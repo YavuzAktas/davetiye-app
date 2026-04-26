@@ -8,6 +8,38 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+
+  const davetiye = await prisma.davetiye.findUnique({
+    where: { slug },
+  });
+
+  if (!davetiye) {
+    return { title: "Davetiye Bulunamadı" };
+  }
+
+  const tarihStr = davetiye.tarih
+    ? new Date(davetiye.tarih).toLocaleDateString("tr-TR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
+  const aciklama = `${davetiye.mekan ? davetiye.mekan + " • " : ""}${tarihStr}`;
+
+  return {
+    title: davetiye.baslik,
+    description: aciklama,
+    openGraph: {
+      title: davetiye.baslik,
+      description: aciklama,
+      type: "website",
+    },
+  };
+}
+
 export default async function DavetiyeSayfasi({ params }: Props) {
   const { slug } = await params;
   

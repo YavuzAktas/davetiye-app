@@ -10,8 +10,40 @@ import NavLinks from "@/components/NavLinks";
 const geist = Geist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Davetim — Online Davetiye Platformu",
-  description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
+  title: {
+    default: "Davetim — Online Davetiye Platformu",
+    template: "%s | Davetim",
+  },
+  description:
+    "Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
+  keywords: [
+    "online davetiye",
+    "dijital davetiye",
+    "düğün davetiyesi",
+    "nişan davetiyesi",
+    "doğum günü davetiyesi",
+    "elektronik davetiye",
+    "davetiye oluştur",
+  ],
+  authors: [{ name: "Davetim" }],
+  openGraph: {
+    title: "Davetim — Online Davetiye Platformu",
+    description:
+      "Düğün, nişan, doğum günü için özel online davetiye oluştur. WhatsApp ile paylaş.",
+    url: "https://davetiye-app.vercel.app",
+    siteName: "Davetim",
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Davetim — Online Davetiye Platformu",
+    description: "Dijital davetiye platformu. Ücretsiz başla.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -3,6 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SABLONLAR, KATEGORILER } from "@/lib/sablonlar";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Şablonlar",
+  description:
+    "Yüzlerce hazır davetiye şablonu arasından seçin. Düğün, nişan, doğum günü ve daha fazlası.",
+};
 
 export default function SablonlarSayfasi() {
   const [aktifKategori, setAktifKategori] = useState("hepsi");
