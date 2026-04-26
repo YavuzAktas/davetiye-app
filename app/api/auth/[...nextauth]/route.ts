@@ -17,15 +17,14 @@ export const authOptions: NextAuthOptions = {
     signIn: "/giris",
   },
   callbacks: {
-  async session({ session, user }) {
-    if (session.user) {
-      session.user.id = user.id;
-      session.user.plan = user.plan;
-    }
-    return session;
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+        session.user.plan = user.plan;
+      }
+      return session;
+    },
   },
-},
 };
-
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
