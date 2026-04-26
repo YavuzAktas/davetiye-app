@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  name          String?
+  email         String      @unique
+  emailVerified DateTime?
+  image         String?
+  plan          String      @default("free")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  davetiyeler   Davetiye[]
+}
+
+model Davetiye {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  baslik      String
+  etkinlikTur String
+  tarih       DateTime?
+  mekan       String?
+  mesaj       String?
+  sablon      String    @default("klasik")
+  muzik       String?
+  aktif       Boolean   @default(true)
+  goruntulenme Int      @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rsvplar     RSVP[]
+}
+
+model RSVP {
+  id          String   @id @default(cuid())
+  ad          String
+  email       String?
+  telefon     String?
+  katilim     Boolean
+  kisiSayisi  Int      @default(1)
+  not         String?
+  createdAt   DateTime @default(now())
+  davetiyeId  String
+  davetiye    Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+}
