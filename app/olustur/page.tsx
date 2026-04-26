@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { SABLONLAR } from "@/lib/sablonlar";
 
-export default function OlusturSayfasi() {
+function OlusturIcerigi() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sablonId = searchParams.get("sablon") || "klasik-dugun";
@@ -62,7 +63,6 @@ export default function OlusturSayfasi() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Form */}
         <div className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -143,7 +143,6 @@ export default function OlusturSayfasi() {
           </button>
         </div>
 
-        {/* Canlı Önizleme */}
         <div>
           <p className="text-sm font-medium text-gray-700 mb-3">
             Canlı Önizleme
@@ -183,5 +182,13 @@ export default function OlusturSayfasi() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OlusturSayfasi() {
+  return (
+    <Suspense>
+      <OlusturIcerigi />
+    </Suspense>
   );
 }
