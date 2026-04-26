@@ -19,6 +19,7 @@ model User {
   davetiyeler   Davetiye[]
   accounts  Account[]
   sessions  Session[]
+  odemeTokenlar OdemeToken[]
 }
 
 model Account {
@@ -85,4 +86,13 @@ model RSVP {
   createdAt   DateTime @default(now())
   davetiyeId  String
   davetiye    Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+}
+
+model OdemeToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  planId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
