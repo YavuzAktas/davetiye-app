@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { notFound } from "next/navigation";
+import RsvpForm from "@/components/RsvpForm";
+
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -158,23 +160,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 text-center">
-          <p className="font-semibold text-gray-800 mb-1">Katılacak mısınız?</p>
-          <p className="text-sm text-gray-400 mb-4">
-            Lütfen katılım durumunuzu bildirin
-          </p>
-          <div className="flex gap-3">
-            <button
-              className="flex-1 py-3 rounded-xl font-medium text-white transition-colors"
-              style={{ backgroundColor: sablon.renk }}
-            >
-              ✓ Katılıyorum
-            </button>
-            <button className="flex-1 py-3 rounded-xl font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors">
-              ✗ Katılamıyorum
-            </button>
-          </div>
-        </div>
+        <div className="mb-6">
+  <RsvpForm davetiyeId={davetiye.id} renk={sablon.renk} />
+</div>
 
         <a
           href={`https://wa.me/?text=${whatsappMetin}`}
