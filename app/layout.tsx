@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { Providers } from "./providers";
+
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -18,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className={geist.className}>
-
+        <Providers>
         {/* Navigasyon */}
         <nav className="border-b border-gray-100 bg-white sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -58,7 +60,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
-
+        </Providers>
       </body>
     </html>
   );
