@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Providers } from "./providers";
+import NavLinks from "@/components/NavLinks";
+
 
 
 const geist = Geist({ subsets: ["latin"] });
@@ -27,20 +29,7 @@ export default function RootLayout({
             <Link href="/" className="text-xl font-semibold text-purple-600">
               Davetim
             </Link>
-            <div className="flex items-center gap-6">
-              <Link href="/sablonlar" className="text-sm text-gray-600 hover:text-gray-900">
-                Şablonlar
-              </Link>
-              <Link href="/fiyatlar" className="text-sm text-gray-600 hover:text-gray-900">
-                Fiyatlar
-              </Link>
-              <Link
-                href="/giris"
-                className="text-sm bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                Giriş Yap
-              </Link>
-            </div>
+            <NavLinks />
           </div>
         </nav>
 
