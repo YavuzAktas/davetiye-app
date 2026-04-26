@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
@@ -66,13 +66,15 @@ export async function POST(req: NextRequest) {
     ],
   };
 
-  return new Promise((resolve) => {
-    iyzipay.checkoutFormInitialize.create(request as any, async (err: unknown, result: any) => {
-  if (err || result.status !== "success") {
-    resolve(
-      NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 })
-    );
-    return;
+  const result = await new Promise<any>((resolve, reject) => {
+    iyzipay.checkoutFormInitialize.create(request as any, (err: unknown, res: any) => {
+      if (err) reject(err);
+      else resolve(res);
+    });
+  });
+
+  if (result.status !== "success") {
+    return NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 });
   }
 
   await prisma.odemeToken.create({
@@ -83,11 +85,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  resolve(
-    NextResponse.json({
-      checkoutFormContent: result.checkoutFormContent,
-      token: result.token,
-    })
-  );
-});
-})}
+  return NextResponse.json({
+    checkoutFormContent: result.checkoutFormContent,
+    token: result.token,
+  });
+}
