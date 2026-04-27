@@ -118,7 +118,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="Adınızı girin"
               value={form.ad}
               onChange={(e) => setForm({ ...form, ad: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
 
@@ -131,7 +131,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="ornek@mail.com"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
                 onChange={(e) =>
                   setForm({ ...form, kisiSayisi: Number(e.target.value) })
                 }
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
               >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={n}>
@@ -165,7 +165,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="Bir şey eklemek ister misiniz?"
               value={form.not}
               onChange={(e) => setForm({ ...form, not: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
             />
           </div>
 
