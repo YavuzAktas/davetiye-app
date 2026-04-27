@@ -128,7 +128,7 @@ function OlusturIcerigi() {
                         placeholder="Örn: Ayşe & Mehmet'in Düğününe Davetlisiniz"
                         value={form.baslik}
                         onChange={(e) => setForm({ ...form, baslik: e.target.value })}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
                       />
                     </div>
 
@@ -141,7 +141,7 @@ function OlusturIcerigi() {
                           type="date"
                           value={form.tarih}
                           onChange={(e) => setForm({ ...form, tarih: e.target.value })}
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
                         />
                       </div>
                       <div>
@@ -150,7 +150,7 @@ function OlusturIcerigi() {
                           type="time"
                           value={form.saat}
                           onChange={(e) => setForm({ ...form, saat: e.target.value })}
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
                         />
                       </div>
                     </div>
@@ -164,7 +164,7 @@ function OlusturIcerigi() {
                         placeholder="Örn: Çırağan Palace, İstanbul"
                         value={form.mekan}
                         onChange={(e) => setForm({ ...form, mekan: e.target.value })}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
                       />
                       {form.mekan && (
                         <a
@@ -187,7 +187,7 @@ function OlusturIcerigi() {
                         placeholder="Misafirlerinize özel bir mesaj yazın..."
                         value={form.mesaj}
                         onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 resize-none"
                       />
                       <p className="text-xs text-gray-400 mt-1">{form.mesaj.length}/200 karakter</p>
                     </div>
