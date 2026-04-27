@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-
+import CopyButton from "@/components/CopyButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -36,7 +36,6 @@ export default async function DavetiyeDetay({ params }: Props) {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-
       <div className="flex items-center gap-3 mb-8">
         <Link
           href="/dashboard"
@@ -58,14 +57,14 @@ export default async function DavetiyeDetay({ params }: Props) {
           Davetiyeyi Görüntüle →
         </Link>
         <Link
-  href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-  className="text-sm text-green-600 hover:underline mt-1 inline-block"
->
-  Davetli Listesi →
-</Link>
+          href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+          className="text-sm text-green-600 hover:underline mt-1 block"
+        >
+          Davetli Listesi →
+        </Link>
       </div>
 
-      {/* Özet */}
+      {/* Özet Kartları */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-white border border-gray-100 rounded-2xl p-5 text-center">
           <p className="text-2xl font-bold text-gray-900">
@@ -85,9 +84,68 @@ export default async function DavetiyeDetay({ params }: Props) {
         </div>
       </div>
 
+      {/* QR Kod ve Paylaşım */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-6">
+        <h2 className="font-semibold text-gray-800 mb-4">QR Kod ve Paylaşım</h2>
+        <div className="flex flex-col sm:flex-row gap-6 items-start">
+          
+          {/* QR Kod */}
+          <div className="flex flex-col items-center gap-3">
+            <img
+              src={`/api/qr?url=${encodeURIComponent(process.env.NEXT_PUBLIC_URL + "/davetiye/" + davetiye.slug)}`}
+              alt="QR Kod"
+              className="w-36 h-36 rounded-xl border border-gray-100"
+            />
+            <a
+              href={`/api/qr?url=${encodeURIComponent(process.env.NEXT_PUBLIC_URL + "/davetiye/" + davetiye.slug)}`}
+              download={`davetiye-${davetiye.slug}.png`}
+              className="text-xs text-purple-600 hover:underline"
+            >
+              QR Kodu İndir
+            </a>
+          </div>
+
+          {/* Paylaşım Linkleri */}
+          <div className="flex-1 space-y-3">
+            <div>
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">
+                Davetiye Linki
+              </p>
+              <div className="flex gap-2">
+                <input
+                  readOnly
+                  value={`${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}`}
+                  className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm bg-gray-50 text-gray-600 focus:outline-none"
+                />
+                <CopyButton text={`${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}`} />
+              </div>
+            </div>
+
+            <div className="flex gap-2 flex-wrap">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " - " + process.env.NEXT_PUBLIC_URL + "/davetiye/" + davetiye.slug)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-green-500 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-600 transition-colors"
+              >
+                WhatsApp
+              </a>
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(process.env.NEXT_PUBLIC_URL + "/davetiye/" + davetiye.slug)}&text=${encodeURIComponent(davetiye.baslik)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-blue-500 text-white text-xs px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors"
+              >
+                Telegram
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* RSVP Listesi */}
       <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800">
             Katılım Bildirimleri ({davetiye.rsvplar.length})
           </h2>
@@ -141,7 +199,6 @@ export default async function DavetiyeDetay({ params }: Props) {
         )}
       </div>
 
-      {/* Katılmayanlar varsa göster */}
       {katilmayanlar.length > 0 && (
         <p className="text-center text-sm text-gray-400 mt-4">
           {katilmayanlar.length} kişi katılamayacağını bildirdi
