@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json(
@@ -43,15 +43,15 @@ export async function POST(req: NextRequest) {
 
   const davetiye = await prisma.davetiye.create({
     data: {
-      slug,
-      baslik,
-      etkinlikTur,
-      tarih: tarihSaat,
-      mekan,
-      mesaj,
-      sablon,
-      userId: user.id,
-    },
+  slug,
+  baslik,
+  etkinlikTur,
+  tarih: tarihSaat,
+  mekan,
+  mesaj,
+  sablon,
+  userId: user.id,
+},
   });
 
   return NextResponse.json({ slug: davetiye.slug });
