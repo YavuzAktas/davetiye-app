@@ -75,11 +75,14 @@ export default function SablonlarSayfasi() {
 
             {/* Şablon Bilgisi */}
             <div className="p-4">
-              <p className="font-medium text-gray-800">{sablon.isim}</p>
-              <p className="text-sm text-gray-400 capitalize mt-0.5">
-                {KATEGORILER.find((k) => k.id === sablon.kategori)?.isim}
-              </p>
-            </div>
+  <p className="font-medium text-gray-800">{sablon.isim}</p>
+  <p className="text-xs text-gray-400 mt-0.5">
+    {KATEGORILER.find((k) => k.id === sablon.kategori)?.isim}
+  </p>
+  {sablon.aciklama && (
+    <p className="text-xs text-gray-500 mt-1">{sablon.aciklama}</p>
+  )}
+</div>
           </div>
         ))}
       </div>

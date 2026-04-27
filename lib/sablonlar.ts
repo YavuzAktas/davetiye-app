@@ -1,13 +1,15 @@
 export type Sablon = {
   id: string;
   isim: string;
-  kategori: "dugun" | "nisan" | "dogumgunu" | "sunnet" | "kina" | "diger";
+  kategori: "dugun" | "nisan" | "dogumgunu" | "sunnet" | "kina" | "kurumsal" | "diger";
   renk: string;
   arkaplan: string;
   yaziRengi: string;
+  aciklama?: string;
 };
 
 export const SABLONLAR: Sablon[] = [
+  // DÜĞÜN
   {
     id: "klasik-dugun",
     isim: "Klasik Düğün",
@@ -15,6 +17,7 @@ export const SABLONLAR: Sablon[] = [
     renk: "#7C3AED",
     arkaplan: "from-purple-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Şık ve zamansız",
   },
   {
     id: "romantik-dugun",
@@ -23,7 +26,54 @@ export const SABLONLAR: Sablon[] = [
     renk: "#DB2777",
     arkaplan: "from-pink-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Pembe ve romantik",
   },
+  {
+    id: "altin-dugun",
+    isim: "Altın Düğün",
+    kategori: "dugun",
+    renk: "#B45309",
+    arkaplan: "from-yellow-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Lüks ve görkemli",
+  },
+  {
+    id: "modern-dugun",
+    isim: "Modern Düğün",
+    kategori: "dugun",
+    renk: "#111827",
+    arkaplan: "from-gray-100 to-white",
+    yaziRengi: "#111827",
+    aciklama: "Minimalist ve çağdaş",
+  },
+  {
+    id: "bahar-dugun",
+    isim: "Bahar Düğünü",
+    kategori: "dugun",
+    renk: "#059669",
+    arkaplan: "from-emerald-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Yeşil ve taze",
+  },
+  {
+    id: "mavi-dugun",
+    isim: "Mavi Düğün",
+    kategori: "dugun",
+    renk: "#1D4ED8",
+    arkaplan: "from-blue-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Sakin ve zarif",
+  },
+  {
+    id: "gul-dugun",
+    isim: "Gül Düğünü",
+    kategori: "dugun",
+    renk: "#E11D48",
+    arkaplan: "from-rose-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Kırmızı gül temalı",
+  },
+  // NİŞAN
   {
     id: "modern-nisan",
     isim: "Modern Nişan",
@@ -31,7 +81,36 @@ export const SABLONLAR: Sablon[] = [
     renk: "#0891B2",
     arkaplan: "from-cyan-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Şık ve modern",
   },
+  {
+    id: "romantik-nisan",
+    isim: "Romantik Nişan",
+    kategori: "nisan",
+    renk: "#BE185D",
+    arkaplan: "from-pink-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Pembe ve sevgi dolu",
+  },
+  {
+    id: "altin-nisan",
+    isim: "Altın Nişan",
+    kategori: "nisan",
+    renk: "#92400E",
+    arkaplan: "from-amber-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Lüks ve özel",
+  },
+  {
+    id: "mor-nisan",
+    isim: "Mor Nişan",
+    kategori: "nisan",
+    renk: "#6D28D9",
+    arkaplan: "from-violet-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Zarif ve asil",
+  },
+  // DOĞUM GÜNÜ
   {
     id: "eglenceli-dogumgunu",
     isim: "Eğlenceli Doğum Günü",
@@ -39,6 +118,7 @@ export const SABLONLAR: Sablon[] = [
     renk: "#D97706",
     arkaplan: "from-amber-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Renkli ve neşeli",
   },
   {
     id: "sade-dogumgunu",
@@ -47,7 +127,45 @@ export const SABLONLAR: Sablon[] = [
     renk: "#059669",
     arkaplan: "from-emerald-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Minimal ve şık",
   },
+  {
+    id: "cocuk-dogumgunu",
+    isim: "Çocuk Doğum Günü",
+    kategori: "dogumgunu",
+    renk: "#7C3AED",
+    arkaplan: "from-purple-50 to-yellow-50",
+    yaziRengi: "#1F2937",
+    aciklama: "Çocuklar için renkli",
+  },
+  {
+    id: "pembe-dogumgunu",
+    isim: "Pembe Doğum Günü",
+    kategori: "dogumgunu",
+    renk: "#EC4899",
+    arkaplan: "from-pink-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Kızlar için özel",
+  },
+  {
+    id: "mavi-dogumgunu",
+    isim: "Mavi Doğum Günü",
+    kategori: "dogumgunu",
+    renk: "#2563EB",
+    arkaplan: "from-blue-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Erkekler için şık",
+  },
+  {
+    id: "altin-dogumgunu",
+    isim: "Altın Doğum Günü",
+    kategori: "dogumgunu",
+    renk: "#B45309",
+    arkaplan: "from-yellow-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Özel günler için",
+  },
+  // SÜNNET
   {
     id: "geleneksel-sunnet",
     isim: "Geleneksel Sünnet",
@@ -55,6 +173,118 @@ export const SABLONLAR: Sablon[] = [
     renk: "#1D4ED8",
     arkaplan: "from-blue-50 to-white",
     yaziRengi: "#1F2937",
+    aciklama: "Geleneksel ve özel",
+  },
+  {
+    id: "modern-sunnet",
+    isim: "Modern Sünnet",
+    kategori: "sunnet",
+    renk: "#0369A1",
+    arkaplan: "from-sky-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Çağdaş ve şık",
+  },
+  {
+    id: "altin-sunnet",
+    isim: "Altın Sünnet",
+    kategori: "sunnet",
+    renk: "#92400E",
+    arkaplan: "from-amber-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Görkemli kutlama",
+  },
+  {
+    id: "yildiz-sunnet",
+    isim: "Yıldız Sünnet",
+    kategori: "sunnet",
+    renk: "#4338CA",
+    arkaplan: "from-indigo-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Parlak ve özel",
+  },
+  // KINA
+  {
+    id: "geleneksel-kina",
+    isim: "Geleneksel Kına",
+    kategori: "kina",
+    renk: "#B45309",
+    arkaplan: "from-orange-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Kırmızı ve geleneksel",
+  },
+  {
+    id: "modern-kina",
+    isim: "Modern Kına",
+    kategori: "kina",
+    renk: "#BE185D",
+    arkaplan: "from-rose-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Şık ve çağdaş",
+  },
+  {
+    id: "altin-kina",
+    isim: "Altın Kına",
+    kategori: "kina",
+    renk: "#92400E",
+    arkaplan: "from-yellow-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Görkemli kına gecesi",
+  },
+  // KURUMSAL
+  {
+    id: "kurumsal-toplanti",
+    isim: "Kurumsal Toplantı",
+    kategori: "kurumsal",
+    renk: "#1E40AF",
+    arkaplan: "from-blue-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Profesyonel davetiye",
+  },
+  {
+    id: "kurumsal-etkinlik",
+    isim: "Kurumsal Etkinlik",
+    kategori: "kurumsal",
+    renk: "#374151",
+    arkaplan: "from-gray-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Şık ve profesyonel",
+  },
+  {
+    id: "kurumsal-kutlama",
+    isim: "Kurumsal Kutlama",
+    kategori: "kurumsal",
+    renk: "#065F46",
+    arkaplan: "from-emerald-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Başarı kutlaması",
+  },
+  // DİĞER
+  {
+    id: "mezuniyet",
+    isim: "Mezuniyet",
+    kategori: "diger",
+    renk: "#1D4ED8",
+    arkaplan: "from-blue-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Mezuniyet töreni",
+  },
+  {
+    id: "yildonumu",
+    isim: "Yıldönümü",
+    kategori: "diger",
+    renk: "#DC2626",
+    arkaplan: "from-red-50 to-white",
+    yaziRengi: "#1F2937",
+    aciklama: "Özel yıldönümü",
+  },
+  {
+    id: "bebek-partisi",
+    isim: "Bebek Partisi",
+    kategori: "diger",
+    renk: "#7C3AED",
+    arkaplan: "from-purple-50 to-pink-50",
+    yaziRengi: "#1F2937",
+    aciklama: "Baby shower",
   },
 ];
 
@@ -65,5 +295,6 @@ export const KATEGORILER = [
   { id: "dogumgunu", isim: "Doğum Günü" },
   { id: "sunnet", isim: "Sünnet" },
   { id: "kina", isim: "Kına" },
+  { id: "kurumsal", isim: "Kurumsal" },
   { id: "diger", isim: "Diğer" },
 ];
