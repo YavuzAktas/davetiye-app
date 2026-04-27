@@ -194,7 +194,7 @@ export default async function Dashboard() {
                 return (
                   <div
                     key={davetiye.id}
-                    className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shadow-sm hover:shadow-md transition-shadow"
                   >
                     {/* Sol — İkon */}
                     <div
@@ -240,7 +240,7 @@ export default async function Dashboard() {
                     </div>
 
                     {/* Butonlar */}
-                    <div className="flex gap-2 flex-shrink-0">
+                    <div className="flex gap-2 flex-shrink-0 self-end sm:self-auto">
                       <Link
                         href={`/davetiye/${davetiye.slug}`}
                         target="_blank"

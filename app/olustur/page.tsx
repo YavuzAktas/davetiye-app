@@ -308,8 +308,8 @@ function OlusturIcerigi() {
             </div>
           </div>
 
-          {/* Sağ — Önizleme */}
-          <div className="lg:col-span-2">
+          {/* Sağ — Önizleme (mobilden gizli) */}
+          <div className="hidden lg:block lg:col-span-2">
             <div className="sticky top-24">
               <p className="text-xs font-semibold text-gray-400 uppercase mb-3 text-center">Canlı Önizleme</p>
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-center">

@@ -19,13 +19,13 @@ export default function Anasayfa() {
               <span className="inline-block bg-white border border-purple-100 text-purple-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6 shadow-sm">
                 🎉 Türkiye&apos;nin dijital davetiye platformu
               </span>
-              <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
                 Davetiyeni<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                   dijitale taşı
                 </span>
               </h1>
-              <p className="text-xl text-gray-500 mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-500 mb-8 leading-relaxed">
                 Düğün, nişan, doğum günü için dakikalar içinde özel davetiye oluştur.
                 WhatsApp ile tek tıkla paylaş, RSVP&apos;leri takip et.
               </p>
@@ -94,10 +94,10 @@ export default function Anasayfa() {
               </div>
 
               {/* Floating badge */}
-              <div className="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+              <div className="hidden sm:block absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
                 Yeni RSVP! 🎉
               </div>
-              <div className="absolute -bottom-3 -left-3 bg-white border border-gray-100 shadow-lg rounded-2xl px-4 py-2.5">
+              <div className="hidden sm:block absolute -bottom-3 -left-3 bg-white border border-gray-100 shadow-lg rounded-2xl px-4 py-2.5">
                 <p className="text-xs text-gray-500">Görüntülenme</p>
                 <p className="text-lg font-bold text-gray-800">248 kişi</p>
               </div>
@@ -130,7 +130,7 @@ export default function Anasayfa() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-purple-600 font-semibold text-sm uppercase tracking-widest">Özellikler</span>
-            <h2 className="text-4xl font-bold text-gray-900 mt-2 mb-4">Neden Davetim?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">Neden Davetim?</h2>
             <p className="text-gray-500 text-lg max-w-xl mx-auto">Kağıt davetiyenin yerini alan modern çözüm</p>
           </div>
 
@@ -160,7 +160,7 @@ export default function Anasayfa() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-purple-600 font-semibold text-sm uppercase tracking-widest">Nasıl Çalışır</span>
-            <h2 className="text-4xl font-bold text-gray-900 mt-2">3 adımda davetiye hazır</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">3 adımda davetiye hazır</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             <div className="hidden md:block absolute top-8 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-purple-200 to-purple-200" />
@@ -189,7 +189,7 @@ export default function Anasayfa() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-purple-600 font-semibold text-sm uppercase tracking-widest">Yorumlar</span>
-            <h2 className="text-4xl font-bold text-gray-900 mt-2">Kullanıcılarımız ne diyor?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">Kullanıcılarımız ne diyor?</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -223,7 +223,7 @@ export default function Anasayfa() {
       <section className="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-purple-600 font-semibold text-sm uppercase tracking-widest">Fiyatlar</span>
-          <h2 className="text-4xl font-bold text-gray-900 mt-2 mb-4">Ücretsiz başla</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">Ücretsiz başla</h2>
           <p className="text-gray-500 text-lg mb-12">İhtiyacına göre yükselt. Kredi kartı gerekmez.</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
             {[
@@ -268,10 +268,10 @@ export default function Anasayfa() {
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full translate-x-1/2 translate-y-1/2" />
         </div>
         <div className="max-w-2xl mx-auto relative">
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             İlk davetiyeni şimdi oluştur
           </h2>
-          <p className="text-purple-200 text-lg mb-10">
+          <p className="text-purple-200 text-base md:text-lg mb-10">
             2 dakikada başla. Ücretsiz. Kredi kartı gerekmez.
           </p>
           <Link
