@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { SABLONLAR } from "@/lib/sablonlar";
+import MuzikSecici from "@/components/MuzikSecici";
 
 const FONTLAR = [
   { id: "font-sans", isim: "Modern", style: "system-ui" },
@@ -248,15 +249,11 @@ function OlusturIcerigi() {
                 {aktifTab === "tasarim" && (
                   <div className="space-y-7">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Arka Plan Müziği</label>
-                      <input
-                        type="url"
-                        placeholder="https://... (MP3 dosya bağlantısı)"
-                        value={form.muzik}
-                        onChange={(e) => setForm({ ...form, muzik: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900"
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Arka Plan Müziği</label>
+                      <MuzikSecici
+                        secili={form.muzik}
+                        onChange={(dosya) => setForm({ ...form, muzik: dosya })}
                       />
-                      <p className="text-xs text-gray-400 mt-1.5">Davetiye açıldığında otomatik çalar. Doğrudan MP3 URL girin.</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-3">Tema Rengi</label>
