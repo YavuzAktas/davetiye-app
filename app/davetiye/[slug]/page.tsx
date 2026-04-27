@@ -51,6 +51,8 @@ export default async function DavetiyeSayfasi({ params }: Props) {
       name: davetiye.user?.name ?? null,
       email: davetiye.user?.email ?? null,
     },
+    kisi1: (davetiye as any).kisi1 ?? null,
+    kisi2: (davetiye as any).kisi2 ?? null,
   };
 
   const rsvpBileseni = <RsvpForm davetiyeId={davetiye.id} renk="#7C3AED" />;

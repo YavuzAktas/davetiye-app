@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2 } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json(
@@ -68,6 +68,8 @@ export async function POST(req: NextRequest) {
       font: font || "font-sans",
       ozelRenk: renk || null,
       userId: user.id,
+      kisi1: kisi1 || null,
+      kisi2: kisi2 || null,
     },
   });
 

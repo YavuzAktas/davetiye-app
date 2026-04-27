@@ -57,7 +57,8 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni }: SablonProps)
     "Davetiye: " + process.env.NEXT_PUBLIC_URL + "/davetiye/" + davetiye.slug
   );
 
-  const isimler = davetiye.baslik.split(/[&ve]/i).map(s => s.trim()).filter(Boolean);
+  const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
+  const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
 
   if (!acildi) {
     return (
@@ -86,13 +87,13 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni }: SablonProps)
 
         <div className="text-center mb-12 relative z-10">
           <p className="text-5xl md:text-6xl text-gray-600 mb-2" style={{ fontFamily: "var(--font-dancing), cursive" }}>
-            {isimler[0] ?? davetiye.baslik}
+            {isim1 ?? davetiye.baslik}
           </p>
-          {isimler[1] && (
+          {isim2 && (
             <>
               <p className="text-2xl text-gray-400 my-3" style={{ fontFamily: "var(--font-cormorant), serif" }}>&</p>
               <p className="text-5xl md:text-6xl text-gray-600" style={{ fontFamily: "var(--font-dancing), cursive" }}>
-                {isimler[1]}
+                {isim2}
               </p>
             </>
           )}
@@ -145,11 +146,11 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni }: SablonProps)
               {davetiye.etkinlikTur === "nisan" ? "Nişan Davetiyesi" : "Davetiye"}
             </p>
             <div className="mb-6">
-              <p className="text-6xl md:text-7xl text-gray-700 leading-tight" style={{ fontFamily: "var(--font-dancing), cursive" }}>{isimler[0] ?? davetiye.baslik}</p>
-              {isimler[1] && (
+              <p className="text-6xl md:text-7xl text-gray-700 leading-tight" style={{ fontFamily: "var(--font-dancing), cursive" }}>{isim1 ?? davetiye.baslik}</p>
+              {isim2 && (
                 <>
                   <p className="text-3xl text-gray-400 my-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>&</p>
-                  <p className="text-6xl md:text-7xl text-gray-700 leading-tight" style={{ fontFamily: "var(--font-dancing), cursive" }}>{isimler[1]}</p>
+                  <p className="text-6xl md:text-7xl text-gray-700 leading-tight" style={{ fontFamily: "var(--font-dancing), cursive" }}>{isim2}</p>
                 </>
               )}
             </div>

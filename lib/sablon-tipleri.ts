@@ -15,6 +15,8 @@ export interface DavetiyeVeri {
     name: string | null;
     email: string | null;
   };
+  kisi1: string | null;
+  kisi2: string | null;
 }
 
 export interface SablonProps {

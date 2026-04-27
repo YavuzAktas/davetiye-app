@@ -76,6 +76,8 @@ model Davetiye {
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   rsvplar      RSVP[]
   davetliler Davetli[]
+  kisi1 String?
+  kisi2 String?
 }
 
 model RSVP {

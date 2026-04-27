@@ -22,6 +22,8 @@ function OlusturIcerigi() {
   const sablonId = searchParams.get("sablon") || "klasik-dugun";
   const sablon = SABLONLAR.find((s) => s.id === sablonId) || SABLONLAR[0];
 
+  const nisanVeyaDugun = sablon.kategori === "nisan" || sablon.kategori === "dugun";
+
   const [form, setForm] = useState({
     baslik: "",
     etkinlikTur: sablon.kategori,
@@ -31,38 +33,54 @@ function OlusturIcerigi() {
     mesaj: "",
     font: "font-sans",
     renk: sablon.renk,
+    kisi1: "",
+    kisi2: "",
   });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
   const [aktifTab, setAktifTab] = useState<"icerik" | "tasarim">("icerik");
 
   const handleSubmit = async () => {
-
-    
-    if (!form.baslik || !form.tarih || !form.mekan) {
-      setHata("Lütfen başlık, tarih ve mekan alanlarını doldurun.");
+    if (!form.tarih || !form.mekan) {
+      setHata("Lütfen tarih ve mekan alanlarını doldurun.");
       return;
     }
+    if (nisanVeyaDugun && (!form.kisi1 || !form.kisi2)) {
+      setHata("Lütfen iki kişinin adını girin.");
+      return;
+    }
+    if (!nisanVeyaDugun && !form.baslik) {
+      setHata("Lütfen davetiye başlığını girin.");
+      return;
+    }
+
     setYukleniyor(true);
     setHata("");
+
+    const gonderilecekBaslik = nisanVeyaDugun
+      ? `${form.kisi1} & ${form.kisi2}`
+      : form.baslik;
+
     try {
       const res = await fetch("/api/davetiye/olustur", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, sablon: sablonId }),
+        body: JSON.stringify({
+          ...form,
+          baslik: gonderilecekBaslik,
+          sablon: sablonId,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
         setHata(data.hata || "Bir hata oluştu.");
         return;
       }
-
       if (data.limitAsimi) {
-  setHata(data.hata);
-  // 2 saniye sonra fiyatlar sayfasına yönlendir
-  setTimeout(() => router.push("/fiyatlar"), 2000);
-  return;
-}
+        setHata(data.hata);
+        setTimeout(() => router.push("/fiyatlar"), 2000);
+        return;
+      }
       router.push(`/davetiye/${data.slug}`);
     } catch {
       setHata("Bir hata oluştu, tekrar deneyin.");
@@ -76,6 +94,12 @@ function OlusturIcerigi() {
     : form.font === "font-mono" ? "monospace"
     : "system-ui";
 
+  const onizlemeBaslik = nisanVeyaDugun
+    ? form.kisi1 && form.kisi2
+      ? `${form.kisi1} & ${form.kisi2}`
+      : form.kisi1 || "Ad & Soyad"
+    : form.baslik || "Davetiye Başlığı";
+
   return (
     <div className="min-h-screen bg-gray-50">
 
@@ -85,8 +109,7 @@ function OlusturIcerigi() {
           <div>
             <h1 className="text-lg font-bold text-gray-900">Davetiye Oluştur</h1>
             <p className="text-sm text-gray-400 mt-0.5">
-              Şablon:{" "}
-              <span className="font-medium text-purple-600">{sablon.isim}</span>
+              Şablon: <span className="font-medium text-purple-600">{sablon.isim}</span>
             </p>
           </div>
           <button
@@ -128,29 +151,52 @@ function OlusturIcerigi() {
               <div className="p-6">
                 {aktifTab === "icerik" && (
                   <div className="space-y-5">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Davetiye Başlığı <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Örn: Ayşe & Mehmet'in Düğününe Davetlisiniz"
-                        value={form.baslik}
-                        onChange={(e) => setForm({ ...form, baslik: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
-                      />
-                    </div>
+
+                    {nisanVeyaDugun ? (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                          İsimler <span className="text-red-400">*</span>
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <input
+                            type="text"
+                            placeholder="1. Kişi (Örn: Ayşe)"
+                            value={form.kisi1}
+                            onChange={(e) => setForm({ ...form, kisi1: e.target.value })}
+                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900"
+                          />
+                          <input
+                            type="text"
+                            placeholder="2. Kişi (Örn: Mehmet)"
+                            value={form.kisi2}
+                            onChange={(e) => setForm({ ...form, kisi2: e.target.value })}
+                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                          Davetiye Başlığı <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Örn: Can'ın Doğum Günü Partisi"
+                          value={form.baslik}
+                          onChange={(e) => setForm({ ...form, baslik: e.target.value })}
+                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900"
+                        />
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                          Tarih <span className="text-red-400">*</span>
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Tarih *</label>
                         <input
                           type="date"
                           value={form.tarih}
                           onChange={(e) => setForm({ ...form, tarih: e.target.value })}
-                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                         />
                       </div>
                       <div>
@@ -159,21 +205,19 @@ function OlusturIcerigi() {
                           type="time"
                           value={form.saat}
                           onChange={(e) => setForm({ ...form, saat: e.target.value })}
-                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+                          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Mekan <span className="text-red-400">*</span>
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Mekan *</label>
                       <input
                         type="text"
-                        placeholder="Örn: Çırağan Palace, İstanbul"
+                        placeholder="Mekan adı veya adresi"
                         value={form.mekan}
                         onChange={(e) => setForm({ ...form, mekan: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                       />
                       {form.mekan && (
                         <a
@@ -188,17 +232,14 @@ function OlusturIcerigi() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Davetiye Mesajı
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Mesaj</label>
                       <textarea
                         rows={4}
-                        placeholder="Misafirlerinize özel bir mesaj yazın..."
+                        placeholder="Özel bir mesaj..."
                         value={form.mesaj}
                         onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 resize-none"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white resize-none"
                       />
-                      <p className="text-xs text-gray-400 mt-1">{form.mesaj.length}/200 karakter</p>
                     </div>
                   </div>
                 )}
@@ -206,60 +247,37 @@ function OlusturIcerigi() {
                 {aktifTab === "tasarim" && (
                   <div className="space-y-7">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Tema Rengi
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Tema Rengi</label>
                       <div className="flex gap-2.5 flex-wrap mb-3">
                         {RENKLER.map((renk) => (
                           <button
                             key={renk}
                             onClick={() => setForm({ ...form, renk })}
-                            className="w-10 h-10 rounded-full transition-all hover:scale-110 relative border-2"
+                            className="w-10 h-10 rounded-full transition-all hover:scale-110 border-2"
                             style={{
                               backgroundColor: renk,
                               borderColor: form.renk === renk ? "white" : "transparent",
                               boxShadow: form.renk === renk ? `0 0 0 3px ${renk}` : "none",
                             }}
                           >
-                            {form.renk === renk && (
-                              <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold">✓</span>
-                            )}
+                            {form.renk === renk && <span className="text-white text-sm">✓</span>}
                           </button>
                         ))}
-                      </div>
-                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                        <label className="text-xs text-gray-500 font-medium">Özel renk:</label>
-                        <input
-                          type="color"
-                          value={form.renk}
-                          onChange={(e) => setForm({ ...form, renk: e.target.value })}
-                          className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent"
-                        />
-                        <span className="text-xs font-mono text-gray-400">{form.renk}</span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Yazı Stili
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Yazı Stili</label>
                       <div className="grid grid-cols-3 gap-3">
                         {FONTLAR.map((font) => (
                           <button
                             key={font.id}
                             onClick={() => setForm({ ...form, font: font.id })}
-                            className={`p-4 rounded-xl border-2 text-center transition-all ${
-                              form.font === font.id
-                                ? "border-purple-500 bg-purple-50"
-                                : "border-gray-100 hover:border-gray-200 bg-white"
+                            className={`p-4 rounded-xl border-2 transition-all ${
+                              form.font === font.id ? "border-purple-500 bg-purple-50" : "border-gray-100 bg-white"
                             }`}
                           >
-                            <span
-                              className="text-2xl block mb-1"
-                              style={{ fontFamily: font.style }}
-                            >
-                              Aa
-                            </span>
+                            <span className="text-2xl block mb-1" style={{ fontFamily: font.style }}>Aa</span>
                             <span className="text-xs text-gray-500">{font.isim}</span>
                           </button>
                         ))}
@@ -268,16 +286,12 @@ function OlusturIcerigi() {
                   </div>
                 )}
 
-                {hata && (
-                  <div className="mt-4 bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl flex items-center gap-2">
-                    <span>⚠️</span> {hata}
-                  </div>
-                )}
+                {hata && <div className="mt-4 bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl">⚠️ {hata}</div>}
 
                 <button
                   onClick={handleSubmit}
                   disabled={yukleniyor}
-                  className="w-full bg-purple-600 text-white py-3.5 rounded-xl font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 mt-6 shadow-sm shadow-purple-200"
+                  className="w-full bg-purple-600 text-white py-3.5 rounded-xl font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 mt-6"
                 >
                   {yukleniyor ? "Oluşturuluyor..." : "Davetiyemi Oluştur"}
                 </button>
@@ -288,70 +302,17 @@ function OlusturIcerigi() {
           {/* Sağ — Önizleme */}
           <div className="lg:col-span-2">
             <div className="sticky top-24">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 text-center">
-                Canlı Önizleme
-              </p>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <p className="text-xs font-semibold text-gray-400 uppercase mb-3 text-center">Canlı Önizleme</p>
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-center">
                 <div className="h-1.5" style={{ backgroundColor: form.renk }} />
-                <div className="p-6 bg-linear-to-b from-gray-50 to-white text-center">
-                  <div className="text-3xl mb-2">
-                    {sablon.kategori === "dugun" ? "💍"
-                      : sablon.kategori === "nisan" ? "💑"
-                      : sablon.kategori === "dogumgunu" ? "🎂"
-                      : sablon.kategori === "sunnet" ? "⭐"
-                      : sablon.kategori === "kina" ? "🌿"
-                      : "🎉"}
-                  </div>
-                  <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: form.renk }}>
-                    {sablon.isim}
-                  </p>
-                  <h2
-                    className="text-lg font-bold text-gray-800 mb-1 leading-snug"
-                    style={{ fontFamily: aktifFont }}
-                  >
-                    {form.baslik || "Davetiye Başlığı"}
-                  </h2>
+                <div className="p-6 bg-linear-to-b from-gray-50 to-white">
+                  <div className="text-3xl mb-2">🎉</div>
+                  <h2 className="text-lg font-bold text-gray-800" style={{ fontFamily: aktifFont }}>{onizlemeBaslik}</h2>
                   <div className="w-8 h-0.5 mx-auto my-3" style={{ backgroundColor: form.renk }} />
-
-                  <div className="space-y-2 mb-4 text-left">
-                    {form.tarih && (
-                      <div className="bg-white rounded-xl p-2.5 flex items-center gap-2 border border-gray-100">
-                        <span className="text-sm">📅</span>
-                        <p className="text-xs text-gray-600">
-                          {new Date(form.tarih).toLocaleDateString("tr-TR", {
-                            day: "numeric", month: "long", year: "numeric",
-                          })}
-                          {form.saat && ` - ${form.saat}`}
-                        </p>
-                      </div>
-                    )}
-                    {form.mekan && (
-                      <div className="bg-white rounded-xl p-2.5 flex items-center gap-2 border border-gray-100">
-                        <span className="text-sm">📍</span>
-                        <p className="text-xs text-gray-600 truncate">{form.mekan}</p>
-                      </div>
-                    )}
-                    {form.mesaj && (
-                      <div className="bg-white rounded-xl p-2.5 border border-gray-100">
-                        <p className="text-xs text-gray-500 italic">"{form.mesaj}"</p>
-                      </div>
-                    )}
+                  <div className="space-y-2 text-left">
+                    {form.tarih && <p className="text-xs text-gray-600">📅 {new Date(form.tarih).toLocaleDateString("tr-TR")}</p>}
+                    {form.mekan && <p className="text-xs text-gray-600">📍 {form.mekan}</p>}
                   </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div
-                      className="py-2 rounded-xl text-center text-xs font-medium text-white"
-                      style={{ backgroundColor: form.renk }}
-                    >
-                      ✓ Katılıyorum
-                    </div>
-                    <div className="py-2 rounded-xl text-center text-xs font-medium text-gray-500 bg-gray-100">
-                      ✗ Katılamıyorum
-                    </div>
-                  </div>
-                </div>
-                <div className="px-6 py-3 border-t border-gray-50 text-center">
-                  <p className="text-xs text-gray-300">davetim.com ile oluşturuldu</p>
                 </div>
               </div>
             </div>
@@ -365,7 +326,7 @@ function OlusturIcerigi() {
 
 export default function OlusturSayfasi() {
   return (
-    <Suspense fallback={<div className="p-10 text-center">Yükleniyor...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Yükleniyor...</div>}>
       <OlusturIcerigi />
     </Suspense>
   );
