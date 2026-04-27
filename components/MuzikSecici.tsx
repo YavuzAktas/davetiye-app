@@ -43,7 +43,7 @@ export default function MuzikSecici({ secili, onChange }: Props) {
     <div>
       {/* Kategori filtreleri */}
       <div className="flex gap-2 flex-wrap mb-4">
-        {(["hepsi", ...Object.keys(MUZIK_KATEGORILER)] as const).map((k) => (
+        {(["hepsi", "romantik", "klasik", "neseli", "sakin"] as const).map((k) => (
           <button
             key={k}
             onClick={() => setAktifKategori(k)}
@@ -53,7 +53,7 @@ export default function MuzikSecici({ secili, onChange }: Props) {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            {k === "hepsi" ? "Hepsi" : MUZIK_KATEGORILER[k as Muzik["kategori"]]}
+            {k === "hepsi" ? "Hepsi" : MUZIK_KATEGORILER[k]}
           </button>
         ))}
       </div>
