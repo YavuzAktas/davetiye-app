@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const PLANLAR = [
   {
@@ -83,13 +83,22 @@ export default function FiyatlarSayfasi() {
   const router = useRouter();
   const [yukleniyor, setYukleniyor] = useState<string | null>(null);
   const [acikSss, setAcikSss] = useState<number | null>(null);
+  const [kullanicıPlan, setKullanicıPlan] = useState<string>("free");
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch("/api/kullanici/plan")
+        .then((r) => r.json())
+        .then((d) => setKullanicıPlan(d.plan ?? "free"));
+    }
+  }, [session]);
 
   const handleOdeme = async (planId: string, fiyat: number) => {
     if (!session) {
       router.push("/giris");
       return;
     }
-    if (planId === "free") return;
+    if (planId === "free" || kullanicıPlan === planId) return;
     setYukleniyor(planId);
     try {
       const res = await fetch("/api/odeme/baslat", {
@@ -112,6 +121,22 @@ export default function FiyatlarSayfasi() {
     }
   };
 
+  const butonMetni = (planId: string, varsayilan: string) => {
+    if (yukleniyor === planId) return "Yükleniyor...";
+    if (kullanicıPlan === planId) return "✓ Mevcut Planın";
+    return varsayilan;
+  };
+
+  const butonStil = (plan: typeof PLANLAR[0]) => {
+    if (kullanicıPlan === plan.id) {
+      return plan.populer
+        ? "bg-white/30 text-white cursor-default"
+        : "bg-gray-100 text-gray-400 cursor-default border border-gray-200";
+    }
+    if (plan.populer) return "bg-white text-purple-600 hover:bg-purple-50";
+    return plan.butonStil;
+  };
+
   return (
     <div className="bg-white min-h-screen">
 
@@ -127,6 +152,14 @@ export default function FiyatlarSayfasi() {
           <p className="text-gray-500 text-lg">
             İhtiyacınıza uygun planı seçin. Kredi kartı gerekmez, istediğiniz zaman yükseltin.
           </p>
+          {session && (
+            <p className="mt-4 text-sm text-purple-600 font-medium">
+              Mevcut planın:{" "}
+              <span className="bg-purple-100 px-2 py-0.5 rounded-full">
+                {kullanicıPlan === "free" ? "Ücretsiz" : kullanicıPlan === "standart" ? "Standart" : "Premium"}
+              </span>
+            </p>
+          )}
         </div>
       </section>
 
@@ -136,13 +169,27 @@ export default function FiyatlarSayfasi() {
           {PLANLAR.map((plan) => (
             <div
               key={plan.id}
-              className={`relative rounded-2xl p-8 flex flex-col ${
-                plan.populer
+              className={`relative rounded-2xl p-8 flex flex-col transition-all ${
+                kullanicıPlan === plan.id
+                  ? plan.populer
+                    ? "bg-purple-600 text-white shadow-2xl shadow-purple-200 scale-105 ring-4 ring-purple-300"
+                    : "bg-white border-2 border-purple-400 shadow-lg scale-105"
+                  : plan.populer
                   ? "bg-purple-600 text-white shadow-2xl shadow-purple-200 scale-105"
                   : "bg-white border border-gray-100 shadow-sm"
               }`}
             >
-              {plan.populer && (
+              {/* Aktif Plan Rozeti */}
+              {kullanicıPlan === plan.id && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="bg-green-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg">
+                    ✓ Aktif Planın
+                  </span>
+                </div>
+              )}
+
+              {/* En Popüler Rozeti */}
+              {plan.populer && kullanicıPlan !== plan.id && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-gradient-to-r from-pink-500 to-orange-400 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg">
                     En Popüler
@@ -151,11 +198,19 @@ export default function FiyatlarSayfasi() {
               )}
 
               <div className="mb-6">
-                <p className={`text-sm font-medium mb-1 ${plan.populer ? "text-purple-200" : "text-gray-500"}`}>
+                <p className={`text-sm font-medium mb-1 ${
+                  plan.populer || kullanicıPlan === plan.id && !plan.populer
+                    ? plan.populer ? "text-purple-200" : "text-purple-600"
+                    : "text-gray-500"
+                }`}>
                   {plan.isim}
                 </p>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className={`text-4xl font-bold ${plan.populer ? "text-white" : "text-gray-900"}`}>
+                  <span className={`text-4xl font-bold ${
+                    plan.populer ? "text-white"
+                    : kullanicıPlan === plan.id ? "text-purple-600"
+                    : "text-gray-900"
+                  }`}>
                     {plan.fiyatLabel}
                   </span>
                   {plan.fiyat > 0 && (
@@ -173,11 +228,17 @@ export default function FiyatlarSayfasi() {
                 {plan.ozellikler.map((ozellik) => (
                   <li key={ozellik} className="flex items-center gap-2.5">
                     <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${
-                      plan.populer ? "bg-purple-500 text-white" : "bg-green-100 text-green-600"
+                      plan.populer ? "bg-purple-500 text-white"
+                      : kullanicıPlan === plan.id ? "bg-purple-100 text-purple-600"
+                      : "bg-green-100 text-green-600"
                     }`}>
                       ✓
                     </span>
-                    <span className={`text-sm ${plan.populer ? "text-purple-100" : "text-gray-600"}`}>
+                    <span className={`text-sm ${
+                      plan.populer ? "text-purple-100"
+                      : kullanicıPlan === plan.id ? "text-gray-700"
+                      : "text-gray-600"
+                    }`}>
                       {ozellik}
                     </span>
                   </li>
@@ -186,14 +247,14 @@ export default function FiyatlarSayfasi() {
 
               <button
                 onClick={() => handleOdeme(plan.id, plan.fiyat)}
-                disabled={plan.id === "free" || yukleniyor === plan.id}
-                className={`w-full py-3.5 rounded-xl font-medium transition-all text-sm disabled:opacity-60 ${
-                  plan.populer
-                    ? "bg-white text-purple-600 hover:bg-purple-50"
-                    : plan.butonStil
-                }`}
+                disabled={
+                  plan.id === "free" ||
+                  kullanicıPlan === plan.id ||
+                  yukleniyor === plan.id
+                }
+                className={`w-full py-3.5 rounded-xl font-medium transition-all text-sm disabled:opacity-70 ${butonStil(plan)}`}
               >
-                {yukleniyor === plan.id ? "Yükleniyor..." : plan.buton}
+                {butonMetni(plan.id, plan.buton)}
               </button>
             </div>
           ))}
@@ -226,9 +287,15 @@ export default function FiyatlarSayfasi() {
               <thead>
                 <tr className="border-b border-gray-100">
                   <th className="text-left px-6 py-4 text-sm font-medium text-gray-500 w-1/2">Özellik</th>
-                  <th className="px-6 py-4 text-sm font-semibold text-gray-700 text-center">Ücretsiz</th>
-                  <th className="px-6 py-4 text-sm font-semibold text-purple-600 text-center bg-purple-50">Standart</th>
-                  <th className="px-6 py-4 text-sm font-semibold text-gray-700 text-center">Premium</th>
+                  <th className={`px-6 py-4 text-sm font-semibold text-center ${kullanicıPlan === "free" ? "text-purple-600 bg-purple-50" : "text-gray-700"}`}>
+                    Ücretsiz {kullanicıPlan === "free" && "✓"}
+                  </th>
+                  <th className={`px-6 py-4 text-sm font-semibold text-center ${kullanicıPlan === "standart" ? "text-purple-600 bg-purple-50" : "text-gray-700"}`}>
+                    Standart {kullanicıPlan === "standart" && "✓"}
+                  </th>
+                  <th className={`px-6 py-4 text-sm font-semibold text-center ${kullanicıPlan === "premium" ? "text-purple-600 bg-purple-50" : "text-gray-700"}`}>
+                    Premium {kullanicıPlan === "premium" && "✓"}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -246,9 +313,9 @@ export default function FiyatlarSayfasi() {
                 ].map((satir, i) => (
                   <tr key={satir.ozellik} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="px-6 py-3.5 text-sm text-gray-700">{satir.ozellik}</td>
-                    <td className="px-6 py-3.5 text-sm text-center text-gray-500">{satir.free}</td>
-                    <td className="px-6 py-3.5 text-sm text-center text-purple-600 font-medium bg-purple-50">{satir.standart}</td>
-                    <td className="px-6 py-3.5 text-sm text-center text-gray-700">{satir.premium}</td>
+                    <td className={`px-6 py-3.5 text-sm text-center ${kullanicıPlan === "free" ? "text-purple-600 font-medium bg-purple-50" : "text-gray-500"}`}>{satir.free}</td>
+                    <td className={`px-6 py-3.5 text-sm text-center ${kullanicıPlan === "standart" ? "text-purple-600 font-medium bg-purple-50" : "text-gray-500"}`}>{satir.standart}</td>
+                    <td className={`px-6 py-3.5 text-sm text-center ${kullanicıPlan === "premium" ? "text-purple-600 font-medium bg-purple-50" : "text-gray-700"}`}>{satir.premium}</td>
                   </tr>
                 ))}
               </tbody>
