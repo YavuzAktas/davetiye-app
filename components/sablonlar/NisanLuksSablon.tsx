@@ -3,6 +3,7 @@
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import MuzikCalar from "@/components/MuzikCalar";
 
 export default function NisanLuksSablon({ davetiye, rsvpBileseni }: SablonProps) {
   const [acildi, setAcildi] = useState(false);
@@ -123,6 +124,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni }: SablonProps)
 
   return (
     <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #f0eaf5 0%, #fdf8f8 40%, #ffffff 100%)" }}>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} />}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-2xl mx-auto px-4 h-12 flex items-center justify-center gap-8">
           {["Biz", "Sayım", "Katılım", "Mekan"].map((item) => (

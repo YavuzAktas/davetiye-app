@@ -2,6 +2,7 @@ import { SablonProps } from "@/lib/sablon-tipleri";
 import { SABLONLAR } from "@/lib/sablonlar";
 import Link from "next/link";
 import { FadeUp, FadeIn, ScaleIn } from "@/components/DavetiyeAnimasyon";
+import MuzikCalar from "@/components/MuzikCalar";
 
 export default function KlasikSablon({ davetiye, rsvpBileseni }: SablonProps) {
   const sablon = SABLONLAR.find((s) => s.id === davetiye.sablon) || SABLONLAR[0];
@@ -66,7 +67,8 @@ export default function KlasikSablon({ davetiye, rsvpBileseni }: SablonProps) {
     : null;
 
   return (
-    <div className={"min-h-screen bg-gradient-to-b " + bg}>
+    <div className={"min-h-screen bg-linear-to-b " + bg}>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} />}
       <div className="h-2 w-full" style={{ backgroundColor: aktifRenk }} />
       <div className="max-w-md mx-auto px-4 py-10">
 
