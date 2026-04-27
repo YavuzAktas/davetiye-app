@@ -75,6 +75,7 @@ model Davetiye {
   userId       String
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   rsvplar      RSVP[]
+  davetliler Davetli[]
 }
 
 model RSVP {
@@ -97,4 +98,15 @@ model OdemeToken {
   planId    String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Davetli {
+  id         String   @id @default(cuid())
+  ad         String
+  telefon    String?
+  email      String?
+  notlar     String?
+  createdAt  DateTime @default(now())
+  davetiyeId String
+  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 }

@@ -56,6 +56,12 @@ export default async function DavetiyeDetay({ params }: Props) {
         >
           Davetiyeyi Görüntüle →
         </Link>
+        <Link
+  href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+  className="text-sm text-green-600 hover:underline mt-1 inline-block"
+>
+  Davetli Listesi →
+</Link>
       </div>
 
       {/* Özet */}
