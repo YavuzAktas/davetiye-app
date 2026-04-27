@@ -57,22 +57,24 @@ model VerificationToken {
 }
 
 model Davetiye {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  baslik      String
-  etkinlikTur String
-  tarih       DateTime?
-  mekan       String?
-  mesaj       String?
-  sablon      String    @default("klasik")
-  muzik       String?
-  aktif       Boolean   @default(true)
-  goruntulenme Int      @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rsvplar     RSVP[]
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  baslik       String
+  etkinlikTur  String
+  tarih        DateTime?
+  mekan        String?
+  mesaj        String?
+  sablon       String    @default("klasik")
+  ozelRenk     String?
+  font         String    @default("font-sans")
+  muzik        String?
+  aktif        Boolean   @default(true)
+  goruntulenme Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rsvplar      RSVP[]
 }
 
 model RSVP {

@@ -41,6 +41,14 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   const sablon = SABLONLAR.find((s) => s.id === davetiye.sablon) || SABLONLAR[0];
 
+  const aktifRenk = davetiye.ozelRenk || sablon.renk;
+const aktifFont =
+  davetiye.font === "font-serif"
+    ? "Georgia, serif"
+    : davetiye.font === "font-mono"
+    ? "monospace"
+    : "system-ui, sans-serif";
+
   const tarihStr = davetiye.tarih
     ? new Date(davetiye.tarih).toLocaleDateString("tr-TR", {
         weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -58,12 +66,12 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   );
 
   // Kategori bazlı tema
-  const tema = getTema(davetiye.etkinlikTur, sablon.renk);
+  const tema = getTema(davetiye.etkinlikTur, aktifRenk);
 
   return (
     <div className={`min-h-screen ${tema.bg}`}>
       {/* Üst dekoratif band */}
-      <div className="h-2 w-full" style={{ backgroundColor: sablon.renk }} />
+      <div className="h-2 w-full" style={{ backgroundColor: aktifRenk }} />
 
       <div className="max-w-md mx-auto px-4 py-10">
 
@@ -75,17 +83,17 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
           <p
             className="text-xs font-semibold tracking-[0.2em] uppercase mb-3 opacity-70"
-            style={{ color: sablon.renk }}
+            style={{ color: aktifRenk }}
           >
             {tema.etiket}
           </p>
 
           <h1
-            className="text-3xl font-bold leading-snug mb-4"
-            style={{ color: sablon.yaziRengi }}
-          >
-            {davetiye.baslik}
-          </h1>
+  className="text-3xl font-bold leading-snug mb-4 text-gray-800"
+  style={{ fontFamily: aktifFont }}
+>
+  {davetiye.baslik}
+</h1>
 
           {davetiye.mesaj && (
             <p className="text-gray-500 text-sm italic leading-relaxed max-w-xs mx-auto">
@@ -97,7 +105,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
         {/* Ayraç */}
         <div className="flex items-center gap-3 mb-8">
           <div className="flex-1 h-px bg-gray-200" />
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: sablon.renk }} />
+          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: aktifRenk }} />
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
@@ -107,7 +115,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
             <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm border border-gray-100">
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                style={{ backgroundColor: `${sablon.renk}18` }}
+                style={{ backgroundColor: `${aktifRenk}18` }}
               >
                 📅
               </div>
@@ -127,7 +135,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
             <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm border border-gray-100">
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
-                style={{ backgroundColor: `${sablon.renk}18` }}
+                style={{ backgroundColor: `${aktifRenk}18` }}
               >
                 📍
               </div>
@@ -143,7 +151,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs font-medium mt-0.5 inline-block"
-                  style={{ color: sablon.renk }}
+                  style={{ color: aktifRenk }}
                 >
                   Haritada Gör →
                 </a>
@@ -154,12 +162,12 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
         {/* Geri Sayım */}
         {davetiye.tarih && new Date(davetiye.tarih) > new Date() && (
-          <GeriSayim tarih={davetiye.tarih} renk={sablon.renk} />
+          <GeriSayim tarih={davetiye.tarih} renk={aktifRenk} />
         )}
 
         {/* RSVP */}
         <div className="mb-4">
-          <RsvpForm davetiyeId={davetiye.id} renk={sablon.renk} />
+          <RsvpForm davetiyeId={davetiye.id} renk={aktifRenk} />
         </div>
 
         {/* WhatsApp Paylaş */}
