@@ -37,6 +37,8 @@ function OlusturIcerigi() {
   const [aktifTab, setAktifTab] = useState<"icerik" | "tasarim">("icerik");
 
   const handleSubmit = async () => {
+
+    
     if (!form.baslik || !form.tarih || !form.mekan) {
       setHata("Lütfen başlık, tarih ve mekan alanlarını doldurun.");
       return;
@@ -54,6 +56,13 @@ function OlusturIcerigi() {
         setHata(data.hata || "Bir hata oluştu.");
         return;
       }
+
+      if (data.limitAsimi) {
+  setHata(data.hata);
+  // 2 saniye sonra fiyatlar sayfasına yönlendir
+  setTimeout(() => router.push("/fiyatlar"), 2000);
+  return;
+}
       router.push(`/davetiye/${data.slug}`);
     } catch {
       setHata("Bir hata oluştu, tekrar deneyin.");

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
+import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -21,6 +22,10 @@ export default async function Dashboard() {
   });
 
   if (!user) redirect("/giris");
+
+  const planLimiti = PLAN_LIMITLER[user.plan as PlanTipi] ?? PLAN_LIMITLER.free;
+  const aktifDavetiyeSayisi = user.davetiyeler.filter(d => d.aktif).length;
+  const kullanim = Math.round((aktifDavetiyeSayisi / planLimiti.davetiyeLimit) * 100);
 
   const toplamGoruntulenme = user.davetiyeler.reduce((acc, d) => acc + d.goruntulenme, 0);
   const toplamRsvp = user.davetiyeler.reduce((acc, d) => acc + d.rsvplar.length, 0);
@@ -75,20 +80,89 @@ export default async function Dashboard() {
         </div>
 
         {/* Plan Durumu */}
-        {user.plan === "free" && (
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-5 mb-8 flex items-center justify-between">
-            <div>
-              <p className="text-white font-semibold mb-1">Ücretsiz Plan</p>
-              <p className="text-purple-200 text-sm">Daha fazla davetiye ve özellik için yükseltin</p>
-            </div>
-            <Link
-              href="/fiyatlar"
-              className="bg-white text-purple-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-50 transition-colors whitespace-nowrap"
-            >
-              Planı Yükselt
-            </Link>
-          </div>
-        )}
+        {/* Plan Kartı */}
+<div className={`rounded-2xl p-5 mb-6 ${
+  user.plan === "premium"
+    ? "bg-gradient-to-r from-amber-500 to-orange-500"
+    : user.plan === "standart"
+    ? "bg-gradient-to-r from-purple-600 to-pink-600"
+    : "bg-white border border-gray-100 shadow-sm"
+}`}>
+  <div className="flex items-center justify-between mb-4">
+    <div>
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-lg">
+          {user.plan === "premium" ? "👑" : user.plan === "standart" ? "⭐" : "🆓"}
+        </span>
+        <p className={`font-bold ${user.plan === "free" ? "text-gray-800" : "text-white"}`}>
+          {planLimiti.isim} Plan
+        </p>
+      </div>
+      <p className={`text-sm ${user.plan === "free" ? "text-gray-500" : "text-white/80"}`}>
+        {aktifDavetiyeSayisi} / {planLimiti.davetiyeLimit === 999 ? "∞" : planLimiti.davetiyeLimit} davetiye kullanıldı
+      </p>
+    </div>
+    {user.plan === "free" && (
+      <Link
+        href="/fiyatlar"
+        className="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-purple-700 transition-colors"
+      >
+        Yükselt
+      </Link>
+    )}
+    {user.plan === "standart" && (
+      <Link
+        href="/fiyatlar"
+        className="bg-white text-purple-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-purple-50 transition-colors"
+      >
+        Premium&apos;a Geç
+      </Link>
+    )}
+    {user.plan === "premium" && (
+      <span className="bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-bold">
+        Aktif 🎉
+      </span>
+    )}
+  </div>
+
+  {/* Kullanım Çubuğu */}
+  {planLimiti.davetiyeLimit !== 999 && (
+    <div>
+      <div className={`w-full h-2 rounded-full ${user.plan === "free" ? "bg-gray-100" : "bg-white/20"}`}>
+        <div
+          className={`h-2 rounded-full transition-all ${
+            kullanim >= 80 ? "bg-red-500" : user.plan === "free" ? "bg-purple-500" : "bg-white"
+          }`}
+          style={{ width: `${Math.min(kullanim, 100)}%` }}
+        />
+      </div>
+      <div className="flex justify-between mt-1.5">
+        <p className={`text-xs ${user.plan === "free" ? "text-gray-400" : "text-white/70"}`}>
+          {aktifDavetiyeSayisi} kullanıldı
+        </p>
+        <p className={`text-xs ${user.plan === "free" ? "text-gray-400" : "text-white/70"}`}>
+          {planLimiti.davetiyeLimit - aktifDavetiyeSayisi} hak kaldı
+        </p>
+      </div>
+    </div>
+  )}
+
+  {/* Özellikler */}
+  <div className="flex flex-wrap gap-2 mt-4">
+    {planLimiti.ozellikler.map((o) => (
+      <span
+        key={o}
+        className={`text-xs px-2.5 py-1 rounded-full ${
+          user.plan === "free"
+            ? "bg-gray-100 text-gray-600"
+            : "bg-white/20 text-white"
+        }`}
+      >
+        ✓ {o}
+      </span>
+    ))}
+  </div>
+</div>
 
         {/* Davetiye Listesi */}
         <div>
