@@ -4,9 +4,7 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 
-interface Props { dark?: boolean }
-
-export default function NavLinks({ dark = false }: Props) {
+export default function NavLinks() {
   const { data: session } = useSession();
   const [profilAcik, setProfilAcik] = useState(false);
   const [mobMenuAcik, setMobMenuAcik] = useState(false);
@@ -17,9 +15,7 @@ export default function NavLinks({ dark = false }: Props) {
     ...(session ? [{ href: "/dashboard", isim: "Dashboard" }] : []),
   ];
 
-  const linkCls = dark
-    ? "text-sm text-white/70 hover:text-white px-3 py-2 rounded-lg hover:bg-white/8 transition-all"
-    : "text-sm text-gray-500 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all";
+  const linkCls = "text-sm text-gray-500 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all";
 
   return (
     <>
@@ -35,11 +31,7 @@ export default function NavLinks({ dark = false }: Props) {
           <div className="relative ml-3">
             <button
               onClick={() => setProfilAcik(!profilAcik)}
-              className={`flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border transition-all ${
-                dark
-                  ? "border-white/15 hover:bg-white/8 hover:border-white/25"
-                  : "border-gray-200 hover:bg-gray-50"
-              }`}
+              className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all"
             >
               {session.user?.image ? (
                 <img src={session.user.image} alt="Profil" className="w-6 h-6 rounded-full" />
@@ -48,10 +40,10 @@ export default function NavLinks({ dark = false }: Props) {
                   {session.user?.name?.[0] ?? "U"}
                 </div>
               )}
-              <span className={`text-sm max-w-24 truncate ${dark ? "text-white/80" : "text-gray-700"}`}>
+              <span className="text-sm text-gray-700 max-w-24 truncate">
                 {session.user?.name?.split(" ")[0]}
               </span>
-              <svg className={`w-3 h-3 ${dark ? "text-white/40" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -98,13 +90,13 @@ export default function NavLinks({ dark = false }: Props) {
           {session ? "+ Yeni" : "Başla"}
         </Link>
         <button onClick={() => setMobMenuAcik(!mobMenuAcik)} aria-label="Menü"
-          className={`p-2 rounded-lg transition-colors ${dark ? "hover:bg-white/10" : "hover:bg-gray-100"}`}>
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
           {mobMenuAcik ? (
-            <svg className={`w-5 h-5 ${dark ? "text-white" : "text-gray-700"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            <svg className={`w-5 h-5 ${dark ? "text-white" : "text-gray-700"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           )}
@@ -113,28 +105,28 @@ export default function NavLinks({ dark = false }: Props) {
 
       {/* ── Mobile dropdown ── */}
       {mobMenuAcik && (
-        <div className="absolute top-full left-0 right-0 z-40 md:hidden bg-[#0d0118]/95 backdrop-blur-xl border-b border-white/8 shadow-2xl">
-          <div className="px-5 py-4">
+        <div className="absolute top-full left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-lg">
+          <div className="px-5 py-3">
             {anaLinkler.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setMobMenuAcik(false)}
-                className="flex items-center py-3.5 text-white/70 hover:text-white text-sm border-b border-white/5 last:border-0 transition-colors">
+                className="flex items-center py-3.5 text-gray-600 hover:text-gray-900 text-sm border-b border-gray-50 last:border-0 transition-colors">
                 {link.isim}
               </Link>
             ))}
             {session ? (
               <>
                 <Link href="/sablonlar" onClick={() => setMobMenuAcik(false)}
-                  className="flex items-center py-3.5 text-purple-400 text-sm font-medium border-b border-white/5">
+                  className="flex items-center py-3.5 text-purple-600 text-sm font-medium border-b border-gray-50">
                   + Yeni Davetiye
                 </Link>
                 <button onClick={() => { setMobMenuAcik(false); signOut({ callbackUrl: "/" }); }}
-                  className="flex items-center w-full py-3.5 text-red-400 text-sm">
+                  className="flex items-center w-full py-3.5 text-red-500 text-sm">
                   Çıkış Yap
                 </button>
               </>
             ) : (
               <Link href="/giris" onClick={() => setMobMenuAcik(false)}
-                className="flex items-center py-3.5 text-purple-400 text-sm font-medium">
+                className="flex items-center py-3.5 text-purple-600 text-sm font-medium">
                 Giriş Yap
               </Link>
             )}
