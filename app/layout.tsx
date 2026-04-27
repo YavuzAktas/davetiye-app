@@ -4,8 +4,19 @@ import "./globals.css";
 import { Providers } from "./providers";
 import NavLinks from "@/components/NavLinks";
 import Link from "next/link";
+import { Dancing_Script, Cormorant_Garamond } from "next/font/google";
 
 const geist = Geist({ subsets: ["latin"] });
+const dancingScript = Dancing_Script({ 
+  subsets: ["latin"],
+  variable: "--font-dancing",
+  weight: ["400", "700"],
+});
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -33,7 +44,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body className={geist.className}>
+      <body className={`${geist.className} ${dancingScript.variable} ${cormorant.variable}`}>
         <Providers>
           {/* Navigasyon */}
           <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
