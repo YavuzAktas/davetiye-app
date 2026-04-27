@@ -8,195 +8,186 @@ import { SABLONLAR } from "@/lib/sablonlar";
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
-    redirect("/giris");
-  }
+  if (!session?.user?.email) redirect("/giris");
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     include: {
       davetiyeler: {
         orderBy: { createdAt: "desc" },
-        include: {
-          rsvplar: true,
-        },
+        include: { rsvplar: true },
       },
     },
   });
 
   if (!user) redirect("/giris");
 
-  const toplamGoruntulenme = user.davetiyeler.reduce(
-    (acc, d) => acc + d.goruntulenme,
-    0
-  );
-  const toplamRsvp = user.davetiyeler.reduce(
-    (acc, d) => acc + d.rsvplar.length,
-    0
-  );
+  const toplamGoruntulenme = user.davetiyeler.reduce((acc, d) => acc + d.goruntulenme, 0);
+  const toplamRsvp = user.davetiyeler.reduce((acc, d) => acc + d.rsvplar.length, 0);
   const toplamKatilim = user.davetiyeler.reduce(
-    (acc, d) => acc + d.rsvplar.filter((r) => r.katilim).length,
-    0
+    (acc, d) => acc + d.rsvplar.filter((r) => r.katilim).length, 0
   );
+
+  const emojiler: Record<string, string> = {
+    dugun: "💍", nisan: "💑", dogumgunu: "🎂",
+    sunnet: "⭐", kina: "🌿", kurumsal: "🎯", diger: "🎉",
+  };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gray-50">
 
-      {/* Başlık */}
-      <div className="flex items-center justify-between mb-10">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Merhaba, {user.name?.split(" ")[0] ?? "Kullanıcı"} 👋
-          </h1>
-          <p className="text-gray-500 mt-1">Davetiyelerini buradan yönet</p>
-        </div>
-        <Link
-          href="/sablonlar"
-          className="bg-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-700 transition-colors"
-        >
-          + Yeni Davetiye
-        </Link>
-      </div>
-
-      {/* İstatistik Kartları */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-        <div className="bg-white border border-gray-100 rounded-2xl p-6">
-          <p className="text-sm text-gray-400 mb-1">Toplam Davetiye</p>
-          <p className="text-3xl font-bold text-gray-900">
-            {user.davetiyeler.length}
-          </p>
-        </div>
-        <div className="bg-white border border-gray-100 rounded-2xl p-6">
-          <p className="text-sm text-gray-400 mb-1">Toplam Görüntülenme</p>
-          <p className="text-3xl font-bold text-gray-900">
-            {toplamGoruntulenme}
-          </p>
-        </div>
-        <div className="bg-white border border-gray-100 rounded-2xl p-6">
-          <p className="text-sm text-gray-400 mb-1">Katılım Onayı</p>
-          <p className="text-3xl font-bold text-gray-900">
-            {toplamKatilim}
-            <span className="text-lg text-gray-400 font-normal">
-              /{toplamRsvp}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Davetiye Listesi */}
-      {user.davetiyeler.length === 0 ? (
-        <div className="text-center py-20 bg-white border border-gray-100 rounded-2xl">
-          <p className="text-4xl mb-4">🎉</p>
-          <p className="font-semibold text-gray-700 mb-2">
-            Henüz davetiyeniz yok
-          </p>
-          <p className="text-gray-400 text-sm mb-6">
-            İlk davetiyenizi oluşturmak için şablonlara göz atın
-          </p>
+      {/* Üst Bar */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Merhaba, {user.name?.split(" ")[0] ?? "Kullanıcı"} 👋
+            </h1>
+            <p className="text-gray-500 text-sm mt-0.5">Davetiyelerini buradan yönet</p>
+          </div>
           <Link
             href="/sablonlar"
-            className="bg-purple-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-700 transition-colors"
+            className="bg-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-700 transition-colors flex items-center gap-2 shadow-sm shadow-purple-200"
           >
-            Şablonlara Git
+            <span className="text-lg">+</span> Yeni Davetiye
           </Link>
         </div>
-      ) : (
-        <div className="space-y-4">
-          {user.davetiyeler.map((davetiye) => {
-            const sablon =
-              SABLONLAR.find((s) => s.id === davetiye.sablon) || SABLONLAR[0];
-            const katilimSayisi = davetiye.rsvplar.filter(
-              (r) => r.katilim
-            ).length;
-            const katilmiyorSayisi = davetiye.rsvplar.filter(
-              (r) => !r.katilim
-            ).length;
+      </div>
 
-            return (
-              <div
-                key={davetiye.id}
-                className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center gap-4"
-              >
-                {/* Renk Göstergesi */}
-                <div
-                  className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center text-white text-xl"
-                  style={{ backgroundColor: sablon.renk }}
-                >
-                  {davetiye.etkinlikTur === "dugun" && "💍"}
-                  {davetiye.etkinlikTur === "nisan" && "💑"}
-                  {davetiye.etkinlikTur === "dogumgunu" && "🎂"}
-                  {davetiye.etkinlikTur === "sunnet" && "⭐"}
-                  {davetiye.etkinlikTur === "kina" && "🌿"}
-                  {davetiye.etkinlikTur === "diger" && "🎉"}
-                </div>
+      <div className="max-w-5xl mx-auto px-4 py-8">
 
-                {/* Bilgiler */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-800 truncate">
-                    {davetiye.baslik}
-                  </h3>
-                  <div className="flex flex-wrap gap-3 mt-1">
-                    {davetiye.tarih && (
-                      <span className="text-xs text-gray-400">
-                        📅{" "}
-                        {new Date(davetiye.tarih).toLocaleDateString("tr-TR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    )}
-                    {davetiye.mekan && (
-                      <span className="text-xs text-gray-400">
-                        📍 {davetiye.mekan}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* İstatistikler */}
-                <div className="flex gap-4 text-center">
-                  <div>
-                    <p className="text-lg font-bold text-gray-800">
-                      {davetiye.goruntulenme}
-                    </p>
-                    <p className="text-xs text-gray-400">Görüntüleme</p>
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-green-600">
-                      {katilimSayisi}
-                    </p>
-                    <p className="text-xs text-gray-400">Katılıyor</p>
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-red-400">
-                      {katilmiyorSayisi}
-                    </p>
-                    <p className="text-xs text-gray-400">Katılmıyor</p>
-                  </div>
-                </div>
-
-                {/* Butonlar */}
-                <div className="flex gap-2">
-                  <Link
-                    href={`/davetiye/${davetiye.slug}`}
-                    target="_blank"
-                    className="text-sm border border-gray-200 text-gray-600 px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
-                  >
-                    Görüntüle
-                  </Link>
-                  <Link
-                    href={`/dashboard/davetiye/${davetiye.slug}`}
-                    className="text-sm border border-purple-200 text-purple-600 px-4 py-2 rounded-xl hover:bg-purple-50 transition-colors"
-                  >
-                    Detay
-                  </Link>
-                </div>
+        {/* İstatistik Kartları */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { etiket: "Toplam Davetiye", deger: user.davetiyeler.length, emoji: "📨", renk: "text-purple-600", bg: "bg-purple-50" },
+            { etiket: "Görüntülenme", deger: toplamGoruntulenme, emoji: "👁️", renk: "text-blue-600", bg: "bg-blue-50" },
+            { etiket: "RSVP Sayısı", deger: toplamRsvp, emoji: "✉️", renk: "text-amber-600", bg: "bg-amber-50" },
+            { etiket: "Katılım Onayı", deger: toplamKatilim, emoji: "✅", renk: "text-green-600", bg: "bg-green-50" },
+          ].map((stat) => (
+            <div key={stat.etiket} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+              <div className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center text-xl mb-3`}>
+                {stat.emoji}
               </div>
-            );
-          })}
+              <p className={`text-2xl font-bold ${stat.renk}`}>{stat.deger}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{stat.etiket}</p>
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* Plan Durumu */}
+        {user.plan === "free" && (
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-5 mb-8 flex items-center justify-between">
+            <div>
+              <p className="text-white font-semibold mb-1">Ücretsiz Plan</p>
+              <p className="text-purple-200 text-sm">Daha fazla davetiye ve özellik için yükseltin</p>
+            </div>
+            <Link
+              href="/fiyatlar"
+              className="bg-white text-purple-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-50 transition-colors whitespace-nowrap"
+            >
+              Planı Yükselt
+            </Link>
+          </div>
+        )}
+
+        {/* Davetiye Listesi */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-900 text-lg">Davetiyelerim</h2>
+            <span className="text-sm text-gray-400">{user.davetiyeler.length} davetiye</span>
+          </div>
+
+          {user.davetiyeler.length === 0 ? (
+            <div className="bg-white border border-gray-100 rounded-2xl py-20 text-center shadow-sm">
+              <div className="text-5xl mb-4">🎉</div>
+              <p className="font-semibold text-gray-700 mb-2">Henüz davetiyeniz yok</p>
+              <p className="text-gray-400 text-sm mb-6">İlk davetiyenizi oluşturmak için şablonlara göz atın</p>
+              <Link
+                href="/sablonlar"
+                className="bg-purple-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-700 transition-colors"
+              >
+                Şablonlara Git
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {user.davetiyeler.map((davetiye) => {
+                const sablon = SABLONLAR.find((s) => s.id === davetiye.sablon) || SABLONLAR[0];
+                const katilimSayisi = davetiye.rsvplar.filter((r) => r.katilim).length;
+                const katilmiyorSayisi = davetiye.rsvplar.filter((r) => !r.katilim).length;
+                const emoji = emojiler[davetiye.etkinlikTur] ?? "🎉";
+
+                return (
+                  <div
+                    key={davetiye.id}
+                    className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {/* Sol — İkon */}
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ backgroundColor: sablon.renk + "20" }}
+                    >
+                      {emoji}
+                    </div>
+
+                    {/* Bilgiler */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-800 truncate">{davetiye.baslik}</h3>
+                      <div className="flex flex-wrap gap-3 mt-1">
+                        {davetiye.tarih && (
+                          <span className="text-xs text-gray-400 flex items-center gap-1">
+                            📅 {new Date(davetiye.tarih).toLocaleDateString("tr-TR", {
+                              day: "numeric", month: "long", year: "numeric",
+                            })}
+                          </span>
+                        )}
+                        {davetiye.mekan && (
+                          <span className="text-xs text-gray-400 flex items-center gap-1">
+                            📍 {davetiye.mekan}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* İstatistikler */}
+                    <div className="flex gap-4">
+                      <div className="text-center">
+                        <p className="text-lg font-bold text-gray-700">{davetiye.goruntulenme}</p>
+                        <p className="text-xs text-gray-400">Görüntüleme</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-lg font-bold text-green-500">{katilimSayisi}</p>
+                        <p className="text-xs text-gray-400">Katılıyor</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-lg font-bold text-red-400">{katilmiyorSayisi}</p>
+                        <p className="text-xs text-gray-400">Katılmıyor</p>
+                      </div>
+                    </div>
+
+                    {/* Butonlar */}
+                    <div className="flex gap-2 flex-shrink-0">
+                      <Link
+                        href={`/davetiye/${davetiye.slug}`}
+                        target="_blank"
+                        className="text-xs border border-gray-200 text-gray-600 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+                      >
+                        Görüntüle
+                      </Link>
+                      <Link
+                        href={`/dashboard/davetiye/${davetiye.slug}`}
+                        className="text-xs bg-purple-50 border border-purple-200 text-purple-600 px-3 py-2 rounded-xl hover:bg-purple-100 transition-colors"
+                      >
+                        Detay
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
