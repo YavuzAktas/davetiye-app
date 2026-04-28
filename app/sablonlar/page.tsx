@@ -9,287 +9,522 @@ const DEMO_URLS: Record<string, string> = {
   "nisan-luks": "/davetiye/ornek-nisan",
   "dugun-luks": "/davetiye/ornek-dugun",
 };
-
 const PREMIUM = new Set(["nisan-luks", "dugun-luks"]);
-
 const KAT_EMOJI: Record<string, string> = {
-  dugun: "💍", nisan: "💌", dogumgunu: "🎂",
-  sunnet: "⭐", kina: "🕯️", kurumsal: "💼", diger: "🎉",
+  dugun:"💍", nisan:"💌", dogumgunu:"🎂",
+  sunnet:"⭐", kina:"🕯️", kurumsal:"💼", diger:"🎉",
 };
 
-/* ══════════════════════════════════════
-   MİNİ ÖNIZLEME BİLEŞENLERİ
-══════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   TELEFON MOCKUP
+══════════════════════════════════════════════ */
+function TelefonMockup({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative mx-auto" style={{ width:260 }}>
+      <div className="relative rounded-[38px] overflow-hidden"
+        style={{ background:"#1a1a1a", padding:"14px 10px",
+          boxShadow:"0 0 0 1px #333,0 30px 80px rgba(0,0,0,0.5),inset 0 0 0 1px #444" }}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20"
+          style={{ width:80, height:26, background:"#1a1a1a", borderRadius:"0 0 16px 16px" }}/>
+        <div className="rounded-3xl overflow-hidden" style={{ height:500, background:"#000" }}>
+          {children}
+        </div>
+      </div>
+      <div className="absolute right-0 top-24 w-1 h-10 rounded-l bg-gray-700" style={{ right:-1 }}/>
+      <div className="absolute left-0 top-20 w-1 h-8 rounded-r bg-gray-700" style={{ left:-1 }}/>
+      <div className="absolute left-0 top-32 w-1 h-8 rounded-r bg-gray-700" style={{ left:-1 }}/>
+    </div>
+  );
+}
 
-/* Nişan Lüks — bordo & altın */
-function NisanLuksMini() {
+/* ══════════════════════════════════════════════
+   PREMIUM ÖNIZLEMELER — Nişan Lüks
+══════════════════════════════════════════════ */
+const N = { BG:"#3B0A14", BG_MED:"#4E1020", BG_DARK:"#270610", GOLD:"#C4A05A", CREAM:"#F5E8D8" };
+
+function NisanKapak() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ background:"radial-gradient(ellipse at 50% 40%,#5C1020 0%,#3B0A14 55%,#270610 100%)" }}>
-      <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage:"radial-gradient(circle,rgba(196,160,90,0.055) 1px,transparent 1px)",
-        backgroundSize:"20px 20px",
-      }}/>
-      <p className="relative z-10 text-center mb-4" style={{
-        fontFamily:"var(--font-dancing),cursive", fontSize:"1.25rem", color:"#F5E8D8", lineHeight:1.2,
-      }}>
-        Aylin <span style={{ color:"#C4A05A" }}>&amp;</span> Yavuz
+      style={{ background:`radial-gradient(ellipse at 50% 45%,#5C1020 0%,${N.BG} 55%,${N.BG_DARK} 100%)` }}>
+      <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,rgba(196,160,90,0.055) 1px,transparent 1px)`, backgroundSize:"22px 22px" }}/>
+      <p className="relative z-10 text-center mb-6" style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2.2rem)", color:N.CREAM, lineHeight:1.2 }}>
+        Aylin <span style={{ color:N.GOLD }}>&amp;</span> Yavuz
       </p>
-      {/* Mühür */}
-      <div className="relative z-10" style={{
-        width:72, height:72, borderRadius:"50%", overflow:"hidden",
-        boxShadow:"0 0 0 4px #3B0A14,0 0 0 6px rgba(196,160,90,0.25),0 8px 24px rgba(10,0,6,0.7)",
-      }}>
+      <div className="relative z-10" style={{ width:110, height:110, borderRadius:"50%", overflow:"hidden",
+        boxShadow:`0 0 0 6px ${N.BG},0 0 0 8px rgba(196,160,90,0.2),0 12px 36px rgba(10,0,6,0.7)` }}>
         <img src="/rose-seal.png" alt="" className="w-full h-full object-cover block"
           onError={e=>{(e.currentTarget as HTMLImageElement).style.display="none";(e.currentTarget.nextElementSibling as HTMLElement).style.display="flex";}}/>
         <div className="w-full h-full items-center justify-center hidden"
-          style={{ background:"radial-gradient(circle at 38% 32%,#A01C2E 0%,#7A1220 40%,#3E0810 100%)" }}>
+          style={{ background:`radial-gradient(circle at 38% 32%,#A01C2E 0%,#7A1220 40%,#3E0810 100%)` }}>
           <svg viewBox="0 0 200 200" className="w-3/4 h-3/4" fill="none">
-            {[0,60,120,180,240,300].map(a=><ellipse key={a} cx="100" cy="52" rx="13" ry="21" fill="rgba(200,80,80,0.3)" transform={`rotate(${a} 100 100)`}/>)}
-            <circle cx="100" cy="100" r="11" fill="rgba(225,105,105,0.65)"/>
+            {[0,60,120,180,240,300].map(a=><ellipse key={a} cx="100" cy="52" rx="14" ry="22" fill="rgba(200,80,80,0.3)" transform={`rotate(${a} 100 100)`}/>)}
+            <circle cx="100" cy="100" r="12" fill="rgba(225,105,105,0.65)"/>
             <circle cx="100" cy="100" r="5"  fill="rgba(245,140,130,0.8)"/>
           </svg>
         </div>
       </div>
-      <p className="relative z-10 mt-4" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em", color:"#C4A05A" }}>
-        06 HAZİRAN 2026
-      </p>
-      <p className="relative z-10 mt-1.5" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, fontStyle:"italic", color:"rgba(196,160,90,0.5)" }}>
-        Mühüre dokun ✦
-      </p>
+      <p className="relative z-10 mt-6" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.3em", color:N.GOLD }}>06 HAZİRAN 2026</p>
+      <p className="relative z-10 mt-2" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontStyle:"italic", color:`${N.GOLD}55` }}>Mühüre dokun ✦</p>
+    </div>
+  );
+}
+function NisanHero() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 relative"
+      style={{ background:`radial-gradient(ellipse at 50% 30%,#5C1020 0%,${N.BG} 60%)` }}>
+      {["top-4 left-4","top-4 right-4","bottom-4 left-4","bottom-4 right-4"].map((c,i)=>(
+        <span key={i} className={`absolute ${c}`} style={{ color:`${N.GOLD}40`, fontSize:12 }}>✦</span>
+      ))}
+      <div className="w-full text-center py-6 px-5" style={{ borderRadius:"80px 80px 12px 12px", border:`1px solid ${N.GOLD}30` }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.3em", color:N.GOLD, marginBottom:12 }}>NİŞAN DAVETİYESİ</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:N.CREAM, lineHeight:1 }}>Aylin</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1rem,3vw,1.3rem)", color:N.GOLD, lineHeight:1.4 }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:N.CREAM, lineHeight:1, marginBottom:10 }}>Yavuz</p>
+        <div style={{ height:1, background:`linear-gradient(to right,transparent,${N.GOLD}50,transparent)`, margin:"10px 0" }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.12em", color:`${N.CREAM}60` }}>06 HAZİRAN 2026 · İSTANBUL</p>
+      </div>
+    </div>
+  );
+}
+function NisanSayim() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:N.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:N.GOLD, marginBottom:12 }}>NİŞANA KALAN SÜRE</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2rem)", color:N.CREAM, marginBottom:28 }}>Sayıyoruz...</p>
+      <div className="flex items-start gap-3 justify-center">
+        {[{v:"43",l:"GÜN"},{v:"07",l:"SAAT"},{v:"42",l:"DAK"},{v:"39",l:"SAN"}].map((item,i)=>(
+          <div key={i} className="flex items-start gap-2">
+            <div className="text-center">
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"clamp(1.8rem,6vw,2.6rem)", fontWeight:600, color:N.CREAM, lineHeight:1 }}>{item.v}</p>
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.15em", color:N.GOLD, marginTop:5 }}>{item.l}</p>
+            </div>
+            {i<3 && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"1.5rem", color:`${N.GOLD}40`, lineHeight:1.1, marginTop:2 }}>:</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+function NisanKatilim() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5" style={{ background:N.BG_DARK }}>
+      <div className="w-full relative rounded-2xl p-6" style={{ background:"#FAF0E4", boxShadow:"0 12px 40px rgba(0,0,0,0.4)" }}>
+        <span className="absolute top-3 left-4" style={{ color:N.GOLD, fontSize:12, opacity:0.5 }}>✦</span>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.28em", color:"#8B5A4A", textAlign:"center", marginBottom:8 }}>KATILIM BİLDİRİMİ</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.3rem,5vw,1.8rem)", color:N.BG, textAlign:"center", marginBottom:12 }}>Gelecek misiniz?</p>
+        <div style={{ height:1, background:`linear-gradient(to right,transparent,${N.GOLD}50,transparent)`, marginBottom:16 }}/>
+        {["ADINIZ SOYADINIZ","KAÇ KİŞİ?","KATILIM DURUMU"].map(lbl=>(
+          <div key={lbl} style={{ marginBottom:12 }}>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.22em", color:"#8B6550", marginBottom:4 }}>{lbl}</p>
+            <div style={{ height:1, background:`rgba(196,160,90,0.35)` }}/>
+          </div>
+        ))}
+        <div style={{ marginTop:16, padding:"9px", background:N.BG, borderRadius:8, textAlign:"center", fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.28em", color:"#F5E8D8" }}>BİLDİR</div>
+      </div>
+    </div>
+  );
+}
+function NisanMekan() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:N.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:N.GOLD, marginBottom:10 }}>MEKAN</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.3rem,5vw,1.8rem)", color:N.CREAM, marginBottom:20 }}>Nerede Buluşuyoruz?</p>
+      <div className="flex gap-8 justify-center mb-5">
+        {[{e:"📍",l:"MEKAN",v:"Çırağan Sarayı"},{e:"🕐",l:"SAAT",v:"18:00"},{e:"📅",l:"TARİH",v:"06 Haz 2026"}].map(col=>(
+          <div key={col.l} className="text-center">
+            <p style={{ fontSize:18, marginBottom:6 }}>{col.e}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.2em", color:N.GOLD, marginBottom:4 }}>{col.l}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, fontWeight:600, color:N.CREAM }}>{col.v}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ width:"85%", height:80, borderRadius:10, background:"rgba(255,255,255,0.06)", border:`1px solid ${N.GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, color:`${N.GOLD}50`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+      </div>
+    </div>
+  );
+}
+function NisanAnilar() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center"
+      style={{ background:`linear-gradient(180deg,${N.BG} 0%,${N.BG_DARK} 100%)` }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:N.GOLD, marginBottom:10 }}>BİZİM HİKAYEMİZ</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.4rem,5vw,2rem)", color:N.CREAM, marginBottom:18 }}>En Güzel Anılar</p>
+      <div style={{ height:1, background:`linear-gradient(to right,transparent,${N.GOLD}40,transparent)`, width:140, marginBottom:24 }}/>
+      <div style={{ position:"relative", width:210, height:180 }}>
+        {[{t:10,l:-24,r:-9},{t:18,l:28,r:5},{t:2,l:68,r:-3}].map((p,i)=>(
+          <div key={i} style={{ position:"absolute", top:p.t, left:p.l, background:"#fff", borderRadius:3, padding:"7px 7px 22px", transform:`rotate(${p.r}deg)`, boxShadow:"0 6px 20px rgba(0,0,0,0.45)", width:116 }}>
+            <div style={{ width:"100%", height:96, background:`linear-gradient(135deg,${N.BG_MED},#6B1828)`, borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <span style={{ fontSize:26, opacity:0.2 }}>📷</span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-/* Düğün Lüks — lacivert & şampanya */
-function DugunLuksMini() {
+/* ══════════════════════════════════════════════
+   PREMIUM ÖNIZLEMELER — Düğün Lüks
+══════════════════════════════════════════════ */
+const D = { BG:"#0D1F3C", BG_MED:"#152C52", BG_DARK:"#071228", GOLD:"#D4AA70", CREAM:"#F8F3EE" };
+
+function DugunKapak() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ background:"radial-gradient(ellipse at 50% 40%,#1E3A6E 0%,#0D1F3C 55%,#071228 100%)" }}>
-      <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage:"radial-gradient(circle,rgba(212,170,112,0.06) 1px,transparent 1px)",
-        backgroundSize:"20px 20px",
-      }}/>
-      <p className="relative z-10 text-center mb-4" style={{
-        fontFamily:"var(--font-dancing),cursive", fontSize:"1.25rem", color:"#F8F3EE", lineHeight:1.2,
-      }}>
-        Selin <span style={{ color:"#D4AA70" }}>&amp;</span> Mert
+      style={{ background:`radial-gradient(ellipse at 50% 45%,#1E3A6E 0%,${D.BG} 55%,${D.BG_DARK} 100%)` }}>
+      <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,rgba(212,170,112,0.06) 1px,transparent 1px)`, backgroundSize:"22px 22px" }}/>
+      <p className="relative z-10 text-center mb-6" style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2.2rem)", color:D.CREAM, lineHeight:1.2 }}>
+        Selin <span style={{ color:D.GOLD }}>&amp;</span> Mert
       </p>
-      {/* Yüzük mühür */}
-      <div className="relative z-10" style={{
-        width:72, height:72, borderRadius:"50%", overflow:"hidden",
-        boxShadow:"0 0 0 4px #0D1F3C,0 0 0 6px rgba(212,170,112,0.25),0 8px 24px rgba(0,6,20,0.7)",
-      }}>
+      <div className="relative z-10" style={{ width:110, height:110, borderRadius:"50%", overflow:"hidden",
+        boxShadow:`0 0 0 6px ${D.BG},0 0 0 8px rgba(212,170,112,0.2),0 12px 36px rgba(0,6,20,0.7)` }}>
         <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center",
-          background:"radial-gradient(circle at 38% 34%,#1E3A6E 0%,#0D1F3C 50%,#071228 100%)" }}>
-          <svg viewBox="0 0 200 200" style={{ width:"82%", height:"82%" }} fill="none">
-            <circle cx="80" cy="112" r="35" stroke="#D4AA70" strokeWidth="7" fill="none" opacity="0.9"/>
-            <circle cx="120" cy="112" r="35" stroke="#D4AA70" strokeWidth="7" fill="none" opacity="0.9"/>
-            <polygon points="100,48 113,63 100,76 87,63" fill="#D4AA70" opacity="0.88"/>
-            <polygon points="100,48 113,63 100,57 87,63" fill="rgba(255,255,255,0.22)"/>
+          background:`radial-gradient(circle at 38% 34%,#1E3A6E 0%,${D.BG} 50%,${D.BG_DARK} 100%)` }}>
+          <svg viewBox="0 0 200 200" style={{ width:"80%", height:"80%" }} fill="none">
+            <circle cx="80" cy="112" r="36" stroke={D.GOLD} strokeWidth="7" fill="none" opacity="0.9"/>
+            <circle cx="120" cy="112" r="36" stroke={D.GOLD} strokeWidth="7" fill="none" opacity="0.9"/>
+            <polygon points="100,46 114,63 100,77 86,63" fill={D.GOLD} opacity="0.88"/>
+            <polygon points="100,46 114,63 100,57 86,63" fill="rgba(255,255,255,0.22)"/>
           </svg>
         </div>
       </div>
-      <p className="relative z-10 mt-4" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em", color:"#D4AA70" }}>
-        12 EYLÜL 2026
-      </p>
-      <p className="relative z-10 mt-1.5" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, fontStyle:"italic", color:"rgba(212,170,112,0.5)" }}>
-        Mühüre dokun ◆
-      </p>
+      <p className="relative z-10 mt-6" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.3em", color:D.GOLD }}>12 EYLÜL 2026</p>
+      <p className="relative z-10 mt-2" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontStyle:"italic", color:`${D.GOLD}55` }}>Mühüre dokun ◆</p>
+    </div>
+  );
+}
+function DugunHero() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 relative"
+      style={{ background:`radial-gradient(ellipse at 50% 30%,#1E3A6E 0%,${D.BG} 60%)` }}>
+      {["top-4 left-4","top-4 right-4","bottom-4 left-4","bottom-4 right-4"].map((c,i)=>(
+        <span key={i} className={`absolute ${c}`} style={{ color:`${D.GOLD}40`, fontSize:12 }}>◆</span>
+      ))}
+      <div className="w-full text-center py-6 px-5" style={{ border:`1px solid ${D.GOLD}30`, borderRadius:4, position:"relative" }}>
+        {[{top:-6,left:-6},{top:-6,right:-6},{bottom:-6,left:-6},{bottom:-6,right:-6}].map((pos,i)=>(
+          <div key={i} style={{ position:"absolute",...pos, width:12, height:12, transform:"rotate(45deg)", background:D.GOLD, opacity:0.65 }}/>
+        ))}
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.3em", color:D.GOLD, marginBottom:12 }}>DÜĞÜN DAVETİYESİ</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:D.CREAM, lineHeight:1 }}>Selin</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1rem,3vw,1.3rem)", color:D.GOLD, lineHeight:1.4 }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:D.CREAM, lineHeight:1, marginBottom:10 }}>Mert</p>
+        <div style={{ height:1, background:`linear-gradient(to right,transparent,${D.GOLD}50,transparent)`, margin:"10px 0" }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.12em", color:`${D.CREAM}60` }}>12 EYLÜL 2026 · İSTANBUL</p>
+      </div>
+    </div>
+  );
+}
+function DugunSayim() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:D.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:D.GOLD, marginBottom:12 }}>DÜĞÜNE KALAN SÜRE</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2rem)", color:D.CREAM, marginBottom:28 }}>Sayıyoruz...</p>
+      <div className="flex items-start gap-3 justify-center">
+        {[{v:"136",l:"GÜN"},{v:"14",l:"SAAT"},{v:"28",l:"DAK"},{v:"51",l:"SAN"}].map((item,i)=>(
+          <div key={i} className="flex items-start gap-2">
+            <div className="text-center">
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"clamp(1.8rem,6vw,2.6rem)", fontWeight:600, color:D.CREAM, lineHeight:1 }}>{item.v}</p>
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.15em", color:D.GOLD, marginTop:5 }}>{item.l}</p>
+            </div>
+            {i<3 && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"1.5rem", color:`${D.GOLD}40`, lineHeight:1.1, marginTop:2 }}>:</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+function DugunMekan() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:D.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:D.GOLD, marginBottom:10 }}>MEKAN</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.3rem,5vw,1.8rem)", color:D.CREAM, marginBottom:20 }}>Nerede Buluşuyoruz?</p>
+      <div className="flex gap-8 justify-center mb-5">
+        {[{e:"📍",l:"MEKAN",v:"Four Seasons"},{e:"🕐",l:"SAAT",v:"19:00"},{e:"📅",l:"TARİH",v:"12 Eyl 2026"}].map(col=>(
+          <div key={col.l} className="text-center">
+            <p style={{ fontSize:18, marginBottom:6 }}>{col.e}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.2em", color:D.GOLD, marginBottom:4 }}>{col.l}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, fontWeight:600, color:D.CREAM }}>{col.v}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ width:"85%", height:80, borderRadius:10, background:"rgba(255,255,255,0.06)", border:`1px solid ${D.GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, color:`${D.GOLD}50`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+      </div>
     </div>
   );
 }
 
-/* Standart şablon — renkli hafif kart */
-function KlasikMini({ sablon }: { sablon: Sablon }) {
+/* ══════════════════════════════════════════════
+   STANDART ŞABLON ÖNİZLEMELERİ
+══════════════════════════════════════════════ */
+function StdKapak({ sablon }: { sablon: Sablon }) {
+  const r = sablon.renk;
   const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
-  const renk = sablon.renk;
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ background:`linear-gradient(145deg,#fff 0%,${renk}18 100%)` }}>
-      {/* Üst aksant şerit */}
-      <div style={{ position:"absolute", top:0, left:0, right:0, height:4, background:renk }}/>
-      {/* Nokta dokusu */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage:`radial-gradient(circle,${renk}18 1px,transparent 1px)`,
-        backgroundSize:"18px 18px",
-      }}/>
-      {/* Dekoratif çerçeve */}
-      <div style={{
-        position:"absolute", inset:"14px",
-        border:`1px solid ${renk}22`, borderRadius:4,
-      }}/>
-      {/* İçerik */}
-      <div className="relative z-10 flex flex-col items-center gap-3 px-5 text-center">
-        <span style={{ fontSize:32 }}>{emoji}</span>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.3rem", color:"#1a1a1a", lineHeight:1.2 }}>
-          Ad <span style={{ color:renk }}>&amp;</span> Soyad
+      style={{ background:`linear-gradient(145deg,#fff 0%,${r}12 100%)` }}>
+      <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,${r}14 1px,transparent 1px)`, backgroundSize:"20px 20px" }}/>
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:4, background:r }}/>
+      <div style={{ position:"absolute", inset:16, border:`1px solid ${r}20`, borderRadius:4 }}/>
+      <div className="relative z-10 flex flex-col items-center gap-4 px-8 text-center">
+        <span style={{ fontSize:42 }}>{emoji}</span>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.8rem", color:"#1a1a1a", lineHeight:1.15 }}>
+          Ad <span style={{ color:r }}>&amp;</span> Soyad
         </p>
-        <div style={{ width:36, height:1, background:renk, opacity:0.7 }}/>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.12em", color:"#999" }}>
-          GÜN · AY · YIL
-        </p>
-        <div style={{
-          marginTop:2, padding:"4px 14px", borderRadius:20,
-          border:`1px solid ${renk}35`, color:renk,
-          fontSize:10, letterSpacing:"0.06em", fontWeight:700,
-        }}>
+        <div style={{ width:44, height:1.5, background:r, borderRadius:2 }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.14em", color:"#999" }}>GÜN · AY · YIL</p>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:"#bbb" }}>Mekan Adı</p>
+        <div style={{ padding:"5px 18px", borderRadius:20, border:`1px solid ${r}35`, color:r, fontSize:11, fontWeight:700, letterSpacing:"0.06em" }}>
           {sablon.isim}
         </div>
       </div>
     </div>
   );
 }
-
-function MiniOnizleme({ sablon }: { sablon: Sablon }) {
-  if (sablon.id === "nisan-luks") return <NisanLuksMini/>;
-  if (sablon.id === "dugun-luks") return <DugunLuksMini/>;
-  return <KlasikMini sablon={sablon}/>;
+function StdDavetiye({ sablon }: { sablon: Sablon }) {
+  const r = sablon.renk;
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-6 relative"
+      style={{ background:`linear-gradient(160deg,${r}10 0%,white 60%)` }}>
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:r }}/>
+      <div className="w-full text-center py-7 px-5" style={{ border:`1.5px solid ${r}25`, borderRadius:8 }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em", color:r, marginBottom:14, textTransform:"uppercase" }}>
+          {sablon.isim}
+        </p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"2rem", color:"#1a1a1a", lineHeight:1 }}>Ad Soyad</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.3rem", color:r, lineHeight:1.5 }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"2rem", color:"#1a1a1a", lineHeight:1, marginBottom:14 }}>Ad Soyad</p>
+        <div style={{ height:1, background:`linear-gradient(to right,transparent,${r}50,transparent)`, margin:"12px 0" }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.1em", color:"#888" }}>GÜN · AY · YIL · MEKAN</p>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontStyle:"italic", color:"#bbb", marginTop:8 }}>Özel mesajınız burada yer alır.</p>
+      </div>
+    </div>
+  );
+}
+function StdMekan({ sablon }: { sablon: Sablon }) {
+  const r = sablon.renk;
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-6 text-center"
+      style={{ background:`linear-gradient(160deg,${r}08 0%,white 100%)` }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em", color:r, marginBottom:10, textTransform:"uppercase" }}>Mekan</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.8rem", color:"#1a1a1a", marginBottom:24 }}>Nerede Buluşuyoruz?</p>
+      <div className="flex gap-8 justify-center mb-6">
+        {[{e:"📍",l:"MEKAN",v:"Venue"},{e:"🕐",l:"SAAT",v:"18:00"},{e:"📅",l:"TARİH",v:"Tarih"}].map(col=>(
+          <div key={col.l} className="text-center">
+            <p style={{ fontSize:20, marginBottom:6 }}>{col.e}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.2em", color:r, marginBottom:4 }}>{col.l}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontWeight:600, color:"#333" }}>{col.v}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ width:"85%", height:80, borderRadius:10, background:`${r}08`, border:`1px solid ${r}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <p style={{ fontSize:11, color:`${r}60`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+      </div>
+    </div>
+  );
 }
 
-/* ══════════════════════════════════════
-   ŞABLON KARTI
-══════════════════════════════════════ */
-function SablonKarti({ sablon, onOlustur }: { sablon: Sablon; onOlustur: (id:string)=>void }) {
-  const [hover, setHover] = useState(false);
+/* ══════════════════════════════════════════════
+   BÖLÜM TANIMLARI
+══════════════════════════════════════════════ */
+const NISAN_BOLUMLER = [
+  { id:"kapak",    icon:"🌹", label:"Kapak",    etiket:"Açılış", baslik:"Gül Mühürlü Kapak", aciklama:"Mühüre dokunulunca açılan bordo & altın kapak. İlk izlenim unutulmaz.", node:<NisanKapak/> },
+  { id:"davetiye", icon:"💍", label:"Davetiye", etiket:"Hero",   baslik:"Kemer Çerçeveli Hero", aciklama:"İsimler büyük el yazısıyla kemer çerçeve içinde. Tarih ve mekan altında.", node:<NisanHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",         aciklama:"Nişana kaç gün kaldığını saniye saniye gösterir.", node:<NisanSayim/> },
+  { id:"katilim",  icon:"💌", label:"Katılım",  etiket:"RSVP",   baslik:"Katılım Formu",      aciklama:"Misafirler kişi sayısını ve katılım durumunu bildirir.", node:<NisanKatilim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",      aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.", node:<NisanMekan/> },
+  { id:"anilar",   icon:"📷", label:"Anılar",   etiket:"Galeri", baslik:"Polaroid Galeri",    aciklama:"Fotoğraflar polaroid tarzında, üst üste binmiş şekilde.", node:<NisanAnilar/> },
+] as const;
+
+const DUGUN_BOLUMLER = [
+  { id:"kapak",    icon:"💍", label:"Kapak",    etiket:"Açılış", baslik:"Yüzük Mühürlü Kapak", aciklama:"Düğün yüzükleri mühürüne dokunulunca açılan lacivert kapak.", node:<DugunKapak/> },
+  { id:"davetiye", icon:"🌟", label:"Davetiye", etiket:"Hero",   baslik:"Elmas Köşeli Hero",   aciklama:"İsimler büyük el yazısıyla köşelerinde altın elmas motifi olan çerçeve içinde.", node:<DugunHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",          aciklama:"Düğüne kaç gün kaldığını saniye saniye gösterir.", node:<DugunSayim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",       aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.", node:<DugunMekan/> },
+] as const;
+
+type Bolum = { id:string; icon:string; label:string; etiket:string; baslik:string; aciklama:string; node:React.ReactNode };
+
+function getStdBolumler(sablon: Sablon): Bolum[] {
+  return [
+    { id:"kapak",    icon:KAT_EMOJI[sablon.kategori]??"✨", label:"Kapak",    etiket:"Tasarım", baslik:"Davetiye Kapağı",      aciklama:`${sablon.aciklama ?? sablon.isim} temalı davetiye kapağı.`, node:<StdKapak sablon={sablon}/> },
+    { id:"davetiye", icon:"✉️",                              label:"Davetiye", etiket:"İçerik",  baslik:"Davetiye İçeriği",     aciklama:"İsimler, tarih, mekan ve kişisel mesajınız zarif tipografi ile gösterilir.", node:<StdDavetiye sablon={sablon}/> },
+    { id:"mekan",    icon:"📍",                              label:"Mekan",    etiket:"Harita",  baslik:"Konum & Harita",       aciklama:"Mekan adı, saat ve tarih. Google Maps entegrasyonu ile yol tarifi.", node:<StdMekan sablon={sablon}/> },
+  ];
+}
+
+/* ══════════════════════════════════════════════
+   ŞABLON SATIRI (tek şablon kartı)
+══════════════════════════════════════════════ */
+function SablonSatiri({ sablon }: { sablon: Sablon }) {
+  const router = useRouter();
   const isPremium = PREMIUM.has(sablon.id);
   const demoUrl = DEMO_URLS[sablon.id];
 
+  const bolumler: readonly Bolum[] | Bolum[] =
+    sablon.id === "nisan-luks" ? NISAN_BOLUMLER :
+    sablon.id === "dugun-luks" ? DUGUN_BOLUMLER :
+    getStdBolumler(sablon);
+
+  const [aktifId, setAktifId] = useState(bolumler[0].id);
+  const [gecis, setGecis] = useState(true);
+
+  const aktif = (bolumler as Bolum[]).find(b=>b.id===aktifId) ?? bolumler[0];
+
+  const handleTab = (id: string) => {
+    if (id === aktifId) return;
+    setGecis(false);
+    setTimeout(()=>{ setAktifId(id); setGecis(true); }, 160);
+  };
+
+  const renk = isPremium
+    ? (sablon.id === "nisan-luks" ? "#7A1220" : "#0D1F3C")
+    : sablon.renk;
+
   return (
-    <div
-      onMouseEnter={()=>setHover(true)}
-      onMouseLeave={()=>setHover(false)}
-      className="relative rounded-2xl overflow-hidden bg-white border border-gray-100 transition-all duration-300"
-      style={{
-        boxShadow: hover
-          ? `0 16px 40px rgba(0,0,0,0.12), 0 4px 12px ${sablon.renk}22`
-          : "0 2px 8px rgba(0,0,0,0.06)",
-        transform: hover ? "translateY(-4px)" : "translateY(0)",
-      }}
-    >
-      {/* Premium rozeti */}
-      {isPremium && (
-        <div className="absolute top-3 left-3 z-20">
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full text-white"
-            style={{ background:"linear-gradient(135deg,#7A1220,#C4A05A)" }}>
-            ✦ PRİMİUM
-          </span>
-        </div>
-      )}
-
-      {/* Önizleme alanı */}
-      <div className="relative overflow-hidden" style={{ height:220 }}>
-        <MiniOnizleme sablon={sablon}/>
-
-        {/* Hover overlay — butonlar */}
-        <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 transition-all duration-200 ${hover?"opacity-100":"opacity-0"}`}
-          style={{ background:"rgba(0,0,0,0.45)", backdropFilter:"blur(2px)" }}>
-          <button onClick={()=>onOlustur(sablon.id)}
-            className="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 w-40"
-            style={{ background:sablon.renk }}>
-            Oluştur
-          </button>
-          {demoUrl && (
-            <a href={demoUrl} target="_blank" rel="noopener noreferrer"
-              className="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-white/20 hover:bg-white/30 transition-all text-center w-40">
-              Canlı Önizle ↗
-            </a>
+    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      {/* ── Kart Başlığı ── */}
+      <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-50">
+        <div className="flex items-center gap-3">
+          {isPremium && (
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full text-white"
+              style={{ background:`linear-gradient(135deg,${renk},${sablon.id==="nisan-luks"?"#C4A05A":"#D4AA70"})` }}>
+              ✦ PRİMİUM
+            </span>
+          )}
+          <h2 className="text-lg font-bold text-gray-900">{sablon.isim}</h2>
+          {sablon.aciklama && (
+            <span className="hidden sm:inline text-sm text-gray-400">— {sablon.aciklama}</span>
           )}
         </div>
+        <span className="text-xs font-semibold px-3 py-1.5 rounded-full"
+          style={{ background:`${renk}12`, color:renk }}>
+          {KAT_EMOJI[sablon.kategori]} {sablon.kategori.charAt(0).toUpperCase()+sablon.kategori.slice(1)}
+        </span>
       </div>
 
-      {/* Bilgi alanı */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="text-sm font-bold text-gray-900 leading-tight">{sablon.isim}</h3>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 mt-0.5"
-            style={{ background:`${sablon.renk}14`, color:sablon.renk }}>
-            {KAT_EMOJI[sablon.kategori]} {sablon.kategori.charAt(0).toUpperCase() + sablon.kategori.slice(1)}
-          </span>
-        </div>
-        {sablon.aciklama && (
-          <p className="text-xs text-gray-400 leading-relaxed mb-3">{sablon.aciklama}</p>
-        )}
-        {/* Renk göstergesi + Oluştur butonu */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <div className="w-4 h-4 rounded-full border border-white shadow-sm shrink-0" style={{ background:sablon.renk }}/>
-            <div className="w-3 h-3 rounded-full border border-white/80" style={{ background:sablon.yaziRengi }}/>
+      {/* ── Gövde: Telefon + Bilgi ── */}
+      <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 p-6">
+        {/* Sol — Bölüm Sekmeleri + Telefon */}
+        <div className="shrink-0 flex flex-col items-center">
+          <div className="flex gap-1.5 mb-4 flex-wrap justify-center">
+            {(bolumler as Bolum[]).map(b=>(
+              <button key={b.id} onClick={()=>handleTab(b.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  aktifId===b.id ? "text-white shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                }`}
+                style={aktifId===b.id ? { background:renk } : {}}>
+                <span>{b.icon}</span> {b.label}
+              </button>
+            ))}
           </div>
-          <button onClick={()=>onOlustur(sablon.id)}
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80 text-white"
-            style={{ background:sablon.renk }}>
-            Oluştur →
-          </button>
+          <TelefonMockup>
+            <div className={`w-full h-full transition-opacity duration-150 ${gecis?"opacity-100":"opacity-0"}`}>
+              {(aktif as Bolum).node}
+            </div>
+          </TelefonMockup>
+        </div>
+
+        {/* Sağ — Açıklama + Bölüm Listesi + CTA */}
+        <div className="flex-1 max-w-lg w-full">
+          {/* Aktif bölüm açıklaması */}
+          <div className={`transition-all duration-200 mb-6 ${gecis?"opacity-100 translate-y-0":"opacity-0 translate-y-2"}`}>
+            <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full mb-4"
+              style={{ background:`${renk}12`, color:renk }}>
+              {(aktif as Bolum).icon} {(aktif as Bolum).etiket}
+            </span>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{(aktif as Bolum).baslik}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{(aktif as Bolum).aciklama}</p>
+          </div>
+
+          {/* Bölüm listesi */}
+          <div className="space-y-1.5 mb-8">
+            {(bolumler as Bolum[]).map(b=>(
+              <button key={b.id} onClick={()=>handleTab(b.id)}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all ${
+                  aktifId===b.id ? "bg-gray-50 shadow-sm border border-gray-100" : "hover:bg-gray-50"
+                }`}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0"
+                  style={{ background:aktifId===b.id?`${renk}12`:"transparent" }}>
+                  {b.icon}
+                </div>
+                <div className="min-w-0">
+                  <p className={`text-sm font-semibold ${aktifId===b.id?"text-gray-900":"text-gray-400"}`}>{b.label}</p>
+                  <p className="text-xs text-gray-400 truncate">{b.baslik}</p>
+                </div>
+                {aktifId===b.id && <div className="ml-auto w-2 h-2 rounded-full shrink-0" style={{ background:renk }}/>}
+              </button>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button onClick={()=>router.push(`/olustur?sablon=${sablon.id}`)}
+              className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
+              style={{ background:renk }}>
+              Davetiyeni Oluştur →
+            </button>
+            {demoUrl && (
+              <a href={demoUrl} target="_blank" rel="noopener noreferrer"
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-gray-700 bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all text-center">
+                Canlı Önizle ↗
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    ANA SAYFA
-══════════════════════════════════════ */
+══════════════════════════════════════════════ */
 export default function SablonlarSayfasi() {
-  const router = useRouter();
   const [aktifKat, setAktifKat] = useState("hepsi");
 
   const filtrelenmis = useMemo(() => {
-    const liste = aktifKat === "hepsi"
-      ? SABLONLAR
-      : SABLONLAR.filter(s => s.kategori === aktifKat);
-
-    // Premium şablonlar üste
-    return [...liste].sort((a, b) => {
+    const liste = aktifKat === "hepsi" ? SABLONLAR : SABLONLAR.filter(s=>s.kategori===aktifKat);
+    return [...liste].sort((a,b) => {
       const aP = PREMIUM.has(a.id) ? 0 : 1;
       const bP = PREMIUM.has(b.id) ? 0 : 1;
       return aP - bP;
     });
   }, [aktifKat]);
 
-  const handleOlustur = (sablonId: string) => {
-    router.push(`/olustur?sablon=${sablonId}`);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* ── Başlık ── */}
       <div className="bg-white border-b border-gray-100 px-4 py-10 text-center">
         <p className="text-xs text-purple-500 font-semibold tracking-[0.22em] uppercase mb-2">Şablonlar</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Dijital Davetiye Şablonları</h1>
         <p className="text-gray-400 text-sm max-w-md mx-auto">
-          {SABLONLAR.length} farklı şablon. Filtreleyip beğendiğinizi seçin, dakikalar içinde hazır.
+          {SABLONLAR.length} şablon. Her bölümü önizleyin, beğendiğinizi seçin.
         </p>
       </div>
 
       {/* ── Filtre Bar ── */}
       <div className="bg-white border-b border-gray-100 sticky top-16 z-30 px-4 py-3">
-        <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto scrollbar-hide">
-          {KATEGORILER.map(kat => {
-            const sayi = kat.id === "hepsi"
-              ? SABLONLAR.length
-              : SABLONLAR.filter(s=>s.kategori===kat.id).length;
+        <div className="max-w-5xl mx-auto flex gap-2 overflow-x-auto scrollbar-hide">
+          {KATEGORILER.map(kat=>{
+            const sayi = kat.id==="hepsi" ? SABLONLAR.length : SABLONLAR.filter(s=>s.kategori===kat.id).length;
             return (
               <button key={kat.id} onClick={()=>setAktifKat(kat.id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all ${
-                  aktifKat === kat.id
-                    ? "bg-gray-900 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  aktifKat===kat.id ? "bg-gray-900 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}>
-                {kat.id !== "hepsi" && <span>{KAT_EMOJI[kat.id]}</span>}
+                {kat.id!=="hepsi" && <span>{KAT_EMOJI[kat.id]}</span>}
                 {kat.isim}
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                  aktifKat === kat.id ? "bg-white/20 text-white" : "bg-gray-200 text-gray-500"
-                }`}>{sayi}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${aktifKat===kat.id?"bg-white/20 text-white":"bg-gray-200 text-gray-500"}`}>{sayi}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Şablon Grid ── */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* ── Şablon Listesi ── */}
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         {filtrelenmis.length === 0 ? (
           <div className="text-center py-20 text-gray-400">
             <p className="text-4xl mb-4">🔍</p>
@@ -297,28 +532,15 @@ export default function SablonlarSayfasi() {
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-400 mb-5">
+            <p className="text-sm text-gray-400">
               <span className="font-semibold text-gray-700">{filtrelenmis.length}</span> şablon gösteriliyor
-              {aktifKat !== "hepsi" && <> · <button onClick={()=>setAktifKat("hepsi")} className="text-purple-500 hover:underline">Tümünü gör</button></>}
+              {aktifKat!=="hepsi" && <> · <button onClick={()=>setAktifKat("hepsi")} className="text-purple-500 hover:underline ml-1">Tümünü gör</button></>}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {filtrelenmis.map(sablon => (
-                <SablonKarti key={sablon.id} sablon={sablon} onOlustur={handleOlustur}/>
-              ))}
-            </div>
+            {filtrelenmis.map(sablon=>(
+              <SablonSatiri key={sablon.id} sablon={sablon}/>
+            ))}
           </>
         )}
-      </div>
-
-      {/* ── CTA ── */}
-      <div className="bg-gray-900 px-4 py-16 text-center mt-8">
-        <p className="text-white/50 text-xs tracking-[0.2em] uppercase mb-3">Hemen başla</p>
-        <h2 className="text-2xl font-bold text-white mb-2">Kendi davetiyeni oluştur</h2>
-        <p className="text-white/40 text-sm mb-8">Birkaç dakika içinde hazır. Kredi kartı gerekmez.</p>
-        <button onClick={()=>router.push("/olustur?sablon=nisan-luks")}
-          className="bg-white text-gray-900 px-8 py-3.5 rounded-2xl text-sm font-bold hover:bg-gray-100 transition-colors">
-          Ücretsiz Başla →
-        </button>
       </div>
     </div>
   );
