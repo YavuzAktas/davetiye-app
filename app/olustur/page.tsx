@@ -356,7 +356,7 @@ function OlusturIcerigi() {
       const data = await res.json();
       if (!res.ok) { setHata(data.hata || "Bir hata oluştu."); return; }
       if (data.limitAsimi) { setHata(data.hata); setTimeout(()=>router.push("/fiyatlar"),2000); return; }
-      router.push(`/davetiye/${data.slug}`);
+      window.open(`/davetiye/${data.slug}`, "_blank");
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }
   };
