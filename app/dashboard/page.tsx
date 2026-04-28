@@ -471,6 +471,7 @@ export default async function Dashboard() {
                 {[
                   { href: "/sablonlar", label: "Şablonlara Göz At", icon: "🎨", desc: "Yeni davetiye oluştur" },
                   { href: "/fiyatlar", label: "Planlar", icon: "⭐", desc: "Planını yükselt" },
+                  { href: "/dashboard/ayarlar", label: "Ayarlar", icon: "⚙️", desc: "Hesap ve profil" },
                 ].map(link => (
                   <Link
                     key={link.href}

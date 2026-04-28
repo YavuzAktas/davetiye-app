@@ -57,6 +57,7 @@ export default function NavLinks() {
                   { href: "/dashboard", label: "Dashboard" },
                   { href: "/sablonlar", label: "Yeni Davetiye" },
                   { href: "/fiyatlar", label: "Planım" },
+                  { href: "/dashboard/ayarlar", label: "Ayarlar" },
                 ].map(({ href, label }) => (
                   <Link key={href} href={href} onClick={() => setProfilAcik(false)}
                     className="flex items-center px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
