@@ -83,9 +83,9 @@ export default async function Dashboard() {
         {/* Plan Kartı */}
 <div className={`rounded-2xl p-5 mb-6 ${
   user.plan === "premium"
-    ? "bg-gradient-to-r from-amber-500 to-orange-500"
+    ? "bg-linear-to-r from-amber-500 to-orange-500"
     : user.plan === "standart"
-    ? "bg-gradient-to-r from-purple-600 to-pink-600"
+    ? "bg-linear-to-r from-purple-600 to-pink-600"
     : "bg-white border border-gray-100 shadow-sm"
 }`}>
   <div className="flex items-center justify-between mb-4">
@@ -198,7 +198,7 @@ export default async function Dashboard() {
                   >
                     {/* Sol — İkon */}
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
                       style={{ backgroundColor: sablon.renk + "20" }}
                     >
                       {emoji}
@@ -240,7 +240,7 @@ export default async function Dashboard() {
                     </div>
 
                     {/* Butonlar */}
-                    <div className="flex gap-2 flex-shrink-0 self-end sm:self-auto">
+                    <div className="flex gap-2 shrink-0 self-end sm:self-auto">
                       <Link
                         href={`/davetiye/${davetiye.slug}`}
                         target="_blank"
