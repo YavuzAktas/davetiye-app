@@ -623,7 +623,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
 ───────────────────────────────────────── */
 function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
-  const [form, setForm] = useState({ ad:"", telefon:"", kisiSayisi:"1", katilim:"" });
+  const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"" });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
 
@@ -653,7 +653,6 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
         body: JSON.stringify({
           davetiyeId,
           ad: form.ad,
-          telefon: form.telefon,
           katilim: form.katilim === "evet",
           kisiSayisi: Number(form.kisiSayisi),
         }),
@@ -694,11 +693,6 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
       <input type="text" value={form.ad}
         onChange={e => setForm({...form, ad:e.target.value})}
         placeholder="örn. Selin Kaya" style={fieldStyle}/>
-
-      <label style={labelStyle}>Telefon</label>
-      <input type="tel" value={form.telefon}
-        onChange={e => setForm({...form, telefon:e.target.value})}
-        placeholder="0500 000 00 00" style={fieldStyle}/>
 
       <label style={labelStyle}>Kaç Kişi?</label>
       <select value={form.kisiSayisi}
