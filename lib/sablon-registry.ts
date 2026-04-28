@@ -2,6 +2,9 @@ export const SABLON_REGISTRY: Record<string, string> = {
   // Lüks Nişan
   "nisan-luks": "nisan-luks",
 
+  // Lüks Düğün
+  "dugun-luks": "dugun-luks",
+
   // Düğün şablonları
   "klasik-dugun": "klasik",
   "romantik-dugun": "klasik",

@@ -20,6 +20,17 @@ export const SABLONLAR: Sablon[] = [
     aciklama: "Bordo & altın, gül mühürlü lüks tasarım",
   },
 
+  // DÜĞÜN LÜKS
+  {
+    id: "dugun-luks",
+    isim: "Lüks Düğün",
+    kategori: "dugun",
+    renk: "#0D1F3C",
+    arkaplan: "from-blue-950 to-blue-900",
+    yaziRengi: "#F8F3EE",
+    aciklama: "Lacivert & şampanya altın, yüzük mühürlü lüks tasarım",
+  },
+
   // DÜĞÜN
   {
     id: "klasik-dugun",
