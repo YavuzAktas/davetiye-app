@@ -5,6 +5,20 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
+function PlanSkeleton() {
+  return (
+    <div className="bg-white rounded-3xl border border-gray-100 p-7 sm:p-6 lg:p-8 animate-pulse">
+      <div className="h-4 w-20 bg-gray-100 rounded mb-4" />
+      <div className="h-10 w-24 bg-gray-100 rounded mb-2" />
+      <div className="h-3 w-28 bg-gray-100 rounded mb-7" />
+      <div className="space-y-3 mb-8">
+        {[1,2,3,4].map(i => <div key={i} className="h-4 bg-gray-100 rounded" />)}
+      </div>
+      <div className="h-12 bg-gray-100 rounded-2xl" />
+    </div>
+  );
+}
+
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -76,21 +90,16 @@ const SSS = [
 ];
 
 export default function FiyatlarSayfasi() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [yukleniyor, setYukleniyor] = useState<string | null>(null);
   const [acikSss, setAcikSss] = useState<number | null>(null);
-  const [kullaniciPlan, setKullaniciPlan] = useState<string>("free");
   const [tableRef, tableVisible] = useInView();
   const [sssRef, sssVisible] = useInView();
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      fetch("/api/kullanici/plan")
-        .then(r => r.json())
-        .then(d => setKullaniciPlan(d.plan ?? "free"));
-    }
-  }, [session]);
+  // Plan session'dan direkt okunur — ayrı API isteği gerekmez
+  const kullaniciPlan = session?.user?.plan ?? "free";
+  const sessionYukleniyor = status === "loading";
 
   const handleOdeme = async (planId: string, fiyat: number) => {
     if (!session) { router.push("/giris"); return; }
@@ -161,7 +170,7 @@ export default function FiyatlarSayfasi() {
             İhtiyacınıza uygun planı seçin. Kredi kartı gerekmez, istediğiniz zaman yükseltin.
           </p>
 
-          {session && (
+          {status === "authenticated" && (
             <div className="inline-flex items-center gap-2 bg-white/8 border border-white/10 px-4 py-2 rounded-full text-sm text-white/70">
               <span className="w-2 h-2 bg-emerald-400 rounded-full" />
               Mevcut planın:
@@ -178,6 +187,13 @@ export default function FiyatlarSayfasi() {
       ══════════════════════════════════════════ */}
       <section className="bg-white pb-16 sm:pb-24 px-4">
         <div className="max-w-5xl mx-auto">
+          {sessionYukleniyor ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-3 lg:gap-5 items-start">
+              <PlanSkeleton />
+              <div className="sm:-mt-4 sm:mb-4"><PlanSkeleton /></div>
+              <PlanSkeleton />
+            </div>
+          ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-3 lg:gap-5 items-start">
             {PLANLAR.map((plan, i) => {
               const aktif = kullaniciPlan === plan.id;
@@ -286,6 +302,7 @@ export default function FiyatlarSayfasi() {
               );
             })}
           </div>
+          )}
 
           {/* Güven rozetleri */}
           <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-12 pt-10 border-t border-gray-100">
