@@ -20,6 +20,15 @@ const BG_MED  = "#4E1020";
 const GOLD    = "#C4A05A";
 const CREAM   = "#F5E8D8";
 
+/* ─────────────────────────────────────
+   DÜĞÜN LÜKS RENK PALETİ
+───────────────────────────────────── */
+const D_BG      = "#0D1F3C";
+const D_BG_DARK = "#071228";
+const D_BG_MED  = "#152C52";
+const D_GOLD    = "#D4AA70";
+const D_CREAM   = "#F8F3EE";
+
 /* Telefon ekranı iç genişliği: 220 - 2×8 padding = 204px
    Önizleme doğal genişliği (iPhone): 390px
    Ölçek: 204 / 390 ≈ 0.523 */
@@ -281,6 +290,229 @@ function PreviewMekan({ tarih, saat, mekan }: OnizlemeProps) {
   );
 }
 
+/* ══════════════════════════════════════════════════
+   DÜĞÜN LÜKS ÖNIZLEME BÖLÜMLERİ
+══════════════════════════════════════════════════ */
+
+function DugunGoldDivider() {
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:10, margin:"8px 0" }}>
+      <div style={{ flex:1, height:1, background:`linear-gradient(to right,transparent,${D_GOLD}70)` }}/>
+      <span style={{ color:D_GOLD, fontSize:9, letterSpacing:5 }}>◆</span>
+      <div style={{ flex:1, height:1, background:`linear-gradient(to left,transparent,${D_GOLD}70)` }}/>
+    </div>
+  );
+}
+
+function WeddingRingsSeal({ size }: { size: number }) {
+  const ring = Math.round(size * 0.055);
+  return (
+    <div style={{
+      width:size, height:size, borderRadius:"50%", overflow:"hidden",
+      boxShadow:`0 0 0 ${ring}px ${D_BG},0 0 0 ${ring+2}px rgba(212,170,112,0.18),0 20px 70px rgba(0,10,20,0.7)`,
+    }}>
+      <svg viewBox="0 0 200 200" style={{ width:"100%", height:"100%" }} fill="none">
+        <circle cx="100" cy="100" r="100" fill={D_BG_DARK}/>
+        <circle cx="100" cy="100" r="97" fill="none" stroke={`${D_GOLD}18`} strokeWidth="1"/>
+        <circle cx="83" cy="106" r="34" fill="none" stroke={D_GOLD} strokeWidth="5" opacity="0.9"/>
+        <circle cx="117" cy="106" r="34" fill="none" stroke={D_GOLD} strokeWidth="5" opacity="0.9"/>
+        <polygon points="100,62 110,76 100,90 90,76" fill={D_GOLD} opacity="0.95"/>
+        <polygon points="100,66 108,76 100,86 92,76" fill={D_BG_DARK} opacity="0.4"/>
+      </svg>
+    </div>
+  );
+}
+
+function DugunPreviewKapak({ kisi1, kisi2, tarih, saat }: OnizlemeProps) {
+  const ad1 = kisi1 || "Selin";
+  const ad2 = kisi2 || "Mert";
+  const tarihStr = tarih
+    ? new Date(`${tarih}T${saat||"12:00"}`).toLocaleDateString("tr-TR",{ day:"2-digit", month:"long", year:"numeric" }).toUpperCase()
+    : "GÜN · AY · YIL";
+  return (
+    <div style={{
+      width:NAT_W, height:844,
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      position:"relative", overflow:"hidden",
+      background:`radial-gradient(ellipse at 50% 45%,#1A3560 0%,${D_BG} 55%,${D_BG_DARK} 100%)`,
+    }}>
+      <div style={{ position:"absolute", inset:0,
+        backgroundImage:`radial-gradient(circle,rgba(212,170,112,0.045) 1px,transparent 1px)`,
+        backgroundSize:"30px 30px", pointerEvents:"none" }}/>
+      <p style={{
+        position:"relative", zIndex:10, textAlign:"center",
+        marginBottom:48, padding:"0 32px",
+        fontFamily:"var(--font-dancing),cursive",
+        fontSize:54, color:D_CREAM, lineHeight:1.15, letterSpacing:1,
+      }}>
+        {ad1}{ad2 && <><span style={{ color:D_GOLD }}> &amp; </span>{ad2}</>}
+      </p>
+      <div style={{ position:"relative", zIndex:10 }}>
+        <WeddingRingsSeal size={220}/>
+      </div>
+      <p style={{ position:"relative", zIndex:10, marginTop:48,
+        fontFamily:"var(--font-cormorant),serif",
+        fontSize:13, letterSpacing:"0.35em", color:D_GOLD }}>
+        {tarihStr}
+      </p>
+      <p style={{ position:"relative", zIndex:10, marginTop:12,
+        fontFamily:"var(--font-cormorant),serif",
+        fontSize:13, fontStyle:"italic", letterSpacing:"0.15em", color:`${D_GOLD}70` }}>
+        Mühüre dokun ◆
+      </p>
+    </div>
+  );
+}
+
+function DugunPreviewBiz({ kisi1, kisi2, tarih, saat, mekan, mesaj }: OnizlemeProps) {
+  const ad1 = kisi1 || "Selin";
+  const ad2 = kisi2 || "Mert";
+  const tarihKisa = tarih
+    ? new Date(`${tarih}T${saat||"12:00"}`).toLocaleDateString("tr-TR",{ day:"2-digit", month:"long", year:"numeric" }).toUpperCase()
+    : null;
+  return (
+    <div style={{
+      width:NAT_W, minHeight:844,
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      padding:"80px 24px", position:"relative",
+      background:`radial-gradient(ellipse at 50% 30%,#1A3560 0%,${D_BG} 60%)`,
+    }}>
+      <div style={{
+        position:"absolute", top:0, left:0, right:0, height:46,
+        background:"rgba(4,14,32,0.9)", borderBottom:`1px solid rgba(212,170,112,0.18)`,
+        display:"flex", alignItems:"center", justifyContent:"center", gap:26, zIndex:10,
+      }}>
+        <span style={{ color:D_GOLD, fontSize:15 }}>◆</span>
+        {["BİZ","SAYIM","KATILIM","MEKAN","ALBÜM"].map(l=>(
+          <span key={l} style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.22em", color:`${D_CREAM}70` }}>{l}</span>
+        ))}
+      </div>
+      {/* Köşe elmas süsleri */}
+      {[{ top:60, left:16 },{ top:60, right:16 },{ bottom:20, left:16 },{ bottom:20, right:16 }].map((pos,i)=>(
+        <span key={i} style={{ position:"absolute", color:`${D_GOLD}50`, fontSize:14, ...pos }}>◆</span>
+      ))}
+      {/* Dikdörtgen çerçeve */}
+      <div style={{
+        position:"relative", maxWidth:330, width:"100%",
+        borderRadius:6,
+        border:`1px solid ${D_GOLD}38`,
+        padding:"48px 36px 44px", textAlign:"center",
+        boxShadow:`inset 0 0 80px rgba(212,170,112,0.03)`,
+      }}>
+        <div style={{ position:"absolute", inset:9, borderRadius:4,
+          border:`1px solid ${D_GOLD}18`, pointerEvents:"none" }}/>
+        {/* Köşe elmas dekorasyonları */}
+        {[{top:-4,left:-4},{top:-4,right:-4},{bottom:-4,left:-4},{bottom:-4,right:-4}].map((pos,i)=>(
+          <div key={i} style={{
+            position:"absolute", width:8, height:8, background:D_GOLD, opacity:0.5,
+            transform:"rotate(45deg)", ...pos,
+          }}/>
+        ))}
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em",
+          color:D_GOLD, textTransform:"uppercase", marginBottom:22 }}>Düğün Davetiyesi</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:60, color:D_CREAM, lineHeight:1, marginBottom:4 }}>{ad1}</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:30, color:D_GOLD, lineHeight:1.3, margin:"6px 0" }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:60, color:D_CREAM, lineHeight:1, marginBottom:8 }}>{ad2}</p>
+        <div style={{ margin:"20px auto", maxWidth:220 }}><DugunGoldDivider/></div>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13, letterSpacing:"0.22em", color:`${D_CREAM}70`, marginBottom:10 }}>
+          {tarihKisa}{tarihKisa && mekan ? " · " : ""}{mekan ? mekan.split(",")[0].toUpperCase() : ""}
+        </p>
+        {mesaj && (
+          <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, fontStyle:"italic", color:`${D_CREAM}55`, marginTop:8 }}>
+            {mesaj.length > 60 ? mesaj.slice(0,60)+"…" : mesaj}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DugunPreviewSayim({ tarih, saat }: OnizlemeProps) {
+  const [kalan, setKalan] = useState(calcKalan(tarih, saat));
+  useEffect(() => {
+    setKalan(calcKalan(tarih, saat));
+    const id = setInterval(()=>setKalan(calcKalan(tarih,saat)), 1000);
+    return () => clearInterval(id);
+  }, [tarih, saat]);
+
+  return (
+    <div style={{
+      width:NAT_W, minHeight:844,
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      padding:"80px 24px", textAlign:"center", background:D_BG_MED,
+    }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em",
+        color:D_GOLD, textTransform:"uppercase", marginBottom:14 }}>Düğüne Kalan Süre</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:36, color:D_CREAM, marginBottom:52 }}>
+        {kalan ? "Sayıyoruz..." : "Tarih girilmedi"}
+      </p>
+      <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-start", gap:16, flexWrap:"wrap" }}>
+        {[
+          { val:kalan?.gun    ?? 0, lbl:"GÜN" },
+          { val:kalan?.saat   ?? 0, lbl:"SAAT" },
+          { val:kalan?.dakika ?? 0, lbl:"DAKİKA" },
+          { val:kalan?.saniye ?? 0, lbl:"SANİYE" },
+        ].map((item,i)=>(
+          <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:14 }}>
+            <div style={{ textAlign:"center" }}>
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:52, fontWeight:600,
+                color:D_CREAM, lineHeight:1, fontVariantNumeric:"tabular-nums", minWidth:"2ch" }}>
+                {String(item.val).padStart(2,"0")}
+              </p>
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.22em",
+                color:D_GOLD, marginTop:8 }}>{item.lbl}</p>
+            </div>
+            {i<3 && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:35,
+              color:`${D_GOLD}50`, lineHeight:1.1, marginTop:4 }}>:</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DugunPreviewMekan({ tarih, saat, mekan }: OnizlemeProps) {
+  const tarihStr = tarih
+    ? new Date(`${tarih}T${saat||"12:00"}`).toLocaleDateString("tr-TR",{ day:"2-digit", month:"short", year:"numeric" })
+    : "—";
+  return (
+    <div style={{
+      width:NAT_W, minHeight:844,
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      padding:"80px 24px", textAlign:"center", background:D_BG_MED,
+    }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em",
+        color:D_GOLD, textTransform:"uppercase", marginBottom:14 }}>Mekan</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:38, color:D_CREAM, marginBottom:44 }}>
+        Nerede Buluşuyoruz?
+      </p>
+      <div style={{ display:"flex", justifyContent:"center", gap:60, flexWrap:"wrap", marginBottom:40 }}>
+        {[
+          { emoji:"📍", lbl:"MEKAN",  val:mekan ? mekan.split(",")[0] : "—" },
+          { emoji:"🕐", lbl:"SAAT",   val:saat || "—" },
+          { emoji:"📅", lbl:"TARİH",  val:tarihStr },
+        ].map(col=>(
+          <div key={col.lbl} style={{ textAlign:"center", minWidth:90 }}>
+            <div style={{ fontSize:22, marginBottom:10 }}>{col.emoji}</div>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.25em",
+              color:D_GOLD, marginBottom:8, textTransform:"uppercase" }}>{col.lbl}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:15, fontWeight:600, color:D_CREAM }}>{col.val}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{
+        width:"80%", maxWidth:280, height:100, borderRadius:12,
+        background:"rgba(255,255,255,0.04)", border:`1px solid ${D_GOLD}20`,
+        display:"flex", alignItems:"center", justifyContent:"center",
+      }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:`${D_GOLD}50`, fontStyle:"italic" }}>
+          📍 Harita görünümü
+        </p>
+      </div>
+    </div>
+  );
+}
+
 const ONIZLEME_SEKMELERI = [
   { id:"kapak",    label:"Kapak",    icon:"🌹" },
   { id:"davetiye", label:"Davetiye", icon:"💍" },
@@ -321,6 +553,7 @@ function OlusturIcerigi() {
   const sablonId = searchParams.get("sablon") || "klasik-dugun";
   const sablon = SABLONLAR.find(s=>s.id===sablonId) || SABLONLAR[0];
   const isNisanLuks = sablonId === "nisan-luks";
+  const isDugunLuks = sablonId === "dugun-luks";
   const nisanVeyaDugun = sablon.kategori === "nisan" || sablon.kategori === "dugun";
 
   const [form, setForm] = useState({
@@ -476,7 +709,7 @@ function OlusturIcerigi() {
                       <label className="block text-sm font-medium text-gray-700 mb-3">Arka Plan Müziği</label>
                       <MuzikSecici secili={form.muzik} onChange={dosya=>setForm({...form,muzik:dosya})}/>
                     </div>
-                    {!isNisanLuks && (
+                    {!isNisanLuks && !isDugunLuks && (
                       <>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-3">Tema Rengi</label>
@@ -512,6 +745,13 @@ function OlusturIcerigi() {
                         <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.<br/>Müzik seçimi için yukarıya bakın.</p>
                       </div>
                     )}
+                    {isDugunLuks && (
+                      <div className="text-center py-6 text-gray-400 text-sm">
+                        <p className="text-2xl mb-2">💍</p>
+                        <p className="font-medium text-gray-600">Lacivert &amp; Şampanya Altın Tasarım</p>
+                        <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.<br/>Müzik seçimi için yukarıya bakın.</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -540,7 +780,7 @@ function OlusturIcerigi() {
                           ? "text-white shadow-sm"
                           : "text-gray-400 hover:text-gray-600 bg-white border border-gray-100"
                       }`}
-                      style={onizlemeSekme===s.id ? { background:"linear-gradient(135deg,#7A1220,#4E0A14)" } : {}}>
+                      style={onizlemeSekme===s.id ? { background: isDugunLuks ? "linear-gradient(135deg,#0D1F3C,#071228)" : "linear-gradient(135deg,#7A1220,#4E0A14)" } : {}}>
                       {s.icon}
                     </button>
                   ))}
@@ -559,10 +799,14 @@ function OlusturIcerigi() {
                     transformOrigin:"top left",
                     position:"absolute", top:0, left:0,
                   }}>
-                    {onizlemeSekme==="kapak"    && <PreviewKapak    {...onizlemeProps}/>}
-                    {onizlemeSekme==="davetiye" && <PreviewBiz      {...onizlemeProps}/>}
-                    {onizlemeSekme==="sayim"    && <PreviewSayim    {...onizlemeProps}/>}
-                    {onizlemeSekme==="mekan"    && <PreviewMekan    {...onizlemeProps}/>}
+                    {onizlemeSekme==="kapak"    && !isDugunLuks && <PreviewKapak      {...onizlemeProps}/>}
+                    {onizlemeSekme==="davetiye" && !isDugunLuks && <PreviewBiz        {...onizlemeProps}/>}
+                    {onizlemeSekme==="sayim"    && !isDugunLuks && <PreviewSayim      {...onizlemeProps}/>}
+                    {onizlemeSekme==="mekan"    && !isDugunLuks && <PreviewMekan      {...onizlemeProps}/>}
+                    {onizlemeSekme==="kapak"    && isDugunLuks  && <DugunPreviewKapak  {...onizlemeProps}/>}
+                    {onizlemeSekme==="davetiye" && isDugunLuks  && <DugunPreviewBiz    {...onizlemeProps}/>}
+                    {onizlemeSekme==="sayim"    && isDugunLuks  && <DugunPreviewSayim  {...onizlemeProps}/>}
+                    {onizlemeSekme==="mekan"    && isDugunLuks  && <DugunPreviewMekan  {...onizlemeProps}/>}
                   </div>
                 </div>
               </TelefonMockup>
