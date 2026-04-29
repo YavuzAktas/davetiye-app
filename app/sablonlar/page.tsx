@@ -547,13 +547,6 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
                 ))}
               </div>
             </TelefonMockup>
-            {kilitli && (
-              <div className="absolute inset-0 rounded-[38px] flex flex-col items-center justify-center gap-3"
-                style={{ background:"rgba(0,0,0,0.55)", backdropFilter:"blur(2px)" }}>
-                <span className="text-4xl">👑</span>
-                <p className="text-white text-xs font-bold text-center px-4 leading-snug">Ücretli Plan<br/>Gerekli</p>
-              </div>
-            )}
           </div>
         </div>
 
