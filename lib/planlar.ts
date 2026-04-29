@@ -21,4 +21,4 @@ export const PLAN_LIMITLER = {
 
 export type PlanTipi = keyof typeof PLAN_LIMITLER;
 
-export const PREMIUM_SABLON_IDS = new Set(["nisan-luks", "dugun-luks"]);
+export const PREMIUM_SABLON_IDS = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);

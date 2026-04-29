@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
-import { KlasikSablon, NisanLuksSablon, DugunLuksSablon } from "@/components/sablonlar";
+import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 
@@ -62,6 +62,10 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   if (sablonTipi === "dugun-luks") {
     return <DugunLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  }
+
+  if (sablonTipi === "dogumgunu-luks") {
+    return <DogumGunuLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
   }
 
   return <KlasikSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;

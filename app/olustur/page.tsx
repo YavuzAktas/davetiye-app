@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { PREMIUM_SABLON_IDS } from "@/lib/planlar";
 import { getSablonTipi } from "@/lib/sablon-registry";
-import { KlasikSablon, NisanLuksSablon, DugunLuksSablon } from "@/components/sablonlar";
+import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
 
@@ -313,9 +313,10 @@ function OlusturIcerigi() {
                     transformOrigin: "top left",
                     position: "absolute", top: 0, left: 0,
                   }}>
-                    {sablonTipi === "nisan-luks" && <NisanLuksSablon davetiye={previewVeri} rsvpBileseni={null} />}
-                    {sablonTipi === "dugun-luks" && <DugunLuksSablon davetiye={previewVeri} rsvpBileseni={null} />}
-                    {sablonTipi === "klasik"     && <KlasikSablon    davetiye={previewVeri} rsvpBileseni={null} />}
+                    {sablonTipi === "nisan-luks"      && <NisanLuksSablon      davetiye={previewVeri} rsvpBileseni={null} />}
+                    {sablonTipi === "dugun-luks"      && <DugunLuksSablon      davetiye={previewVeri} rsvpBileseni={null} />}
+                    {sablonTipi === "dogumgunu-luks"  && <DogumGunuLuksSablon  davetiye={previewVeri} rsvpBileseni={null} />}
+                    {sablonTipi === "klasik"          && <KlasikSablon         davetiye={previewVeri} rsvpBileseni={null} />}
                   </div>
                 </div>
               </TelefonMockup>

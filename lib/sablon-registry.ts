@@ -5,6 +5,9 @@ export const SABLON_REGISTRY: Record<string, string> = {
   // Lüks Düğün
   "dugun-luks": "dugun-luks",
 
+  // Lüks Doğum Günü
+  "dogumgunu-luks": "dogumgunu-luks",
+
   // Düğün şablonları
   "klasik-dugun": "klasik",
   "romantik-dugun": "klasik",

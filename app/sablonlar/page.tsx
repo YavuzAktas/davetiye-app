@@ -7,10 +7,11 @@ import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
 
 /* ─── Sabitler ─── */
 const DEMO_URLS: Record<string, string> = {
-  "nisan-luks": "/davetiye/ornek-nisan",
-  "dugun-luks": "/davetiye/ornek-dugun",
+  "nisan-luks":      "/davetiye/ornek-nisan",
+  "dugun-luks":      "/davetiye/ornek-dugun",
+  "dogumgunu-luks":  "/davetiye/ornek-dogumgunu",
 };
-const PREMIUM = new Set(["nisan-luks", "dugun-luks"]);
+const PREMIUM = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
 const KAT_EMOJI: Record<string, string> = {
   dugun:"💍", nisan:"💌", dogumgunu:"🎂",
   sunnet:"⭐", kina:"🕯️", kurumsal:"💼", diger:"🎉",
@@ -257,6 +258,106 @@ function DugunMekan() {
 }
 
 /* ══════════════════════════════════════════════
+   PREMIUM ÖNIZLEMELER — Doğum Günü Lüks
+══════════════════════════════════════════════ */
+const G = { BG:"#140828", BG_MED:"#1E0C38", BG_DARK:"#0A0414", GOLD:"#D4A84B", CREAM:"#F9F3E8", PL:"#5A2090" };
+
+function DGKapak() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
+      style={{ background:`radial-gradient(ellipse at 50% 45%,${G.PL} 0%,${G.BG} 55%,${G.BG_DARK} 100%)` }}>
+      <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,rgba(212,168,75,0.05) 1px,transparent 1px)`, backgroundSize:"22px 22px" }}/>
+      <p className="relative z-10 text-center mb-6" style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2.2rem)", color:G.CREAM, lineHeight:1.2 }}>
+        Zeynep
+      </p>
+      {/* Pasta mühür (küçük) */}
+      <div className="relative z-10" style={{ width:110, height:110, borderRadius:"50%", overflow:"hidden",
+        boxShadow:`0 0 0 6px ${G.BG},0 0 0 8px rgba(212,168,75,0.2),0 12px 36px rgba(10,0,20,0.7)` }}>
+        <svg viewBox="0 0 200 200" style={{ width:"100%", height:"100%" }} fill="none">
+          <circle cx="100" cy="100" r="100" fill={G.BG_DARK}/>
+          <circle cx="100" cy="100" r="96" stroke={`${G.GOLD}22`} strokeWidth="1"/>
+          {/* Alt kat */}
+          <rect x="44" y="126" width="112" height="38" rx="7" fill={G.PL} opacity="0.75"/>
+          <rect x="44" y="118" width="112" height="11" rx="5" fill={G.GOLD} opacity="0.55"/>
+          {/* Üst kat */}
+          <rect x="62" y="90" width="76" height="30" rx="6" fill={G.PL} opacity="0.9"/>
+          <rect x="62" y="83" width="76" height="10" rx="5" fill={G.GOLD} opacity="0.65"/>
+          {/* Mumlar */}
+          {[80, 100, 120].map((x, i) => (
+            <g key={i}>
+              <rect x={x-3.5} y={i===1?62:67} width="7" height={i===1?24:19} rx="2" fill={`${G.CREAM}CC`}/>
+              <ellipse cx={x} cy={i===1?58:63} rx="5" ry="7" fill="#FFD060" opacity="0.9"/>
+              <ellipse cx={x} cy={i===1?60:65} rx="2.5" ry="4" fill="#fff" opacity="0.4"/>
+            </g>
+          ))}
+        </svg>
+      </div>
+      <p className="relative z-10 mt-6" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.3em", color:G.GOLD }}>15 AĞUSTOS 2026</p>
+      <p className="relative z-10 mt-2" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontStyle:"italic", color:`${G.GOLD}55` }}>Mühüre dokun ★</p>
+    </div>
+  );
+}
+function DGHero() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 relative"
+      style={{ background:`radial-gradient(ellipse at 50% 30%,${G.PL} 0%,${G.BG} 60%)` }}>
+      {["top-4 left-4","top-4 right-4","bottom-4 left-4","bottom-4 right-4"].map((c,i)=>(
+        <span key={i} className={`absolute ${c}`} style={{ color:`${G.GOLD}40`, fontSize:13 }}>★</span>
+      ))}
+      <div className="w-full text-center py-6 px-5" style={{ border:`1px solid ${G.GOLD}30`, borderRadius:6, position:"relative" }}>
+        {[{top:-8,left:-8},{top:-8,right:-8},{bottom:-8,left:-8},{bottom:-8,right:-8}].map((pos,i)=>(
+          <div key={i} style={{ position:"absolute",...pos,
+            width:3, height:16, background:G.GOLD, opacity:0.5, transform:"rotate(0deg)" }}/>
+        ))}
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.3em", color:G.GOLD, marginBottom:12 }}>DOĞUM GÜNÜ DAVETİ</p>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:G.CREAM, lineHeight:1.1, marginBottom:10 }}>Zeynep</p>
+        <div style={{ height:1, background:`linear-gradient(to right,transparent,${G.GOLD}50,transparent)`, margin:"10px 0" }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.12em", color:`${G.CREAM}60` }}>15 AĞUSTOS 2026 · İSTANBUL</p>
+      </div>
+    </div>
+  );
+}
+function DGSayim() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:G.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:G.GOLD, marginBottom:12 }}>PARTİYE KALAN SÜRE</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2rem)", color:G.CREAM, marginBottom:28 }}>Sayıyoruz...</p>
+      <div className="flex items-start gap-3 justify-center">
+        {[{v:"108",l:"GÜN"},{v:"08",l:"SAAT"},{v:"42",l:"DAK"},{v:"17",l:"SAN"}].map((item,i)=>(
+          <div key={i} className="flex items-start gap-2">
+            <div className="text-center">
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"clamp(1.8rem,6vw,2.6rem)", fontWeight:600, color:G.CREAM, lineHeight:1 }}>{item.v}</p>
+              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.15em", color:G.GOLD, marginTop:5 }}>{item.l}</p>
+            </div>
+            {i<3 && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"1.5rem", color:`${G.GOLD}40`, lineHeight:1.1, marginTop:2 }}>:</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+function DGMekan() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:G.BG_MED }}>
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.35em", color:G.GOLD, marginBottom:10 }}>MEKAN</p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.3rem,5vw,1.8rem)", color:G.CREAM, marginBottom:20 }}>Nerede Buluşuyoruz?</p>
+      <div className="flex gap-8 justify-center mb-5">
+        {[{e:"📍",l:"MEKAN",v:"Çırağan Palace"},{e:"🕐",l:"SAAT",v:"20:00"},{e:"📅",l:"TARİH",v:"15 Ağu 2026"}].map(col=>(
+          <div key={col.l} className="text-center">
+            <p style={{ fontSize:18, marginBottom:6 }}>{col.e}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.2em", color:G.GOLD, marginBottom:4 }}>{col.l}</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, fontWeight:600, color:G.CREAM }}>{col.v}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ width:"85%", height:80, borderRadius:10, background:"rgba(255,255,255,0.04)", border:`1px solid ${G.GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, color:`${G.GOLD}50`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
    STANDART ŞABLON ÖNİZLEMELERİ
 ══════════════════════════════════════════════ */
 function StdKapak({ sablon }: { sablon: Sablon }) {
@@ -345,6 +446,13 @@ const DUGUN_BOLUMLER = [
   { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",       aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.", node:<DugunMekan/> },
 ] as const;
 
+const DOGUMGUNU_BOLUMLER = [
+  { id:"kapak",    icon:"🎂", label:"Kapak",    etiket:"Açılış", baslik:"Pasta Mühürlü Kapak", aciklama:"Altın pasta mühürüne dokunulunca açılan derin mor & şampanya altın kapak.", node:<DGKapak/> },
+  { id:"davetiye", icon:"✨", label:"Davetiye", etiket:"Hero",   baslik:"Yıldız Köşeli Hero",  aciklama:"İsim büyük el yazısıyla yıldız köşeli çerçeve içinde, zarif tipografi.", node:<DGHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",          aciklama:"Partiye kaç gün kaldığını saniye saniye gösterir.", node:<DGSayim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",       aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.", node:<DGMekan/> },
+] as const;
+
 type Bolum = { id:string; icon:string; label:string; etiket:string; baslik:string; aciklama:string; node:React.ReactNode };
 
 function getStdBolumler(sablon: Sablon): Bolum[] {
@@ -367,8 +475,9 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
   const demoUrl = DEMO_URLS[sablon.id];
 
   const bolumler: readonly Bolum[] | Bolum[] =
-    sablon.id === "nisan-luks" ? NISAN_BOLUMLER :
-    sablon.id === "dugun-luks" ? DUGUN_BOLUMLER :
+    sablon.id === "nisan-luks"     ? NISAN_BOLUMLER :
+    sablon.id === "dugun-luks"     ? DUGUN_BOLUMLER :
+    sablon.id === "dogumgunu-luks" ? DOGUMGUNU_BOLUMLER :
     getStdBolumler(sablon);
 
   const [aktifId, setAktifId] = useState(bolumler[0].id);
@@ -383,7 +492,9 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
   };
 
   const renk = isPremium
-    ? (sablon.id === "nisan-luks" ? "#7A1220" : "#0D1F3C")
+    ? sablon.id === "nisan-luks" ? "#7A1220"
+    : sablon.id === "dugun-luks" ? "#0D1F3C"
+    : "#140828"
     : sablon.renk;
 
   return (
@@ -393,7 +504,7 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
         <div className="flex items-center gap-3">
           {isPremium && (
             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full text-white"
-              style={{ background:`linear-gradient(135deg,${renk},${sablon.id==="nisan-luks"?"#C4A05A":"#D4AA70"})` }}>
+              style={{ background:`linear-gradient(135deg,${renk},${sablon.id==="nisan-luks"?"#C4A05A":"#D4A84B"})` }}>
               ✦ PRİMİUM
             </span>
           )}
