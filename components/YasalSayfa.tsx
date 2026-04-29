@@ -44,9 +44,12 @@ export default function YasalSayfa({ etiket, baslik, sonGuncelleme, bolumler }: 
 
         {/* Bölümler */}
         <div className="space-y-6">
-          {bolumler.map((b, i) => (
+          {bolumler.map((b, i) => {
+            const slug = b.baslik.toLocaleLowerCase("tr").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+            return (
             <div key={i} id={`bolum-${i + 1}`}
               className="bg-white rounded-2xl border border-gray-100 p-7 shadow-sm scroll-mt-24">
+              <span id={slug} className="sr-only" />
               <div className="flex items-start gap-4 mb-4">
                 <span className="text-xs font-mono text-gray-300 mt-1">{String(i + 1).padStart(2, "0")}</span>
                 <h2 className="text-lg font-bold text-gray-900">{b.baslik}</h2>
@@ -63,7 +66,8 @@ export default function YasalSayfa({ etiket, baslik, sonGuncelleme, bolumler }: 
                 {b.icerik}
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
 
         {/* Alt — diğer belgeler */}

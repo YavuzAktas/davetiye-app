@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
+import CerezBanner from "./CerezBanner";
 
 export default function NavFooterWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -13,6 +14,7 @@ export default function NavFooterWrapper({ children }: { children: React.ReactNo
       {!isDavetiye && <Header />}
       <main>{children}</main>
       {!isDavetiye && <Footer />}
+      <CerezBanner />
     </>
   );
 }
