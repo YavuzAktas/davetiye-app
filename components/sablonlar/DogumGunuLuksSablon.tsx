@@ -680,6 +680,18 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
       }}>
         {yukleniyor ? "Gönderiliyor..." : "BİLDİR"}
       </button>
+
+      <p style={{
+        marginTop:16, fontSize:10, lineHeight:1.6,
+        color:`${GOLD}70`, fontFamily:"var(--font-cormorant),serif",
+        textAlign:"center",
+      }}>
+        Girdiğiniz bilgiler yalnızca katılım durumunuzu davet sahibine iletmek amacıyla işlenmektedir.{" "}
+        <a href="/kvkk" target="_blank" rel="noopener noreferrer"
+          style={{ color:`${GOLD}99`, textDecoration:"underline", textUnderlineOffset:2 }}>
+          KVKK Aydınlatma Metni
+        </a>
+      </p>
     </div>
   );
 }

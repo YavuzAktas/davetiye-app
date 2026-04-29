@@ -558,6 +558,18 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream }: { davetiyeId:string; bg:s
       }}>
         {yukleniyor ? "Gönderiliyor..." : "BİLDİR"}
       </button>
+
+      {/* KVKK Bildirimi */}
+      <p style={{ marginTop:16, fontSize:9.5, lineHeight:1.7,
+        fontFamily:"var(--font-cormorant),serif",
+        color:"rgba(100,110,130,0.65)", textAlign:"center" }}>
+        Girdiğiniz bilgiler yalnızca katılım bildirimini davet sahibine iletmek amacıyla
+        işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.{" "}
+        <a href="/kvkk" target="_blank" rel="noopener noreferrer"
+          style={{ color:"rgba(100,110,130,0.85)", textDecoration:"underline" }}>
+          KVKK Aydınlatma Metni
+        </a>
+      </p>
     </div>
   );
 }

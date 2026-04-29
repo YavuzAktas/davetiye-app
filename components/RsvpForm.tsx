@@ -175,6 +175,34 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             </p>
           )}
 
+          {/* KVKK Aydınlatma Bildirimi */}
+          <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
+              Girdiğiniz bilgiler (ad soyad{form.email ? ", e-posta" : ""}) yalnızca
+              katılım durumunuzu davet sahibine iletmek amacıyla{" "}
+              <span className="font-medium text-gray-500">Davetim</span> tarafından
+              işlenmektedir. Etkinlik tarihinden itibaren en geç 1 yıl içinde silinir.
+              Verilerinizin silinmesini talep etmek için{" "}
+              <a
+                href="mailto:kvkk@davetim.com"
+                className="underline underline-offset-2 hover:text-gray-600"
+              >
+                kvkk@davetim.com
+              </a>{" "}
+              adresine yazabilir ya da{" "}
+              <a
+                href="/kvkk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-gray-600"
+              >
+                KVKK Aydınlatma Metni
+              </a>
+              'ni inceleyebilirsiniz.
+            </p>
+          </div>
+
           <button
             onClick={handleGonder}
             disabled={yukleniyor}

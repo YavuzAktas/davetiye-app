@@ -21,6 +21,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { planId, fiyat } = await req.json();
 
+  // Gerçek istemci IP'sini al (proxy arkasında x-forwarded-for öncelikli)
+  const clientIp =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "127.0.0.1";
+
   const request = {
     locale: "tr",
     conversationId: `${user.id}-${planId}-${Date.now()}`,
@@ -35,11 +41,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       id: user.id,
       name: user.name?.split(" ")[0] || "Ad",
       surname: user.name?.split(" ").slice(1).join(" ") || "Soyad",
-      gsmNumber: "+905000000000",
+      // TODO (production): Kullanıcıdan telefon numarası toplanmalı
+      gsmNumber: "+905350000000",
       email: user.email!,
-      identityNumber: "11111111111",
+      // Sandbox test değeri. TODO (production): iyzico canlıya geçişte
+      // TC kimlik no toplamak KVKK kapsamında özel nitelikli veri sayılır;
+      // iyzico'nun "11111111111" placeholder'ına production'da izin verip
+      // vermediğini iyzico ile teyit et.
+      identityNumber: "74300864791",
       registrationAddress: "Türkiye",
-      ip: "85.34.78.112",
+      ip: clientIp,
       city: "Istanbul",
       country: "Turkey",
     },
