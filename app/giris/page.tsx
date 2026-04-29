@@ -150,17 +150,6 @@ function GirisIcerigi() {
         position:"relative",
       }}>
 
-        {/* Sağ üst — anasayfa */}
-        <div style={{ position:"absolute", top:24, right:28 }}>
-          <Link href="/" style={{
-            display:"flex", alignItems:"center", gap:6,
-            fontSize:13, color:"#9CA3AF", textDecoration:"none",
-            fontWeight:500, transition:"color 0.15s",
-          }}>
-            ← Anasayfa
-          </Link>
-        </div>
-
         {/* Mobilde logo */}
         <div className="flex lg:hidden" style={{ marginBottom:32, textAlign:"center", flexDirection:"column", alignItems:"center" }}>
           <div style={{ display:"inline-flex", alignItems:"center", gap:9 }}>
