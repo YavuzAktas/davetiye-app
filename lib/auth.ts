@@ -14,6 +14,9 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // E-posta/şifre ile kayıtlı kullanıcı aynı e-posta ile Google'a girerse
+      // otomatik olarak hesapları birleştirilir, yeni kullanıcı açılmaz.
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -48,12 +51,23 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Google ile ilk girişte KVKK onayını kaydet
       if (account?.provider === "google" && user?.email) {
-        await prisma.user.updateMany({
-          where: { email: user.email, kvkkOnay: false },
-          data:  { kvkkOnay: true, kvkkOnayTarih: new Date() },
+        const mevcut = await prisma.user.findUnique({
+          where: { email: user.email },
         });
+        if (mevcut) {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: {
+              // KVKK onayı yoksa kaydet
+              ...(mevcut.kvkkOnay ? {} : { kvkkOnay: true, kvkkOnayTarih: new Date() }),
+              // Profil resmi yoksa Google'dan al
+              ...(mevcut.image ? {} : { image: user.image }),
+              // İsim yoksa Google'dan al
+              ...(mevcut.name  ? {} : { name:  user.name  }),
+            },
+          });
+        }
       }
       return true;
     },
