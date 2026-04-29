@@ -523,7 +523,8 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 p-6">
         {/* Sol — Bölüm Sekmeleri + Telefon */}
         <div className="shrink-0 flex flex-col items-center">
-          <div className="flex gap-1.5 mb-4 flex-wrap justify-center">
+          {/* Sabit yükseklik: tüm kartlarda telefon aynı hizada başlar */}
+          <div className="flex gap-1.5 flex-wrap justify-center mb-4" style={{ minHeight: 64, alignContent: "flex-start" }}>
             {(bolumler as Bolum[]).map(b=>(
               <button key={b.id} onClick={()=>handleTab(b.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
