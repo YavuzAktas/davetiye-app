@@ -344,8 +344,8 @@ export default async function DavetiyeDetay({ params }: Props) {
                           {rsvp.email && (
                             <p className="text-xs text-gray-400 truncate">{rsvp.email}</p>
                           )}
-                          {rsvp.not && (
-                            <p className="text-xs text-gray-400 italic truncate max-w-40">"{rsvp.not}"</p>
+                          {rsvp.mesaj && (
+                            <p className="text-xs text-gray-400 italic truncate max-w-40">"{rsvp.mesaj}"</p>
                           )}
                         </div>
                       </div>

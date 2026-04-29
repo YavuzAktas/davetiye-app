@@ -4,7 +4,7 @@ import { rsvpBildirimiGonder } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, not } = body;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj } = body;
 
   if (!davetiyeId || !ad || katilim === undefined) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       telefon: telefon || null,
       katilim,
       kisiSayisi: kisiSayisi || 1,
-      not: not || null,
+      mesaj: mesaj || null,
     },
   });
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       misafirAd: ad,
       katilim,
       kisiSayisi: kisiSayisi || 1,
-      misafirNot: not,
+      misafirNot: mesaj,
     });
   }
 

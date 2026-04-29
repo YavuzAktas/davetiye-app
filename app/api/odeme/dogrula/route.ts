@@ -30,19 +30,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     where: { token },
   });
 
-  if (!odemeToken) {
+  if (!odemeToken || odemeToken.kullanildi || odemeToken.expiresAt < new Date()) {
     return new NextResponse(null, {
       status: 302,
       headers: { Location: `${process.env.NEXT_PUBLIC_URL}/odeme/basarisiz` },
     });
   }
 
+  // Önce token'ı kullanıldı olarak işaretle (double-spend önlemi)
+  await prisma.odemeToken.update({
+    where: { token },
+    data: { kullanildi: true },
+  });
+
   await prisma.user.update({
     where: { id: odemeToken.userId },
     data: { plan: odemeToken.planId },
   });
-
-  await prisma.odemeToken.delete({ where: { token } });
 
   return new NextResponse(null, {
     status: 302,

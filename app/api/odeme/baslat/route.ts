@@ -79,9 +79,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   await prisma.odemeToken.create({
     data: {
-      token: result.token,
-      userId: user.id,
+      token:     result.token,
+      userId:    user.id,
       planId,
+      expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat
     },
   });
 

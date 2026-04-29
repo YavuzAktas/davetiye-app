@@ -19,7 +19,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
     email: "",
     telefon: "",
     kisiSayisi: 1,
-    not: "",
+    mesaj: "",
   });
 
   const handleSecim = (karar: boolean) => {
@@ -47,7 +47,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
           telefon: form.telefon,
           katilim,
           kisiSayisi: form.kisiSayisi,
-          not: form.not,
+          mesaj: form.mesaj,
         }),
       });
 
@@ -163,8 +163,8 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             <textarea
               rows={2}
               placeholder="Bir şey eklemek ister misiniz?"
-              value={form.not}
-              onChange={(e) => setForm({ ...form, not: e.target.value })}
+              value={form.mesaj}
+              onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
             />
           </div>

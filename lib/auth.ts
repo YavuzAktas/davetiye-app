@@ -47,6 +47,16 @@ export const authOptions: NextAuthOptions = {
     signIn: "/giris",
   },
   callbacks: {
+    async signIn({ user, account }) {
+      // Google ile ilk girişte KVKK onayını kaydet
+      if (account?.provider === "google" && user?.email) {
+        await prisma.user.updateMany({
+          where: { email: user.email, kvkkOnay: false },
+          data:  { kvkkOnay: true, kvkkOnayTarih: new Date() },
+        });
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id   = user.id;
