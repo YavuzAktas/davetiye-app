@@ -1,12 +1,19 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 function BasariliIcerigi() {
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
+  const { update } = useSession();
+
+  // Ödeme DB'de güncellendi; JWT'yi şimdi yenile
+  useEffect(() => {
+    update();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

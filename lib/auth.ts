@@ -71,10 +71,18 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id   = user.id;
         token.plan = (user as any).plan ?? "free";
+      }
+      // update() tetiklendiğinde DB'den güncel planı oku (ör. ödeme sonrası)
+      if (trigger === "update" && token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { plan: true },
+        });
+        if (dbUser) token.plan = dbUser.plan;
       }
       return token;
     },
