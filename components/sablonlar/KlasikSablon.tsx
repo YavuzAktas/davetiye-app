@@ -1,3 +1,5 @@
+"use client";
+
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { SABLONLAR } from "@/lib/sablonlar";
 import Link from "next/link";
