@@ -16,21 +16,41 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600"],
 });
 
+const SITE_URL = "https://davetiye-app.vercel.app";
+const OG_IMAGE  = `${SITE_URL}/og-image.png`;
+
 export const metadata: Metadata = {
   title: {
     default: "Davetim — Online Davetiye Platformu",
     template: "%s | Davetim",
   },
   description:
-    "Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
-  keywords: ["online davetiye", "dijital davetiye", "düğün davetiyesi"],
+    "Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş, RSVP takip et.",
+  keywords: [
+    "online davetiye", "dijital davetiye", "düğün davetiyesi",
+    "nişan davetiyesi", "doğum günü davetiyesi", "davetiye oluştur",
+    "ücretsiz davetiye", "davetiye şablonu", "whatsapp davetiye",
+  ],
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "Davetim — Online Davetiye Platformu",
-    description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
-    url: "https://davetiye-app.vercel.app",
+    description: "Düğün, nişan, doğum günü için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
+    url: SITE_URL,
     siteName: "Davetim",
     locale: "tr_TR",
     type: "website",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Davetim — Online Davetiye Platformu" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Davetim — Online Davetiye Platformu",
+    description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
+    images: [OG_IMAGE],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
   robots: { index: true, follow: true },
 };
@@ -40,9 +60,28 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Davetim",
+    url: SITE_URL,
+    logo: `${SITE_URL}/og-image.png`,
+    description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "destek@davetim.com",
+      contactType: "customer service",
+      availableLanguage: "Turkish",
+    },
+  };
+
   return (
     <html lang="tr">
       <body className={`${geist.className} ${dancingScript.variable} ${cormorant.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
         <Providers>
           <NavFooterWrapper>
             {children}
