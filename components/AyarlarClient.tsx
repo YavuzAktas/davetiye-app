@@ -13,6 +13,40 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
   const [cikisOnay, setCikisOnay] = useState(false);
   const [silOnay, setSilOnay] = useState(false);
   const [silYazisi, setSilYazisi] = useState("");
+  const [silYukleniyor, setSilYukleniyor] = useState(false);
+  const [exportYukleniyor, setExportYukleniyor] = useState(false);
+
+  async function hesabiSil() {
+    if (silYazisi !== "SİL" || silYukleniyor) return;
+    setSilYukleniyor(true);
+    try {
+      const res = await fetch("/api/kullanici/sil", { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      await signOut({ callbackUrl: "/" });
+    } catch {
+      setSilYukleniyor(false);
+      alert("Bir hata oluştu, tekrar deneyin.");
+    }
+  }
+
+  async function veriIndir() {
+    setExportYukleniyor(true);
+    try {
+      const res = await fetch("/api/kullanici/export");
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `davetim-verilerim-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Veri indirilemedi, tekrar deneyin.");
+    } finally {
+      setExportYukleniyor(false);
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -58,6 +92,26 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
           </div>
         </div>
       )}
+
+      {/* Veri Export — KVKK m.11 veri taşınabilirlik hakkı */}
+      <div className="bg-white border border-gray-100 rounded-3xl p-6">
+        <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase mb-4">Verilerim</p>
+        <button
+          onClick={veriIndir}
+          disabled={exportYukleniyor}
+          className="flex items-center gap-3 w-full p-3.5 rounded-2xl border border-gray-200 hover:border-blue-200 hover:bg-blue-50 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <div className="w-9 h-9 bg-blue-50 group-hover:bg-blue-100 rounded-xl flex items-center justify-center text-lg transition-colors shrink-0">
+            📥
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold text-gray-700 group-hover:text-blue-700 transition-colors">
+              {exportYukleniyor ? "Hazırlanıyor..." : "Verilerimi İndir"}
+            </p>
+            <p className="text-xs text-gray-400">KVKK m.11 kapsamında tüm verilerini JSON olarak al</p>
+          </div>
+        </button>
+      </div>
 
       {/* Çıkış Yap */}
       <div className="bg-white border border-gray-100 rounded-3xl p-6">
@@ -129,10 +183,11 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
             />
             <div className="flex gap-2">
               <button
-                disabled={silYazisi !== "SİL"}
+                onClick={hesabiSil}
+                disabled={silYazisi !== "SİL" || silYukleniyor}
                 className="flex-1 bg-red-500 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-red-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Hesabı Kalıcı Sil
+                {silYukleniyor ? "Siliniyor..." : "Hesabı Kalıcı Sil"}
               </button>
               <button
                 onClick={() => { setSilOnay(false); setSilYazisi(""); }}
