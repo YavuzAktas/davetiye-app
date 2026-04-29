@@ -538,7 +538,7 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
         <div className="shrink-0 flex flex-col items-center">
           <div className="relative">
             <TelefonMockup>
-              <div ref={scrollRef} className="scrollbar-hide"
+              <div ref={scrollRef} className="phone-scroll"
                 style={{ height: "100%", overflowY: "auto" }}>
                 {bolumler.map(b => (
                   <div key={b.id} style={{ height: 500, flexShrink: 0 }}>
