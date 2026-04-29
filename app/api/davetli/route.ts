@@ -67,6 +67,22 @@ export async function DELETE(req: NextRequest) {
   }
 
   const { id } = await req.json();
+  if (!id) return NextResponse.json({ hata: "id gerekli." }, { status: 400 });
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
+
+  // IDOR önlemi: davetlinin hangi davetiyeye ait olduğunu ve o davetiyenin
+  // bu kullanıcıya ait olduğunu doğrula
+  const davetli = await prisma.davetli.findUnique({
+    where: { id },
+    include: { davetiye: { select: { userId: true } } },
+  });
+
+  if (!davetli || davetli.davetiye.userId !== user.id) {
+    return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
+  }
+
   await prisma.davetli.delete({ where: { id } });
   return NextResponse.json({ basarili: true });
 }
