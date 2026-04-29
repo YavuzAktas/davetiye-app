@@ -33,6 +33,8 @@ const SABLON_RENKLER: Record<string, string> = {
   "mezuniyet": "#1D4ED8", "yildonumu": "#DC2626", "bebek-partisi": "#7C3AED",
 };
 
+const KVKK_KEY = "davetli-kvkk-goruldu";
+
 export default function DavetlilerSayfasi() {
   const params = useParams();
   const slug = params.slug as string;
@@ -47,6 +49,16 @@ export default function DavetlilerSayfasi() {
   const [aktifTab, setAktifTab] = useState<"liste" | "toplu" | "import">("liste");
   const [ekleniyor, setEkleniyor] = useState(false);
   const [siliniyor, setSiliniyor] = useState<string | null>(null);
+  const [kvkkGoruldu, setKvkkGoruldu] = useState(true);
+
+  useEffect(() => {
+    setKvkkGoruldu(localStorage.getItem(KVKK_KEY) === "1");
+  }, []);
+
+  function kvkkKapat() {
+    localStorage.setItem(KVKK_KEY, "1");
+    setKvkkGoruldu(true);
+  }
 
   const renk = davetiye ? (SABLON_RENKLER[davetiye.sablon] ?? "#7C3AED") : "#7C3AED";
 
@@ -173,6 +185,38 @@ export default function DavetlilerSayfasi() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-5">
 
+        {/* ── KVKK Bilgilendirme Kartı ── */}
+        {!kvkkGoruldu && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+            <div className="flex items-start gap-3">
+              <span className="text-xl shrink-0">⚖️</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-amber-900 mb-1">
+                  Misafir verilerini girerken KVKK sorumluluğunuz
+                </p>
+                <p className="text-xs text-amber-800 leading-relaxed mb-3">
+                  Sisteme girdiğiniz ad, telefon ve e-posta bilgileri üçüncü kişilere aittir.
+                  Bu verileri girerek, söz konusu bilgilerin yalnızca davetiye gönderimi amacıyla
+                  kullanılacağını ve davetiye silindiğinde otomatik olarak sistemmizden
+                  kaldırılacağını kabul etmiş olursunuz.
+                </p>
+                <ul className="text-xs text-amber-700 space-y-1 mb-4 list-none">
+                  <li>✓ Yalnızca gerekli bilgileri girin — telefon ve e-posta isteğe bağlıdır</li>
+                  <li>✓ Veriler yalnızca davetiye paylaşımı için işlenir, başka amaçla kullanılmaz</li>
+                  <li>✓ Davetiye silindiğinde tüm misafir verileri de kalıcı olarak silinir</li>
+                  <li>✓ Bu veriler için <strong>meşru menfaat</strong> hukuki dayanağı uygulanır (KVKK m.5/2-f)</li>
+                </ul>
+                <button
+                  onClick={kvkkKapat}
+                  className="text-xs font-semibold text-amber-900 bg-amber-200 hover:bg-amber-300 transition-colors px-4 py-2 rounded-xl"
+                >
+                  Anladım, Devam Et
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ── Tabs ── */}
         <div className="flex gap-1 bg-gray-100 p-1 rounded-2xl">
           {[
@@ -250,6 +294,9 @@ export default function DavetlilerSayfasi() {
                 )}
                 Davetli Ekle
               </button>
+              <p className="text-[11px] text-gray-400 leading-relaxed mt-1">
+                Girilen bilgiler yalnızca bu davetiye için saklanır ve davetiye silindiğinde otomatik olarak silinir.
+              </p>
             </div>
 
             {/* List */}
@@ -389,6 +436,9 @@ export default function DavetlilerSayfasi() {
                 {topluMetin.trim().split("\n").filter(s => s.trim()).length} satır hazır
               </p>
             </div>
+            <p className="text-[11px] text-gray-400 leading-relaxed mt-3">
+              İçe aktarılan veriler yalnızca bu davetiye kapsamında saklanır ve davetiye silindiğinde otomatik olarak silinir.
+            </p>
           </div>
         )}
       </div>
