@@ -89,6 +89,13 @@ const SSS = [
   { soru: "Fatura alabilir miyim?", cevap: "Evet, ödeme sonrası otomatik fatura e-posta adresinize gönderilir." },
 ];
 
+interface OnayModal {
+  planId: string;
+  fiyat: number;
+  planIsim: string;
+  fiyatLabel: string;
+}
+
 export default function FiyatlarSayfasi() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -96,14 +103,26 @@ export default function FiyatlarSayfasi() {
   const [acikSss, setAcikSss] = useState<number | null>(null);
   const [tableRef, tableVisible] = useInView();
   const [sssRef, sssVisible] = useInView();
+  const [onayModal, setOnayModal] = useState<OnayModal | null>(null);
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
   const sessionYukleniyor = status === "loading";
 
-  const handleOdeme = async (planId: string, fiyat: number) => {
+  // Ödeme butonuna tıklanınca önce cayma hakkı modalı göster
+  const handleOdeme = (planId: string, fiyat: number) => {
     if (!session) { router.push("/giris"); return; }
     if (planId === "free" || kullaniciPlan === planId) return;
+    const plan = PLANLAR.find(p => p.id === planId);
+    if (!plan) return;
+    setOnayModal({ planId, fiyat, planIsim: plan.isim, fiyatLabel: plan.fiyatLabel });
+  };
+
+  // Kullanıcı cayma hakkı feragat beyanını onaylayınca API'yi çağır
+  const handleOnayliOdeme = async () => {
+    if (!onayModal) return;
+    const { planId, fiyat } = onayModal;
+    setOnayModal(null);
     setYukleniyor(planId);
     try {
       const res = await fetch("/api/odeme/baslat", {
@@ -130,6 +149,7 @@ export default function FiyatlarSayfasi() {
     id === "free" ? "Ücretsiz" : id === "standart" ? "Standart" : "Premium";
 
   return (
+    <>
     <div className="overflow-x-hidden">
 
       {/* ══════════════════════════════════════════
@@ -457,5 +477,64 @@ export default function FiyatlarSayfasi() {
       </section>
 
     </div>
+
+    {/* ══ Cayma Hakkı Feragat Modalı — Mesafeli Sözleşmeler Yönetmeliği m.15/1-ğ ══ */}
+    {onayModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        onClick={() => setOnayModal(null)}
+      >
+        <div
+          className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex items-start gap-4 mb-5">
+            <div className="w-11 h-11 bg-amber-50 rounded-2xl flex items-center justify-center text-xl shrink-0">⚖️</div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg leading-snug">Satın Alma Onayı</h3>
+              <p className="text-gray-400 text-sm mt-0.5">{onayModal.planIsim} Plan · {onayModal.fiyatLabel}</p>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5">
+            <p className="text-sm text-amber-900 font-semibold mb-2">Cayma Hakkı Hakkında Bilgilendirme</p>
+            <p className="text-xs text-amber-800 leading-relaxed">
+              6502 sayılı Tüketicinin Korunması Kanunu ve Mesafeli Sözleşmeler Yönetmeliği
+              m.15/1-ğ uyarınca; dijital içerik ve hizmetlerde, tüketicinin onayıyla
+              ifaya başlandığında <strong>cayma hakkı kullanılamaz.</strong>
+            </p>
+            <p className="text-xs text-amber-800 leading-relaxed mt-2">
+              &quot;Onaylıyorum, Satın Al&quot; butonuna tıklayarak hizmet ifasının{" "}
+              <strong>satın alma anında başlamasını</strong> ve bu nedenle 14 günlük
+              cayma hakkından feragat ettiğinizi kabul etmiş olursunuz.
+            </p>
+          </div>
+
+          <p className="text-xs text-gray-400 mb-5">
+            Detaylı bilgi için{" "}
+            <Link href="/kullanim-sartlari" target="_blank" className="text-purple-600 underline underline-offset-2">
+              Kullanım Şartları
+            </Link>
+            &apos;nı inceleyebilirsiniz.
+          </p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => setOnayModal(null)}
+              className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              Vazgeç
+            </button>
+            <button
+              onClick={handleOnayliOdeme}
+              className="flex-1 py-3 rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 text-white text-sm font-bold hover:opacity-90 transition-opacity"
+            >
+              Onaylıyorum, Satın Al
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
