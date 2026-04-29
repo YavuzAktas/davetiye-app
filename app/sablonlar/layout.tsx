@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "doğum günü davetiyesi", "dijital davetiye şablon", "kına davetiyesi",
     "online davetiye hazır şablon", "ücretsiz davetiye şablonu",
   ],
-  alternates: { canonical: `${SITE_URL}/sablonlar` },
+  alternates: { canonical: "/sablonlar" },
   openGraph: {
     title: "Davetiye Şablonları | Davetim",
     description: "Düğün, nişan, doğum günü için hazır dijital davetiye şablonları. Dakikalar içinde özelleştir.",

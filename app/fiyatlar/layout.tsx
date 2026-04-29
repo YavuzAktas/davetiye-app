@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "online davetiye fiyat", "dijital davetiye plan", "davetiye ücretsiz",
     "düğün davetiyesi fiyat", "nişan davetiyesi online ücret",
   ],
-  alternates: { canonical: `${SITE_URL}/fiyatlar` },
+  alternates: { canonical: "/fiyatlar" },
   openGraph: {
     title: "Fiyatlar ve Planlar | Davetim",
     description: "Ücretsiz başla, ihtiyacına göre yükselt. Tek seferlik ödeme, abonelik yok.",

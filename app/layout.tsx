@@ -32,7 +32,6 @@ export const metadata: Metadata = {
     "ücretsiz davetiye", "davetiye şablonu", "whatsapp davetiye",
   ],
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "Davetim — Online Davetiye Platformu",
     description: "Düğün, nişan, doğum günü için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
