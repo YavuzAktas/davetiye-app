@@ -96,12 +96,32 @@ export default function FiyatlarSayfasi() {
   const [acikSss, setAcikSss] = useState<number | null>(null);
   const [tableRef, tableVisible] = useInView();
   const [sssRef, sssVisible] = useInView();
+  const [odeModal, setOdeModal] = useState<string | null>(null);
+  const scriptInjected = useRef(false);
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
   const sessionYukleniyor = status === "loading";
 
-  // Ödemeye geçildiğinde direkt İyzico'yu başlat (Cayma hakkı feragati buton altı metniyle sağlandı)
+  // iyzico script'ini modal açıldıktan sonra DOM'a inject et
+  useEffect(() => {
+    if (!odeModal || scriptInjected.current) return;
+    scriptInjected.current = true;
+
+    // Önceki iyzico script'lerini temizle
+    document.querySelectorAll("[data-iyzico-script]").forEach(el => el.remove());
+
+    const tmp = document.createElement("div");
+    tmp.innerHTML = odeModal;
+    tmp.querySelectorAll("script").forEach(old => {
+      const s = document.createElement("script");
+      s.setAttribute("data-iyzico-script", "");
+      if (old.src) s.src = old.src;
+      else s.text = old.textContent ?? "";
+      document.body.appendChild(s);
+    });
+  }, [odeModal]);
+
   const handleOdeme = async (planId: string, fiyat: number) => {
     if (!session) { router.push("/giris"); return; }
     if (planId === "free" || kullaniciPlan === planId) return;
@@ -115,8 +135,10 @@ export default function FiyatlarSayfasi() {
       });
       const data = await res.json();
       if (data.checkoutFormContent) {
-        const yeniSayfa = window.open("", "_blank");
-        if (yeniSayfa) { yeniSayfa.document.write(data.checkoutFormContent); yeniSayfa.document.close(); }
+        scriptInjected.current = false;
+        setOdeModal(data.checkoutFormContent);
+      } else {
+        alert("Ödeme başlatılamadı, tekrar deneyin.");
       }
     } catch { alert("Bir hata oluştu."); }
     finally { setYukleniyor(null); }
@@ -133,6 +155,42 @@ export default function FiyatlarSayfasi() {
 
   return (
     <>
+    {/* ── iyzico Ödeme Modalı ── */}
+    {odeModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)" }}
+        onClick={e => { if (e.target === e.currentTarget) setOdeModal(null); }}
+      >
+        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          {/* Başlık */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg,#7C3AED,#DB2777)" }}>
+                <span className="text-white font-bold text-xs">D</span>
+              </div>
+              <span className="font-bold text-gray-900 text-sm">Güvenli Ödeme</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-gray-400 flex items-center gap-1">
+                🔒 iyzico güvencesi
+              </span>
+              <button
+                onClick={() => setOdeModal(null)}
+                className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors text-xs"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          {/* iyzico form container */}
+          <div className="overflow-y-auto" style={{ maxHeight: "80vh" }}>
+            <div id="iyzipay-checkout-form" className="responsive" />
+          </div>
+        </div>
+      </div>
+    )}
     <div className="overflow-x-hidden">
 
       {/* ══════════════════════════════════════════
