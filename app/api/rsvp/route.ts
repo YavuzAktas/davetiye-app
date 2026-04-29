@@ -14,6 +14,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email && !emailRegex.test(email.trim())) {
+    return NextResponse.json({ hata: "Geçerli bir e-posta adresi girin." }, { status: 400 });
+  }
+
   const davetiye = await prisma.davetiye.findUnique({
     where: { id: davetiyeId },
     include: { user: true },

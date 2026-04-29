@@ -254,8 +254,15 @@ function GirisIcerigi() {
                 <form onSubmit={handleGiris} className="space-y-3">
                   <input type="email" required placeholder="E-posta adresiniz" value={girisEmail}
                     onChange={e=>setGirisEmail(e.target.value)} className={inputCls}/>
-                  <input type="password" required placeholder="Şifreniz" value={girisSifre}
-                    onChange={e=>setGirisSifre(e.target.value)} className={inputCls}/>
+                  <div>
+                    <input type="password" required placeholder="Şifreniz" value={girisSifre}
+                      onChange={e=>setGirisSifre(e.target.value)} className={inputCls}/>
+                    <div className="text-right mt-1">
+                      <Link href="/sifre-sifirla" className="text-xs text-purple-500 hover:underline">
+                        Şifremi unuttum
+                      </Link>
+                    </div>
+                  </div>
                   <button type="submit" disabled={yukleme}
                     className="w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 hover:-translate-y-0.5 disabled:opacity-60"
                     style={{ background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>

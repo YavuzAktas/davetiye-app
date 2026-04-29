@@ -103,3 +103,55 @@ export async function rsvpBildirimiGonder({
     console.error("E-posta gönderilemedi:", error);
   }
 }
+
+export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,sans-serif;">
+      <div style="max-width:520px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:linear-gradient(135deg,#7C3AED,#DB2777);padding:32px;text-align:center;">
+          <p style="color:white;font-size:32px;margin:0;">🔐</p>
+          <h1 style="color:white;font-size:20px;margin:10px 0 0;font-weight:600;">Şifre Sıfırlama</h1>
+        </div>
+        <div style="padding:32px;">
+          <p style="color:#374151;font-size:15px;margin:0 0 16px;">
+            Davetim hesabınız için şifre sıfırlama talebinde bulundunuz.
+          </p>
+          <p style="color:#374151;font-size:15px;margin:0 0 28px;">
+            Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz.
+            Bu bağlantı <strong>1 saat</strong> geçerlidir.
+          </p>
+          <div style="text-align:center;margin-bottom:28px;">
+            <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;">
+              Şifremi Sıfırla
+            </a>
+          </div>
+          <p style="color:#9ca3af;font-size:12px;margin:0;line-height:1.6;">
+            Bu talebi siz yapmadıysanız bu e-postayı görmezden gelebilirsiniz.
+            Şifreniz değişmeyecektir.<br><br>
+            Bağlantı çalışmıyorsa şu adresi tarayıcınıza kopyalayın:<br>
+            <span style="color:#7C3AED;word-break:break-all;">${resetUrl}</span>
+          </p>
+        </div>
+        <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Davetim · destek@davetim.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: email,
+      subject: "Davetim — Şifre Sıfırlama",
+      html,
+    });
+  } catch (error) {
+    console.error("Şifre sıfırlama e-postası gönderilemedi:", error);
+    throw error;
+  }
+}

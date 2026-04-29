@@ -15,6 +15,10 @@ export async function POST(req: Request) {
     if (!kullanim)
       return NextResponse.json({ hata: "Kullanım şartlarını kabul etmeniz zorunludur." }, { status: 400 });
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim()))
+      return NextResponse.json({ hata: "Geçerli bir e-posta adresi girin." }, { status: 400 });
+
     if (sifre.length < 8)
       return NextResponse.json({ hata: "Şifre en az 8 karakter olmalıdır." }, { status: 400 });
 
