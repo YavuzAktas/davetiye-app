@@ -5,37 +5,43 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
 
-const BG    = "#06010F";
-const GOLD  = "#D4A84B";
-const CREAM = "#F9F3E8";
-const PL    = "#3D0D7A";
-const PLM   = "#5A1AAA";
+/* ── Sol panel — davetiye kartı önizlemeleri ── */
+const CARDS = [
+  { bg: "linear-gradient(150deg,#3B0A14 0%,#1a0308 100%)", gold: "#C4A05A", label: "Lüks Nişan",   rot: "-6deg",  x: -24, y: 0   },
+  { bg: "linear-gradient(150deg,#0D1F3C 0%,#071228 100%)", gold: "#D4AA70", label: "Lüks Düğün",   rot:  "3deg",  x:  12, y: 40  },
+  { bg: "linear-gradient(150deg,#140828 0%,#0A0414 100%)", gold: "#D4A84B", label: "Lüks Doğum",   rot:  "12deg", x:  48, y: 80  },
+];
 
-/* ── Dekoratif davetiye kartı (arka planda float eder) ── */
-function FloatingInvite({ style }: { style: React.CSSProperties }) {
+function InviteStack() {
   return (
-    <div style={{
-      position: "absolute",
-      width: 148, height: 208,
-      borderRadius: 14,
-      background: `linear-gradient(150deg, ${PL} 0%, #110228 100%)`,
-      border: `1px solid ${GOLD}22`,
-      boxShadow: `0 24px 64px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.03)`,
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 9,
-      ...style,
-    }}>
-      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-        <div style={{ width:20, height:0.5, background:`${GOLD}40` }}/>
-        <span style={{ color:`${GOLD}80`, fontSize:8 }}>✦</span>
-        <div style={{ width:20, height:0.5, background:`${GOLD}40` }}/>
-      </div>
-      <div style={{ fontFamily:"var(--font-dancing),cursive", fontSize:22, color:CREAM, textAlign:"center", lineHeight:1 }}>Davetim</div>
-      <div style={{ width:"55%", height:0.5, background:`${GOLD}30` }}/>
-      <div style={{ fontFamily:"var(--font-cormorant),serif", fontSize:7.5, letterSpacing:"0.22em", color:`${GOLD}70`, textTransform:"uppercase" }}>Davetiye</div>
-      <div style={{ width:28, height:28, borderRadius:"50%", border:`1px solid ${GOLD}35`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <span style={{ color:`${GOLD}60`, fontSize:10 }}>✦</span>
-      </div>
+    <div style={{ position:"relative", width:220, height:300, margin:"0 auto" }}>
+      {CARDS.map((c, i) => (
+        <div key={i} style={{
+          position:"absolute", inset:0,
+          transform:`rotate(${c.rot}) translate(${c.x}px,${c.y}px)`,
+          transformOrigin:"center center",
+          transition:"transform 0.3s",
+        }}>
+          <div style={{
+            width:200, height:280,
+            borderRadius:18,
+            background: c.bg,
+            border:`1px solid ${c.gold}30`,
+            boxShadow:`0 20px 60px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.04)`,
+            display:"flex", flexDirection:"column",
+            alignItems:"center", justifyContent:"center", gap:10,
+          }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+              <div style={{ width:28, height:0.5, background:`${c.gold}50` }}/>
+              <span style={{ color:c.gold, fontSize:10 }}>✦</span>
+              <div style={{ width:28, height:0.5, background:`${c.gold}50` }}/>
+            </div>
+            <div style={{ fontFamily:"var(--font-dancing),cursive", fontSize:28, color:"#F9F3E8", textAlign:"center" }}>Davetim</div>
+            <div style={{ width:"60%", height:0.5, background:`${c.gold}35` }}/>
+            <div style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.25em", color:`${c.gold}80`, textTransform:"uppercase" }}>{c.label}</div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -45,211 +51,209 @@ function GirisIcerigi() {
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: `radial-gradient(ellipse at 35% 25%, ${PLM}55 0%, ${PL}28 30%, ${BG} 65%)`,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      position: "relative", overflow: "hidden", padding: "24px",
-    }}>
+    <div style={{ minHeight:"100vh", display:"flex" }}>
 
-      {/* Dot grid */}
-      <div style={{
-        position:"absolute", inset:0, pointerEvents:"none",
-        backgroundImage:`radial-gradient(circle, ${GOLD}0D 1px, transparent 1px)`,
-        backgroundSize:"30px 30px",
-      }}/>
-
-      {/* Blob 1 */}
-      <div className="animate-blob-1" style={{
-        position:"absolute", top:"-18%", left:"-8%",
-        width:640, height:640, borderRadius:"50%",
-        background:`radial-gradient(circle, ${PLM}45 0%, transparent 68%)`,
-        filter:"blur(72px)", pointerEvents:"none",
-      }}/>
-
-      {/* Blob 2 */}
-      <div className="animate-blob-2" style={{
-        position:"absolute", bottom:"-18%", right:"-6%",
-        width:560, height:560, borderRadius:"50%",
-        background:`radial-gradient(circle, #1A0355 0%, transparent 70%)`,
-        filter:"blur(88px)", pointerEvents:"none",
-      }}/>
-
-      {/* Dönen altın halkalar */}
-      {[580, 780, 1000].map((size, i) => (
-        <div key={i} className={i % 2 === 0 ? "animate-spin-slow" : "animate-spin-slow"}
-          style={{
-            position:"absolute", top:"50%", left:"50%",
-            width:size, height:size, borderRadius:"50%",
-            border:`1px solid ${GOLD}${["06","04","02"][i]}`,
-            transform:"translate(-50%,-50%)",
-            animationDirection: i % 2 === 0 ? "normal" : "reverse",
-            pointerEvents:"none",
-          }}/>
-      ))}
-
-      {/* Float eden davetiye kartları */}
-      <FloatingInvite style={{ top:"8%",  left:"4%",  transform:"rotate(-14deg)", opacity:0.22, filter:"blur(1.5px)" }}/>
-      <FloatingInvite style={{ bottom:"9%", left:"6%",  transform:"rotate(9deg)",  opacity:0.16, filter:"blur(2px)"   }}/>
-      <FloatingInvite style={{ top:"12%", right:"5%", transform:"rotate(13deg)",  opacity:0.20, filter:"blur(1px)"   }}/>
-      <FloatingInvite style={{ bottom:"10%",right:"4%",transform:"rotate(-7deg)", opacity:0.14, filter:"blur(2.5px)" }}/>
-
-      {/* Işıltı noktaları */}
-      {[
-        { top:"21%", left:"24%",  s:5 },
-        { top:"68%", left:"17%",  s:3 },
-        { top:"38%", right:"21%", s:4 },
-        { top:"74%", right:"23%", s:3 },
-        { top:"82%", left:"42%",  s:4 },
-        { top:"14%", right:"38%", s:5 },
-        { top:"52%", left:"8%",   s:3 },
-      ].map((p, i) => (
-        <div key={i} className="animate-float" style={{
-          position:"absolute", ...p,
-          width:p.s, height:p.s, borderRadius:"50%",
-          background:GOLD, opacity:0.3,
-          animationDelay:`${i * 0.65}s`,
-          pointerEvents:"none",
-        }}/>
-      ))}
-
-      {/* ── Ana Kart ── */}
-      <div style={{
-        position:"relative", zIndex:10,
-        width:"100%", maxWidth:420,
-        background:"rgba(10, 2, 24, 0.78)",
-        backdropFilter:"blur(28px)",
-        WebkitBackdropFilter:"blur(28px)",
-        borderRadius:26,
-        border:`1px solid ${GOLD}28`,
-        boxShadow:`0 0 0 1px rgba(255,255,255,0.035), 0 48px 120px rgba(0,0,0,0.65), 0 0 100px ${PLM}30`,
-        padding:"52px 44px",
-        display:"flex", flexDirection:"column", alignItems:"center",
+      {/* ── Sol Panel ── */}
+      <div className="hidden lg:flex" style={{
+        flex:"0 0 52%",
+        background:"linear-gradient(145deg, #4C1D95 0%, #6D28D9 45%, #BE185D 100%)",
+        position:"relative",
+        overflow:"hidden",
+        padding:"48px 56px",
+        flexDirection:"column",
+        justifyContent:"space-between",
       }}>
 
-        {/* Üst süsleme */}
-        <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:30 }}>
-          <div style={{ width:36, height:0.5, background:`linear-gradient(to right,transparent,${GOLD}55)` }}/>
-          <span style={{ color:GOLD, fontSize:11, letterSpacing:"0.1em" }}>✦</span>
-          <div style={{ width:36, height:0.5, background:`linear-gradient(to left,transparent,${GOLD}55)` }}/>
-        </div>
-
-        {/* Marka adı */}
+        {/* Dot texture */}
         <div style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:58, color:CREAM, lineHeight:0.88,
-          textAlign:"center", marginBottom:10,
-          textShadow:`0 0 60px ${PLM}80`,
-        }}>
-          Davetim
-        </div>
-
-        <div style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:9.5, letterSpacing:"0.42em",
-          color:GOLD, textTransform:"uppercase",
-          marginBottom:38,
-        }}>
-          Dijital Davetiye
-        </div>
-
-        {/* Ayraç */}
-        <div style={{
-          width:"100%", height:1,
-          background:`linear-gradient(to right,transparent,${GOLD}35,transparent)`,
-          marginBottom:36,
+          position:"absolute", inset:0, pointerEvents:"none",
+          backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.08) 1px,transparent 1px)",
+          backgroundSize:"24px 24px",
         }}/>
 
-        {/* Karşılama */}
+        {/* Blob */}
         <div style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:28, fontStyle:"italic",
-          color:CREAM, textAlign:"center", marginBottom:10,
-        }}>
-          Hoş Geldiniz
-        </div>
+          position:"absolute", bottom:"-15%", right:"-10%",
+          width:480, height:480, borderRadius:"50%",
+          background:"radial-gradient(circle,rgba(255,255,255,0.08) 0%,transparent 65%)",
+          pointerEvents:"none",
+        }}/>
         <div style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:13.5, color:`${CREAM}50`,
-          textAlign:"center", marginBottom:38,
-          lineHeight:1.65, letterSpacing:"0.035em",
-        }}>
-          Davetiyenizi oluşturmaya başlamak için<br/>hesabınıza giriş yapın
-        </div>
-
-        {/* Google butonu */}
-        <button
-          onClick={() => signIn("google", { callbackUrl })}
-          style={{
-            width:"100%",
-            display:"flex", alignItems:"center", justifyContent:"center", gap:13,
-            padding:"15px 24px",
-            borderRadius:14,
-            background:"rgba(255,255,255,0.055)",
-            border:`1px solid ${GOLD}35`,
-            color:CREAM,
-            fontSize:14, fontWeight:600,
-            letterSpacing:"0.05em",
-            cursor:"pointer",
-            transition:"all 0.22s ease",
-            outline:"none",
-          }}
-          onMouseEnter={e => {
-            const el = e.currentTarget;
-            el.style.background = "rgba(255,255,255,0.10)";
-            el.style.borderColor = `${GOLD}65`;
-            el.style.transform = "translateY(-2px)";
-            el.style.boxShadow = `0 12px 32px rgba(0,0,0,0.35), 0 0 24px ${GOLD}18`;
-          }}
-          onMouseLeave={e => {
-            const el = e.currentTarget;
-            el.style.background = "rgba(255,255,255,0.055)";
-            el.style.borderColor = `${GOLD}35`;
-            el.style.transform = "translateY(0)";
-            el.style.boxShadow = "none";
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-          </svg>
-          Google ile Giriş Yap
-        </button>
-
-        {/* Alt ayraç */}
-        <div style={{
-          width:"100%", height:1,
-          background:`linear-gradient(to right,transparent,${GOLD}20,transparent)`,
-          margin:"34px 0 26px",
+          position:"absolute", top:"-10%", left:"-8%",
+          width:360, height:360, borderRadius:"50%",
+          background:"radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 65%)",
+          pointerEvents:"none",
         }}/>
 
-        {/* Şartlar + ana sayfaya dön */}
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:11, color:`${CREAM}32`,
-          textAlign:"center", letterSpacing:"0.04em", lineHeight:1.75,
-        }}>
-          Giriş yaparak{" "}
-          <a href="/kullanim-sartlari" style={{ color:`${GOLD}55`, textDecoration:"underline", textUnderlineOffset:3 }}>
-            kullanım şartlarını
-          </a>{" "}
-          kabul etmiş olursunuz.
-        </p>
+        {/* Logo */}
+        <div style={{ position:"relative", zIndex:2 }}>
+          <Link href="/" style={{ display:"flex", alignItems:"center", gap:10, textDecoration:"none" }}>
+            <div style={{
+              width:36, height:36, borderRadius:10,
+              background:"rgba(255,255,255,0.2)",
+              border:"1px solid rgba(255,255,255,0.3)",
+              display:"flex", alignItems:"center", justifyContent:"center",
+            }}>
+              <span style={{ color:"#fff", fontWeight:700, fontSize:16 }}>D</span>
+            </div>
+            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:26, color:"#fff" }}>Davetim</span>
+          </Link>
+        </div>
 
-        <Link href="/" style={{
-          marginTop:18,
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:11, color:`${CREAM}28`,
-          letterSpacing:"0.1em", textDecoration:"none",
-          transition:"color 0.15s",
-        }}
-          onMouseEnter={e => (e.currentTarget.style.color = `${CREAM}60`)}
-          onMouseLeave={e => (e.currentTarget.style.color = `${CREAM}28`)}
-        >
-          ← Ana Sayfaya Dön
-        </Link>
+        {/* Orta içerik */}
+        <div style={{ position:"relative", zIndex:2, flex:1, display:"flex", flexDirection:"column", justifyContent:"center", gap:40 }}>
+          <div>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.32em", color:"rgba(255,255,255,0.55)", textTransform:"uppercase", marginBottom:14 }}>
+              Dijital Davetiye Platformu
+            </p>
+            <h2 style={{ fontFamily:"var(--font-dancing),cursive", fontSize:54, color:"#fff", lineHeight:1.05, marginBottom:18 }}>
+              Özel anlarınızı<br/>unutulmaz kılın
+            </h2>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:16, color:"rgba(255,255,255,0.65)", lineHeight:1.7, maxWidth:360 }}>
+              Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde şık dijital davetiyeler oluşturun.
+            </p>
+          </div>
+
+          {/* Kart önizlemesi */}
+          <InviteStack />
+
+          {/* Özellikler */}
+          <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+            {[
+              { icon:"✦", text:"Lüks şablonlar, sıfır tasarım bilgisi" },
+              { icon:"✦", text:"WhatsApp ile tek tıkla paylaşım" },
+              { icon:"✦", text:"Canlı RSVP takibi ve misafir listesi" },
+            ].map((f,i) => (
+              <div key={i} style={{ display:"flex", alignItems:"center", gap:12 }}>
+                <span style={{ color:"rgba(255,255,255,0.5)", fontSize:9 }}>{f.icon}</span>
+                <span style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, color:"rgba(255,255,255,0.7)", letterSpacing:"0.02em" }}>{f.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Alt */}
+        <div style={{ position:"relative", zIndex:2 }}>
+          <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:"rgba(255,255,255,0.35)", letterSpacing:"0.06em" }}>
+            500+ davetiye · Türkiye genelinde
+          </p>
+        </div>
+      </div>
+
+      {/* ── Sağ Panel ── */}
+      <div style={{
+        flex:1,
+        background:"#fff",
+        display:"flex", flexDirection:"column",
+        alignItems:"center", justifyContent:"center",
+        padding:"48px 40px",
+        position:"relative",
+      }}>
+
+        {/* Sağ üst — anasayfa */}
+        <div style={{ position:"absolute", top:24, right:28 }}>
+          <Link href="/" style={{
+            display:"flex", alignItems:"center", gap:6,
+            fontSize:13, color:"#9CA3AF", textDecoration:"none",
+            fontWeight:500, transition:"color 0.15s",
+          }}>
+            ← Anasayfa
+          </Link>
+        </div>
+
+        {/* Mobilde logo */}
+        <div className="flex lg:hidden" style={{ marginBottom:32, textAlign:"center", flexDirection:"column", alignItems:"center" }}>
+          <div style={{ display:"inline-flex", alignItems:"center", gap:9 }}>
+            <div style={{
+              width:32, height:32, borderRadius:9,
+              background:"linear-gradient(135deg,#7C3AED,#DB2777)",
+              display:"flex", alignItems:"center", justifyContent:"center",
+            }}>
+              <span style={{ color:"#fff", fontWeight:700, fontSize:14 }}>D</span>
+            </div>
+            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:24, color:"#111827" }}>Davetim</span>
+          </div>
+        </div>
+
+        {/* Form alanı */}
+        <div style={{ width:"100%", maxWidth:360 }}>
+          <h1 style={{ fontSize:28, fontWeight:700, color:"#111827", marginBottom:8, letterSpacing:"-0.02em" }}>
+            Tekrar hoş geldiniz
+          </h1>
+          <p style={{ fontSize:15, color:"#6B7280", marginBottom:36, lineHeight:1.6 }}>
+            Hesabınıza giriş yaparak davetiyelerinize ulaşın.
+          </p>
+
+          {/* Google butonu */}
+          <button
+            onClick={() => signIn("google", { callbackUrl })}
+            style={{
+              width:"100%",
+              display:"flex", alignItems:"center", justifyContent:"center", gap:12,
+              padding:"13px 20px",
+              borderRadius:12,
+              background:"#fff",
+              border:"1.5px solid #E5E7EB",
+              color:"#374151",
+              fontSize:15, fontWeight:600,
+              cursor:"pointer",
+              boxShadow:"0 1px 3px rgba(0,0,0,0.07)",
+              transition:"all 0.18s ease",
+              outline:"none",
+            }}
+            onMouseEnter={e => {
+              const el = e.currentTarget;
+              el.style.borderColor = "#D1D5DB";
+              el.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+              el.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={e => {
+              const el = e.currentTarget;
+              el.style.borderColor = "#E5E7EB";
+              el.style.boxShadow = "0 1px 3px rgba(0,0,0,0.07)";
+              el.style.transform = "translateY(0)";
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Google ile Giriş Yap
+          </button>
+
+          {/* Ayraç */}
+          <div style={{ display:"flex", alignItems:"center", gap:12, margin:"28px 0" }}>
+            <div style={{ flex:1, height:1, background:"#F3F4F6" }}/>
+            <span style={{ fontSize:12, color:"#D1D5DB", fontWeight:500 }}>Güvenli giriş</span>
+            <div style={{ flex:1, height:1, background:"#F3F4F6" }}/>
+          </div>
+
+          {/* Özellik rozetleri */}
+          <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:32 }}>
+            {["🔒 SSL Korumalı","⚡ Anında Giriş","🎉 Ücretsiz Başla"].map(t=>(
+              <span key={t} style={{
+                fontSize:11, fontWeight:500,
+                background:"#F9FAFB", border:"1px solid #F3F4F6",
+                borderRadius:20, padding:"4px 10px", color:"#6B7280",
+              }}>{t}</span>
+            ))}
+          </div>
+
+          {/* Şartlar */}
+          <p style={{ fontSize:12, color:"#9CA3AF", lineHeight:1.7 }}>
+            Giriş yaparak{" "}
+            <a href="/kullanim-sartlari" style={{ color:"#7C3AED", textDecoration:"none", fontWeight:500 }}>
+              kullanım şartlarını
+            </a>{" "}
+            ve{" "}
+            <a href="/gizlilik" style={{ color:"#7C3AED", textDecoration:"none", fontWeight:500 }}>
+              gizlilik politikasını
+            </a>{" "}
+            kabul etmiş olursunuz.
+          </p>
+        </div>
       </div>
     </div>
   );
