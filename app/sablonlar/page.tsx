@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
@@ -474,22 +474,35 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
   const kilitli = isPremium && userPlan === "free";
   const demoUrl = DEMO_URLS[sablon.id];
 
-  const bolumler: readonly Bolum[] | Bolum[] =
-    sablon.id === "nisan-luks"     ? NISAN_BOLUMLER :
-    sablon.id === "dugun-luks"     ? DUGUN_BOLUMLER :
-    sablon.id === "dogumgunu-luks" ? DOGUMGUNU_BOLUMLER :
-    getStdBolumler(sablon);
+  const bolumler = useMemo((): Bolum[] => {
+    if (sablon.id === "nisan-luks")     return [...NISAN_BOLUMLER];
+    if (sablon.id === "dugun-luks")     return [...DUGUN_BOLUMLER];
+    if (sablon.id === "dogumgunu-luks") return [...DOGUMGUNU_BOLUMLER];
+    return getStdBolumler(sablon);
+  }, [sablon.id]);
 
   const [aktifId, setAktifId] = useState(bolumler[0].id);
-  const [gecis, setGecis] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const aktif = (bolumler as Bolum[]).find(b=>b.id===aktifId) ?? bolumler[0];
+  const aktif = bolumler.find(b => b.id === aktifId) ?? bolumler[0];
 
   const handleTab = (id: string) => {
-    if (id === aktifId) return;
-    setGecis(false);
-    setTimeout(()=>{ setAktifId(id); setGecis(true); }, 160);
+    const idx = bolumler.findIndex(b => b.id === id);
+    setAktifId(id);
+    scrollRef.current?.scrollTo({ top: idx * 500, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handler = () => {
+      const idx = Math.min(Math.round(el.scrollTop / 500), bolumler.length - 1);
+      const b = bolumler[idx];
+      if (b) setAktifId(b.id);
+    };
+    el.addEventListener("scroll", handler, { passive: true });
+    return () => el.removeEventListener("scroll", handler);
+  }, [bolumler]);
 
   const renk = isPremium
     ? sablon.id === "nisan-luks" ? "#7A1220"
@@ -527,7 +540,7 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
           <div style={{ width: 260, overflowX: "auto", overflowY: "hidden", marginBottom: 16 }}
             className="scrollbar-hide">
             <div className="flex gap-1.5" style={{ flexWrap: "nowrap", paddingBottom: 2 }}>
-              {(bolumler as Bolum[]).map(b=>(
+              {bolumler.map(b=>(
                 <button key={b.id} onClick={()=>handleTab(b.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0 ${
                     aktifId===b.id ? "text-white shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
@@ -540,8 +553,13 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
           </div>
           <div className="relative">
             <TelefonMockup>
-              <div className={`w-full h-full transition-opacity duration-150 ${gecis?"opacity-100":"opacity-0"}`}>
-                {(aktif as Bolum).node}
+              <div ref={scrollRef} className="scrollbar-hide"
+                style={{ height: "100%", overflowY: "auto" }}>
+                {bolumler.map(b => (
+                  <div key={b.id} style={{ height: 500, flexShrink: 0 }}>
+                    {b.node}
+                  </div>
+                ))}
               </div>
             </TelefonMockup>
             {kilitli && (
@@ -557,18 +575,18 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
         {/* Sağ — Açıklama + Bölüm Listesi + CTA */}
         <div className="flex-1 max-w-lg w-full">
           {/* Aktif bölüm açıklaması */}
-          <div className={`transition-all duration-200 mb-6 ${gecis?"opacity-100 translate-y-0":"opacity-0 translate-y-2"}`}>
+          <div className="mb-6">
             <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full mb-4"
               style={{ background:`${renk}12`, color:renk }}>
-              {(aktif as Bolum).icon} {(aktif as Bolum).etiket}
+              {aktif.icon} {aktif.etiket}
             </span>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{(aktif as Bolum).baslik}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{(aktif as Bolum).aciklama}</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{aktif.baslik}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{aktif.aciklama}</p>
           </div>
 
           {/* Bölüm listesi */}
           <div className="space-y-1.5 mb-8">
-            {(bolumler as Bolum[]).map(b=>(
+            {bolumler.map(b=>(
               <button key={b.id} onClick={()=>handleTab(b.id)}
                 className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all ${
                   aktifId===b.id ? "bg-gray-50 shadow-sm border border-gray-100" : "hover:bg-gray-50"
