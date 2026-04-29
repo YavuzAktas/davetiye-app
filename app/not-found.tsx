@@ -1,127 +1,185 @@
 import Link from "next/link";
 
-/* ── Açık zarf SVG ── */
-function EnvelopeOpen() {
+const GOLD  = "#C4A05A";
+const BG    = "#0D0118";
+const CREAM = "#F5ECD8";
+const DARK  = "#1a0a08";
+
+function CornerMark({ pos }: { pos: "tl"|"tr"|"bl"|"br" }) {
+  const top    = pos.startsWith("t") ? -8 : undefined;
+  const bottom = pos.startsWith("b") ? -8 : undefined;
+  const left   = pos.endsWith("l")   ? -8 : undefined;
+  const right  = pos.endsWith("r")   ? -8 : undefined;
   return (
-    <svg width="72" height="60" viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Zarf gövdesi */}
-      <rect x="4" y="20" width="64" height="36" rx="4" fill="white" stroke="#E9D5FF" strokeWidth="1.5"/>
-      {/* Zarf iç gölge */}
-      <rect x="4" y="20" width="64" height="36" rx="4" fill="url(#envGrad)" opacity="0.4"/>
-      {/* Sol üçgen */}
-      <path d="M4 20 L36 42 L4 56" stroke="#E9D5FF" strokeWidth="1.5" fill="none"/>
-      {/* Sağ üçgen */}
-      <path d="M68 20 L36 42 L68 56" stroke="#E9D5FF" strokeWidth="1.5" fill="none"/>
-      {/* Üst kapak (açık) */}
-      <path d="M4 20 L36 4 L68 20" fill="white" stroke="#D8B4FE" strokeWidth="1.5" strokeLinejoin="round"/>
-      {/* Mühür izi (soluk) */}
-      <circle cx="36" cy="14" r="5" fill="none" stroke="#DDD6FE" strokeWidth="1" strokeDasharray="2 2"/>
-      {/* Soru işareti içeride */}
-      <text x="36" y="42" textAnchor="middle" fill="#C4B5FD" fontSize="11" fontFamily="serif" fontStyle="italic">?</text>
-      <defs>
-        <linearGradient id="envGrad" x1="4" y1="20" x2="68" y2="56" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F3E8FF"/>
-          <stop offset="1" stopColor="#FCE7F3"/>
-        </linearGradient>
-      </defs>
-    </svg>
+    <div style={{
+      position:"absolute", top, bottom, left, right,
+      width:16, height:16,
+      borderTop:   pos.startsWith("t") ? `1.5px solid ${GOLD}` : "none",
+      borderBottom:pos.startsWith("b") ? `1.5px solid ${GOLD}` : "none",
+      borderLeft:  pos.endsWith("l")   ? `1.5px solid ${GOLD}` : "none",
+      borderRight: pos.endsWith("r")   ? `1.5px solid ${GOLD}` : "none",
+    }}/>
   );
 }
 
-/* ── Dekoratif nokta ── */
-function Dot({ className, style }: { className?: string; style?: React.CSSProperties }) {
+function GoldDivider() {
   return (
-    <div className={`absolute rounded-full ${className ?? ""}`} style={style} />
+    <div style={{ display:"flex", alignItems:"center", gap:10, width:"100%", margin:"20px 0" }}>
+      <div style={{ flex:1, height:0.75, background:`linear-gradient(to right, transparent, ${GOLD}60)` }}/>
+      <span style={{ color:GOLD, fontSize:9, letterSpacing:"0.1em" }}>✦</span>
+      <div style={{ flex:1, height:0.75, background:`linear-gradient(to left, transparent, ${GOLD}60)` }}/>
+    </div>
   );
 }
 
 export default function NotFound() {
   return (
-    <div className="relative min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4 overflow-hidden bg-white">
+    <div style={{
+      minHeight:"calc(100vh - 64px)",
+      background:`radial-gradient(ellipse at 40% 30%, #2D0A5E 0%, ${BG} 60%, #030008 100%)`,
+      display:"flex", alignItems:"center", justifyContent:"center",
+      position:"relative", overflow:"hidden", padding:"32px 16px",
+    }}>
 
-      {/* Arka plan doku */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage:"radial-gradient(circle,#F3E8FF 1px,transparent 1px)", backgroundSize:"28px 28px", opacity:0.55 }}/>
+      {/* Dot grid */}
+      <div style={{
+        position:"absolute", inset:0, pointerEvents:"none",
+        backgroundImage:`radial-gradient(circle, ${GOLD}10 1px, transparent 1px)`,
+        backgroundSize:"28px 28px",
+      }}/>
 
-      {/* Gradient blob — sol üst */}
-      <div className="absolute -top-32 -left-32 w-120 h-120 rounded-full pointer-events-none animate-blob-1"
-        style={{ background:"radial-gradient(circle,#EDE9FE 0%,transparent 65%)", filter:"blur(60px)", opacity:0.7 }}/>
+      {/* Blob sol */}
+      <div className="animate-blob-1" style={{
+        position:"absolute", top:"-20%", left:"-12%",
+        width:520, height:520, borderRadius:"50%",
+        background:"radial-gradient(circle, #3D0D7A38 0%, transparent 65%)",
+        filter:"blur(64px)", pointerEvents:"none",
+      }}/>
 
-      {/* Gradient blob — sağ alt */}
-      <div className="absolute -bottom-32 -right-32 w-100 h-100 rounded-full pointer-events-none animate-blob-2"
-        style={{ background:"radial-gradient(circle,#FCE7F3 0%,transparent 65%)", filter:"blur(72px)", opacity:0.6 }}/>
+      {/* Blob sağ */}
+      <div className="animate-blob-2" style={{
+        position:"absolute", bottom:"-18%", right:"-10%",
+        width:440, height:440, borderRadius:"50%",
+        background:"radial-gradient(circle, #1A035530 0%, transparent 65%)",
+        filter:"blur(80px)", pointerEvents:"none",
+      }}/>
 
-      {/* Yüzen noktalar */}
-      <Dot className="animate-float w-2 h-2 bg-purple-300" style={{ top:"18%", left:"14%", animationDelay:"0s" }}/>
-      <Dot className="animate-float w-1.5 h-1.5 bg-pink-300" style={{ top:"28%", right:"12%", animationDelay:"1.2s" }}/>
-      <Dot className="animate-float w-2.5 h-2.5 bg-violet-200" style={{ bottom:"22%", left:"18%", animationDelay:"0.6s" }}/>
-      <Dot className="animate-float w-1.5 h-1.5 bg-pink-200" style={{ bottom:"30%", right:"16%", animationDelay:"1.8s" }}/>
-      <Dot className="animate-float w-2 h-2 bg-purple-200" style={{ top:"50%", left:"6%",  animationDelay:"0.9s" }}/>
-      <Dot className="animate-float w-1.5 h-1.5 bg-violet-300" style={{ top:"60%", right:"8%", animationDelay:"2.1s" }}/>
+      {/* ── Davetiye Kartı ── */}
+      <div style={{
+        position:"relative", zIndex:10,
+        width:"100%", maxWidth:440,
+        background:CREAM,
+        borderRadius:4,
+        padding:"52px 48px",
+        boxShadow:`0 0 0 1px ${GOLD}30, 0 48px 120px rgba(0,0,0,0.7), 0 0 0 8px ${GOLD}08`,
+        display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center",
+      }}>
 
-      {/* İçerik */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
+        {/* Köşe süsler */}
+        <CornerMark pos="tl"/><CornerMark pos="tr"/>
+        <CornerMark pos="bl"/><CornerMark pos="br"/>
 
-        {/* 404 büyük numara */}
-        <div className="relative mb-2 select-none" style={{ lineHeight:1 }}>
-          <span
-            className="font-black"
-            style={{
-              fontSize:"clamp(7rem,22vw,11rem)",
-              background:"linear-gradient(135deg,#7C3AED 0%,#A855F7 45%,#EC4899 100%)",
-              WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
-              backgroundClip:"text",
-              letterSpacing:"-0.04em",
-            }}>
-            404
-          </span>
-          {/* Hafif gölge katmanı */}
-          <span
-            className="absolute inset-0 font-black pointer-events-none select-none"
-            aria-hidden
-            style={{
-              fontSize:"clamp(7rem,22vw,11rem)",
-              background:"linear-gradient(135deg,#7C3AED 0%,#A855F7 45%,#EC4899 100%)",
-              WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
-              backgroundClip:"text",
-              letterSpacing:"-0.04em",
-              filter:"blur(32px)",
-              opacity:0.25,
-              transform:"translateY(8px)",
-            }}>
-            404
-          </span>
-        </div>
-
-        {/* Zarf */}
-        <div className="animate-float mb-6" style={{ animationDelay:"0.4s" }}>
-          <EnvelopeOpen />
-        </div>
-
-        {/* Başlık */}
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 tracking-tight">
-          Bu sayfa davete gelmedi
-        </h1>
-
-        {/* Açıklama */}
-        <p className="text-gray-400 text-base mb-10 leading-relaxed max-w-sm"
-          style={{ fontFamily:"var(--font-cormorant),serif", fontSize:17 }}>
-          Aradığınız sayfa kaybolmuş, silinmiş ya da hiç var olmamış olabilir.
-          Merak etmeyin, sizi doğru yere götürelim.
+        {/* Üst küçük etiket */}
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:9, letterSpacing:"0.38em",
+          color:`${DARK}55`, textTransform:"uppercase", marginBottom:20,
+        }}>
+          Davetim · Dijital Davetiye
         </p>
 
-        {/* CTA butonları */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs">
-          <Link href="/"
-            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl text-sm font-bold text-white text-center transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-200"
-            style={{ background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
+        {/* Üst altın çizgi */}
+        <div style={{ display:"flex", alignItems:"center", gap:10, width:"100%", marginBottom:24 }}>
+          <div style={{ flex:1, height:0.75, background:`linear-gradient(to right,transparent,${GOLD}80)` }}/>
+          <span style={{ color:GOLD, fontSize:14 }}>✦</span>
+          <div style={{ flex:1, height:0.75, background:`linear-gradient(to left,transparent,${GOLD}80)` }}/>
+        </div>
+
+        {/* Hitap */}
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:13, letterSpacing:"0.18em",
+          color:`${DARK}70`, textTransform:"uppercase", marginBottom:16,
+        }}>
+          Sayın Misafirimiz
+        </p>
+
+        {/* 404 */}
+        <div style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:"clamp(5rem,16vw,7.5rem)",
+          color:DARK, lineHeight:0.9,
+          marginBottom:12,
+        }}>
+          404
+        </div>
+
+        <GoldDivider/>
+
+        {/* Ana mesaj */}
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:20, fontStyle:"italic",
+          color:DARK, lineHeight:1.4, marginBottom:12,
+        }}>
+          Aradığınız sayfa bu davete<br/>katılamayacağını bildiriyor.
+        </p>
+
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:13, color:`${DARK}60`,
+          lineHeight:1.8, marginBottom:4, letterSpacing:"0.02em",
+        }}>
+          Sayfa kaybolmuş, silinmiş ya da hiç var olmamış olabilir.<br/>
+          Sizi doğru yere götürmekten memnuniyet duyarız.
+        </p>
+
+        <GoldDivider/>
+
+        {/* RSVP etiketi */}
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:9, letterSpacing:"0.38em",
+          color:`${DARK}45`, textTransform:"uppercase", marginBottom:18,
+        }}>
+          Lütfen Cevap Veriniz
+        </p>
+
+        {/* Butonlar */}
+        <div style={{ display:"flex", flexDirection:"column", gap:10, width:"100%" }}>
+          <Link href="/" style={{
+            display:"block", padding:"13px 24px",
+            background:DARK, borderRadius:3,
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:12, letterSpacing:"0.28em",
+            color:CREAM, textDecoration:"none",
+            textTransform:"uppercase", textAlign:"center",
+            transition:"opacity 0.18s",
+          }}>
             Ana Sayfaya Dön
           </Link>
-          <Link href="/sablonlar"
-            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl text-sm font-bold text-gray-700 text-center bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all">
+          <Link href="/sablonlar" style={{
+            display:"block", padding:"12px 24px",
+            background:"transparent",
+            border:`1px solid ${GOLD}50`,
+            borderRadius:3,
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:12, letterSpacing:"0.28em",
+            color:`${DARK}80`, textDecoration:"none",
+            textTransform:"uppercase", textAlign:"center",
+          }}>
             Şablonlara Bak
           </Link>
         </div>
+
+        {/* Alt imza */}
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:16, color:`${GOLD}70`,
+          marginTop:28, letterSpacing:"0.04em",
+        }}>
+          Davetim
+        </p>
 
       </div>
     </div>
