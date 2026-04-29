@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
 
 /* ─── Sabitler ─── */
@@ -359,7 +360,10 @@ function getStdBolumler(sablon: Sablon): Bolum[] {
 ══════════════════════════════════════════════ */
 function SablonSatiri({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const userPlan = (session?.user as any)?.plan ?? "free";
   const isPremium = PREMIUM.has(sablon.id);
+  const kilitli = isPremium && userPlan === "free";
   const demoUrl = DEMO_URLS[sablon.id];
 
   const bolumler: readonly Bolum[] | Bolum[] =
@@ -419,11 +423,20 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
               </button>
             ))}
           </div>
-          <TelefonMockup>
-            <div className={`w-full h-full transition-opacity duration-150 ${gecis?"opacity-100":"opacity-0"}`}>
-              {(aktif as Bolum).node}
-            </div>
-          </TelefonMockup>
+          <div className="relative">
+            <TelefonMockup>
+              <div className={`w-full h-full transition-opacity duration-150 ${gecis?"opacity-100":"opacity-0"}`}>
+                {(aktif as Bolum).node}
+              </div>
+            </TelefonMockup>
+            {kilitli && (
+              <div className="absolute inset-0 rounded-[38px] flex flex-col items-center justify-center gap-3"
+                style={{ background:"rgba(0,0,0,0.55)", backdropFilter:"blur(2px)" }}>
+                <span className="text-4xl">👑</span>
+                <p className="text-white text-xs font-bold text-center px-4 leading-snug">Ücretli Plan<br/>Gerekli</p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sağ — Açıklama + Bölüm Listesi + CTA */}
@@ -460,11 +473,19 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={()=>router.push(`/olustur?sablon=${sablon.id}`)}
-              className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
-              style={{ background:renk }}>
-              Davetiyeni Oluştur →
-            </button>
+            {kilitli ? (
+              <button onClick={()=>router.push("/fiyatlar")}
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                style={{ background:"linear-gradient(135deg,#B45309,#D97706)" }}>
+                <span>👑</span> Planı Yükselt — Oluştur
+              </button>
+            ) : (
+              <button onClick={()=>router.push(`/olustur?sablon=${sablon.id}`)}
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
+                style={{ background:renk }}>
+                Davetiyeni Oluştur →
+              </button>
+            )}
             {demoUrl && (
               <a href={demoUrl} target="_blank" rel="noopener noreferrer"
                 className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-gray-700 bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all text-center">

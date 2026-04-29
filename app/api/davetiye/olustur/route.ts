@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { authOptions } from "@/lib/auth";
-import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
+import { PLAN_LIMITLER, PREMIUM_SABLON_IDS, PlanTipi } from "@/lib/planlar";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -33,6 +33,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { hata: "Kullanici bulunamadi." },
       { status: 404 }
+    );
+  }
+
+  if (PREMIUM_SABLON_IDS.has(sablon) && user.plan === "free") {
+    return NextResponse.json(
+      { hata: "Bu lüks şablon sadece ücretli planlarda kullanılabilir.", premiumGerekli: true },
+      { status: 403 }
     );
   }
 

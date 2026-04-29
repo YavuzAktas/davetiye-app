@@ -2,7 +2,9 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
+import { PREMIUM_SABLON_IDS } from "@/lib/planlar";
 import MuzikSecici from "@/components/MuzikSecici";
 
 const FONTLAR = [
@@ -550,11 +552,16 @@ function TelefonMockup({ children }: { children: React.ReactNode }) {
 function OlusturIcerigi() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const sablonId = searchParams.get("sablon") || "klasik-dugun";
   const sablon = SABLONLAR.find(s=>s.id===sablonId) || SABLONLAR[0];
   const isNisanLuks = sablonId === "nisan-luks";
   const isDugunLuks = sablonId === "dugun-luks";
   const nisanVeyaDugun = sablon.kategori === "nisan" || sablon.kategori === "dugun";
+  const isPremiumSablon = PREMIUM_SABLON_IDS.has(sablonId);
+  const kullaniciBilinen = session !== undefined;
+  const userPlan = (session?.user as any)?.plan ?? "free";
+  const premiumEngel = isPremiumSablon && userPlan === "free";
 
   const [form, setForm] = useState({
     baslik:"", etkinlikTur:sablon.kategori,
@@ -588,6 +595,7 @@ function OlusturIcerigi() {
       });
       const data = await res.json();
       if (!res.ok) { setHata(data.hata || "Bir hata oluştu."); return; }
+      if (data.premiumGerekli) { setHata(data.hata); setTimeout(()=>router.push("/fiyatlar"),2000); return; }
       if (data.limitAsimi) { setHata(data.hata); setTimeout(()=>router.push("/fiyatlar"),2000); return; }
       window.open(`/davetiye/${data.slug}`, "_blank");
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
@@ -625,7 +633,28 @@ function OlusturIcerigi() {
 
           {/* ── Sol — Form ── */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            {/* Premium engel */}
+            {premiumEngel && kullaniciBilinen && (
+              <div className="bg-white rounded-2xl border border-amber-200 shadow-sm p-8 text-center">
+                <div className="text-5xl mb-4">👑</div>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Lüks Şablon</h2>
+                <p className="text-gray-500 text-sm mb-1">
+                  <span className="font-semibold text-gray-700">{sablon.isim}</span> şablonu yalnızca ücretli planlarda kullanılabilir.
+                </p>
+                <p className="text-gray-400 text-xs mb-6">Ücretsiz planda temel şablonlardan davetiye oluşturabilirsiniz.</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <button onClick={()=>router.push("/fiyatlar")}
+                    className="bg-amber-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-amber-600 transition-colors text-sm">
+                    Planları Gör →
+                  </button>
+                  <button onClick={()=>router.push("/sablonlar")}
+                    className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors text-sm">
+                    Temel Şablonlara Dön
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className={`bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden ${premiumEngel ? "hidden" : ""}`}>
               <div className="flex border-b border-gray-100">
                 {[{ id:"icerik", isim:"İçerik", emoji:"✏️" },{ id:"tasarim", isim:"Tasarım", emoji:"🎨" }].map(tab=>(
                   <button key={tab.id} onClick={()=>setAktifTab(tab.id as "icerik"|"tasarim")}
