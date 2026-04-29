@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Suspense } from "react";
 
 function KvkkOnayIcerigi() {
-  const { update }    = useSession();
+  useSession();
   const searchParams  = useSearchParams();
-  const router        = useRouter();
   const callbackUrl   = searchParams.get("callbackUrl") || "/dashboard";
 
   const [kvkk,      setKvkk]      = useState(false);
@@ -26,8 +25,8 @@ function KvkkOnayIcerigi() {
     try {
       const res = await fetch("/api/auth/kvkk-onay", { method: "POST" });
       if (!res.ok) { setHata("Bir hata oluştu, tekrar deneyin."); return; }
-      await update();
-      router.replace(callbackUrl);
+      // Hard redirect: cookie'nin middleware tarafından doğru okunması için tam sayfa yenileme
+      window.location.replace(callbackUrl);
     } catch {
       setHata("Bir hata oluştu, tekrar deneyin.");
     } finally {
