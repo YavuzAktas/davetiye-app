@@ -37,11 +37,12 @@ export const authOptions: NextAuthOptions = {
         if (!valid) return null;
 
         return {
-          id:    user.id,
-          email: user.email,
-          name:  user.name,
-          image: user.image,
-          plan:  user.plan,
+          id:        user.id,
+          email:     user.email,
+          name:      user.name,
+          image:     user.image,
+          plan:      user.plan,
+          kvkkOnay:  user.kvkkOnay,
         };
       },
     }),
@@ -59,12 +60,11 @@ export const authOptions: NextAuthOptions = {
           await prisma.user.update({
             where: { email: user.email },
             data: {
-              // KVKK onayı yoksa kaydet
-              ...(mevcut.kvkkOnay ? {} : { kvkkOnay: true, kvkkOnayTarih: new Date() }),
               // Profil resmi yoksa Google'dan al
               ...(mevcut.image ? {} : { image: user.image }),
               // İsim yoksa Google'dan al
               ...(mevcut.name  ? {} : { name:  user.name  }),
+              // kvkkOnay burada set edilmiyor — kullanıcı /kvkk-onay sayfasında aktif onay verecek
             },
           });
         }
@@ -73,23 +73,28 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, trigger }) {
       if (user) {
-        token.id   = user.id;
-        token.plan = (user as any).plan ?? "free";
+        token.id       = user.id;
+        token.plan     = (user as any).plan     ?? "free";
+        token.kvkkOnay = (user as any).kvkkOnay ?? false;
       }
-      // update() tetiklendiğinde DB'den güncel planı oku (ör. ödeme sonrası)
+      // update() tetiklendiğinde DB'den güncel değerleri oku (ör. ödeme veya kvkk onayı sonrası)
       if (trigger === "update" && token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { plan: true },
+          select: { plan: true, kvkkOnay: true },
         });
-        if (dbUser) token.plan = dbUser.plan;
+        if (dbUser) {
+          token.plan     = dbUser.plan;
+          token.kvkkOnay = dbUser.kvkkOnay ?? false;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id   = token.id   as string;
-        session.user.plan = token.plan as string;
+        session.user.id       = token.id       as string;
+        session.user.plan     = token.plan     as string;
+        session.user.kvkkOnay = token.kvkkOnay as boolean;
       }
       return session;
     },

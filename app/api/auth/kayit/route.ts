@@ -4,13 +4,10 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { ad, email, sifre, kvkkOnay, kullanim } = await req.json();
+    const { ad, email, sifre, kullanim } = await req.json();
 
     if (!ad?.trim() || !email?.trim() || !sifre)
       return NextResponse.json({ hata: "Tüm alanlar zorunludur." }, { status: 400 });
-
-    if (!kvkkOnay)
-      return NextResponse.json({ hata: "KVKK aydınlatma metnini onaylamanız zorunludur." }, { status: 400 });
 
     if (!kullanim)
       return NextResponse.json({ hata: "Kullanım şartlarını kabul etmeniz zorunludur." }, { status: 400 });

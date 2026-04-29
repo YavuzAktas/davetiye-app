@@ -75,7 +75,6 @@ function GirisIcerigi() {
   const [kayitEmail,  setKayitEmail]  = useState("");
   const [kayitSifre,  setKayitSifre]  = useState("");
   const [kayitSifre2, setKayitSifre2] = useState("");
-  const [kvkk,        setKvkk]        = useState(false);
   const [kullanim,    setKullanim]    = useState(false);
 
   async function handleGiris(e: React.FormEvent) {
@@ -91,12 +90,11 @@ function GirisIcerigi() {
     e.preventDefault();
     setHata("");
     if (kayitSifre !== kayitSifre2) { setHata("Şifreler eşleşmiyor."); return; }
-    if (!kvkk)     { setHata("KVKK aydınlatma metnini onaylamanız zorunludur."); return; }
     if (!kullanim) { setHata("Kullanım şartlarını kabul etmeniz zorunludur."); return; }
     setYukleme(true);
     const res = await fetch("/api/auth/kayit", {
       method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ ad:kayitAd, email:kayitEmail, sifre:kayitSifre, kvkkOnay:kvkk, kullanim }),
+      body: JSON.stringify({ ad:kayitAd, email:kayitEmail, sifre:kayitSifre, kullanim }),
     });
     const veri = await res.json();
     if (!res.ok) { setHata(veri.hata); setYukleme(false); return; }
@@ -290,17 +288,8 @@ function GirisIcerigi() {
                   <input type="password" required placeholder="Şifre tekrar" value={kayitSifre2}
                     onChange={e=>setKayitSifre2(e.target.value)} className={inputCls}/>
 
-                  {/* KVKK onayları */}
+                  {/* Kullanım Şartları onayı */}
                   <div className="space-y-3 pt-2 pb-1">
-                    <KvkkCheckbox id="kvkk" checked={kvkk} onChange={setKvkk}>
-                      <Link href="/kvkk" target="_blank" className="text-purple-600 font-semibold hover:underline">
-                        KVKK Aydınlatma Metni
-                      </Link>
-                      {"'ni okudum; kişisel verilerimin belirtilen amaçlarla işlenmesini "}
-                      <span className="font-semibold text-gray-700">açıkça onaylıyorum.</span>
-                      {" (Zorunlu)"}
-                    </KvkkCheckbox>
-
                     <KvkkCheckbox id="kullanim" checked={kullanim} onChange={setKullanim}>
                       <Link href="/kullanim-sartlari" target="_blank" className="text-purple-500 hover:underline">
                         Kullanım Şartları
@@ -320,9 +309,10 @@ function GirisIcerigi() {
                   </button>
 
                   <p className="text-[10px] text-gray-400 leading-relaxed text-center pt-1">
-                    Onay tarihiniz kayıt altına alınır. KVKK kapsamındaki haklarınız için{" "}
-                    <Link href="/kvkk" className="text-purple-600 font-semibold hover:underline">kvkk sayfamızı</Link>{" "}
-                    inceleyebilirsiniz.
+                    Kişisel verileriniz KVKK m.5/2-c (sözleşme kurulması) kapsamında işlenmektedir.{" "}
+                    <Link href="/kvkk" target="_blank" className="text-purple-600 font-semibold hover:underline">
+                      KVKK Aydınlatma Metni
+                    </Link>
                   </p>
                 </form>
               )}
