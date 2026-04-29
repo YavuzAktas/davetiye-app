@@ -1,13 +1,10 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard"];
-
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isProtected = PROTECTED_PREFIXES.some(p => pathname.startsWith(p));
-  if (!isProtected) return NextResponse.next();
+  if (!pathname.startsWith("/dashboard")) return NextResponse.next();
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
@@ -17,12 +14,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (!token.kvkkOnay) {
-    const onayUrl = new URL("/kvkk-onay", req.url);
-    onayUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(onayUrl);
-  }
-
+  // kvkkOnay kontrolü middleware'de değil, dashboard layout'ta DB'den yapılıyor
   return NextResponse.next();
 }
 
