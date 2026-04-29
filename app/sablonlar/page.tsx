@@ -536,21 +536,6 @@ function SablonSatiri({ sablon }: { sablon: Sablon }) {
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 p-6">
         {/* Sol — Bölüm Sekmeleri + Telefon */}
         <div className="shrink-0 flex flex-col items-center">
-          {/* Tek satır yatay kaydırma — tüm kartlarda telefon aynı yükseklikte başlar */}
-          <div style={{ width: 260, overflowX: "auto", overflowY: "hidden", marginBottom: 16 }}
-            className="scrollbar-hide">
-            <div className="flex gap-1.5" style={{ flexWrap: "nowrap", paddingBottom: 2 }}>
-              {bolumler.map(b=>(
-                <button key={b.id} onClick={()=>handleTab(b.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0 ${
-                    aktifId===b.id ? "text-white shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                  }`}
-                  style={aktifId===b.id ? { background:renk } : {}}>
-                  <span>{b.icon}</span> {b.label}
-                </button>
-              ))}
-            </div>
-          </div>
           <div className="relative">
             <TelefonMockup>
               <div ref={scrollRef} className="scrollbar-hide"
