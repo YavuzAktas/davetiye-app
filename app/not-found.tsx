@@ -1,185 +1,66 @@
 import Link from "next/link";
 
-const GOLD  = "#C4A05A";
-const BG    = "#0D0118";
-const CREAM = "#F5ECD8";
-const DARK  = "#1a0a08";
-
-function CornerMark({ pos }: { pos: "tl"|"tr"|"bl"|"br" }) {
-  const top    = pos.startsWith("t") ? -8 : undefined;
-  const bottom = pos.startsWith("b") ? -8 : undefined;
-  const left   = pos.endsWith("l")   ? -8 : undefined;
-  const right  = pos.endsWith("r")   ? -8 : undefined;
-  return (
-    <div style={{
-      position:"absolute", top, bottom, left, right,
-      width:16, height:16,
-      borderTop:   pos.startsWith("t") ? `1.5px solid ${GOLD}` : "none",
-      borderBottom:pos.startsWith("b") ? `1.5px solid ${GOLD}` : "none",
-      borderLeft:  pos.endsWith("l")   ? `1.5px solid ${GOLD}` : "none",
-      borderRight: pos.endsWith("r")   ? `1.5px solid ${GOLD}` : "none",
-    }}/>
-  );
-}
-
-function GoldDivider() {
-  return (
-    <div style={{ display:"flex", alignItems:"center", gap:10, width:"100%", margin:"20px 0" }}>
-      <div style={{ flex:1, height:0.75, background:`linear-gradient(to right, transparent, ${GOLD}60)` }}/>
-      <span style={{ color:GOLD, fontSize:9, letterSpacing:"0.1em" }}>✦</span>
-      <div style={{ flex:1, height:0.75, background:`linear-gradient(to left, transparent, ${GOLD}60)` }}/>
-    </div>
-  );
-}
-
 export default function NotFound() {
   return (
-    <div style={{
-      minHeight:"calc(100vh - 64px)",
-      background:`radial-gradient(ellipse at 40% 30%, #2D0A5E 0%, ${BG} 60%, #030008 100%)`,
-      display:"flex", alignItems:"center", justifyContent:"center",
-      position:"relative", overflow:"hidden", padding:"32px 16px",
-    }}>
+    <div className="relative min-h-[calc(100vh-64px)] bg-white flex flex-col items-center justify-center px-6 overflow-hidden">
 
-      {/* Dot grid */}
-      <div style={{
-        position:"absolute", inset:0, pointerEvents:"none",
-        backgroundImage:`radial-gradient(circle, ${GOLD}10 1px, transparent 1px)`,
-        backgroundSize:"28px 28px",
-      }}/>
+      {/* Hafif arka plan gradyanı */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background:"radial-gradient(ellipse at 50% 0%,#F3E8FF 0%,#FDF2F8 35%,#fff 70%)" }}/>
 
-      {/* Blob sol */}
-      <div className="animate-blob-1" style={{
-        position:"absolute", top:"-20%", left:"-12%",
-        width:520, height:520, borderRadius:"50%",
-        background:"radial-gradient(circle, #3D0D7A38 0%, transparent 65%)",
-        filter:"blur(64px)", pointerEvents:"none",
-      }}/>
+      {/* Nokta doku */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ backgroundImage:"radial-gradient(circle,#E9D5FF 1px,transparent 1px)", backgroundSize:"32px 32px", opacity:0.5 }}/>
 
-      {/* Blob sağ */}
-      <div className="animate-blob-2" style={{
-        position:"absolute", bottom:"-18%", right:"-10%",
-        width:440, height:440, borderRadius:"50%",
-        background:"radial-gradient(circle, #1A035530 0%, transparent 65%)",
-        filter:"blur(80px)", pointerEvents:"none",
-      }}/>
+      {/* İçerik */}
+      <div className="relative z-10 flex flex-col items-center text-center">
 
-      {/* ── Davetiye Kartı ── */}
-      <div style={{
-        position:"relative", zIndex:10,
-        width:"100%", maxWidth:440,
-        background:CREAM,
-        borderRadius:4,
-        padding:"52px 48px",
-        boxShadow:`0 0 0 1px ${GOLD}30, 0 48px 120px rgba(0,0,0,0.7), 0 0 0 8px ${GOLD}08`,
-        display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center",
-      }}>
-
-        {/* Köşe süsler */}
-        <CornerMark pos="tl"/><CornerMark pos="tr"/>
-        <CornerMark pos="bl"/><CornerMark pos="br"/>
-
-        {/* Üst küçük etiket */}
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:9, letterSpacing:"0.38em",
-          color:`${DARK}55`, textTransform:"uppercase", marginBottom:20,
-        }}>
-          Davetim · Dijital Davetiye
-        </p>
-
-        {/* Üst altın çizgi */}
-        <div style={{ display:"flex", alignItems:"center", gap:10, width:"100%", marginBottom:24 }}>
-          <div style={{ flex:1, height:0.75, background:`linear-gradient(to right,transparent,${GOLD}80)` }}/>
-          <span style={{ color:GOLD, fontSize:14 }}>✦</span>
-          <div style={{ flex:1, height:0.75, background:`linear-gradient(to left,transparent,${GOLD}80)` }}/>
-        </div>
-
-        {/* Hitap */}
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:13, letterSpacing:"0.18em",
-          color:`${DARK}70`, textTransform:"uppercase", marginBottom:16,
-        }}>
-          Sayın Misafirimiz
-        </p>
-
-        {/* 404 */}
-        <div style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:"clamp(5rem,16vw,7.5rem)",
-          color:DARK, lineHeight:0.9,
-          marginBottom:12,
-        }}>
+        {/* Numara */}
+        <p className="font-black leading-none select-none"
+          style={{
+            fontSize:"clamp(8rem,25vw,14rem)",
+            background:"linear-gradient(135deg,#7C3AED 0%,#A855F7 50%,#EC4899 100%)",
+            WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+            backgroundClip:"text",
+            letterSpacing:"-0.04em",
+            filter:"drop-shadow(0 8px 40px rgba(124,58,237,0.2))",
+          }}>
           404
+        </p>
+
+        {/* Zarf ikonuSerif */}
+        <div className="animate-float -mt-4 mb-8">
+          <svg width="64" height="48" viewBox="0 0 64 48" fill="none">
+            <rect x="2" y="10" width="60" height="36" rx="5" fill="white" stroke="#E9D5FF" strokeWidth="1.5"/>
+            <path d="M2 10 L32 30 L62 10" stroke="#D8B4FE" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+            <path d="M2 10 L32 2 L62 10" fill="#F3E8FF" stroke="#D8B4FE" strokeWidth="1.5" strokeLinejoin="round"/>
+            <path d="M2 46 L24 28" stroke="#EDE9FE" strokeWidth="1.2"/>
+            <path d="M62 46 L40 28" stroke="#EDE9FE" strokeWidth="1.2"/>
+          </svg>
         </div>
 
-        <GoldDivider/>
+        {/* Başlık */}
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 tracking-tight">
+          Sayfa bulunamadı
+        </h1>
 
-        {/* Ana mesaj */}
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:20, fontStyle:"italic",
-          color:DARK, lineHeight:1.4, marginBottom:12,
-        }}>
-          Aradığınız sayfa bu davete<br/>katılamayacağını bildiriyor.
-        </p>
-
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:13, color:`${DARK}60`,
-          lineHeight:1.8, marginBottom:4, letterSpacing:"0.02em",
-        }}>
-          Sayfa kaybolmuş, silinmiş ya da hiç var olmamış olabilir.<br/>
-          Sizi doğru yere götürmekten memnuniyet duyarız.
-        </p>
-
-        <GoldDivider/>
-
-        {/* RSVP etiketi */}
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:9, letterSpacing:"0.38em",
-          color:`${DARK}45`, textTransform:"uppercase", marginBottom:18,
-        }}>
-          Lütfen Cevap Veriniz
+        {/* Alt yazı */}
+        <p className="text-gray-400 text-base mb-10 max-w-sm leading-relaxed">
+          Bu sayfanın daveti iptal edilmiş. Sizi doğru adrese götürelim.
         </p>
 
         {/* Butonlar */}
-        <div style={{ display:"flex", flexDirection:"column", gap:10, width:"100%" }}>
-          <Link href="/" style={{
-            display:"block", padding:"13px 24px",
-            background:DARK, borderRadius:3,
-            fontFamily:"var(--font-cormorant),serif",
-            fontSize:12, letterSpacing:"0.28em",
-            color:CREAM, textDecoration:"none",
-            textTransform:"uppercase", textAlign:"center",
-            transition:"opacity 0.18s",
-          }}>
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
+          <Link href="/"
+            className="flex-1 py-3.5 px-6 rounded-2xl text-sm font-bold text-white text-center transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-200"
+            style={{ background:"linear-gradient(135deg,#7C3AED,#EC4899)" }}>
             Ana Sayfaya Dön
           </Link>
-          <Link href="/sablonlar" style={{
-            display:"block", padding:"12px 24px",
-            background:"transparent",
-            border:`1px solid ${GOLD}50`,
-            borderRadius:3,
-            fontFamily:"var(--font-cormorant),serif",
-            fontSize:12, letterSpacing:"0.28em",
-            color:`${DARK}80`, textDecoration:"none",
-            textTransform:"uppercase", textAlign:"center",
-          }}>
+          <Link href="/sablonlar"
+            className="flex-1 py-3.5 px-6 rounded-2xl text-sm font-bold text-gray-600 text-center border border-gray-200 bg-white hover:bg-gray-50 transition-all">
             Şablonlara Bak
           </Link>
         </div>
-
-        {/* Alt imza */}
-        <p style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:16, color:`${GOLD}70`,
-          marginTop:28, letterSpacing:"0.04em",
-        }}>
-          Davetim
-        </p>
 
       </div>
     </div>
