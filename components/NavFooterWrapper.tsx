@@ -7,12 +7,14 @@ import Link from "next/link";
 export default function NavFooterWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDavetiye = pathname.startsWith("/davetiye/");
+  const isGiris = pathname === "/giris";
+  const hideChrome = isDavetiye || isGiris;
 
   return (
     <>
-      {!isDavetiye && <Header />}
+      {!hideChrome && <Header />}
       <main>{children}</main>
-      {!isDavetiye && <Footer />}
+      {!hideChrome && <Footer />}
     </>
   );
 }
