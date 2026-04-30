@@ -14,6 +14,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
   }
 
+  if (typeof ad !== "string" || ad.trim().length > 100) {
+    return NextResponse.json({ hata: "Ad çok uzun." }, { status: 400 });
+  }
+
+  if (mesaj && (typeof mesaj !== "string" || mesaj.length > 500)) {
+    return NextResponse.json({ hata: "Mesaj en fazla 500 karakter olabilir." }, { status: 400 });
+  }
+
+  const kisi = Math.min(Math.max(parseInt(kisiSayisi) || 1, 1), 50);
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (email && !emailRegex.test(email.trim())) {
     return NextResponse.json({ hata: "Geçerli bir e-posta adresi girin." }, { status: 400 });
@@ -84,7 +94,7 @@ export async function POST(req: NextRequest) {
       email: email?.trim() || null,
       telefon: telefon?.trim() || null,
       katilim,
-      kisiSayisi: kisiSayisi || 1,
+      kisiSayisi: kisi,
       mesaj: mesaj?.trim() || null,
     },
   });
@@ -97,7 +107,7 @@ export async function POST(req: NextRequest) {
       davetiyeSlug:   davetiye.slug,
       misafirAd:   ad.trim(),
       katilim,
-      kisiSayisi:  kisiSayisi || 1,
+      kisiSayisi:  kisi,
       misafirNot:  mesaj,
     });
   }

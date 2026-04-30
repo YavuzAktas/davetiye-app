@@ -19,7 +19,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
   }
 
-  const { planId, fiyat } = await req.json();
+  const { planId } = await req.json();
+
+  const PLAN_FIYATLARI: Record<string, number> = { standart: 299, premium: 599 };
+  const fiyat = PLAN_FIYATLARI[planId];
+  if (!fiyat) {
+    return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
+  }
 
   // Gerçek istemci IP'sini al (proxy arkasında x-forwarded-for öncelikli)
   const clientIp =

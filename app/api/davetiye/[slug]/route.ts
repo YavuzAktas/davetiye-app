@@ -9,13 +9,17 @@ export async function GET(
 ) {
   const { slug } = await params;
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { slug, userId: session.user.id },
   });
+
+  if (!davetiye) {
+    return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
+  }
 
   return NextResponse.json({ davetiye });
 }
