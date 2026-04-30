@@ -16,7 +16,7 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600"],
 });
 
-const SITE_URL = "https://davetiye-app.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_URL ?? "https://bekleriz.com";
 const OG_IMAGE  = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
