@@ -17,7 +17,6 @@ const cormorant = Cormorant_Garamond({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL ?? "https://bekleriz.com";
-const OG_IMAGE  = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   title: {
@@ -39,18 +38,13 @@ export const metadata: Metadata = {
     siteName: "Bekleriz",
     locale: "tr_TR",
     type: "website",
-    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Bekleriz — Online Davetiye Platformu" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bekleriz — Online Davetiye Platformu",
     description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
-    images: [OG_IMAGE],
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
+  icons: { icon: "/favicon.ico" },
   robots: { index: true, follow: true },
 };
 
@@ -64,7 +58,7 @@ export default function RootLayout({
     "@type": "Organization",
     name: "Bekleriz",
     url: SITE_URL,
-    logo: `${SITE_URL}/og-image.png`,
+    logo: `${SITE_URL}/opengraph-image`,
     description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
     contactPoint: {
       "@type": "ContactPoint",
