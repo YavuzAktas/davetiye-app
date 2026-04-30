@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 function KvkkOnayIcerigi() {
-  useSession();
+  const { update } = useSession();
   const searchParams  = useSearchParams();
   const callbackUrl   = searchParams.get("callbackUrl") || "/dashboard";
 
@@ -25,7 +25,8 @@ function KvkkOnayIcerigi() {
     try {
       const res = await fetch("/api/auth/kvkk-onay", { method: "POST" });
       if (!res.ok) { setHata("Bir hata oluştu, tekrar deneyin."); return; }
-      // Hard redirect: cookie'nin middleware tarafından doğru okunması için tam sayfa yenileme
+      // JWT'yi yenile: token'daki kvkkOnay=true olsun, sonraki isteklerde DB sorgusu atılmasın
+      await update();
       window.location.replace(callbackUrl);
     } catch {
       setHata("Bir hata oluştu, tekrar deneyin.");

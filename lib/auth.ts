@@ -88,14 +88,6 @@ export const authOptions: NextAuthOptions = {
           token.kvkkOnay = dbUser.kvkkOnay ?? false;
         }
       }
-      // JWT'de kvkkOnay hâlâ false ise DB'yi kontrol et — onay sayfası hard-redirect kullandığında token yenilenir
-      if (!token.kvkkOnay && token.id && !user && trigger !== "update") {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { kvkkOnay: true },
-        });
-        if (dbUser?.kvkkOnay) token.kvkkOnay = true;
-      }
       return token;
     },
     async session({ session, token }) {
