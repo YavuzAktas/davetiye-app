@@ -28,8 +28,13 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
   };
 
   const handleGonder = async () => {
-    if (!form.ad.trim()) {
-      setHata("Lütfen adınızı girin.");
+    if (!form.ad.trim() || form.ad.length > 100) {
+      setHata("Lütfen geçerli bir ad girin (Maks. 100 karakter).");
+      return;
+    }
+
+    if (form.mesaj.length > 500) {
+      setHata("Mesajınız çok uzun (Maks. 500 karakter).");
       return;
     }
 
