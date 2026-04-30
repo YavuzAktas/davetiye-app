@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
 
 /* ─── Sabitler ─── */
@@ -45,6 +46,7 @@ function TelefonMockup({ children }: { children: React.ReactNode }) {
 const N = { BG:"#3B0A14", BG_MED:"#4E1020", BG_DARK:"#270610", GOLD:"#C4A05A", CREAM:"#F5E8D8" };
 
 function NisanKapak() {
+  const [sealFailed, setSealFailed] = useState(false);
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
       style={{ background:`radial-gradient(ellipse at 50% 45%,#5C1020 0%,${N.BG} 55%,${N.BG_DARK} 100%)` }}>
@@ -52,18 +54,20 @@ function NisanKapak() {
       <p className="relative z-10 text-center mb-6" style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.5rem,5vw,2.2rem)", color:N.CREAM, lineHeight:1.2 }}>
         Aylin <span style={{ color:N.GOLD }}>&amp;</span> Yavuz
       </p>
-      <div className="relative z-10" style={{ width:110, height:110, borderRadius:"50%", overflow:"hidden",
+      <div className="relative z-10" style={{ width:110, height:110, borderRadius:"50%", overflow:"hidden", position:"relative",
         boxShadow:`0 0 0 6px ${N.BG},0 0 0 8px rgba(196,160,90,0.2),0 12px 36px rgba(10,0,6,0.7)` }}>
-        <img src="/rose-seal.png" alt="" className="w-full h-full object-cover block"
-          onError={e=>{(e.currentTarget as HTMLImageElement).style.display="none";(e.currentTarget.nextElementSibling as HTMLElement).style.display="flex";}}/>
-        <div className="w-full h-full items-center justify-center hidden"
-          style={{ background:`radial-gradient(circle at 38% 32%,#A01C2E 0%,#7A1220 40%,#3E0810 100%)` }}>
-          <svg viewBox="0 0 200 200" className="w-3/4 h-3/4" fill="none">
-            {[0,60,120,180,240,300].map(a=><ellipse key={a} cx="100" cy="52" rx="14" ry="22" fill="rgba(200,80,80,0.3)" transform={`rotate(${a} 100 100)`}/>)}
-            <circle cx="100" cy="100" r="12" fill="rgba(225,105,105,0.65)"/>
-            <circle cx="100" cy="100" r="5"  fill="rgba(245,140,130,0.8)"/>
-          </svg>
-        </div>
+        {!sealFailed ? (
+          <Image src="/rose-seal.png" alt="" fill className="object-cover" onError={() => setSealFailed(true)} />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center"
+            style={{ background:`radial-gradient(circle at 38% 32%,#A01C2E 0%,#7A1220 40%,#3E0810 100%)` }}>
+            <svg viewBox="0 0 200 200" className="w-3/4 h-3/4" fill="none">
+              {[0,60,120,180,240,300].map(a=><ellipse key={a} cx="100" cy="52" rx="14" ry="22" fill="rgba(200,80,80,0.3)" transform={`rotate(${a} 100 100)`}/>)}
+              <circle cx="100" cy="100" r="12" fill="rgba(225,105,105,0.65)"/>
+              <circle cx="100" cy="100" r="5"  fill="rgba(245,140,130,0.8)"/>
+            </svg>
+          </div>
+        )}
       </div>
       <p className="relative z-10 mt-6" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.3em", color:N.GOLD }}>06 HAZİRAN 2026</p>
       <p className="relative z-10 mt-2" style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, fontStyle:"italic", color:`${N.GOLD}55` }}>Mühüre dokun ✦</p>

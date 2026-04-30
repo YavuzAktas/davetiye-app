@@ -2,6 +2,7 @@
 
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import MuzikCalar from "@/components/MuzikCalar";
 
 /* ─── Renkler ─── */
@@ -46,12 +47,15 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
       }}
     >
       {!imgFailed ? (
-        <img
-          src="/rose-seal.png"
-          alt="Gül Mühür"
-          onError={() => setImgFailed(true)}
-          style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-        />
+        <div style={{ position:"relative", width:"100%", height:"100%" }}>
+          <Image
+            src="/rose-seal.png"
+            alt="Gül Mühür"
+            fill
+            className="object-cover"
+            onError={() => setImgFailed(true)}
+          />
+        </div>
       ) : (
         /* CSS yedek gül */
         <div style={{

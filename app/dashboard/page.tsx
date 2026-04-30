@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
 
@@ -67,7 +68,7 @@ export default async function Dashboard() {
           <div className="flex items-center justify-between gap-4 mb-10">
             <div className="flex items-center gap-4">
               {avatar ? (
-                <img src={avatar} alt={isim} className="w-12 h-12 rounded-2xl ring-2 ring-white/10 object-cover" />
+                <Image src={avatar} alt={isim} width={48} height={48} className="w-12 h-12 rounded-2xl ring-2 ring-white/10 object-cover" />
               ) : (
                 <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
                   {isim[0]}

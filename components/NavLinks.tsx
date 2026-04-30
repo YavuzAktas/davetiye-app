@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 
@@ -35,7 +36,7 @@ export default function NavLinks() {
               className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all"
             >
               {session.user?.image ? (
-                <img src={session.user.image} alt="Profil" className="w-6 h-6 rounded-full" />
+                <Image src={session.user.image} alt="Profil" width={24} height={24} className="rounded-full" />
               ) : (
                 <div className="w-6 h-6 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                   {session.user?.name?.[0] ?? "U"}
