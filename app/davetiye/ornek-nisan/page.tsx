@@ -17,7 +17,7 @@ const ORNEK: DavetiyeVeri = {
   sablon: "nisan-luks",
   ozelRenk: null,
   font: null,
-  muzik: "/muzikler/romantik-piyano.mp3",
+  muzik: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
   goruntulenme: 0,
   user: { name: "Aylin Yılmaz", email: null },
   kisi1: "Aylin",
