@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import QRCode from "qrcode";
+import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
+  }
+
+  const ip = ipAlNextRequest(req);
+  if (!ipIzinVer("qr", ip, 30, 60_000)) {
+    return NextResponse.json({ hata: "Çok fazla istek." }, { status: 429 });
+  }
+
   const { searchParams } = new URL(req.url);
   const url = searchParams.get("url");
 
