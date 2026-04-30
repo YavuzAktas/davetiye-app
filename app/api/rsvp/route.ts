@@ -1,34 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 
-const LIMIT_DAKIKA  = 5;   // aynı davetiye, son 1 dakika
-const LIMIT_SAAT    = 100; // aynı davetiye, son 1 saat
-const LIMIT_MUKERRER_DK = 10; // aynı ad tekrarı bekleme süresi (dakika)
+/* ── Zod şeması ─────────────────────────────────────────── */
+const rsvpSemasi = z.object({
+  davetiyeId: z.string().min(1).max(50),
+  ad:         z.string().min(1).max(100),
+  email:      z.string().email().max(254).optional().or(z.literal("")).transform(v => v || undefined),
+  telefon:    z.string().max(20).optional(),
+  katilim:    z.boolean(),
+  kisiSayisi: z.number().int().min(1).max(50).default(1),
+  mesaj:      z.string().max(500).optional(),
+});
 
+/* ── IP tabanlı rate limiter (module-level, instance başına) */
+const IP_LIMIT   = 10;         // istek / pencere
+const IP_PENCERE = 60_000;     // 1 dakika
+
+const ipSayac = new Map<string, { sayi: number; sifirAt: number }>();
+
+function ipIzinVer(ip: string): boolean {
+  const simdi = Date.now();
+  const kayit = ipSayac.get(ip);
+  if (!kayit || simdi > kayit.sifirAt) {
+    ipSayac.set(ip, { sayi: 1, sifirAt: simdi + IP_PENCERE });
+    return true;
+  }
+  if (kayit.sayi >= IP_LIMIT) return false;
+  kayit.sayi++;
+  return true;
+}
+
+/* ── DB tabanlı per-davetiye limitler ───────────────────── */
+const LIMIT_DAKIKA      = 5;
+const LIMIT_SAAT        = 100;
+const LIMIT_MUKERRER_DK = 10;
+
+/* ── Handler ────────────────────────────────────────────── */
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj } = body;
+  /* 1. IP kontrolü */
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
 
-  if (!davetiyeId || !ad?.trim() || katilim === undefined) {
-    return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
+  if (!ipIzinVer(ip)) {
+    return NextResponse.json(
+      { hata: "Çok fazla istek. Lütfen bir dakika bekleyin." },
+      { status: 429 }
+    );
   }
 
-  if (typeof ad !== "string" || ad.trim().length > 100) {
-    return NextResponse.json({ hata: "Ad çok uzun." }, { status: 400 });
+  /* 2. Zod doğrulama */
+  const ham = await req.json().catch(() => null);
+  const sonuc = rsvpSemasi.safeParse(ham);
+  if (!sonuc.success) {
+    const ilkHata = sonuc.error.issues[0]?.message ?? "Geçersiz veri.";
+    return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  if (mesaj && (typeof mesaj !== "string" || mesaj.length > 500)) {
-    return NextResponse.json({ hata: "Mesaj en fazla 500 karakter olabilir." }, { status: 400 });
-  }
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj } = sonuc.data;
 
-  const kisi = Math.min(Math.max(parseInt(kisiSayisi) || 1, 1), 50);
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (email && !emailRegex.test(email.trim())) {
-    return NextResponse.json({ hata: "Geçerli bir e-posta adresi girin." }, { status: 400 });
-  }
-
+  /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
     where: { id: davetiyeId },
     include: { user: true },
@@ -38,25 +72,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
   }
 
+  /* 4. DB tabanlı per-davetiye rate limit */
   const simdi = Date.now();
 
-  // Üç rate-limit kontrolünü paralel çalıştır
   const [dakikaCount, saatCount, mukerrerCount] = await Promise.all([
-    // 1) Burst: aynı davetiye için son 1 dakikada kaç RSVP?
     prisma.rSVP.count({
-      where: {
-        davetiyeId,
-        createdAt: { gte: new Date(simdi - 60_000) },
-      },
+      where: { davetiyeId, createdAt: { gte: new Date(simdi - 60_000) } },
     }),
-    // 2) Sürekli spam: aynı davetiye için son 1 saatte kaç RSVP?
     prisma.rSVP.count({
-      where: {
-        davetiyeId,
-        createdAt: { gte: new Date(simdi - 3_600_000) },
-      },
+      where: { davetiyeId, createdAt: { gte: new Date(simdi - 3_600_000) } },
     }),
-    // 3) Mükerrer: aynı ad + aynı davetiye son 10 dakikada gönderildi mi?
     prisma.rSVP.count({
       where: {
         davetiyeId,
@@ -72,14 +97,12 @@ export async function POST(req: NextRequest) {
       { status: 429 }
     );
   }
-
   if (saatCount >= LIMIT_SAAT) {
     return NextResponse.json(
       { hata: "Bu davetiye için saatlik RSVP sınırına ulaşıldı." },
       { status: 429 }
     );
   }
-
   if (mukerrerCount > 0) {
     return NextResponse.json(
       { hata: "Bu isimle zaten bir katılım bildirimi gönderildi. Lütfen bekleyin." },
@@ -87,28 +110,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  /* 5. Kaydet */
   const rsvp = await prisma.rSVP.create({
     data: {
       davetiyeId,
-      ad: ad.trim(),
-      email: email?.trim() || null,
-      telefon: telefon?.trim() || null,
+      ad:         ad.trim(),
+      email:      email?.trim()   || null,
+      telefon:    telefon?.trim() || null,
       katilim,
-      kisiSayisi: kisi,
-      mesaj: mesaj?.trim() || null,
+      kisiSayisi,
+      mesaj:      mesaj?.trim()   || null,
     },
   });
 
+  /* 6. Bildirim e-postası (beklemeden gönder) */
   if (davetiye.user?.email) {
     rsvpBildirimiGonder({
-      sahipEmail: davetiye.user.email,
-      sahipAd:    davetiye.user.name || "Kullanıcı",
+      sahipEmail:     davetiye.user.email,
+      sahipAd:        davetiye.user.name || "Kullanıcı",
       davetiyeBaslik: davetiye.baslik,
       davetiyeSlug:   davetiye.slug,
-      misafirAd:   ad.trim(),
+      misafirAd:      ad.trim(),
       katilim,
-      kisiSayisi:  kisi,
-      misafirNot:  mesaj,
+      kisiSayisi,
+      misafirNot:     mesaj,
     });
   }
 
