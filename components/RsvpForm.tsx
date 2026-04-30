@@ -118,6 +118,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="Adınızı girin"
               value={form.ad}
               onChange={(e) => setForm({ ...form, ad: e.target.value })}
+              maxLength={100}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
@@ -131,6 +132,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="ornek@mail.com"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
+              maxLength={254}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
@@ -165,6 +167,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               placeholder="Bir şey eklemek ister misiniz?"
               value={form.mesaj}
               onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
+              maxLength={500}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
             />
           </div>
