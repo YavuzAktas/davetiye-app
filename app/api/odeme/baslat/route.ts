@@ -3,16 +3,34 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
+import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // 1. IP tabanlı limit: 5 deneme / 15 dk
+  const clientIp = ipAlNextRequest(req);
+  if (!ipIzinVer("odeme-ip", clientIp, 5, 15 * 60_000)) {
+    return NextResponse.json(
+      { hata: "Çok fazla ödeme isteği. Lütfen 15 dakika bekleyin." },
+      { status: 429 },
+    );
+  }
+
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
+  // 2. Kullanıcı tabanlı limit: 3 deneme / saat
+  if (!ipIzinVer("odeme-kullanici", session.user.id, 3, 60 * 60_000)) {
+    return NextResponse.json(
+      { hata: "Saatlik ödeme deneme sınırına ulaşıldı. Lütfen bekleyin." },
+      { status: 429 },
+    );
+  }
+
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+    where: { id: session.user.id },
   });
 
   if (!user) {
@@ -26,12 +44,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!fiyat) {
     return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
   }
-
-  // Gerçek istemci IP'sini al (proxy arkasında x-forwarded-for öncelikli)
-  const clientIp =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "127.0.0.1";
 
   const request = {
     locale: "tr",
