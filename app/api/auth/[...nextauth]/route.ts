@@ -13,9 +13,10 @@ export { handler as GET };
 // 10 giriş denemesi / IP / 15 dakika — sadece credentials callback'e uygulanır
 export async function POST(
   req: NextRequest,
-  ctx: { params: { nextauth: string[] } },
+  ctx: { params: Promise<{ nextauth: string[] }> },
 ) {
-  const path = (ctx.params.nextauth ?? []).join("/");
+  const { nextauth } = await ctx.params;
+  const path = (nextauth ?? []).join("/");
   if (path === "callback/credentials") {
     const ip = ipAlNextRequest(req);
     if (!ipIzinVer("giris", ip, 10, 15 * 60_000)) {
