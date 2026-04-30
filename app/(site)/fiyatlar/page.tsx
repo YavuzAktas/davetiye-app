@@ -97,20 +97,16 @@ export default function FiyatlarSayfasi() {
   const [tableRef, tableVisible] = useInView();
   const [sssRef, sssVisible] = useInView();
   const [odeModal, setOdeModal] = useState<string | null>(null);
-  const scriptInjected = useRef(false);
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
   const sessionYukleniyor = status === "loading";
 
-  // iyzico script'ini modal açıldıktan sonra DOM'a inject et
+  // iyzico script'ini modal açıldığında DOM'a inject et, kapandığında temizle
   useEffect(() => {
-    if (!odeModal || scriptInjected.current) return;
-    scriptInjected.current = true;
+    if (!odeModal) return;
 
-    // Önceki iyzico script'lerini temizle
-    document.querySelectorAll("[data-iyzico-script]").forEach(el => el.remove());
-
+    const injected: HTMLScriptElement[] = [];
     const tmp = document.createElement("div");
     tmp.innerHTML = odeModal;
     tmp.querySelectorAll("script").forEach(old => {
@@ -119,7 +115,12 @@ export default function FiyatlarSayfasi() {
       if (old.src) s.src = old.src;
       else s.text = old.textContent ?? "";
       document.body.appendChild(s);
+      injected.push(s);
     });
+
+    return () => {
+      injected.forEach(s => s.remove());
+    };
   }, [odeModal]);
 
   const handleOdeme = async (planId: string, fiyat: number) => {
@@ -135,7 +136,6 @@ export default function FiyatlarSayfasi() {
       });
       const data = await res.json();
       if (data.checkoutFormContent) {
-        scriptInjected.current = false;
         setOdeModal(data.checkoutFormContent);
       } else {
         alert("Ödeme başlatılamadı, tekrar deneyin.");
