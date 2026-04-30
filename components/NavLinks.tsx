@@ -11,7 +11,8 @@ export default function NavLinks() {
 
   const anaLinkler = [
     { href: "/sablonlar", isim: "Şablonlar" },
-    { href: "/fiyatlar", isim: "Fiyatlar" },
+    { href: "/fiyatlar",  isim: "Fiyatlar"  },
+    { href: "/blog",      isim: "Blog"       },
     ...(session ? [{ href: "/dashboard", isim: "Dashboard" }] : []),
   ];
 
