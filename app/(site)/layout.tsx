@@ -1,37 +1,13 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import NavLinks from "./NavLinks";
 import Link from "next/link";
-import CerezBanner from "./CerezBanner";
+import NavLinks from "@/components/NavLinks";
 
-export default function NavFooterWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isDavetiye = pathname.startsWith("/davetiye/");
-
-  return (
-    <>
-      {!isDavetiye && <Header />}
-      <main>{children}</main>
-      {!isDavetiye && <Footer />}
-      <CerezBanner />
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────
-   HEADER
-───────────────────────────────────────── */
+/* ── Header ─────────────────────────────── */
 function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl">
-      {/* İnce gradient alt çizgi */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-purple-300/60 to-transparent" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="h-16 flex items-center justify-between gap-4">
-
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
             <div className="relative w-8 h-8">
               <div className="absolute inset-0 bg-linear-to-br from-purple-600 to-pink-500 rounded-xl blur-sm opacity-40 group-hover:opacity-60 transition-opacity" />
@@ -41,8 +17,6 @@ function Header() {
             </div>
             <span className="text-lg font-bold text-gray-900 tracking-tight">Bekleriz</span>
           </Link>
-
-          {/* Nav Links */}
           <NavLinks />
         </div>
       </div>
@@ -50,54 +24,54 @@ function Header() {
   );
 }
 
-/* ─────────────────────────────────────────
-   FOOTER
-───────────────────────────────────────── */
+/* ── Footer ─────────────────────────────── */
 const PLATFORM_LINKS = [
-  { href: "/sablonlar", label: "Şablonlar" },
-  { href: "/fiyatlar", label: "Fiyatlar" },
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/giris", label: "Giriş Yap" },
+  { href: "/sablonlar",  label: "Şablonlar"  },
+  { href: "/fiyatlar",   label: "Fiyatlar"   },
+  { href: "/dashboard",  label: "Dashboard"  },
+  { href: "/giris",      label: "Giriş Yap"  },
 ];
 
 const YASAL_LINKS = [
-  { href: "/gizlilik", label: "Gizlilik Politikası" },
-  { href: "/kullanim-sartlari", label: "Kullanım Şartları" },
-  { href: "/kvkk", label: "KVKK" },
-  { href: "/iletisim", label: "İletişim" },
+  { href: "/gizlilik",          label: "Gizlilik Politikası" },
+  { href: "/kullanim-sartlari", label: "Kullanım Şartları"   },
+  { href: "/kvkk",              label: "KVKK"                },
+  { href: "/iletisim",          label: "İletişim"            },
 ];
+
+function SocialIcon({ href, label, path }: { href: string; label: string; path: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+      className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all">
+      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+        <path d={path} />
+      </svg>
+    </a>
+  );
+}
 
 function Footer() {
   return (
     <footer className="bg-[#0c0118] text-white">
-
-      {/* Üst: CTA şeridi */}
       <div className="border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p
-              className="text-3xl md:text-4xl text-white/90 mb-1"
-              style={{ fontFamily: "var(--font-dancing), cursive" }}
-            >
+            <p className="text-3xl md:text-4xl text-white/90 mb-1"
+              style={{ fontFamily: "var(--font-dancing), cursive" }}>
               Davetiyeni bugün oluştur
             </p>
             <p className="text-sm text-white/30">Ücretsiz başla · Kredi kartı gerekmez</p>
           </div>
-          <Link
-            href="/sablonlar"
-            className="shrink-0 group flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold px-7 py-3.5 rounded-2xl hover:opacity-90 hover:shadow-2xl hover:shadow-purple-900/40 hover:-translate-y-0.5 transition-all"
-          >
+          <Link href="/sablonlar"
+            className="shrink-0 group flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold px-7 py-3.5 rounded-2xl hover:opacity-90 hover:shadow-2xl hover:shadow-purple-900/40 hover:-translate-y-0.5 transition-all">
             Şablonlara Bak
             <span className="group-hover:translate-x-0.5 transition-transform">→</span>
           </Link>
         </div>
       </div>
 
-      {/* Ana içerik */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-
-          {/* Marka */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4 group">
               <div className="w-7 h-7 bg-linear-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center">
@@ -115,7 +89,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Platform */}
           <div>
             <p className="text-[10px] font-semibold text-white/20 tracking-[0.2em] uppercase mb-5">Platform</p>
             <ul className="space-y-3.5">
@@ -129,7 +102,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Yasal */}
           <div>
             <p className="text-[10px] font-semibold text-white/20 tracking-[0.2em] uppercase mb-5">Yasal</p>
             <ul className="space-y-3.5">
@@ -143,14 +115,13 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Özet stat */}
           <div>
             <p className="text-[10px] font-semibold text-white/20 tracking-[0.2em] uppercase mb-5">Rakamlar</p>
             <div className="space-y-4">
               {[
                 { n: "500+", l: "Davetiye oluşturuldu" },
-                { n: "%98", l: "Memnuniyet" },
-                { n: "3 dk", l: "Oluşturma süresi" },
+                { n: "%98",  l: "Memnuniyet"           },
+                { n: "3 dk", l: "Oluşturma süresi"     },
               ].map(({ n, l }) => (
                 <div key={l}>
                   <p className="text-lg font-bold text-white/80">{n}</p>
@@ -159,11 +130,9 @@ function Footer() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Alt bar */}
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/20">© 2025 Bekleriz. Tüm hakları saklıdır.</p>
@@ -172,23 +141,17 @@ function Footer() {
           </p>
         </div>
       </div>
-
     </footer>
   );
 }
 
-function SocialIcon({ href, label, path }: { href: string; label: string; path: string }) {
+/* ── Layout ─────────────────────────────── */
+export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all"
-    >
-      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-        <path d={path} />
-      </svg>
-    </a>
+    <>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+    </>
   );
 }

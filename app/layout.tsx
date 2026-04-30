@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Dancing_Script, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import NavFooterWrapper from "@/components/NavFooterWrapper";
+import CerezBanner from "@/components/CerezBanner";
 
 const geist = Geist({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({
@@ -76,9 +76,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
         <Providers>
-          <NavFooterWrapper>
-            {children}
-          </NavFooterWrapper>
+          {children}
+          <CerezBanner />
         </Providers>
       </body>
     </html>
