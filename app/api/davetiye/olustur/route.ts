@@ -7,33 +7,25 @@ import { PLAN_LIMITLER, PREMIUM_SABLON_IDS, PlanTipi } from "@/lib/planlar";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { hata: "Giris yapmaniz gerekiyor." },
-      { status: 401 }
-    );
+  if (!session?.user?.id) {
+    return NextResponse.json({ hata: "Giriş yapmanız gerekiyor." }, { status: 401 });
   }
 
   const body = await req.json();
   const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik } = body;
 
   if (!baslik || !mekan || !tarih) {
-    return NextResponse.json(
-      { hata: "Zorunlu alanlar eksik." },
-      { status: 400 }
-    );
+    return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
   }
 
+  // Plan ve davetiye sayısını tek sorguda al — session.user.id ile ekstra findUnique kaldırıldı
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+    where: { id: session.user.id },
+    select: { id: true, plan: true },
   });
 
   if (!user) {
-    return NextResponse.json(
-      { hata: "Kullanici bulunamadi." },
-      { status: 404 }
-    );
+    return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
   }
 
   if (PREMIUM_SABLON_IDS.has(sablon) && user.plan === "free") {
@@ -51,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (mevcutDavetiyeSayisi >= planLimiti.davetiyeLimit) {
     return NextResponse.json(
       {
-        hata: planLimiti.isim + " planinda en fazla " + planLimiti.davetiyeLimit + " davetiye olusturabilirsiniz. Planinizi yukseltin.",
+        hata: `${planLimiti.isim} planında en fazla ${planLimiti.davetiyeLimit} davetiye oluşturabilirsiniz. Planınızı yükseltin.`,
         limitAsimi: true,
       },
       { status: 403 }
@@ -59,9 +51,7 @@ export async function POST(req: NextRequest) {
   }
 
   const slug = nanoid(10);
-  const tarihSaat = saat
-    ? new Date(tarih + "T" + saat + ":00")
-    : new Date(tarih);
+  const tarihSaat = saat ? new Date(`${tarih}T${saat}:00`) : new Date(tarih);
 
   const davetiye = await prisma.davetiye.create({
     data: {
@@ -72,12 +62,12 @@ export async function POST(req: NextRequest) {
       mekan,
       mesaj,
       sablon,
-      font: font || "font-sans",
-      ozelRenk: renk || null,
-      muzik: muzik || null,
-      userId: user.id,
-      kisi1: kisi1 || null,
-      kisi2: kisi2 || null,
+      font:     font  || "font-sans",
+      ozelRenk: renk  || null,
+      muzik:    muzik || null,
+      userId:   user.id,
+      kisi1:    kisi1 || null,
+      kisi2:    kisi2 || null,
     },
   });
 
