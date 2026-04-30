@@ -51,10 +51,10 @@ export default async function BlogPostPage(
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
-    author: { "@type": "Organization", name: "Davetim" },
+    author: { "@type": "Organization", name: "Bekleriz" },
     publisher: {
       "@type": "Organization",
-      name: "Davetim",
+      name: "Bekleriz",
       url: "https://davetiye-app.vercel.app",
     },
     keywords: post.tags.join(", "),

@@ -178,7 +178,7 @@ export default function KlasikSablon({ davetiye, rsvpBileseni }: SablonProps) {
 
         <FadeIn delay={0.9}>
           <p className="text-center text-xs text-gray-300">
-            <Link href="/" className="hover:text-gray-400 transition-colors">davetim.com</Link>
+            <Link href="/" className="hover:text-gray-400 transition-colors">bekleriz.com</Link>
             {" "}ile oluşturuldu
           </p>
         </FadeIn>

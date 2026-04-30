@@ -2,7 +2,7 @@ import YasalSayfa from "@/components/YasalSayfa";
 
 export const metadata = {
   title: "Kullanım Şartları",
-  description: "Davetim platformu kullanım şartları ve hizmet koşulları.",
+  description: "Bekleriz platformu kullanım şartları ve hizmet koşulları.",
 };
 
 export default function KullanimSartlariSayfasi() {
@@ -17,7 +17,7 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Bu Kullanım Şartları ("<strong>Şartlar</strong>"), <strong>Davetim</strong> ("<strong>Davetim</strong>",
+                Bu Kullanım Şartları ("<strong>Şartlar</strong>"), <strong>Bekleriz</strong> ("<strong>Bekleriz</strong>",
                 "<strong>biz</strong>") ile platformumuzu kullanan gerçek veya tüzel kişi
                 ("<strong>Kullanıcı</strong>", "<strong>siz</strong>") arasındaki hukuki ilişkiyi
                 düzenlemektedir.
@@ -35,7 +35,7 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Davetim; kullanıcıların düğün, nişan, doğum günü ve benzeri etkinlikler için
+                Bekleriz; kullanıcıların düğün, nişan, doğum günü ve benzeri etkinlikler için
                 dijital davetiye oluşturmasına, paylaşmasına ve RSVP (katılım bildirimi) toplamasına
                 imkân tanıyan çevrimiçi bir platformdur.
               </p>
@@ -117,7 +117,7 @@ export default function KullanimSartlariSayfasi() {
                   içindeki başvurularda iade değerlendirmeye alınır.
                 </li>
                 <li>
-                  İade talepleri için <a href="mailto:destek@davetim.com">destek@davetim.com</a>{" "}
+                  İade talepleri için <a href="mailto:destek@bekleriz.com">destek@bekleriz.com</a>{" "}
                   adresine yazınız. Talepler 5 iş günü içinde yanıtlanır.
                 </li>
               </ul>
@@ -130,7 +130,7 @@ export default function KullanimSartlariSayfasi() {
             <>
               <p>
                 Platformda oluşturduğunuz davetiye içerikleri (metinler, yüklediğiniz görseller)
-                size aittir. Davetim bu içerikler üzerinde mülkiyet hakkı talep etmez.
+                size aittir. Bekleriz bu içerikler üzerinde mülkiyet hakkı talep etmez.
               </p>
               <p>
                 Bununla birlikte içeriğinizi platform üzerinde barındırmak, iletmek ve görüntülemek
@@ -138,7 +138,7 @@ export default function KullanimSartlariSayfasi() {
                 tanımış olursunuz.
               </p>
               <p>
-                Platform tasarımları, şablonlar, marka unsurları ve yazılım <strong>Davetim</strong>'e
+                Platform tasarımları, şablonlar, marka unsurları ve yazılım <strong>Bekleriz</strong>'e
                 aittir; izinsiz kopyalanamaz, dağıtılamaz veya türev eserler oluşturulamaz.
               </p>
             </>
@@ -166,12 +166,12 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Davetim'in herhangi bir nedenle sorumlu tutulabileceği durumlarda toplam sorumluluğu;
+                Bekleriz'in herhangi bir nedenle sorumlu tutulabileceği durumlarda toplam sorumluluğu;
                 zararın meydana geldiği tarihten önceki son <strong>3 ay</strong> içinde
                 kullanıcının ödediği toplam ücretle sınırlıdır.
               </p>
               <p>
-                Davetim; veri kayıpları, iş kesintisi, kâr kaybı veya dolaylı zararlar için
+                Bekleriz; veri kayıpları, iş kesintisi, kâr kaybı veya dolaylı zararlar için
                 sorumlu tutulamaz.
               </p>
             </>
@@ -191,7 +191,7 @@ export default function KullanimSartlariSayfasi() {
                 <li>Yasal saklama yükümlülüğü olan ödeme kayıtları mevzuat gereği saklanmaya devam eder.</li>
               </ul>
               <p>
-                Şartlara aykırı davranış tespit edilmesi hâlinde Davetim, hesabı önceden
+                Şartlara aykırı davranış tespit edilmesi hâlinde Bekleriz, hesabı önceden
                 bildirmeksizin feshedebilir. Aktif aboneliğin kalan süresi iade edilmez.
               </p>
             </>
@@ -233,9 +233,9 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Genel destek</th><td>destek@davetim.com</td></tr>
-                <tr><th>KVKK başvuruları</th><td>kvkk@davetim.com</td></tr>
-                <tr><th>Hukuki bildirimler</th><td>hukuk@davetim.com</td></tr>
+                <tr><th>Genel destek</th><td>destek@bekleriz.com</td></tr>
+                <tr><th>KVKK başvuruları</th><td>kvkk@bekleriz.com</td></tr>
+                <tr><th>Hukuki bildirimler</th><td>hukuk@bekleriz.com</td></tr>
               </tbody>
             </table>
           ),

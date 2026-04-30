@@ -25,7 +25,7 @@ function InviteStack() {
               <span style={{ color:c.gold, fontSize:10 }}>✦</span>
               <div style={{ width:28, height:0.5, background:`${c.gold}50` }}/>
             </div>
-            <div style={{ fontFamily:"var(--font-dancing),cursive", fontSize:28, color:"#F9F3E8", textAlign:"center" }}>Davetim</div>
+            <div style={{ fontFamily:"var(--font-dancing),cursive", fontSize:28, color:"#F9F3E8", textAlign:"center" }}>Bekleriz</div>
             <div style={{ width:"60%", height:0.5, background:`${c.gold}35` }}/>
             <div style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.25em", color:`${c.gold}80`, textTransform:"uppercase" }}>{c.label}</div>
           </div>
@@ -129,7 +129,7 @@ function GirisIcerigi() {
               display:"flex", alignItems:"center", justifyContent:"center" }}>
               <span style={{ color:"#fff", fontWeight:700, fontSize:16 }}>D</span>
             </div>
-            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:26, color:"#fff" }}>Davetim</span>
+            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:26, color:"#fff" }}>Bekleriz</span>
           </Link>
         </div>
 
@@ -171,7 +171,7 @@ function GirisIcerigi() {
             <div style={{ width:32, height:32, borderRadius:9, background:"linear-gradient(135deg,#7C3AED,#DB2777)", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <span style={{ color:"#fff", fontWeight:700, fontSize:14 }}>D</span>
             </div>
-            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:24, color:"#111827" }}>Davetim</span>
+            <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:24, color:"#111827" }}>Bekleriz</span>
           </div>
         </div>
 

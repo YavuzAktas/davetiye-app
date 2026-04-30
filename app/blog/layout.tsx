@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Blog & Rehber",
   description:
-    "Dijital davetiye rehberleri, düğün ipuçları, davetiye sözleri ve daha fazlası. Davetim Blog'da aradığınız her bilgi burada.",
+    "Dijital davetiye rehberleri, düğün ipuçları, davetiye sözleri ve daha fazlası. Bekleriz Blog'da aradığınız her bilgi burada.",
   keywords: [
     "davetiye rehberi", "düğün ipuçları", "davetiye sözleri",
     "dijital davetiye nasıl yapılır", "whatsapp davetiye",

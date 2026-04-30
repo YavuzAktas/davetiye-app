@@ -39,7 +39,7 @@ function Header() {
                 <span className="text-white text-sm font-bold">D</span>
               </div>
             </div>
-            <span className="text-lg font-bold text-gray-900 tracking-tight">Davetim</span>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">Bekleriz</span>
           </Link>
 
           {/* Nav Links */}
@@ -103,7 +103,7 @@ function Footer() {
               <div className="w-7 h-7 bg-linear-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center">
                 <span className="text-white text-xs font-bold">D</span>
               </div>
-              <span className="font-bold text-white/90">Davetim</span>
+              <span className="font-bold text-white/90">Bekleriz</span>
             </Link>
             <p className="text-white/30 text-sm leading-relaxed mb-5 max-w-50">
               Türkiye&apos;nin dijital davetiye platformu.
@@ -166,7 +166,7 @@ function Footer() {
       {/* Alt bar */}
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/20">© 2025 Davetim. Tüm hakları saklıdır.</p>
+          <p className="text-xs text-white/20">© 2025 Bekleriz. Tüm hakları saklıdır.</p>
           <p className="text-xs text-white/20 flex items-center gap-1.5">
             <span>🇹🇷</span> Türkiye&apos;de geliştirildi
           </p>

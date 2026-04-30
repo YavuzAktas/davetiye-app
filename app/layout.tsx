@@ -21,8 +21,8 @@ const OG_IMAGE  = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   title: {
-    default: "Davetim — Online Davetiye Platformu",
-    template: "%s | Davetim",
+    default: "Bekleriz — Online Davetiye Platformu",
+    template: "%s | Bekleriz",
   },
   description:
     "Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş, RSVP takip et.",
@@ -33,17 +33,17 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Davetim — Online Davetiye Platformu",
+    title: "Bekleriz — Online Davetiye Platformu",
     description: "Düğün, nişan, doğum günü için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
     url: SITE_URL,
-    siteName: "Davetim",
+    siteName: "Bekleriz",
     locale: "tr_TR",
     type: "website",
-    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Davetim — Online Davetiye Platformu" }],
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Bekleriz — Online Davetiye Platformu" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Davetim — Online Davetiye Platformu",
+    title: "Bekleriz — Online Davetiye Platformu",
     description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
     images: [OG_IMAGE],
   },
@@ -62,13 +62,13 @@ export default function RootLayout({
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Davetim",
+    name: "Bekleriz",
     url: SITE_URL,
     logo: `${SITE_URL}/og-image.png`,
     description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
     contactPoint: {
       "@type": "ContactPoint",
-      email: "destek@davetim.com",
+      email: "destek@bekleriz.com",
       contactType: "customer service",
       availableLanguage: "Turkish",
     },

@@ -21,7 +21,7 @@ Bir dijital davetiye platformunda davetiyenizi oluşturup bağlantısını Whats
 
 ### Nasıl Yapılır?
 
-1. [Davetim'de bir hesap oluşturun](https://davetiye-app.vercel.app/giris)
+1. [Bekleriz'de bir hesap oluşturun](https://davetiye-app.vercel.app/giris)
 2. Size uygun şablonu seçin
 3. Ad, tarih, saat, mekan bilgilerini girin
 4. "Paylaş" butonuna basın — WhatsApp linki otomatik oluşturulur

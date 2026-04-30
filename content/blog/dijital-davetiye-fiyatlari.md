@@ -35,7 +35,7 @@ Piyasada farklı fiyat aralıklarında çeşitli dijital davetiye platformları 
 
 Bazı platformlar aylık abonelik, bazıları ise tek seferlik ödeme modeli uyguluyor. **Düğün veya nişan gibi tek bir etkinlik için** tek seferlik ödeme çok daha ekonomik.
 
-[Davetim'de örneğin](https://davetiye-app.vercel.app/fiyatlar) Standart plan ₺299, Premium ₺599 tek seferlik ödemeyle sunuluyor — aylık abonelik yok.
+[Bekleriz'de örneğin](https://davetiye-app.vercel.app/fiyatlar) Standart plan ₺299, Premium ₺599 tek seferlik ödemeyle sunuluyor — aylık abonelik yok.
 
 ### 3. Özelleştirme Derinliği
 

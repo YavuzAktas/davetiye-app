@@ -85,8 +85,8 @@ const TABLO = [
 const SSS = [
   { soru: "Ücretsiz plan ne kadar süre kullanılabilir?", cevap: "Ücretsiz plan süresiz kullanılabilir. Daha fazla özellik için istediğiniz zaman yükseltebilirsiniz." },
   { soru: "Ödeme güvenli mi?", cevap: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz güvende." },
-  { soru: "İptal edebilir miyim?", cevap: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Satın alma sırasında onayladığınız üzere, dijital hizmet satın alma anında başladığından cayma hakkı uygulanmaz. Sorunlar için destek@davetim.com adresine yazabilirsiniz." },
-  { soru: "Fatura alabilir miyim?", cevap: "Ödeme belgesi için destek@davetim.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir." },
+  { soru: "İptal edebilir miyim?", cevap: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Satın alma sırasında onayladığınız üzere, dijital hizmet satın alma anında başladığından cayma hakkı uygulanmaz. Sorunlar için destek@bekleriz.com adresine yazabilirsiniz." },
+  { soru: "Fatura alabilir miyim?", cevap: "Ödeme belgesi için destek@bekleriz.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir." },
 ];
 
 export default function FiyatlarSayfasi() {

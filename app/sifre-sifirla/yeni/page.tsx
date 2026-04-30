@@ -118,7 +118,7 @@ export default function YeniSifreSayfasi() {
             <div className="w-9 h-9 bg-linear-to-br from-purple-600 to-pink-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold">D</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Davetim</span>
+            <span className="text-xl font-bold text-gray-900">Bekleriz</span>
           </Link>
         </div>
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">

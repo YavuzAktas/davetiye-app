@@ -39,7 +39,7 @@ export default function SifreSifirla() {
             <div className="w-9 h-9 bg-linear-to-br from-purple-600 to-pink-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold">D</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Davetim</span>
+            <span className="text-xl font-bold text-gray-900">Bekleriz</span>
           </Link>
         </div>
 

@@ -610,7 +610,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           fontFamily:"var(--font-cormorant),serif",
           fontSize:11, letterSpacing:"0.2em",
           color:`${GOLD}35`,
-        }}>davetim.com ile oluşturuldu ✦</p>
+        }}>bekleriz.com ile oluşturuldu ✦</p>
       </footer>
 
       <style>{`@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}`}</style>

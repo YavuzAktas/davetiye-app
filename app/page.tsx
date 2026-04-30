@@ -436,7 +436,7 @@ export default function Anasayfa() {
         <div className="max-w-5xl mx-auto relative">
           <Section>
             <div className="text-center mb-20">
-              <span className="text-purple-400 text-xs font-bold tracking-[0.25em] uppercase">Rakamlarla Davetim</span>
+              <span className="text-purple-400 text-xs font-bold tracking-[0.25em] uppercase">Rakamlarla Bekleriz</span>
               <h2 className="text-4xl md:text-5xl font-bold text-white mt-3">Binlerce anıya ortak olduk</h2>
             </div>
           </Section>

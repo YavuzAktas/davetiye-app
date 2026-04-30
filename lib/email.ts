@@ -84,7 +84,7 @@ export async function rsvpBildirimiGonder({
 
         <div style="padding:16px 24px;border-top:1px solid #e5e7eb;text-align:center;">
           <p style="color:#9ca3af;font-size:12px;margin:0;">
-            Bu e-posta davetim.com tarafından gönderildi.
+            Bu e-posta bekleriz.com tarafından gönderildi.
           </p>
         </div>
       </div>
@@ -117,7 +117,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
         </div>
         <div style="padding:32px;">
           <p style="color:#374151;font-size:15px;margin:0 0 16px;">
-            Davetim hesabınız için şifre sıfırlama talebinde bulundunuz.
+            Bekleriz hesabınız için şifre sıfırlama talebinde bulundunuz.
           </p>
           <p style="color:#374151;font-size:15px;margin:0 0 28px;">
             Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz.
@@ -136,7 +136,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
           </p>
         </div>
         <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Davetim · destek@davetim.com</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
         </div>
       </div>
     </body>
@@ -147,7 +147,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: email,
-      subject: "Davetim — Şifre Sıfırlama",
+      subject: "Bekleriz — Şifre Sıfırlama",
       html,
     });
   } catch (error) {

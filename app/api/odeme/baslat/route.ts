@@ -69,7 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     basketItems: [
       {
         id: planId,
-        name: `Davetim ${planId} Planı`,
+        name: `Bekleriz ${planId} Planı`,
         category1: "Dijital Ürün",
         itemType: "VIRTUAL",
         price: String(fiyat),

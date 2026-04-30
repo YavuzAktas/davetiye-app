@@ -2,7 +2,7 @@ import YasalSayfa from "@/components/YasalSayfa";
 
 export const metadata = {
   title: "KVKK Aydınlatma Metni",
-  description: "Davetim platformu kişisel verilerin korunması kanunu aydınlatma metni.",
+  description: "Bekleriz platformu kişisel verilerin korunması kanunu aydınlatma metni.",
 };
 
 export default function KvkkSayfasi() {
@@ -18,15 +18,15 @@ export default function KvkkSayfasi() {
             <>
               <p>
                 6698 sayılı Kişisel Verilerin Korunması Kanunu ("<strong>KVKK</strong>") uyarınca,
-                kişisel verileriniz; veri sorumlusu sıfatıyla <strong>Davetim</strong> tarafından
+                kişisel verileriniz; veri sorumlusu sıfatıyla <strong>Bekleriz</strong> tarafından
                 aşağıda açıklanan kapsamda işlenmektedir.
               </p>
               <table>
                 <tbody>
-                  <tr><th>Ticaret Unvanı</th><td>Davetim</td></tr>
+                  <tr><th>Ticaret Unvanı</th><td>Bekleriz</td></tr>
                   <tr><th>Hizmet Adresi</th><td>Türkiye</td></tr>
-                  <tr><th>E-posta</th><td>kvkk@davetim.com</td></tr>
-                  <tr><th>Web Sitesi</th><td>davetim.com</td></tr>
+                  <tr><th>E-posta</th><td>kvkk@bekleriz.com</td></tr>
+                  <tr><th>Web Sitesi</th><td>bekleriz.com</td></tr>
                 </tbody>
               </table>
             </>
@@ -162,7 +162,7 @@ export default function KvkkSayfasi() {
               </p>
               <table>
                 <tbody>
-                  <tr><th>E-posta</th><td>kvkk@davetim.com</td></tr>
+                  <tr><th>E-posta</th><td>kvkk@bekleriz.com</td></tr>
                   <tr><th>Konu</th><td>"KVKK Başvurusu" olarak belirtiniz</td></tr>
                 </tbody>
               </table>

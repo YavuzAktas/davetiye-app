@@ -137,7 +137,7 @@ export default function KvkkOnayPage() {
               style={{ background: "linear-gradient(135deg,#7C3AED,#DB2777)" }}>
               <span className="text-white font-bold">D</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Davetim</span>
+            <span className="text-xl font-bold text-gray-900">Bekleriz</span>
           </Link>
         </div>
         <Suspense fallback={<div className="text-center text-gray-400 text-sm">Yükleniyor...</div>}>

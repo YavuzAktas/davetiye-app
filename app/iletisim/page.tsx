@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "İletişim",
-  description: "Davetim platformu iletişim bilgileri ve destek kanalları.",
+  description: "Bekleriz platformu iletişim bilgileri ve destek kanalları.",
 };
 
 const KANALLAR = [
@@ -11,24 +11,24 @@ const KANALLAR = [
     icon: "✉️",
     baslik: "Genel Destek",
     aciklama: "Ürün, teknik sorunlar ve genel sorularınız için",
-    deger: "destek@davetim.com",
-    href: "mailto:destek@davetim.com",
+    deger: "destek@bekleriz.com",
+    href: "mailto:destek@bekleriz.com",
     sure: "1–2 iş günü içinde yanıt",
   },
   {
     icon: "⚖️",
     baslik: "KVKK Başvuruları",
     aciklama: "Kişisel veri erişim, düzeltme ve silme talepleri",
-    deger: "kvkk@davetim.com",
-    href: "mailto:kvkk@davetim.com",
+    deger: "kvkk@bekleriz.com",
+    href: "mailto:kvkk@bekleriz.com",
     sure: "5 iş günü içinde yanıt (yasal yükümlülük)",
   },
   {
     icon: "🏛️",
     baslik: "Hukuki Bildirimler",
     aciklama: "Resmi tebligat ve hukuki yazışmalar için",
-    deger: "hukuk@davetim.com",
-    href: "mailto:hukuk@davetim.com",
+    deger: "hukuk@bekleriz.com",
+    href: "mailto:hukuk@bekleriz.com",
     sure: "5 iş günü içinde yanıt",
   },
 ];
@@ -80,7 +80,7 @@ export default function IletisimSayfasi() {
           <div className="space-y-2 text-sm">
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Ticaret Unvanı</span>
-              <span className="text-gray-700 font-medium">Davetim</span>
+              <span className="text-gray-700 font-medium">Bekleriz</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Faaliyet Ülkesi</span>
@@ -88,11 +88,11 @@ export default function IletisimSayfasi() {
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Web Sitesi</span>
-              <span className="text-gray-700">davetim.com</span>
+              <span className="text-gray-700">bekleriz.com</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">E-posta</span>
-              <a href="mailto:destek@davetim.com" className="text-purple-600 hover:underline">destek@davetim.com</a>
+              <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:underline">destek@bekleriz.com</a>
             </div>
           </div>
         </div>

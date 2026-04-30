@@ -2,7 +2,7 @@ import YasalSayfa from "@/components/YasalSayfa";
 
 export const metadata = {
   title: "Gizlilik Politikası",
-  description: "Davetim platformu gizlilik politikası ve kişisel veri işleme ilkeleri.",
+  description: "Bekleriz platformu gizlilik politikası ve kişisel veri işleme ilkeleri.",
 };
 
 export default function GizlilikSayfasi() {
@@ -17,7 +17,7 @@ export default function GizlilikSayfasi() {
           icerik: (
             <>
               <p>
-                <strong>Davetim</strong> olarak gizliliğinize saygı duyuyor ve kişisel verilerinizi
+                <strong>Bekleriz</strong> olarak gizliliğinize saygı duyuyor ve kişisel verilerinizi
                 korumayı öncelikli yükümlülüklerimizden biri olarak kabul ediyoruz. Bu Gizlilik
                 Politikası; hangi verileri topladığımızı, neden topladığımızı ve bu verileri nasıl
                 kullandığımızı açıklamaktadır.
@@ -151,7 +151,7 @@ export default function GizlilikSayfasi() {
               Hizmetlerimiz <strong>18 yaş altı</strong> bireylere yönelik değildir. 18 yaşından
               küçük bir kullanıcının verilerinin sistemimizde bulunduğunu fark edersek, ilgili
               veriler derhal silinir. Ebeveyn veya vasiler bu konuda{" "}
-              <a href="mailto:kvkk@davetim.com">kvkk@davetim.com</a> adresine başvurabilir.
+              <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine başvurabilir.
             </p>
           ),
         },
@@ -164,7 +164,7 @@ export default function GizlilikSayfasi() {
                 silme, taşınabilirlik ve itiraz haklarına sahipsiniz.
               </p>
               <p>
-                Talepleriniz için <a href="mailto:kvkk@davetim.com">kvkk@davetim.com</a> adresine
+                Talepleriniz için <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine
                 yazabilirsiniz. Ayrıca hesabınızı <strong>Dashboard → Ayarlar</strong> sayfasından
                 silebilirsiniz.
               </p>

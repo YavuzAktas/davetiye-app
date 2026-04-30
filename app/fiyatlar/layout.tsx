@@ -5,14 +5,14 @@ const SITE_URL = "https://davetiye-app.vercel.app";
 export const metadata: Metadata = {
   title: "Fiyatlar ve Planlar",
   description:
-    "Davetim ücretsiz, Standart (₺299) ve Premium (₺599) planlarını karşılaştır. Tek seferlik ödeme, abonelik yok. Dijital davetiye oluşturmak için en uygun fiyat.",
+    "Bekleriz ücretsiz, Standart (₺299) ve Premium (₺599) planlarını karşılaştır. Tek seferlik ödeme, abonelik yok. Dijital davetiye oluşturmak için en uygun fiyat.",
   keywords: [
     "online davetiye fiyat", "dijital davetiye plan", "davetiye ücretsiz",
     "düğün davetiyesi fiyat", "nişan davetiyesi online ücret",
   ],
   alternates: { canonical: "/fiyatlar" },
   openGraph: {
-    title: "Fiyatlar ve Planlar | Davetim",
+    title: "Fiyatlar ve Planlar | Bekleriz",
     description: "Ücretsiz başla, ihtiyacına göre yükselt. Tek seferlik ödeme, abonelik yok.",
     url: `${SITE_URL}/fiyatlar`,
     images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
@@ -52,7 +52,7 @@ const faqSchema = {
       name: "Fatura alabilir miyim?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ödeme belgesi için destek@davetim.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir.",
+        text: "Ödeme belgesi için destek@bekleriz.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir.",
       },
     },
   ],

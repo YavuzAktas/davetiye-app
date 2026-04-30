@@ -181,14 +181,14 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
               Girdiğiniz bilgiler (ad soyad{form.email ? ", e-posta" : ""}) yalnızca
               katılım durumunuzu davet sahibine iletmek amacıyla{" "}
-              <span className="font-medium text-gray-500">Davetim</span> tarafından
+              <span className="font-medium text-gray-500">Bekleriz</span> tarafından
               işlenmektedir. Etkinlik tarihinden itibaren en geç 1 yıl içinde silinir.
               Verilerinizin silinmesini talep etmek için{" "}
               <a
-                href="mailto:kvkk@davetim.com"
+                href="mailto:kvkk@bekleriz.com"
                 className="underline underline-offset-2 hover:text-gray-600"
               >
-                kvkk@davetim.com
+                kvkk@bekleriz.com
               </a>{" "}
               adresine yazabilir ya da{" "}
               <a

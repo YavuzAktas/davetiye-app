@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/sablonlar" },
   openGraph: {
-    title: "Davetiye Şablonları | Davetim",
+    title: "Davetiye Şablonları | Bekleriz",
     description: "Düğün, nişan, doğum günü için hazır dijital davetiye şablonları. Dakikalar içinde özelleştir.",
     url: `${SITE_URL}/sablonlar`,
     images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
