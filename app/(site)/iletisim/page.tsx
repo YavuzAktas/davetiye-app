@@ -83,8 +83,12 @@ export default function IletisimSayfasi() {
               <span className="text-gray-700 font-medium">Bekleriz</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-400 w-28 shrink-0">Faaliyet Ülkesi</span>
-              <span className="text-gray-700">Türkiye</span>
+              <span className="text-gray-400 w-28 shrink-0">Adres</span>
+              <span className="text-gray-700">[Şirket tescilinde güncellenecek]</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-gray-400 w-28 shrink-0">MERSİS No</span>
+              <span className="text-gray-700">[Şirket tescilinde güncellenecek]</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Web Sitesi</span>

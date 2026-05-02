@@ -38,7 +38,7 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `davetim-verilerim-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `bekleriz-verilerim-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {

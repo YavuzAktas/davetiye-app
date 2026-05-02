@@ -10,7 +10,7 @@ export default function KvkkSayfasi() {
     <YasalSayfa
       etiket="Yasal"
       baslik="KVKK Aydınlatma Metni"
-      sonGuncelleme="29 Nisan 2026"
+      sonGuncelleme="2 Mayıs 2026"
       bolumler={[
         {
           baslik: "Veri Sorumlusu",
@@ -85,7 +85,6 @@ export default function KvkkSayfasi() {
                   <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c)</td></tr>
                   <tr><td>Güvenlik, log kayıtları</td><td>Meşru menfaat (m.5/2-f)</td></tr>
                   <tr><td>Yasal yükümlülükler</td><td>Kanuni yükümlülük (m.5/2-ç)</td></tr>
-                  <tr><td>Pazarlama bildirimleri</td><td>Açık rıza (m.5/1)</td></tr>
                 </tbody>
               </table>
             </>
