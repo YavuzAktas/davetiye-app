@@ -41,7 +41,7 @@ function TelefonMockup({ children }: { children: React.ReactNode }) {
 }
 
 /* ══════════════════════════════════════════════
-   PREMİUM ÖNİZLEMELER — Nişan Lüks
+   PREMIUM ÖNİZLEMELER — Nişan Lüks
 ══════════════════════════════════════════════ */
 const N = { BG:"#3B0A14", BG_MED:"#4E1020", BG_DARK:"#270610", GOLD:"#C4A05A", CREAM:"#F5E8D8" };
 
@@ -171,7 +171,7 @@ function NisanAnilar() {
 }
 
 /* ══════════════════════════════════════════════
-   PREMİUM ÖNİZLEMELER — Düğün Lüks
+   PREMIUM ÖNİZLEMELER — Düğün Lüks
 ══════════════════════════════════════════════ */
 const D = { BG:"#0D1F3C", BG_MED:"#152C52", BG_DARK:"#071228", GOLD:"#D4AA70", CREAM:"#F8F3EE" };
 
@@ -262,7 +262,7 @@ function DugunMekan() {
 }
 
 /* ══════════════════════════════════════════════
-   PREMİUM ÖNİZLEMELER — Doğum Günü Lüks
+   PREMIUM ÖNİZLEMELER — Doğum Günü Lüks
 ══════════════════════════════════════════════ */
 const G = { BG:"#140828", BG_MED:"#1E0C38", BG_DARK:"#0A0414", GOLD:"#D4A84B", CREAM:"#F9F3E8", PL:"#5A2090" };
 
@@ -306,8 +306,7 @@ function DGHero() {
       ))}
       <div className="w-full text-center py-6 px-5" style={{ border:`1px solid ${G.GOLD}30`, borderRadius:6, position:"relative" }}>
         {[{top:-8,left:-8},{top:-8,right:-8},{bottom:-8,left:-8},{bottom:-8,right:-8}].map((pos,i)=>(
-          <div key={i} style={{ position:"absolute",...pos,
-            width:3, height:16, background:G.GOLD, opacity:0.5, transform:"rotate(0deg)" }}/>
+          <div key={i} style={{ position:"absolute",...pos, width:3, height:16, background:G.GOLD, opacity:0.5 }}/>
         ))}
         <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.3em", color:G.GOLD, marginBottom:12 }}>DOĞUM GÜNÜ DAVETİ</p>
         <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.8rem,6vw,2.5rem)", color:G.CREAM, lineHeight:1.1, marginBottom:10 }}>Zeynep</p>
@@ -358,35 +357,63 @@ function DGMekan() {
 }
 
 /* ══════════════════════════════════════════════
+   STANDART ÖNİZLEME (kart içi telefon için)
+══════════════════════════════════════════════ */
+function StdKapak({ sablon }: { sablon: Sablon }) {
+  const r = sablon.renk;
+  const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden"
+      style={{ background:`linear-gradient(145deg,#fff 0%,${r}12 100%)` }}>
+      <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,${r}14 1px,transparent 1px)`, backgroundSize:"20px 20px" }}/>
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:4, background:r }}/>
+      <div style={{ position:"absolute", inset:16, border:`1px solid ${r}20`, borderRadius:4 }}/>
+      <div className="relative z-10 flex flex-col items-center gap-4 px-8 text-center">
+        <span style={{ fontSize:42 }}>{emoji}</span>
+        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.8rem", color:"#1a1a1a", lineHeight:1.15 }}>
+          Ad <span style={{ color:r }}>&amp;</span> Soyad
+        </p>
+        <div style={{ width:44, height:1.5, background:r, borderRadius:2 }}/>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, letterSpacing:"0.14em", color:"#999" }}>GÜN · AY · YIL</p>
+        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:"#bbb" }}>Mekan Adı</p>
+        <div style={{ padding:"5px 18px", borderRadius:20, border:`1px solid ${r}35`, color:r, fontSize:11, fontWeight:700, letterSpacing:"0.06em" }}>
+          {sablon.isim}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
    BÖLÜM TANIMLARI
 ══════════════════════════════════════════════ */
 const NISAN_BOLUMLER = [
-  { id:"kapak",    icon:"🌹", label:"Kapak",    etiket:"Açılış", baslik:"Gül Mühürlü Kapak",     aciklama:"Mühüre dokunulunca açılan bordo & altın kapak. İlk izlenim unutulmaz.",                        node:<NisanKapak/> },
-  { id:"davetiye", icon:"💍", label:"Davetiye", etiket:"Hero",   baslik:"Kemer Çerçeveli Hero",   aciklama:"İsimler büyük el yazısıyla kemer çerçeve içinde. Tarih ve mekan altında.",                   node:<NisanHero/> },
-  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Nişana kaç gün kaldığını saniye saniye gösterir.",                                           node:<NisanSayim/> },
-  { id:"katilim",  icon:"💌", label:"Katılım",  etiket:"RSVP",   baslik:"Katılım Formu",          aciklama:"Misafirler kişi sayısını ve katılım durumunu bildirir.",                                     node:<NisanKatilim/> },
-  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                            node:<NisanMekan/> },
-  { id:"anilar",   icon:"📷", label:"Anılar",   etiket:"Galeri", baslik:"Polaroid Galeri",        aciklama:"Fotoğraflar polaroid tarzında, üst üste binmiş şekilde.",                                    node:<NisanAnilar/> },
+  { id:"kapak",    icon:"🌹", label:"Kapak",    etiket:"Açılış", baslik:"Gül Mühürlü Kapak",     aciklama:"Mühüre dokunulunca açılan bordo & altın kapak. İlk izlenim unutulmaz.",                     node:<NisanKapak/> },
+  { id:"davetiye", icon:"💍", label:"Davetiye", etiket:"Hero",   baslik:"Kemer Çerçeveli Hero",   aciklama:"İsimler büyük el yazısıyla kemer çerçeve içinde. Tarih ve mekan altında.",                  node:<NisanHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Nişana kaç gün kaldığını saniye saniye gösterir.",                                          node:<NisanSayim/> },
+  { id:"katilim",  icon:"💌", label:"Katılım",  etiket:"RSVP",   baslik:"Katılım Formu",          aciklama:"Misafirler kişi sayısını ve katılım durumunu bildirir.",                                    node:<NisanKatilim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                           node:<NisanMekan/> },
+  { id:"anilar",   icon:"📷", label:"Anılar",   etiket:"Galeri", baslik:"Polaroid Galeri",        aciklama:"Fotoğraflar polaroid tarzında, üst üste binmiş şekilde.",                                   node:<NisanAnilar/> },
 ] as const;
 
 const DUGUN_BOLUMLER = [
-  { id:"kapak",    icon:"💍", label:"Kapak",    etiket:"Açılış", baslik:"Yüzük Mühürlü Kapak",   aciklama:"Düğün yüzükleri mühürüne dokunulunca açılan lacivert kapak.",                                node:<DugunKapak/> },
-  { id:"davetiye", icon:"🌟", label:"Davetiye", etiket:"Hero",   baslik:"Elmas Köşeli Hero",      aciklama:"İsimler büyük el yazısıyla köşelerinde altın elmas motifi olan çerçeve içinde.",             node:<DugunHero/> },
-  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Düğüne kaç gün kaldığını saniye saniye gösterir.",                                           node:<DugunSayim/> },
-  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                            node:<DugunMekan/> },
+  { id:"kapak",    icon:"💍", label:"Kapak",    etiket:"Açılış", baslik:"Yüzük Mühürlü Kapak",   aciklama:"Düğün yüzükleri mühürüne dokunulunca açılan lacivert kapak.",                               node:<DugunKapak/> },
+  { id:"davetiye", icon:"🌟", label:"Davetiye", etiket:"Hero",   baslik:"Elmas Köşeli Hero",      aciklama:"İsimler büyük el yazısıyla köşelerinde altın elmas motifi olan çerçeve içinde.",            node:<DugunHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Düğüne kaç gün kaldığını saniye saniye gösterir.",                                          node:<DugunSayim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                           node:<DugunMekan/> },
 ] as const;
 
 const DOGUMGUNU_BOLUMLER = [
-  { id:"kapak",    icon:"🎂", label:"Kapak",    etiket:"Açılış", baslik:"Pasta Mühürlü Kapak",    aciklama:"Altın pasta mühürüne dokunulunca açılan derin mor & şampanya altın kapak.",                  node:<DGKapak/> },
-  { id:"davetiye", icon:"✨", label:"Davetiye", etiket:"Hero",   baslik:"Yıldız Köşeli Hero",     aciklama:"İsim büyük el yazısıyla yıldız köşeli çerçeve içinde, zarif tipografi.",                    node:<DGHero/> },
-  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Partiye kaç gün kaldığını saniye saniye gösterir.",                                          node:<DGSayim/> },
-  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                            node:<DGMekan/> },
+  { id:"kapak",    icon:"🎂", label:"Kapak",    etiket:"Açılış", baslik:"Pasta Mühürlü Kapak",    aciklama:"Altın pasta mühürüne dokunulunca açılan derin mor & şampanya altın kapak.",                 node:<DGKapak/> },
+  { id:"davetiye", icon:"✨", label:"Davetiye", etiket:"Hero",   baslik:"Yıldız Köşeli Hero",     aciklama:"İsim büyük el yazısıyla yıldız köşeli çerçeve içinde, zarif tipografi.",                   node:<DGHero/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Partiye kaç gün kaldığını saniye saniye gösterir.",                                         node:<DGSayim/> },
+  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih üç sütunda. Google Maps bağlantılı harita.",                           node:<DGMekan/> },
 ] as const;
 
 type Bolum = { id:string; icon:string; label:string; etiket:string; baslik:string; aciklama:string; node:React.ReactNode };
 
 /* ══════════════════════════════════════════════
-   PREMİUM KART — koyu tema, tam önizleme
+   PREMIUM KART — koyu tema, tam interaktif önizleme
 ══════════════════════════════════════════════ */
 function PremiumKart({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
@@ -439,15 +466,15 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   return (
     <div className="rounded-3xl overflow-hidden" style={{
       background: darkBg,
-      boxShadow: `0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.08)`
+      boxShadow:`0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.08)`
     }}>
-      {/* ── Kart başlığı ── */}
+      {/* Başlık */}
       <div className="flex items-center justify-between px-6 pt-5 pb-4"
-        style={{ borderBottom: `1px solid rgba(255,255,255,0.07)` }}>
+        style={{ borderBottom:`1px solid rgba(255,255,255,0.07)` }}>
         <div className="flex items-center gap-3 min-w-0">
           <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full"
             style={{ background:`${accentColor}20`, color:accentColor, border:`1px solid ${accentColor}30` }}>
-            ✦ PRİMİUM
+            ✦ PREMIUM
           </span>
           <h2 className="text-lg font-bold text-white truncate">{sablon.isim}</h2>
           {sablon.aciklama && (
@@ -462,10 +489,9 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         </span>
       </div>
 
-      {/* ── Gövde ── */}
+      {/* Gövde */}
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 p-6">
-
-        {/* Sol — telefon */}
+        {/* Telefon */}
         <div className="shrink-0">
           <TelefonMockup>
             <div ref={scrollRef} className="phone-scroll" style={{ height:"100%", overflowY:"auto" }}>
@@ -476,10 +502,9 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
           </TelefonMockup>
         </div>
 
-        {/* Sağ — bilgi paneli */}
+        {/* Bilgi paneli */}
         <div className="flex-1 max-w-lg w-full flex flex-col gap-4">
-
-          {/* Aktif bölüm bilgisi */}
+          {/* Aktif bölüm */}
           {aktif && (
             <div className="rounded-2xl p-5" style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)" }}>
               <span className="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full mb-3"
@@ -492,46 +517,47 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
           )}
 
           {/* Bölüm listesi */}
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color:"rgba(255,255,255,0.3)" }}>
-              Tüm Bölümler — kaydır veya seç
+          <div>
+            <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color:"rgba(255,255,255,0.25)" }}>
+              Tüm bölümler — kaydır veya seç
             </p>
-            {bolumler.map(b => (
-              <button key={b.id} onClick={() => handleTab(b.id)}
-                className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all"
-                style={{
-                  background: aktifId === b.id ? `${midBg}cc` : "transparent",
-                  border: aktifId === b.id ? `1px solid rgba(255,255,255,0.1)` : "1px solid transparent",
-                }}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 transition-colors"
-                  style={{ background: aktifId === b.id ? `${accentColor}20` : "rgba(255,255,255,0.05)" }}>
-                  {b.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold transition-colors"
-                    style={{ color: aktifId === b.id ? "#fff" : "rgba(255,255,255,0.4)" }}>
-                    {b.label}
-                  </p>
-                  <p className="text-xs truncate" style={{ color:"rgba(255,255,255,0.25)" }}>{b.baslik}</p>
-                </div>
-                {aktifId === b.id && (
-                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:accentColor }} />
-                )}
-              </button>
-            ))}
+            <div className="space-y-1">
+              {bolumler.map(b => (
+                <button key={b.id} onClick={() => handleTab(b.id)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all"
+                  style={{
+                    background: aktifId === b.id ? `${midBg}cc` : "transparent",
+                    border: aktifId === b.id ? `1px solid rgba(255,255,255,0.1)` : "1px solid transparent",
+                  }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0"
+                    style={{ background: aktifId === b.id ? `${accentColor}20` : "rgba(255,255,255,0.05)" }}>
+                    {b.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold" style={{ color: aktifId === b.id ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                      {b.label}
+                    </p>
+                    <p className="text-xs truncate" style={{ color:"rgba(255,255,255,0.25)" }}>{b.baslik}</p>
+                  </div>
+                  {aktifId === b.id && (
+                    <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:accentColor }} />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             {kilitli ? (
               <button onClick={() => router.push("/fiyatlar")}
-                className="flex-1 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:-translate-y-0.5 flex items-center justify-center gap-2"
                 style={{ background:`linear-gradient(135deg,${accentColor},${accentColor}cc)`, color:darkBg }}>
                 <span>👑</span> Standart&apos;a Geç — Oluştur
               </button>
             ) : (
               <button onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
-                className="flex-1 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:-translate-y-0.5"
                 style={{ background:`linear-gradient(135deg,${accentColor},${accentColor}bb)`, color:darkBg }}>
                 Bu Şablonla Oluştur →
               </button>
@@ -551,7 +577,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 }
 
 /* ══════════════════════════════════════════════
-   STANDART KOMPAKT KART — grid için
+   STANDART KART — gerçek telefon önizlemeli
 ══════════════════════════════════════════════ */
 function StdKompaktKart({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
@@ -559,51 +585,58 @@ function StdKompaktKart({ sablon }: { sablon: Sablon }) {
   const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group flex flex-col">
-      {/* Önizleme */}
-      <div className="relative h-44 overflow-hidden" style={{ background:`linear-gradient(145deg,${r}14 0%,${r}06 100%)` }}>
-        <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,${r}10 1px,transparent 1px)`, backgroundSize:"18px 18px" }}/>
-        <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:r }}/>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <span style={{ fontSize:32, marginBottom:6 }}>{emoji}</span>
-          <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"1.35rem", color:"#1a1a1a", lineHeight:1.2 }}>
-            Ad <span style={{ color:r }}>&amp;</span> Soyad
-          </p>
-          <div style={{ width:28, height:1.5, background:r, borderRadius:2, margin:"6px 0" }}/>
-          <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.14em", color:"#aaa" }}>
-            GÜN · AY · YIL
-          </p>
-        </div>
-        {/* Hover overlay */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"
-          style={{ background:`${r}15` }}>
-          <span className="text-xs font-bold px-3 py-1.5 rounded-full text-white" style={{ background:r }}>
-            Önizle
-          </span>
+    <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-row"
+      style={{ boxShadow:"0 2px 8px rgba(0,0,0,0.06)", transition:"transform 200ms, box-shadow 200ms" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform="translateY(-3px)"; (e.currentTarget as HTMLDivElement).style.boxShadow=`0 12px 32px rgba(0,0,0,0.12), 0 0 0 1.5px ${r}30`; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform=""; (e.currentTarget as HTMLDivElement).style.boxShadow="0 2px 8px rgba(0,0,0,0.06)"; }}>
+
+      {/* Sol — ölçekli telefon önizlemesi */}
+      <div className="shrink-0 relative overflow-hidden" style={{ width:130 }}>
+        {/* Arka plan tonu */}
+        <div className="absolute inset-0" style={{ background:`linear-gradient(160deg,${r}18 0%,${r}08 100%)` }}/>
+        <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,${r}12 1px,transparent 1px)`, backgroundSize:"14px 14px" }}/>
+        {/* Sol vurgu şeridi */}
+        <div className="absolute top-0 left-0 bottom-0 w-0.75" style={{ background:r }}/>
+        {/* Ölçekli telefon — absolute ile normal akıştan çıkarılır */}
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <div style={{ transform:"scale(0.43)", transformOrigin:"center center", width:260, flexShrink:0 }}>
+            <TelefonMockup>
+              <StdKapak sablon={sablon} />
+            </TelefonMockup>
+          </div>
         </div>
       </div>
 
-      {/* Bilgi */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2 mb-1.5">
-          <h3 className="font-bold text-gray-900 text-sm leading-tight">{sablon.isim}</h3>
-          <span className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background:`${r}12`, color:r }}>
-            {emoji}
-          </span>
-        </div>
-        {sablon.aciklama && (
-          <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">{sablon.aciklama}</p>
-        )}
-        <div className="flex gap-1 flex-wrap mb-4">
-          {["📋 Davetiye", "📍 Harita", "💌 RSVP"].map(f => (
-            <span key={f} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-100">{f}</span>
-          ))}
+      {/* Sağ — bilgi */}
+      <div className="flex-1 flex flex-col justify-between p-4 min-w-0" style={{ minHeight:190 }}>
+        <div>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ background:`${r}12`, color:r }}>
+              {emoji} {sablon.kategori.charAt(0).toUpperCase()+sablon.kategori.slice(1)}
+            </span>
+          </div>
+          <h3 className="font-bold text-gray-900 text-[15px] leading-snug mb-1">{sablon.isim}</h3>
+          {sablon.aciklama && (
+            <p className="text-[11px] text-gray-400 leading-relaxed mb-3">{sablon.aciklama}</p>
+          )}
+          <div className="space-y-1.5 mb-3">
+            {[
+              { icon:"💌", text:"RSVP katılım toplama" },
+              { icon:"📍", text:"Harita & yön tarifi" },
+              { icon:"⏱️", text:"Canlı geri sayım" },
+            ].map(f => (
+              <div key={f.text} className="flex items-center gap-2">
+                <span className="text-[11px]">{f.icon}</span>
+                <span className="text-[11px] text-gray-400">{f.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <button
           onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
-          className="mt-auto w-full py-2.5 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90 hover:shadow-md"
+          className="w-full py-2.5 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
           style={{ background:r }}>
-          Bu Şablonu Seç →
+          Seç ve Oluştur →
         </button>
       </div>
     </div>
@@ -630,34 +663,42 @@ export default function SablonlarSayfasi() {
   const toplamSonuc = goruntulenenPremium.length + goruntulenenStandart.length;
 
   return (
-    <div className="min-h-screen" style={{ background:"#f7f6fb" }}>
+    <div className="min-h-screen" style={{ background:"#f5f4fa" }}>
 
-      {/* ── Hero / Başlık ── */}
+      {/* ── Hero ── */}
       <div className="relative overflow-hidden px-4 pt-14 pb-16 text-center"
         style={{ background:"linear-gradient(135deg,#0f0118 0%,#1a0a2e 40%,#0d1a38 100%)" }}>
         <div className="absolute inset-0" style={{ backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.025) 1px,transparent 1px)", backgroundSize:"24px 24px" }}/>
-        <div className="absolute -top-32 -left-16 w-80 h-80 rounded-full opacity-[0.08] blur-3xl" style={{ background:"#7c3aed" }}/>
-        <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full opacity-[0.08] blur-3xl" style={{ background:"#1d4ed8" }}/>
-        <div className="relative">
-          <span className="inline-block text-[11px] font-bold tracking-[0.3em] uppercase text-purple-400 mb-4 px-4 py-1.5 rounded-full"
-            style={{ background:"rgba(124,58,237,0.15)", border:"1px solid rgba(124,58,237,0.25)" }}>
+        <div className="absolute -top-32 -left-16 w-80 h-80 rounded-full opacity-[0.09] blur-3xl" style={{ background:"#7c3aed" }}/>
+        <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full opacity-[0.09] blur-3xl" style={{ background:"#1d4ed8" }}/>
+        <div className="relative z-10">
+          <span className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.28em] uppercase text-purple-300 mb-5 px-4 py-1.5 rounded-full"
+            style={{ background:"rgba(124,58,237,0.18)", border:"1px solid rgba(124,58,237,0.28)" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"/>
             Şablon Galerisi
           </span>
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
-            Her Anın Özel Davetiyesi
+            Her Anın Özel<br/>
+            <span style={{ background:"linear-gradient(90deg,#a78bfa,#60a5fa)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+              Dijital Davetiyesi
+            </span>
           </h1>
-          <p className="text-white/45 text-base max-w-md mx-auto mb-8">
-            {SABLONLAR.length} şablon arasından seçin. Her bölümü anında önizleyin, dakikalar içinde davetiyenizi oluşturun.
+          <p className="text-white/45 text-[15px] max-w-lg mx-auto mb-8 leading-relaxed">
+            {SABLONLAR.length} şablon arasından seçin. Her bölümü anında önizleyin,
+            dakikalar içinde davetiyenizi oluşturun ve paylaşın.
           </p>
-          <div className="flex items-center justify-center gap-6 flex-wrap">
-            <div className="flex items-center gap-2 text-sm text-white/50">
-              <span className="w-2 h-2 rounded-full bg-green-400 inline-block"/>
-              Ücretsiz şablonlar mevcut
-            </div>
-            <div className="flex items-center gap-2 text-sm text-white/50">
-              <span className="w-2 h-2 rounded-full bg-amber-400 inline-block"/>
-              3 lüks premium şablon
-            </div>
+          {/* İstatistikler */}
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            {[
+              { val:`${SABLONLAR.length}`, label:"Şablon" },
+              { val:"3", label:"Premium Tasarım" },
+              { val:"7", label:"Kategori" },
+            ].map(stat => (
+              <div key={stat.label} className="text-center">
+                <p className="text-2xl font-bold text-white">{stat.val}</p>
+                <p className="text-xs text-white/40 mt-0.5">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -669,12 +710,16 @@ export default function SablonlarSayfasi() {
             const sayi = kat.id === "hepsi" ? SABLONLAR.length : SABLONLAR.filter(s => s.kategori === kat.id).length;
             return (
               <button key={kat.id} onClick={() => setAktifKat(kat.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all ${
-                  aktifKat === kat.id ? "bg-gray-900 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}>
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all"
+                style={{
+                  background: aktifKat === kat.id ? "#111" : "#f3f4f6",
+                  color: aktifKat === kat.id ? "#fff" : "#4b5563",
+                  boxShadow: aktifKat === kat.id ? "0 2px 8px rgba(0,0,0,0.2)" : "none",
+                }}>
                 {kat.id !== "hepsi" && <span>{KAT_EMOJI[kat.id]}</span>}
                 {kat.isim}
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${aktifKat === kat.id ? "bg-white/20 text-white" : "bg-gray-200 text-gray-500"}`}>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full"
+                  style={{ background: aktifKat === kat.id ? "rgba(255,255,255,0.2)" : "#e5e7eb", color: aktifKat === kat.id ? "#fff" : "#6b7280" }}>
                   {sayi}
                 </span>
               </button>
@@ -687,59 +732,79 @@ export default function SablonlarSayfasi() {
       <div className="max-w-5xl mx-auto px-4 py-10">
 
         {toplamSonuc === 0 ? (
-          <div className="text-center py-24 text-gray-400">
-            <p className="text-4xl mb-4">🔍</p>
-            <p className="font-medium">Bu kategoride şablon bulunamadı.</p>
+          <div className="text-center py-24">
+            <p className="text-5xl mb-4">🔍</p>
+            <p className="font-semibold text-gray-500">Bu kategoride şablon bulunamadı.</p>
+            <button onClick={() => setAktifKat("hepsi")} className="mt-4 text-sm text-purple-500 hover:underline">
+              Tüm şablonlara bak →
+            </button>
           </div>
         ) : (
           <>
-            {/* Lüks Koleksiyon */}
+            {/* ── PREMIUM KOLEKSİYON ── */}
             {goruntulenenPremium.length > 0 && (
               <section className="mb-14">
                 <div className="flex items-center gap-4 mb-7">
-                  <div className="h-px flex-1" style={{ background:"linear-gradient(to right,transparent,rgba(212,168,75,0.3))" }}/>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span style={{ color:"#D4A84B", fontSize:12 }}>✦</span>
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color:"#B8860B" }}>Lüks Koleksiyon</span>
-                    <span style={{ color:"#D4A84B", fontSize:12 }}>✦</span>
+                  <div className="h-px flex-1" style={{ background:"linear-gradient(to right,transparent,rgba(212,168,75,0.35))" }}/>
+                  <div className="flex items-center gap-2 shrink-0 px-1">
+                    <span style={{ color:"#B8860B", fontSize:13 }}>✦</span>
+                    <span className="text-[11px] font-bold tracking-[0.22em] uppercase" style={{ color:"#92700A" }}>
+                      Lüks Koleksiyon
+                    </span>
+                    <span style={{ color:"#B8860B", fontSize:13 }}>✦</span>
                   </div>
-                  <div className="h-px flex-1" style={{ background:"linear-gradient(to left,transparent,rgba(212,168,75,0.3))" }}/>
+                  <div className="h-px flex-1" style={{ background:"linear-gradient(to left,transparent,rgba(212,168,75,0.35))" }}/>
                 </div>
                 <div className="space-y-6">
-                  {goruntulenenPremium.map(sablon => (
-                    <PremiumKart key={sablon.id} sablon={sablon} />
-                  ))}
+                  {goruntulenenPremium.map(s => <PremiumKart key={s.id} sablon={s} />)}
                 </div>
               </section>
             )}
 
-            {/* Standart Şablonlar */}
+            {/* ── STANDART ŞABLONLAR ── */}
             {goruntulenenStandart.length > 0 && (
               <section>
+                {/* Bölüm başlığı */}
                 {goruntulenenPremium.length > 0 && (
                   <div className="flex items-center gap-4 mb-7">
                     <div className="h-px flex-1 bg-gray-200"/>
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 px-3 shrink-0">
+                    <span className="text-[11px] font-bold tracking-[0.22em] uppercase text-gray-400 px-3 shrink-0">
                       Tüm Şablonlar
                     </span>
                     <div className="h-px flex-1 bg-gray-200"/>
                   </div>
                 )}
-                <div className="flex items-center justify-between mb-5">
-                  <p className="text-sm text-gray-400">
-                    <span className="font-semibold text-gray-700">{goruntulenenStandart.length}</span> şablon
-                    {aktifKat !== "hepsi" && (
-                      <> · <button onClick={() => setAktifKat("hepsi")} className="text-purple-500 hover:underline ml-1">Tümünü gör</button></>
-                    )}
-                  </p>
-                  <p className="text-[11px] text-gray-400 hidden sm:block">
-                    Her şablonda: Kapak · Davetiye · Harita · RSVP
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {goruntulenenStandart.map(sablon => (
-                    <StdKompaktKart key={sablon.id} sablon={sablon} />
+
+                {/* Ne içeriyor — tek satır bilgi */}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-6 px-1">
+                  <span className="text-xs text-gray-400 font-medium">Her şablonda:</span>
+                  {[
+                    "💌 RSVP katılım",
+                    "📍 Harita & konum",
+                    "⏱️ Geri sayım",
+                    "🎵 Arka plan müziği",
+                    "📱 Mobil uyumlu",
+                  ].map(f => (
+                    <span key={f} className="text-xs text-gray-600 flex items-center gap-1.5">
+                      <svg className="w-3 h-3 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      {f}
+                    </span>
                   ))}
+                  <span className="ml-auto text-xs text-gray-400">
+                    {goruntulenenStandart.length} şablon
+                    {aktifKat !== "hepsi" && (
+                      <button onClick={() => setAktifKat("hepsi")} className="text-purple-500 hover:underline ml-2">
+                        Tümünü gör
+                      </button>
+                    )}
+                  </span>
+                </div>
+
+                {/* 2 sütunlu grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {goruntulenenStandart.map(s => <StdKompaktKart key={s.id} sablon={s} />)}
                 </div>
               </section>
             )}
