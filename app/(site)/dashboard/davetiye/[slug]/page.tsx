@@ -5,15 +5,13 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 import SpotifyPlaylistKarti from "@/components/SpotifyPlaylistKarti";
+import RsvpListesi from "@/components/RsvpListesi";
 import { SABLONLAR } from "@/lib/sablonlar";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-const DIYET_EMOJI: Record<string, string> = {
-  vegan: "🌱", vejetaryen: "🥗", glutensiz: "🌾", laktozsuz: "🥛",
-};
 
 const EMOJILER: Record<string, string> = {
   dugun: "💒", nisan: "💍", dogumgunu: "🎂", sunnet: "⭐",
@@ -300,86 +298,19 @@ export default async function DavetiyeDetay({ params }: Props) {
             </div>
 
             {/* RSVP List */}
-            <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
-              <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Katılım Bildirimleri</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm font-bold text-gray-900">{davetiye.rsvplar.length} yanıt</span>
-                    {katilmayanlar.length > 0 && (
-                      <span className="text-xs text-gray-400">· {katilmayanlar.length} katılamıyor</span>
-                    )}
-                  </div>
-                </div>
-                {davetiye.rsvplar.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${katilimYuzde}%`, backgroundColor: renk }}
-                      />
-                    </div>
-                    <span className="text-xs font-bold" style={{ color: renk }}>%{katilimYuzde}</span>
-                  </div>
-                )}
-              </div>
-
-              {davetiye.rsvplar.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">📭</div>
-                  <p className="text-gray-500 text-sm font-medium">Henüz yanıt yok</p>
-                  <p className="text-gray-300 text-xs mt-1">Davetiyeyi paylaşınca bildirimler burada görünecek</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-gray-50">
-                  {davetiye.rsvplar.map((rsvp) => (
-                    <div key={rsvp.id} className="px-4 sm:px-6 py-3.5 flex gap-3 hover:bg-gray-50/50 transition-colors">
-                      {/* Avatar */}
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
-                        style={rsvp.katilim
-                          ? { backgroundColor: renk + "18", color: renk }
-                          : { backgroundColor: "#fef2f2", color: "#f87171" }
-                        }
-                      >
-                        {rsvp.ad[0]?.toUpperCase()}
-                      </div>
-
-                      {/* İçerik — tek sütun, taşmaz */}
-                      <div className="flex-1 min-w-0">
-                        {/* Üst satır: isim + durum badge */}
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="font-semibold text-gray-800 text-sm truncate">{rsvp.ad}</p>
-                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
-                            rsvp.katilim ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-500"
-                          }`}>
-                            {rsvp.katilim ? "✓ Katılıyor" : "✗ Katılmıyor"}
-                          </span>
-                        </div>
-
-                        {/* Alt satır: ikincil bilgiler */}
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
-                          {rsvp.katilim && rsvp.kisiSayisi > 1 && (
-                            <span className="text-xs text-gray-400 font-medium">{rsvp.kisiSayisi} kişi</span>
-                          )}
-                          {rsvp.katilim && rsvp.diyet && rsvp.diyet.split(",").map(d => (
-                            <span key={d} className="text-[11px] bg-amber-50 border border-amber-100 text-amber-700 px-1.5 py-0.5 rounded-md font-medium">
-                              {DIYET_EMOJI[d] ?? "🍽️"} {d}
-                            </span>
-                          ))}
-                          {rsvp.email && (
-                            <span className="text-xs text-gray-400 truncate max-w-45">{rsvp.email}</span>
-                          )}
-                          {rsvp.mesaj && (
-                            <span className="text-xs text-gray-400 italic truncate max-w-45">"{rsvp.mesaj}"</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <RsvpListesi
+              baslangicRsvplar={davetiye.rsvplar.map(r => ({
+                id: r.id,
+                ad: r.ad,
+                email: r.email,
+                mesaj: r.mesaj,
+                katilim: r.katilim,
+                kisiSayisi: r.kisiSayisi,
+                diyet: r.diyet,
+              }))}
+              slug={slug}
+              renk={renk}
+            />
           </div>
 
           {/* RIGHT — Quick info + actions (2/5) */}
