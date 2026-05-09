@@ -96,13 +96,16 @@ export default function BildirimButonu() {
           <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between">
             <p className="text-sm font-bold text-gray-900">Bildirimler</p>
             {bildirimler.length > 0 && (
-              <Link
-                href="/dashboard"
-                onClick={() => setAcik(false)}
-                className="text-xs text-purple-600 hover:text-purple-700 font-medium"
+              <button
+                onClick={async () => {
+                  setBildirimler([]);
+                  setOkunmamis(0);
+                  await fetch("/api/bildirimler", { method: "DELETE" });
+                }}
+                className="text-xs text-red-400 hover:text-red-600 font-medium transition-colors"
               >
-                Tümünü gör →
-              </Link>
+                Tümünü sil
+              </button>
             )}
           </div>
 
@@ -115,7 +118,16 @@ export default function BildirimButonu() {
               </div>
             ) : (
               bildirimler.map((b) => (
-                <BildirimSatiri key={b.id} b={b} onTikla={() => setAcik(false)} />
+                <BildirimSatiri
+                  key={b.id}
+                  b={b}
+                  onTikla={() => setAcik(false)}
+                  onSil={async () => {
+                    setBildirimler(prev => prev.filter(x => x.id !== b.id));
+                    if (!b.okundu) setOkunmamis(prev => Math.max(0, prev - 1));
+                    await fetch(`/api/bildirimler?id=${b.id}`, { method: "DELETE" });
+                  }}
+                />
               ))
             )}
           </div>
@@ -125,7 +137,7 @@ export default function BildirimButonu() {
   );
 }
 
-function BildirimSatiri({ b, onTikla }: { b: Bildirim; onTikla: () => void }) {
+function BildirimSatiri({ b, onTikla, onSil }: { b: Bildirim; onTikla: () => void; onSil: () => void }) {
   const icon = TIP_ICON[b.tip] ?? "🔔";
   const zaman = new Intl.RelativeTimeFormat("tr", { numeric: "auto" });
 
@@ -146,26 +158,26 @@ function BildirimSatiri({ b, onTikla }: { b: Bildirim; onTikla: () => void }) {
     : "/dashboard";
 
   return (
-    <Link
-      href={icerik}
-      onClick={onTikla}
-      className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 ${
-        !b.okundu ? "bg-purple-50/40" : ""
-      }`}
-    >
-      <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-base shrink-0 mt-0.5">
-        {icon}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className={`text-sm leading-snug ${!b.okundu ? "font-semibold text-gray-900" : "font-medium text-gray-700"}`}>
-          {b.baslik}
-        </p>
-        <p className="text-xs text-gray-400 mt-0.5 truncate">{b.mesaj}</p>
-        <p className="text-[10px] text-gray-300 mt-1">{goreli(b.createdAt)}</p>
-      </div>
-      {!b.okundu && (
-        <div className="w-2 h-2 bg-purple-500 rounded-full shrink-0 mt-1.5" />
-      )}
-    </Link>
+    <div className={`flex items-start gap-3 px-4 py-3 border-b border-gray-50 last:border-0 group ${!b.okundu ? "bg-purple-50/40" : ""}`}>
+      <Link href={icerik} onClick={onTikla} className="flex items-start gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity">
+        <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-base shrink-0 mt-0.5">
+          {icon}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-sm leading-snug ${!b.okundu ? "font-semibold text-gray-900" : "font-medium text-gray-700"}`}>
+            {b.baslik}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5 truncate">{b.mesaj}</p>
+          <p className="text-[10px] text-gray-300 mt-1">{goreli(b.createdAt)}</p>
+        </div>
+      </Link>
+      <button
+        onClick={(e) => { e.stopPropagation(); onSil(); }}
+        className="shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 flex items-center justify-center rounded-lg hover:bg-red-50 text-gray-300 hover:text-red-400"
+        aria-label="Sil"
+      >
+        ×
+      </button>
+    </div>
   );
 }

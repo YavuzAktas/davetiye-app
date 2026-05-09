@@ -35,3 +35,19 @@ export async function PATCH() {
 
   return NextResponse.json({ tamam: true });
 }
+
+/* DELETE ?id=xxx → tek sil | id yoksa → tümünü sil */
+export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+
+  const id = new URL(req.url).searchParams.get("id");
+
+  if (id) {
+    await prisma.bildirim.deleteMany({ where: { id, userId: session.user.id } });
+  } else {
+    await prisma.bildirim.deleteMany({ where: { userId: session.user.id } });
+  }
+
+  return NextResponse.json({ tamam: true });
+}
