@@ -140,6 +140,217 @@ function ChatCard({ delay }: { delay: number }) {
   );
 }
 
+/* ── Phone mockup sub-components ── */
+const SABLONLAR_MINI = [
+  {
+    id: "nisan",
+    bg: "radial-gradient(ellipse at 50% 40%,#5C1020 0%,#3B0A14 55%,#270610 100%)",
+    dotColor: "rgba(196,160,90,0.06)",
+    gold: "#C4A05A",
+    cream: "#F5E8D8",
+    isim1: "Aylin",
+    isim2: "Yavuz",
+    tarih: "6 HAZİRAN 2026",
+    seal: "rose" as const,
+    bgSeal: "#3B0A14",
+  },
+  {
+    id: "dugun",
+    bg: "radial-gradient(ellipse at 50% 40%,#1E3A6E 0%,#0D1F3C 55%,#071228 100%)",
+    dotColor: "rgba(212,170,112,0.06)",
+    gold: "#D4AA70",
+    cream: "#F8F3EE",
+    isim1: "Ayşe",
+    isim2: "Mehmet",
+    tarih: "12 EYLÜL 2026",
+    seal: "rings" as const,
+    bgSeal: "#0D1F3C",
+  },
+  {
+    id: "dogumgunu",
+    bg: "radial-gradient(ellipse at 50% 40%,#2A0F4A 0%,#140828 55%,#0A0414 100%)",
+    dotColor: "rgba(212,168,75,0.06)",
+    gold: "#D4A84B",
+    cream: "#F9F3E8",
+    isim1: "Elif",
+    isim2: null,
+    tarih: "18 AĞUSTOS 2026",
+    seal: "cake" as const,
+    bgSeal: "#140828",
+  },
+] as const;
+
+type MiniSablon = typeof SABLONLAR_MINI[number];
+
+function MiniRoseSeal({ gold, bgColor }: { gold: string; bgColor: string }) {
+  return (
+    <svg viewBox="0 0 200 200" style={{ width:"100%", height:"100%" }} fill="none">
+      <circle cx="100" cy="100" r="100" fill={bgColor}/>
+      <circle cx="100" cy="100" r="88" stroke={`${gold}22`} strokeWidth="1.5"/>
+      <circle cx="100" cy="100" r="78" stroke={`${gold}10`} strokeWidth="0.8" strokeDasharray="3 5"/>
+      {[0,60,120,180,240,300].map((a,i) => (
+        <ellipse key={i} cx="100" cy="54" rx="14" ry="22"
+          fill="rgba(200,80,80,0.28)" stroke="rgba(240,160,140,0.3)" strokeWidth="0.8"
+          transform={`rotate(${a} 100 100)`}/>
+      ))}
+      {[30,90,150,210,270,330].map((a,i) => (
+        <ellipse key={i} cx="100" cy="63" rx="11" ry="17"
+          fill="rgba(210,90,90,0.36)" transform={`rotate(${a} 100 100)`}/>
+      ))}
+      {[15,75,135,195,255,315].map((a,i) => (
+        <ellipse key={i} cx="100" cy="73" rx="8" ry="12"
+          fill="rgba(220,100,100,0.44)" transform={`rotate(${a} 100 100)`}/>
+      ))}
+      <circle cx="100" cy="100" r="12" fill="rgba(215,95,95,0.6)"/>
+      <circle cx="100" cy="100" r="7"  fill="rgba(235,115,115,0.7)"/>
+      <circle cx="100" cy="100" r="3"  fill="rgba(248,145,135,0.8)"/>
+    </svg>
+  );
+}
+
+function MiniRingsSeal({ gold, bgColor }: { gold: string; bgColor: string }) {
+  return (
+    <svg viewBox="0 0 200 200" style={{ width:"100%", height:"100%" }} fill="none">
+      <circle cx="100" cy="100" r="100" fill={bgColor}/>
+      <circle cx="100" cy="100" r="88" stroke={`${gold}22`} strokeWidth="1.5"/>
+      <circle cx="100" cy="100" r="78" stroke={`${gold}10`} strokeWidth="0.8" strokeDasharray="3 5"/>
+      <circle cx="80"  cy="112" r="38" stroke={gold} strokeWidth="7" fill="none" opacity="0.9"/>
+      <circle cx="120" cy="112" r="38" stroke={gold} strokeWidth="7" fill="none" opacity="0.9"/>
+      <circle cx="80"  cy="112" r="38" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none"/>
+      <circle cx="120" cy="112" r="38" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none"/>
+      <polygon points="100,44 116,62 100,78 84,62" fill={gold} opacity="0.88"/>
+      <polygon points="100,44 116,62 100,54 84,62" fill="rgba(255,255,255,0.25)"/>
+      <polygon points="100,78 116,62 100,68 84,62" fill="rgba(0,0,0,0.2)"/>
+      <text x="42"  y="60"  textAnchor="middle" fontSize="9" fill={`${gold}55`}>✦</text>
+      <text x="158" y="60"  textAnchor="middle" fontSize="9" fill={`${gold}55`}>✦</text>
+    </svg>
+  );
+}
+
+function MiniCakeSeal({ gold, bgColor }: { gold: string; bgColor: string }) {
+  const PL = "#5A2090";
+  return (
+    <svg viewBox="0 0 200 200" style={{ width:"100%", height:"100%" }} fill="none">
+      <circle cx="100" cy="100" r="100" fill={bgColor}/>
+      <circle cx="100" cy="100" r="88" stroke={`${gold}22`} strokeWidth="1.5"/>
+      {[0,30,60,90,120,150,180,210,240,270,300,330].map((a,i) => {
+        const rad = (a * Math.PI) / 180;
+        return <circle key={i} cx={100+77*Math.cos(rad)} cy={100+77*Math.sin(rad)}
+          r={i%3===0?2.2:1.2} fill={gold} opacity={i%3===0?0.45:0.2}/>;
+      })}
+      <ellipse cx="100" cy="164" rx="58" ry="7" fill={gold} opacity="0.15"/>
+      <rect x="44" y="126" width="112" height="38" rx="7" fill={PL} opacity="0.75"/>
+      <rect x="44" y="118" width="112" height="11" rx="5" fill={gold} opacity="0.55"/>
+      <rect x="60" y="92"  width="80"  height="28" rx="5" fill={PL} opacity="0.6"/>
+      <rect x="60" y="86"  width="80"  height="9"  rx="4" fill={gold} opacity="0.45"/>
+      <rect x="76" y="68"  width="48"  height="18" rx="4" fill={PL} opacity="0.5"/>
+      <rect x="76" y="65"  width="48"  height="6"  rx="3" fill={gold} opacity="0.4"/>
+      <rect x="97" y="50"  width="6"   height="17" rx="3" fill={gold} opacity="0.7"/>
+      <ellipse cx="100" cy="48" rx="5" ry="7" fill="rgba(255,200,50,0.75)"/>
+    </svg>
+  );
+}
+
+function PhoneScreen({ sablon }: { sablon: MiniSablon }) {
+  return (
+    <div style={{
+      width:"100%", height:"100%",
+      background: sablon.bg,
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      padding:"12px 8px", position:"relative", overflow:"hidden",
+    }}>
+      <div style={{
+        position:"absolute", inset:0, pointerEvents:"none",
+        backgroundImage:`radial-gradient(circle,${sablon.dotColor} 1px,transparent 1px)`,
+        backgroundSize:"18px 18px",
+      }} />
+      <p style={{
+        fontFamily:"var(--font-dancing),cursive",
+        fontSize:"15px", color:sablon.cream, lineHeight:1.2,
+        textAlign:"center", marginBottom:5, position:"relative", zIndex:1,
+      }}>
+        {sablon.isim1}
+        {sablon.isim2 && (
+          <><br/><span style={{ color:sablon.gold, fontSize:"10px" }}>&amp;</span><br/>{sablon.isim2}</>
+        )}
+      </p>
+      <div style={{ display:"flex", alignItems:"center", gap:4, width:"65%", marginBottom:5, position:"relative", zIndex:1 }}>
+        <div style={{ flex:1, height:0.5, background:`linear-gradient(to right,transparent,${sablon.gold}80)` }}/>
+        <span style={{ color:sablon.gold, fontSize:5, letterSpacing:3 }}>✦</span>
+        <div style={{ flex:1, height:0.5, background:`linear-gradient(to left,transparent,${sablon.gold}80)` }}/>
+      </div>
+      <div style={{
+        width:72, height:72, position:"relative", zIndex:1,
+        boxShadow:`0 0 0 3px ${sablon.bgSeal},0 0 0 4.5px ${sablon.gold}22,0 8px 20px rgba(0,0,0,0.5)`,
+        borderRadius:"50%",
+      }}>
+        {sablon.seal === "rose"  && <MiniRoseSeal  gold={sablon.gold} bgColor={sablon.bgSeal}/>}
+        {sablon.seal === "rings" && <MiniRingsSeal gold={sablon.gold} bgColor={sablon.bgSeal}/>}
+        {sablon.seal === "cake"  && <MiniCakeSeal  gold={sablon.gold} bgColor={sablon.bgSeal}/>}
+      </div>
+      <p style={{
+        fontFamily:"var(--font-cormorant),serif",
+        fontSize:"6.5px", letterSpacing:"0.28em",
+        color:sablon.gold, marginTop:6,
+        position:"relative", zIndex:1, textAlign:"center",
+      }}>{sablon.tarih}</p>
+      <p style={{
+        fontFamily:"var(--font-cormorant),serif",
+        fontSize:"5.5px", fontStyle:"italic", letterSpacing:"0.15em",
+        color:`${sablon.gold}60`, marginTop:2,
+        position:"relative", zIndex:1,
+      }}>Mühüre dokun ✦</p>
+    </div>
+  );
+}
+
+function PhoneMockupKart() {
+  const [aktif, setAktif] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setFade(false);
+      setTimeout(() => { setAktif(p => (p + 1) % SABLONLAR_MINI.length); setFade(true); }, 280);
+    }, 3200);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="h-72 flex items-center justify-center relative overflow-hidden"
+      style={{ background:"linear-gradient(135deg,#f7f3ff 0%,#fff0f6 100%)" }}>
+      {/* Sol telefon */}
+      <div className="absolute left-0 top-7 w-[96px] h-[172px] bg-gray-900 rounded-[18px] border-[3px] border-gray-700 -rotate-12 opacity-45 overflow-hidden shadow-xl" style={{ zIndex:1 }}>
+        <div style={{ position:"absolute", top:0, left:"50%", transform:"translateX(-50%)", width:36, height:14, background:"#111", borderRadius:"0 0 10px 10px", zIndex:10 }}/>
+        <PhoneScreen sablon={SABLONLAR_MINI[1]}/>
+      </div>
+      {/* Sağ telefon */}
+      <div className="absolute right-0 top-7 w-[96px] h-[172px] bg-gray-900 rounded-[18px] border-[3px] border-gray-700 rotate-12 opacity-45 overflow-hidden shadow-xl" style={{ zIndex:1 }}>
+        <div style={{ position:"absolute", top:0, left:"50%", transform:"translateX(-50%)", width:36, height:14, background:"#111", borderRadius:"0 0 10px 10px", zIndex:10 }}/>
+        <PhoneScreen sablon={SABLONLAR_MINI[2]}/>
+      </div>
+      {/* Orta telefon — döngülü */}
+      <div className="relative w-36 h-[236px] bg-gray-900 rounded-[28px] border-[3px] border-gray-700 overflow-hidden shadow-2xl" style={{ zIndex:2 }}>
+        <div style={{ position:"absolute", top:0, left:"50%", transform:"translateX(-50%)", width:52, height:18, background:"#111", borderRadius:"0 0 14px 14px", zIndex:10 }}/>
+        <div style={{ position:"absolute", inset:0, opacity:fade?1:0, transition:"opacity 0.28s ease" }}>
+          <PhoneScreen sablon={SABLONLAR_MINI[aktif]}/>
+        </div>
+        <div className="absolute inset-0 pointer-events-none" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 50%)" }}/>
+      </div>
+      {/* Sayfa göstergesi */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5" style={{ zIndex:3 }}>
+        {SABLONLAR_MINI.map((s, i) => (
+          <div key={s.id} style={{
+            width:i===aktif?14:5, height:5, borderRadius:3,
+            background:i===aktif?SABLONLAR_MINI[aktif].gold:"rgba(0,0,0,0.18)",
+            transition:"all 0.3s",
+          }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const MARQUEE = [
   "⚡ Dakikalar içinde hazır",
   "📱 WhatsApp ile paylaş",
@@ -473,27 +684,7 @@ export default function Anasayfa() {
             {/* Kart 1: Telefon mockup */}
             <Section>
               <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="h-72 bg-linear-to-br from-purple-50 to-pink-50 flex items-center justify-center relative overflow-hidden">
-                  {/* Yan telefonlar */}
-                  <div className="absolute left-2 top-8 w-[104px] h-[184px] bg-linear-to-b from-[#1a0a3e] to-[#350d6b] rounded-[20px] border-[3px] border-gray-600 -rotate-12 opacity-50 overflow-hidden shadow-lg" />
-                  <div className="absolute right-2 top-8 w-[104px] h-[184px] bg-linear-to-b from-[#0a1f3e] to-[#0d4a7a] rounded-[20px] border-[3px] border-gray-600 rotate-12 opacity-50 overflow-hidden shadow-lg" />
-                  {/* Orta telefon */}
-                  <div className="relative z-10 w-36 h-60 bg-gray-900 rounded-[28px] border-[3px] border-gray-700 overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-5 bg-gray-900 rounded-b-2xl z-20" />
-                    <div className="absolute inset-0 bg-linear-to-b from-[#3d1f08] via-[#7a4f1a] to-[#3d1f08] flex flex-col items-center justify-center text-center p-3 pt-6">
-                      <p className="text-yellow-200/50 text-[7px] tracking-[0.3em] uppercase mb-1.5">DÜĞÜN DAVETİYESİ</p>
-                      <div className="w-8 h-px bg-yellow-500/40 mb-2" />
-                      <p className="text-white text-[22px] leading-tight font-bold" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe</p>
-                      <p className="text-yellow-400/50 text-[10px] my-0.5">&</p>
-                      <p className="text-white text-[22px] leading-tight font-bold" style={{ fontFamily: "var(--font-dancing), cursive" }}>Mehmet</p>
-                      <div className="w-8 h-px bg-yellow-500/40 mt-2 mb-2.5" />
-                      <p className="text-yellow-200/70 text-[8px]">12 Eylül 2026</p>
-                      <p className="text-yellow-200/40 text-[7px]">Çırağan Palace</p>
-                      <div className="mt-3.5 bg-yellow-700/40 text-yellow-100 text-[8px] px-3 py-1 rounded-lg">✓ Katılıyorum</div>
-                    </div>
-                    <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent pointer-events-none" />
-                  </div>
-                </div>
+                <PhoneMockupKart />
                 <div className="bg-white px-6 py-5">
                   <p className="font-bold text-gray-900 mb-1">1 – Şablon Seç</p>
                   <p className="text-sm text-gray-400">Etkinliğine uygun tasarımı seç, dakikalar içinde başla.</p>
