@@ -90,11 +90,12 @@ export default function NavLinks() {
       </div>
 
       {/* ── Mobile trigger ── */}
-      <div className="flex items-center gap-2 md:hidden">
+      <div className="flex items-center gap-1.5 md:hidden">
         <Link href={session ? "/sablonlar" : "/giris"}
           className="text-xs bg-linear-to-r from-purple-600 to-pink-600 text-white px-3.5 py-1.5 rounded-lg font-medium">
           {session ? "+ Yeni" : "Başla"}
         </Link>
+        {session && <BildirimButonu />}
         <button onClick={() => setMobMenuAcik(!mobMenuAcik)} aria-label="Menü"
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
           {mobMenuAcik ? (
@@ -124,6 +125,10 @@ export default function NavLinks() {
                 <Link href="/sablonlar" onClick={() => setMobMenuAcik(false)}
                   className="flex items-center py-3.5 text-purple-600 text-sm font-medium border-b border-gray-50">
                   + Yeni Davetiye
+                </Link>
+                <Link href="/dashboard/ayarlar" onClick={() => setMobMenuAcik(false)}
+                  className="flex items-center py-3.5 text-gray-600 hover:text-gray-900 text-sm border-b border-gray-50 transition-colors">
+                  Ayarlar
                 </Link>
                 <button onClick={() => { setMobMenuAcik(false); signOut({ callbackUrl: "/" }); }}
                   className="flex items-center w-full py-3.5 text-red-500 text-sm">
