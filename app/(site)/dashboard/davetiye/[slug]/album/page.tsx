@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { FotoListesi, AniListesi } from "@/components/ModerasyonListe";
+import { ModerasyonIcerik } from "@/components/ModerasyonListe";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -39,10 +39,6 @@ export default async function AlbumModerasyon({ params }: Props) {
   const renk = sablon.renk;
   const rgb = hexToRgb(renk);
 
-  const bekleyenFoto = davetiye.albumFotolar.filter((f) => !f.onaylandi);
-  const bekleyenAni = davetiye.aniDefterleri.filter((a) => !a.onaylandi);
-  const onaylananFoto = davetiye.albumFotolar.filter((f) => f.onaylandi);
-  const onaylananAni = davetiye.aniDefterleri.filter((a) => a.onaylandi);
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
@@ -89,9 +85,9 @@ export default async function AlbumModerasyon({ params }: Props) {
 
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                {bekleyenFoto.length + bekleyenAni.length > 0 && (
+                {(davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length) > 0 && (
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-400">
-                    {bekleyenFoto.length + bekleyenAni.length} onay bekliyor
+                    {davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length} onay bekliyor
                   </span>
                 )}
               </div>
@@ -121,78 +117,12 @@ export default async function AlbumModerasyon({ params }: Props) {
       {/* ══ CONTENT ══ */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: "Bekleyen Fotoğraf", value: bekleyenFoto.length, icon: "🕐", sub: "onay bekliyor" },
-            { label: "Onaylı Fotoğraf", value: onaylananFoto.length, icon: "✅", sub: "albümde görünür" },
-            { label: "Bekleyen Anı", value: bekleyenAni.length, icon: "🕐", sub: "onay bekliyor" },
-            { label: "Onaylı Anı", value: onaylananAni.length, icon: "💬", sub: "herkese açık" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="bg-white border border-gray-100 rounded-2xl p-5 relative overflow-hidden group hover:shadow-md transition-shadow"
-            >
-              <div
-                className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                style={{ backgroundColor: renk + "20", transform: "translate(40%, -40%)" }}
-              />
-              <div className="text-2xl mb-3">{stat.icon}</div>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums">{stat.value}</p>
-              <p className="text-sm font-semibold text-gray-700 mt-0.5">{stat.label}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{stat.sub}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          {/* ── Fotoğraf Moderasyonu ── */}
-          <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
-            <div className="px-6 pt-6 pb-4 border-b border-gray-50">
-              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Fotoğraflar</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm font-bold text-gray-900">{davetiye.albumFotolar.length} toplam</span>
-                {bekleyenFoto.length > 0 && (
-                  <span className="text-xs bg-amber-50 text-amber-600 font-semibold px-2 py-0.5 rounded-full">
-                    {bekleyenFoto.length} beklemede
-                  </span>
-                )}
-              </div>
-            </div>
-            <FotoListesi
-              baslangic={davetiye.albumFotolar.map((f) => ({
-                ...f,
-                createdAt: f.createdAt.toISOString(),
-              }))}
-              slug={slug}
-              renk={renk}
-            />
-          </div>
-
-          {/* ── Anı Defteri Moderasyonu ── */}
-          <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
-            <div className="px-6 pt-6 pb-4 border-b border-gray-50">
-              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Anı Defteri</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm font-bold text-gray-900">{davetiye.aniDefterleri.length} toplam</span>
-                {bekleyenAni.length > 0 && (
-                  <span className="text-xs bg-amber-50 text-amber-600 font-semibold px-2 py-0.5 rounded-full">
-                    {bekleyenAni.length} beklemede
-                  </span>
-                )}
-              </div>
-            </div>
-            <AniListesi
-              baslangic={davetiye.aniDefterleri.map((a) => ({
-                ...a,
-                createdAt: a.createdAt.toISOString(),
-              }))}
-              slug={slug}
-              renk={renk}
-            />
-          </div>
-        </div>
+        <ModerasyonIcerik
+          baslangicFotolar={davetiye.albumFotolar.map((f) => ({ ...f, createdAt: f.createdAt.toISOString() }))}
+          baslangicAnilar={davetiye.aniDefterleri.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
+          slug={slug}
+          renk={renk}
+        />
 
         {/* Info box */}
         <div
