@@ -54,7 +54,10 @@ export async function tokenYenile(refreshToken: string) {
       refresh_token: refreshToken,
     }),
   });
-  if (!res.ok) throw new Error("Token yenilenemedi");
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "");
+    throw new Error(`Token yenilenemedi — HTTP ${res.status}: ${errBody}`);
+  }
   const json = await res.json();
   return json.access_token as string;
 }
@@ -119,7 +122,10 @@ export async function playlistOlustur(
       public: true,
     }),
   });
-  if (!res.ok) throw new Error("Playlist oluşturulamadı");
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "(body okunamadı)");
+    throw new Error(`Playlist oluşturulamadı — HTTP ${res.status}: ${errBody}`);
+  }
   const json = await res.json();
   return { id: json.id as string, url: json.external_urls?.spotify as string };
 }
