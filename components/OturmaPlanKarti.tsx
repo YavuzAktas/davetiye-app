@@ -6,7 +6,8 @@ import {
   DragOverlay,
   useDraggable,
   useDroppable,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -51,6 +52,7 @@ function MisafirChip({
     <div
       ref={overlay ? undefined : setNodeRef}
       {...(overlay ? {} : { ...attributes, ...listeners })}
+      style={{ touchAction: "none" }}
       className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-grab active:cursor-grabbing select-none transition-all ${
         isDragging && !overlay
           ? "opacity-30"
@@ -233,7 +235,10 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
   const [yeniKapasite, setYeniKapasite] = useState(8);
   const [ekleniyor, setEkleniyor] = useState(false);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+  );
 
   const aktifMisafir = useCallback((): Misafir | undefined => {
     if (!aktifId) return undefined;
