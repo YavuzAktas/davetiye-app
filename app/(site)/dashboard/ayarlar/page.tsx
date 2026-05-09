@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
 import AyarlarClient from "@/components/AyarlarClient";
+import { SessionSync } from "@/components/SessionSync";
 
 export default async function AyarlarSayfasi() {
   const session = await getServerSession(authOptions);
@@ -43,6 +44,7 @@ export default async function AyarlarSayfasi() {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <SessionSync dbPlan={user.plan} />
 
       {/* ══ KOYU HERO HEADER ══ */}
       <div className="relative bg-[#080112] overflow-hidden">

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
+import { SessionSync } from "@/components/SessionSync";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -49,6 +50,7 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <SessionSync dbPlan={user.plan} />
 
       {/* ══════════════════════════════════════════
           KOYU HERO HEADER
