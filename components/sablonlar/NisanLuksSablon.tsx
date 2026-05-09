@@ -630,6 +630,8 @@ type SarkiSonuc = { id:string; uri:string; isim:string; sanatci:string; kapak:st
 function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; spotifyAktif?: boolean }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
   const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"" });
+  const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
+  const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
   const [sarkiSorgu, setSarkiSorgu] = useState("");
@@ -679,6 +681,7 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
           ad: form.ad,
           katilim: form.katilim === "evet",
           kisiSayisi: Number(form.kisiSayisi),
+          diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
           sarkiOnerisi: seciliSarki ? `${seciliSarki.isim} - ${seciliSarki.sanatci}` : sarkiSorgu.trim() || undefined,
           spotifyTrackId: seciliSarki?.id,
         }),
@@ -736,6 +739,24 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
         <option value="evet">Katılıyorum ✓</option>
         <option value="hayir">Katılamıyorum</option>
       </select>
+
+      {form.katilim === "evet" && (
+        <div style={{ marginTop:20 }}>
+          <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#8B6550" }}>(isteğe bağlı)</span></label>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
+            {[{ k:"vegan", l:"🌱 Vegan" },{ k:"vejetaryen", l:"🥗 Vejetaryen" },{ k:"glutensiz", l:"🌾 Glutensiz" },{ k:"laktozsuz", l:"🥛 Laktozsuz" }].map(opt => (
+              <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{
+                padding:"6px 12px", borderRadius:6, fontSize:11, cursor:"pointer",
+                fontFamily:"var(--font-cormorant),serif",
+                border:`1.5px solid ${secilenDiyet.includes(opt.k) ? GOLD : GOLD+"40"}`,
+                color: secilenDiyet.includes(opt.k) ? BG : "#8B6550",
+                background: secilenDiyet.includes(opt.k) ? GOLD+"22" : "transparent",
+                transition:"all 0.15s",
+              }}>{opt.l}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {spotifyAktif && (
         <div style={{ marginTop:20 }}>

@@ -35,7 +35,15 @@ interface Props {
 }
 
 /* ── Draggable misafir chip ── */
-function MisafirChip({ misafir, overlay = false }: { misafir: Misafir; overlay?: boolean }) {
+function MisafirChip({
+  misafir,
+  overlay = false,
+  onRemove,
+}: {
+  misafir: Misafir;
+  overlay?: boolean;
+  onRemove?: () => void;
+}) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: misafir.id });
   const diyetler = misafir.diyet ? misafir.diyet.split(",") : [];
 
@@ -63,6 +71,16 @@ function MisafirChip({ misafir, overlay = false }: { misafir: Misafir; overlay?:
           ))}
         </div>
       )}
+      {onRemove && !overlay && (
+        <button
+          onPointerDown={e => e.stopPropagation()}
+          onClick={e => { e.stopPropagation(); onRemove(); }}
+          className="ml-1 shrink-0 w-4 h-4 rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-red-500 flex items-center justify-center text-[11px] leading-none transition-colors"
+          title="Misafiri kaldır"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }
@@ -71,13 +89,19 @@ function MisafirChip({ misafir, overlay = false }: { misafir: Misafir; overlay?:
 function MasaKarti({
   masa,
   slug,
+  aktifKisiSayisi,
+  kapasiteHataId,
   onDelete,
   onEdit,
+  onMisafirKaldir,
 }: {
   masa: Masa;
   slug: string;
+  aktifKisiSayisi: number;
+  kapasiteHataId: string | null;
   onDelete: (id: string) => void;
   onEdit: (id: string, isim: string, kapasite: number) => void;
+  onMisafirKaldir: (rsvpId: string, masaId: string) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: masa.id });
   const [duzenle, setDuzenle] = useState(false);
@@ -85,6 +109,8 @@ function MasaKarti({
   const [kapasiteDraft, setKapasiteDraft] = useState(masa.kapasite);
   const toplamKisi = masa.atamalar.reduce((a, at) => a + at.rsvp.kisiSayisi, 0);
   const doluluk = Math.min((toplamKisi / masa.kapasite) * 100, 100);
+  const tasmakUzere = isOver && aktifKisiSayisi > 0 && toplamKisi + aktifKisiSayisi > masa.kapasite;
+  const isHataFlash = kapasiteHataId === masa.id;
 
   const kaydet = async () => {
     await fetch(`/api/dashboard/davetiye/${slug}/masalar/${masa.id}`, {
@@ -106,7 +132,9 @@ function MasaKarti({
     <div
       ref={setNodeRef}
       className={`rounded-2xl border-2 transition-all ${
-        isOver
+        tasmakUzere || isHataFlash
+          ? "border-red-400 bg-red-50 shadow-lg shadow-red-100"
+          : isOver
           ? "border-purple-400 bg-purple-50 shadow-lg shadow-purple-100"
           : "border-gray-200 bg-white hover:border-gray-300"
       }`}
@@ -136,7 +164,9 @@ function MasaKarti({
         ) : (
           <div className="flex items-center gap-2">
             <p className="flex-1 text-sm font-bold text-gray-800">{masa.isim}</p>
-            <span className="text-[11px] text-gray-400 tabular-nums">{toplamKisi}/{masa.kapasite}</span>
+            <span className={`text-[11px] tabular-nums font-medium ${toplamKisi >= masa.kapasite ? "text-red-500" : "text-gray-400"}`}>
+              {toplamKisi}/{masa.kapasite}
+            </span>
             <button onClick={() => setDuzenle(true)} className="text-gray-300 hover:text-gray-500 transition-colors text-xs">✏️</button>
             <button onClick={sil} className="text-gray-300 hover:text-red-400 transition-colors text-xs">🗑</button>
           </div>
@@ -148,14 +178,23 @@ function MasaKarti({
             style={{ width: `${doluluk}%` }}
           />
         </div>
+        {tasmakUzere && (
+          <p className="text-[11px] text-red-500 font-medium mt-1.5">Kapasite dolu, buraya eklenemiyor</p>
+        )}
       </div>
 
       {/* Misafirler */}
-      <div className="p-3 min-h-[80px] space-y-1.5">
+      <div className="p-3 min-h-20 space-y-1.5">
         {masa.atamalar.length === 0 ? (
           <p className="text-[11px] text-gray-300 text-center mt-4 select-none">Misafir bırak</p>
         ) : (
-          masa.atamalar.map(at => <MisafirChip key={at.rsvp.id} misafir={at.rsvp} />)
+          masa.atamalar.map(at => (
+            <MisafirChip
+              key={at.rsvp.id}
+              misafir={at.rsvp}
+              onRemove={() => onMisafirKaldir(at.rsvp.id, masa.id)}
+            />
+          ))
         )}
       </div>
     </div>
@@ -168,7 +207,7 @@ function AtanmamisZone({ misafirler }: { misafirler: Misafir[] }) {
   return (
     <div
       ref={setNodeRef}
-      className={`rounded-2xl border-2 transition-all p-4 min-h-[100px] ${
+      className={`rounded-2xl border-2 transition-all p-4 min-h-25 ${
         isOver ? "border-emerald-400 bg-emerald-50" : "border-dashed border-gray-200 bg-gray-50/50"
       }`}
     >
@@ -188,6 +227,7 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
   const [masalar, setMasalar] = useState<Masa[]>(masalarBaslangic);
   const [atanmamis, setAtanmamis] = useState<Misafir[]>(atanmamisBaslangic);
   const [aktifId, setAktifId] = useState<string | null>(null);
+  const [kapasiteHataId, setKapasiteHataId] = useState<string | null>(null);
   const [yeniMasaAcik, setYeniMasaAcik] = useState(false);
   const [yeniIsim, setYeniIsim] = useState("");
   const [yeniKapasite, setYeniKapasite] = useState(8);
@@ -214,13 +254,24 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
     const rsvpId = active.id as string;
     const hedefId = over.id as string;
 
-    // Mevcut konumu bul
     const mevcutMasaId = masalar.find(m => m.atamalar.some(a => a.rsvp.id === rsvpId))?.id ?? null;
     if (mevcutMasaId === hedefId || (hedefId === "atanmamis" && mevcutMasaId === null)) return;
 
-    // Misafiri bul
     const misafir = aktifMisafir();
     if (!misafir) return;
+
+    // Kapasite kontrolü
+    if (hedefId !== "atanmamis") {
+      const hedefMasa = masalar.find(m => m.id === hedefId);
+      if (hedefMasa) {
+        const mevcutKisi = hedefMasa.atamalar.reduce((a, at) => a + at.rsvp.kisiSayisi, 0);
+        if (mevcutKisi + misafir.kisiSayisi > hedefMasa.kapasite) {
+          setKapasiteHataId(hedefId);
+          setTimeout(() => setKapasiteHataId(null), 1800);
+          return;
+        }
+      }
+    }
 
     // Optimistik güncelleme
     setMasalar(prev => prev.map(m => {
@@ -236,6 +287,24 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rsvpId, masaId: hedefId === "atanmamis" ? null : hedefId }),
+    });
+  };
+
+  const misafirKaldir = async (rsvpId: string, masaId: string) => {
+    const masa = masalar.find(m => m.id === masaId);
+    const atama = masa?.atamalar.find(a => a.rsvp.id === rsvpId);
+    if (!atama) return;
+    const misafir = atama.rsvp;
+
+    setMasalar(prev => prev.map(m =>
+      m.id === masaId ? { ...m, atamalar: m.atamalar.filter(a => a.rsvp.id !== rsvpId) } : m
+    ));
+    setAtanmamis(prev => [...prev, misafir]);
+
+    await fetch(`/api/dashboard/davetiye/${slug}/masalar/atama`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rsvpId, masaId: null }),
     });
   };
 
@@ -258,7 +327,6 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
   };
 
   const masaSil = (id: string) => {
-    // Assign guests back to unassigned on delete
     const masa = masalar.find(m => m.id === id);
     if (masa) setAtanmamis(prev => [...prev, ...masa.atamalar.map(a => a.rsvp)]);
     setMasalar(prev => prev.filter(m => m.id !== id));
@@ -270,6 +338,7 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
 
   const toplamAtanan = masalar.reduce((a, m) => a + m.atamalar.length, 0);
   const toplamKisi = masalar.reduce((a, m) => a + m.atamalar.reduce((b, at) => b + at.rsvp.kisiSayisi, 0), 0);
+  const aktifMisafirObj = aktifMisafir();
 
   return (
     <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -281,7 +350,7 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
           { label: "Atanmadı", value: atanmamis.length, color: "bg-amber-50 text-amber-700" },
           { label: "Toplam Kişi", value: toplamKisi, color: "bg-blue-50 text-blue-700" },
         ].map(s => (
-          <div key={s.label} className={`flex-1 min-w-[100px] rounded-2xl px-4 py-3 ${s.color}`}>
+          <div key={s.label} className={`flex-1 min-w-25 rounded-2xl px-4 py-3 ${s.color}`}>
             <p className="text-2xl font-bold tabular-nums">{s.value}</p>
             <p className="text-xs font-medium opacity-70 mt-0.5">{s.label}</p>
           </div>
@@ -353,16 +422,19 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
               key={masa.id}
               masa={masa}
               slug={slug}
+              aktifKisiSayisi={aktifMisafirObj?.kisiSayisi ?? 0}
+              kapasiteHataId={kapasiteHataId}
               onDelete={masaSil}
               onEdit={masaDuzenle}
+              onMisafirKaldir={misafirKaldir}
             />
           ))}
         </div>
       )}
 
       <DragOverlay>
-        {aktifId && aktifMisafir() ? (
-          <MisafirChip misafir={aktifMisafir()!} overlay />
+        {aktifId && aktifMisafirObj ? (
+          <MisafirChip misafir={aktifMisafirObj} overlay />
         ) : null}
       </DragOverlay>
     </DndContext>

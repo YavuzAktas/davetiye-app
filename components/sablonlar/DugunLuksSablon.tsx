@@ -488,6 +488,8 @@ type SarkiSonuc = { id:string; uri:string; isim:string; sanatci:string; kapak:st
 function RsvpFormKrem({ davetiyeId, bg, gold, cream, spotifyAktif=false }: { davetiyeId:string; bg:string; gold:string; cream:string; spotifyAktif?:boolean }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
   const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"" });
+  const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
+  const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
   const [sarkiSorgu, setSarkiSorgu] = useState("");
@@ -527,7 +529,7 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream, spotifyAktif=false }: { dav
     try {
       const res = await fetch("/api/rsvp", {
         method:"POST", headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ davetiyeId, ad:form.ad, katilim:form.katilim==="evet", kisiSayisi:Number(form.kisiSayisi), sarkiOnerisi: seciliSarki ? `${seciliSarki.isim} - ${seciliSarki.sanatci}` : sarkiSorgu.trim() || undefined, spotifyTrackId: seciliSarki?.id }),
+        body: JSON.stringify({ davetiyeId, ad:form.ad, katilim:form.katilim==="evet", kisiSayisi:Number(form.kisiSayisi), diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined, sarkiOnerisi: seciliSarki ? `${seciliSarki.isim} - ${seciliSarki.sanatci}` : sarkiSorgu.trim() || undefined, spotifyTrackId: seciliSarki?.id }),
       });
       if (!res.ok) { const d = await res.json().catch(()=>({})); setHata(d.hata || "Bir hata oluştu."); return; }
       setAdim("tamam");
@@ -567,6 +569,24 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream, spotifyAktif=false }: { dav
         <option value="evet">Katılıyorum ✓</option>
         <option value="hayir">Katılamıyorum</option>
       </select>
+
+      {form.katilim === "evet" && (
+        <div style={{ marginTop:20 }}>
+          <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A6040" }}>(isteğe bağlı)</span></label>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
+            {[{ k:"vegan", l:"🌱 Vegan" },{ k:"vejetaryen", l:"🥗 Vejetaryen" },{ k:"glutensiz", l:"🌾 Glutensiz" },{ k:"laktozsuz", l:"🥛 Laktozsuz" }].map(opt => (
+              <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{
+                padding:"6px 12px", borderRadius:6, fontSize:11, cursor:"pointer",
+                fontFamily:"var(--font-cormorant),serif",
+                border:`1.5px solid ${secilenDiyet.includes(opt.k) ? gold : gold+"40"}`,
+                color: secilenDiyet.includes(opt.k) ? bg : "#7A6040",
+                background: secilenDiyet.includes(opt.k) ? gold+"22" : "transparent",
+                transition:"all 0.15s",
+              }}>{opt.l}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {spotifyAktif && (
         <div style={{ marginTop:20 }}>
