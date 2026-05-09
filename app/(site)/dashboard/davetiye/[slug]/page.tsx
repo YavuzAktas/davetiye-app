@@ -448,6 +448,19 @@ export default async function DavetiyeDetay({ params }: Props) {
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                      📸
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Albüm & Anı</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                </Link>
               </div>
             </div>
 

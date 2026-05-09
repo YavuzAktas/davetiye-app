@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
+import AlbumButonu from "@/components/AlbumButonu";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 
 interface Props {
@@ -54,19 +55,31 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     kisi2: (davetiye as any).kisi2 ?? null,
   };
 
-  const rsvpBileseni = <RsvpForm davetiyeId={davetiye.id} renk="#7C3AED" />;
+  /* Davetiye şablonunun tema rengi (FloatingButton için) */
+  const TEMA_RENKLER: Record<string, string> = {
+    "nisan-luks":     "#C4A05A",
+    "dugun-luks":     "#D4AA70",
+    "dogumgunu-luks": "#D4A84B",
+  };
+  const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
+  const rsvpBileseni = <RsvpForm davetiyeId={davetiye.id} renk={temaRenk} />;
+
+  let sablon: React.ReactNode;
   if (sablonTipi === "nisan-luks") {
-    return <NisanLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+    sablon = <NisanLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  } else if (sablonTipi === "dugun-luks") {
+    sablon = <DugunLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  } else if (sablonTipi === "dogumgunu-luks") {
+    sablon = <DogumGunuLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  } else {
+    sablon = <KlasikSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
   }
 
-  if (sablonTipi === "dugun-luks") {
-    return <DugunLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
-  }
-
-  if (sablonTipi === "dogumgunu-luks") {
-    return <DogumGunuLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
-  }
-
-  return <KlasikSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  return (
+    <>
+      {sablon}
+      <AlbumButonu slug={davetiye.slug} renk={temaRenk} />
+    </>
+  );
 }
