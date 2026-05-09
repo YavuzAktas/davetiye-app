@@ -138,7 +138,7 @@ export async function playlistEEkle(
   trackUri: string,
   accessToken: string
 ) {
-  const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+  const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
