@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
+import { bildirimOlustur } from "@/lib/bildirim";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
 const rsvpSemasi = z.object({
@@ -123,7 +124,16 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  /* 6. Bildirim e-postası (beklemeden gönder) */
+  /* 6. In-app bildirim */
+  bildirimOlustur({
+    userId: davetiye.userId,
+    tip: "rsvp",
+    baslik: katilim ? `${ad.trim()} katılıyor 🎉` : `${ad.trim()} katılamıyor`,
+    mesaj: `"${davetiye.baslik}" davetiyene yanıt geldi.`,
+    davetiyeSlug: davetiye.slug,
+  });
+
+  /* 7. Bildirim e-postası (beklemeden gönder) */
   if (davetiye.user?.email) {
     rsvpBildirimiGonder({
       sahipEmail:     davetiye.user.email,

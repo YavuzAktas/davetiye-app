@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { bildirimOlustur } from "@/lib/bildirim";
 
 /* ── GET: onaylanmış anıları listele ── */
 export async function GET(
@@ -32,7 +33,7 @@ export async function POST(
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, aktif: true },
+    select: { id: true, aktif: true, userId: true, baslik: true },
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
@@ -55,6 +56,14 @@ export async function POST(
       icerik,
       onaylandi: false,
     },
+  });
+
+  bildirimOlustur({
+    userId: davetiye.userId,
+    tip: "ani",
+    baslik: `${ad} anı bıraktı 💌`,
+    mesaj: `"${davetiye.baslik}" için yeni bir anı onay bekliyor.`,
+    davetiyeSlug: slug,
   });
 
   return NextResponse.json({ id: ani.id, mesaj: "Anın alındı, onay bekleniyor." }, { status: 201 });

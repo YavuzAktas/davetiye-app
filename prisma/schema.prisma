@@ -23,6 +23,7 @@ model User {
   davetiyeler   Davetiye[]
   odemeTokenlar OdemeToken[]
   sessions      Session[]
+  bildirimleri  Bildirim[]
 }
 
 model Account {
@@ -156,4 +157,19 @@ model Davetli {
   davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId])
+}
+
+model Bildirim {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tip          String
+  baslik       String
+  mesaj        String
+  okundu       Boolean  @default(false)
+  davetiyeSlug String?
+  createdAt    DateTime @default(now())
+
+  @@index([userId, okundu])
+  @@index([userId, createdAt])
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import BildirimButonu from "@/components/BildirimButonu";
 
 export default function NavLinks() {
   const { data: session } = useSession();
@@ -29,8 +30,10 @@ export default function NavLinks() {
           </Link>
         ))}
 
+        {session && <BildirimButonu />}
+
         {session ? (
-          <div className="relative ml-3">
+          <div className="relative ml-1">
             <button
               onClick={() => setProfilAcik(!profilAcik)}
               className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all"
