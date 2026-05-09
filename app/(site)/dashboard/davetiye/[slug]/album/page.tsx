@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { FotoSatirItem, AniSatirItem } from "@/components/ModerasyonSatir";
+import { FotoListesi, AniListesi } from "@/components/ModerasyonListe";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -40,8 +40,8 @@ export default async function AlbumModerasyon({ params }: Props) {
   const rgb = hexToRgb(renk);
 
   const bekleyenFoto = davetiye.albumFotolar.filter((f) => !f.onaylandi);
-  const onaylananFoto = davetiye.albumFotolar.filter((f) => f.onaylandi);
   const bekleyenAni = davetiye.aniDefterleri.filter((a) => !a.onaylandi);
+  const onaylananFoto = davetiye.albumFotolar.filter((f) => f.onaylandi);
   const onaylananAni = davetiye.aniDefterleri.filter((a) => a.onaylandi);
 
   return (
@@ -160,45 +160,14 @@ export default async function AlbumModerasyon({ params }: Props) {
                 )}
               </div>
             </div>
-
-            <div className="p-4 space-y-3 max-h-[600px] overflow-y-auto">
-              {davetiye.albumFotolar.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">🖼️</div>
-                  <p className="text-gray-500 text-sm font-medium">Henüz fotoğraf yok</p>
-                  <p className="text-gray-300 text-xs mt-1">Misafirler davetiye sayfasından fotoğraf yükleyebilir</p>
-                </div>
-              ) : (
-                <>
-                  {bekleyenFoto.length > 0 && (
-                    <p className="text-[10px] font-bold text-amber-500 tracking-widest uppercase px-1">
-                      Onay Bekleyenler
-                    </p>
-                  )}
-                  {bekleyenFoto.map((foto) => (
-                    <FotoSatirItem
-                      key={foto.id}
-                      foto={{ ...foto, createdAt: foto.createdAt.toISOString() }}
-                      slug={slug}
-                      renk={renk}
-                    />
-                  ))}
-                  {onaylananFoto.length > 0 && (
-                    <p className="text-[10px] font-bold text-emerald-500 tracking-widest uppercase px-1 pt-2">
-                      Onaylananlar
-                    </p>
-                  )}
-                  {onaylananFoto.map((foto) => (
-                    <FotoSatirItem
-                      key={foto.id}
-                      foto={{ ...foto, createdAt: foto.createdAt.toISOString() }}
-                      slug={slug}
-                      renk={renk}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
+            <FotoListesi
+              baslangic={davetiye.albumFotolar.map((f) => ({
+                ...f,
+                createdAt: f.createdAt.toISOString(),
+              }))}
+              slug={slug}
+              renk={renk}
+            />
           </div>
 
           {/* ── Anı Defteri Moderasyonu ── */}
@@ -214,45 +183,14 @@ export default async function AlbumModerasyon({ params }: Props) {
                 )}
               </div>
             </div>
-
-            <div className="p-4 space-y-3 max-h-[600px] overflow-y-auto">
-              {davetiye.aniDefterleri.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">📖</div>
-                  <p className="text-gray-500 text-sm font-medium">Henüz anı yok</p>
-                  <p className="text-gray-300 text-xs mt-1">Misafirler davetiye sayfasından anı bırakabilir</p>
-                </div>
-              ) : (
-                <>
-                  {bekleyenAni.length > 0 && (
-                    <p className="text-[10px] font-bold text-amber-500 tracking-widest uppercase px-1">
-                      Onay Bekleyenler
-                    </p>
-                  )}
-                  {bekleyenAni.map((ani) => (
-                    <AniSatirItem
-                      key={ani.id}
-                      ani={{ ...ani, createdAt: ani.createdAt.toISOString() }}
-                      slug={slug}
-                      renk={renk}
-                    />
-                  ))}
-                  {onaylananAni.length > 0 && (
-                    <p className="text-[10px] font-bold text-emerald-500 tracking-widest uppercase px-1 pt-2">
-                      Onaylananlar
-                    </p>
-                  )}
-                  {onaylananAni.map((ani) => (
-                    <AniSatirItem
-                      key={ani.id}
-                      ani={{ ...ani, createdAt: ani.createdAt.toISOString() }}
-                      slug={slug}
-                      renk={renk}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
+            <AniListesi
+              baslangic={davetiye.aniDefterleri.map((a) => ({
+                ...a,
+                createdAt: a.createdAt.toISOString(),
+              }))}
+              slug={slug}
+              renk={renk}
+            />
           </div>
         </div>
 
