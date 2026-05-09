@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const tokens  = await kodIleTokenAl(code);
+    console.log("Spotify granted scopes:", (tokens as any).scope);
     const profil  = await spotifyProfil(tokens.access_token);
 
     await prisma.user.update({

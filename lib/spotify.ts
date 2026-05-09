@@ -60,6 +60,7 @@ export async function tokenYenile(refreshToken: string) {
     throw new Error(`Token yenilenemedi — HTTP ${res.status}: ${errBody}`);
   }
   const json = await res.json();
+  console.log("Token yenilendi, scope:", json.scope);
   return json.access_token as string;
 }
 
