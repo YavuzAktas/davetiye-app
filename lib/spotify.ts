@@ -18,6 +18,7 @@ export function spotifyAuthUrl(state: string) {
     scope: scopes,
     redirect_uri: REDIRECT_URI,
     state,
+    show_dialog: "true",
   });
 
   return `https://accounts.spotify.com/authorize?${params}`;

@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
   const error = searchParams.get("error");
 
   if (error || !code || !state) {
-    return NextResponse.redirect(`${BASE}/dashboard/ayarlar?spotify=hata`);
+    console.error("Spotify callback hata parametresi:", error, "code:", !!code, "state:", !!state);
+    return NextResponse.redirect(`${BASE}/dashboard/ayarlar?spotify=hata&neden=${encodeURIComponent(error ?? "eksik_parametre")}`);
   }
 
   try {
@@ -27,7 +28,8 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.redirect(`${BASE}/dashboard/ayarlar?spotify=baglandi`);
-  } catch {
-    return NextResponse.redirect(`${BASE}/dashboard/ayarlar?spotify=hata`);
+  } catch (err) {
+    console.error("Spotify callback exception:", err);
+    return NextResponse.redirect(`${BASE}/dashboard/ayarlar?spotify=hata&neden=exception`);
   }
 }
