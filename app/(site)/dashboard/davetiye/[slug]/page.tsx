@@ -348,7 +348,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                       {/* İçerik — tek sütun, taşmaz */}
                       <div className="flex-1 min-w-0">
                         {/* Üst satır: isim + durum badge */}
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center justify-between gap-2">
                           <p className="font-semibold text-gray-800 text-sm truncate">{rsvp.ad}</p>
                           <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
                             rsvp.katilim ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-500"
