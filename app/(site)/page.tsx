@@ -639,6 +639,110 @@ export default function Anasayfa() {
               </div>
             </Section>
 
+            {/* Spotify — Etkinlik Çalma Listesi */}
+            <Section className="md:col-span-2">
+              <div className="h-full bg-[#0a0f0a] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-[#1DB954]/15">
+                <div className="absolute -bottom-14 -left-14 w-60 h-60 rounded-full bg-[#1DB954] opacity-[0.08] blur-3xl group-hover:opacity-[0.15] transition-opacity" />
+                <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-[0.08] transition-opacity">
+                  <svg viewBox="0 0 24 24" className="w-28 h-28 fill-[#1DB954]"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                </div>
+                <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-11 h-11 bg-[#1DB954]/15 border border-[#1DB954]/25 rounded-2xl flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#1DB954]"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                      </div>
+                      <div>
+                        <h3 className="text-white text-xl font-bold leading-tight">Etkinlik Çalma Listesi</h3>
+                        <p className="text-[#1DB954] text-[11px] font-medium tracking-wide">Spotify entegrasyonu</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-sm leading-relaxed">Misafirler RSVP yaparken şarkı önerir — playlist&apos;ine otomatik eklenir.</p>
+                  </div>
+                  <div className="flex-shrink-0 space-y-2 w-full md:w-48">
+                    {[
+                      { isim: "Hepsi Geçer", sanatci: "Sezen Aksu", renk: "from-purple-600 to-pink-500" },
+                      { isim: "Yüksek Kalite", sanatci: "Teoman", renk: "from-blue-600 to-cyan-500" },
+                      { isim: "Seni Beklerken", sanatci: "Athena", renk: "from-orange-500 to-amber-400" },
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.06] rounded-xl px-3 py-2 transition-colors">
+                        <div className={`w-7 h-7 rounded-md bg-gradient-to-br ${s.renk} flex-shrink-0`} />
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-white font-medium leading-tight truncate">{s.isim}</p>
+                          <p className="text-[10px] text-gray-500 truncate">{s.sanatci}</p>
+                        </div>
+                        <div className="ml-auto flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Section>
+
+            {/* Anlık bildirim */}
+            <Section>
+              <div className="h-full bg-gradient-to-br from-violet-600 to-purple-700 rounded-3xl p-7 relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 cursor-default min-h-[190px]">
+                <div className="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full group-hover:opacity-10 transition-opacity" />
+                <div className="absolute bottom-4 right-4 text-5xl opacity-10 select-none">🔔</div>
+                <div className="text-4xl mb-4">🔔</div>
+                <h3 className="text-white text-xl font-bold">Anlık bildirim</h3>
+                <p className="text-purple-200/80 text-sm mt-1.5">Katılım cevabı gelince haberdar ol</p>
+              </div>
+            </Section>
+
+            {/* Dijital Anı Defteri — tam genişlik */}
+            <Section className="md:col-span-3">
+              <div className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default flex flex-col md:flex-row items-start md:items-center gap-8 min-h-[190px]">
+                <div className="absolute inset-0 opacity-[0.06]" style={{
+                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,0.4) 28px, rgba(255,255,255,0.4) 29px)",
+                }} />
+                <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-rose-600/20 to-transparent" />
+                <div className="relative z-10 flex-1">
+                  <div className="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center text-xl mb-5">📖</div>
+                  <h3 className="text-white text-2xl font-bold">Dijital Anı Defteri</h3>
+                  <p className="text-amber-100/80 text-sm mt-2">Misafirler davetiyende mesaj bırakır — etkinlikten kalıcı bir hatıra</p>
+                </div>
+                <div className="relative z-10 flex flex-col gap-2.5 w-full md:w-72">
+                  {[
+                    { mesaj: "Harika bir etkinlikti, çok mutlu olduk 🎉", isim: "Ayşe & Mehmet" },
+                    { mesaj: "Ömür boyu mutluluklar diliyoruz!", isim: "Fatma H." },
+                    { mesaj: "Unutulmaz bir geceydi, teşekkürler 💐", isim: "Can A." },
+                  ].map((a, i) => (
+                    <div key={i} className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-2.5">
+                      <p className="text-white text-[11px] leading-relaxed">&ldquo;{a.mesaj}&rdquo;</p>
+                      <p className="text-amber-200/70 text-[10px] mt-1 font-medium">— {a.isim}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Section>
+
+            {/* Canlı Etkinlik Albümü */}
+            <Section className="md:col-span-2">
+              <div className="h-full bg-[#0c0c14] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-white/[0.06]">
+                <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-indigo-500 opacity-[0.07] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
+                <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
+                  <div className="flex-1">
+                    <div className="w-11 h-11 bg-indigo-500/15 border border-indigo-500/25 rounded-2xl flex items-center justify-center text-xl mb-4">📸</div>
+                    <h3 className="text-white text-xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">Misafirler anları fotoğraf olarak paylaşır — hepsi tek albümde toplanır</p>
+                  </div>
+                  <div className="flex-shrink-0 grid grid-cols-3 gap-1.5 w-full md:w-36">
+                    {[
+                      "from-pink-500 to-rose-600",
+                      "from-sky-500 to-blue-600",
+                      "from-emerald-500 to-teal-600",
+                      "from-amber-500 to-orange-600",
+                      "from-purple-500 to-violet-600",
+                      "from-cyan-500 to-blue-500",
+                    ].map((g, i) => (
+                      <div key={i} className={`aspect-square rounded-lg bg-gradient-to-br ${g} opacity-80 group-hover:opacity-100 transition-opacity`} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Section>
+
             {/* Geri sayım — tam genişlik */}
             <Section className="md:col-span-3">
               <div className="h-full bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default flex flex-col md:flex-row items-start md:items-center gap-8">
