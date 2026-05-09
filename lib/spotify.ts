@@ -112,17 +112,17 @@ export async function playlistOlustur(
   isim: string,
   accessToken: string
 ) {
-  const res = await fetch(`https://api.spotify.com/v1/users/${spotifyUserId}/playlists`, {
+  const safeIsim = isim.replace(/[^\x20-\x7EÀ-ɏЀ-ӿ]/g, "").trim() || "Etkinlik Listesi";
+  const url = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
+  const body = JSON.stringify({ name: safeIsim, description: "Bekleriz tarafindan olusturuldu", public: false });
+  console.log("Spotify playlist POST url:", url, "body:", body);
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({
-      name: isim,
-      description: "Davetiye.app tarafından oluşturuldu",
-      public: false,
-    }),
+    body,
   });
   if (!res.ok) {
     const errBody = await res.text().catch(() => "(body okunamadı)");
