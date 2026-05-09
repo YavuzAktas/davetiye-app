@@ -438,7 +438,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
   const { data: session } = useSession();
   const userPlan = (session?.user as any)?.plan ?? "free";
-  const kilitli = userPlan === "free";
+  const kilitli = userPlan === "free"; // standart ve premium lüks şablonlara erişebilir
   const demoUrl = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
 
@@ -658,7 +658,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
                 className="flex-1 py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2"
                 style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow, letterSpacing: "0.01em" }}
               >
-                <span>👑</span> Premium&apos;a Geç
+                <span>⭐</span> Planını Yükselt
               </motion.button>
             ) : (
               <motion.button
