@@ -58,6 +58,88 @@ function Section({ children, className = "" }: { children: React.ReactNode; clas
   );
 }
 
+/* ── HOW IT WORKS sub-components ── */
+function TypingField() {
+  const [text, setText] = useState("");
+  const [phase, setPhase] = useState<"typing" | "hold" | "deleting">("typing");
+  const target = "Mehmet";
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    if (phase === "typing") {
+      if (text.length < target.length) {
+        t = setTimeout(() => setText(target.slice(0, text.length + 1)), 130);
+      } else {
+        t = setTimeout(() => setPhase("hold"), 1500);
+      }
+    } else if (phase === "hold") {
+      t = setTimeout(() => setPhase("deleting"), 600);
+    } else {
+      if (text.length > 0) {
+        t = setTimeout(() => setText(text.slice(0, -1)), 80);
+      } else {
+        t = setTimeout(() => setPhase("typing"), 500);
+      }
+    }
+    return () => clearTimeout(t);
+  }, [text, phase]);
+
+  return (
+    <div className="border border-gray-200 rounded-lg px-2.5 py-1.5 flex items-center min-h-[26px]">
+      <span className="text-xs text-gray-800">{text}</span>
+      <span className="inline-block w-px h-3.5 bg-gray-500 ml-px animate-pulse" />
+    </div>
+  );
+}
+
+function ChatMsg({ text, type, delay }: { text: string; type: "in" | "out"; delay: number }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), delay);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div
+      className={`flex ${type === "out" ? "justify-end" : "justify-start"}`}
+      style={{ opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(6px)", transition: "opacity 0.35s, transform 0.35s" }}
+    >
+      <div className={`max-w-[80%] px-3 py-1.5 rounded-2xl text-[11px] leading-relaxed shadow-sm ${
+        type === "in"
+          ? "bg-white border border-gray-100 text-gray-700 rounded-bl-sm"
+          : "bg-[#d9fdd3] text-gray-800 rounded-br-sm"
+      }`}>
+        {text}
+      </div>
+    </div>
+  );
+}
+
+function ChatCard({ delay }: { delay: number }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), delay);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div
+      className="flex justify-end"
+      style={{ opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(6px)", transition: "opacity 0.35s, transform 0.35s" }}
+    >
+      <div className="max-w-[80%] rounded-2xl rounded-br-sm overflow-hidden border border-gray-200 shadow-sm">
+        <div className="h-14 bg-gradient-to-b from-amber-800 to-amber-900 flex items-center justify-center px-3">
+          <p className="text-white text-sm" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe & Mehmet</p>
+        </div>
+        <div className="bg-[#d9fdd3] px-2.5 py-1.5">
+          <p className="text-[10px] font-semibold text-gray-700">Düğün Davetiyesi 💍</p>
+          <p className="text-[9px] text-gray-400">bekleriz.com/davetiye/ayse-mehmet</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const MARQUEE = [
   "⚡ Dakikalar içinde hazır",
   "📱 WhatsApp ile paylaş",
@@ -380,41 +462,118 @@ export default function Anasayfa() {
       <section className="py-28 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <Section>
-            <div className="text-center mb-20">
+            <div className="text-center mb-16">
               <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Nasıl Çalışır</span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3">3 adımda davetiye hazır</h2>
             </div>
           </Section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
-            <div className="hidden md:block absolute top-12 left-[calc(16.7%+3rem)] right-[calc(16.7%+3rem)] h-px bg-gradient-to-r from-purple-100 via-pink-200 to-purple-100" />
-            {[
-              { n: "01", emoji: "🖼️", baslik: "Şablon Seç", aciklama: "30+ hazır şablon arasından etkinliğine uygun olanı seç." },
-              { n: "02", emoji: "✏️", baslik: "Özelleştir", aciklama: "Tarih, mekan, mesaj, renk ve müziği kendi zevkine göre düzenle." },
-              { n: "03", emoji: "🚀", baslik: "Paylaş", aciklama: "WhatsApp veya linki kopyalayarak misafirlerine gönder." },
-            ].map((adim, i) => (
-              <Section key={i}>
-                <div className="text-center relative group">
-                  <div className="relative inline-block mb-5">
-                    <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-xl shadow-purple-200 group-hover:shadow-purple-300 group-hover:-translate-y-1 transition-all duration-300">
-                      {adim.emoji}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            {/* Kart 1: Telefon mockup */}
+            <Section>
+              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="h-72 bg-linear-to-br from-purple-50 to-pink-50 flex items-center justify-center relative overflow-hidden">
+                  {/* Yan telefonlar */}
+                  <div className="absolute left-2 top-8 w-[104px] h-[184px] bg-linear-to-b from-[#1a0a3e] to-[#350d6b] rounded-[20px] border-[3px] border-gray-600 -rotate-12 opacity-50 overflow-hidden shadow-lg" />
+                  <div className="absolute right-2 top-8 w-[104px] h-[184px] bg-linear-to-b from-[#0a1f3e] to-[#0d4a7a] rounded-[20px] border-[3px] border-gray-600 rotate-12 opacity-50 overflow-hidden shadow-lg" />
+                  {/* Orta telefon */}
+                  <div className="relative z-10 w-36 h-60 bg-gray-900 rounded-[28px] border-[3px] border-gray-700 overflow-hidden shadow-2xl">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-5 bg-gray-900 rounded-b-2xl z-20" />
+                    <div className="absolute inset-0 bg-linear-to-b from-[#3d1f08] via-[#7a4f1a] to-[#3d1f08] flex flex-col items-center justify-center text-center p-3 pt-6">
+                      <p className="text-yellow-200/50 text-[7px] tracking-[0.3em] uppercase mb-1.5">DÜĞÜN DAVETİYESİ</p>
+                      <div className="w-8 h-px bg-yellow-500/40 mb-2" />
+                      <p className="text-white text-[22px] leading-tight font-bold" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe</p>
+                      <p className="text-yellow-400/50 text-[10px] my-0.5">&</p>
+                      <p className="text-white text-[22px] leading-tight font-bold" style={{ fontFamily: "var(--font-dancing), cursive" }}>Mehmet</p>
+                      <div className="w-8 h-px bg-yellow-500/40 mt-2 mb-2.5" />
+                      <p className="text-yellow-200/70 text-[8px]">12 Eylül 2026</p>
+                      <p className="text-yellow-200/40 text-[7px]">Çırağan Palace</p>
+                      <div className="mt-3.5 bg-yellow-700/40 text-yellow-100 text-[8px] px-3 py-1 rounded-lg">✓ Katılıyorum</div>
                     </div>
-                    <span className="absolute -top-2 -right-2 w-7 h-7 bg-white border-2 border-purple-200 rounded-full text-xs font-bold text-purple-600 flex items-center justify-center shadow-sm">
-                      {i + 1}
-                    </span>
+                    <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent pointer-events-none" />
                   </div>
-                  <p className="text-7xl font-bold text-gray-50 leading-none mb-2 select-none" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                    {adim.n}
-                  </p>
-                  <h3 className="font-bold text-gray-900 text-xl mb-2 -mt-4">{adim.baslik}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{adim.aciklama}</p>
                 </div>
-              </Section>
-            ))}
+                <div className="bg-white px-6 py-5">
+                  <p className="font-bold text-gray-900 mb-1">1 – Şablon Seç</p>
+                  <p className="text-sm text-gray-400">Etkinliğine uygun tasarımı seç, dakikalar içinde başla.</p>
+                </div>
+              </div>
+            </Section>
+
+            {/* Kart 2: Editör mockup */}
+            <Section>
+              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="h-72 bg-gray-50 relative overflow-hidden">
+                  {/* Davetiye önizleme */}
+                  <div className="absolute inset-x-4 top-4 h-[108px] bg-linear-to-b from-[#3d1f08] to-[#7a4f1a] rounded-2xl shadow-md flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-yellow-200/50 text-[7px] tracking-widest uppercase mb-1">DÜĞÜN DAVETİYESİ</p>
+                      <p className="text-white text-lg" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe & Mehmet</p>
+                    </div>
+                  </div>
+                  {/* Düzenle rozeti */}
+                  <div className="absolute top-4 right-4 bg-gray-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-lg z-10">
+                    Düzenle
+                  </div>
+                  {/* Form paneli */}
+                  <div className="absolute inset-x-4 bottom-4 bg-white rounded-2xl border border-gray-200 shadow-lg p-3">
+                    <div className="flex items-center justify-between mb-2.5">
+                      <p className="text-xs font-bold text-gray-800">İsimler</p>
+                      <p className="text-[9px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Bileşen</p>
+                    </div>
+                    <div className="mb-2">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                        <p className="text-[10px] text-gray-500">İsim 1</p>
+                      </div>
+                      <div className="border border-blue-300 bg-blue-50/40 rounded-lg px-2.5 py-1.5">
+                        <p className="text-xs text-gray-800">Ayşe</p>
+                      </div>
+                      <p className="text-[9px] text-gray-300 mt-0.5 px-0.5">Gelinin veya damadın adını girin</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                        <p className="text-[10px] text-gray-500">İsim 2</p>
+                      </div>
+                      <TypingField />
+                      <p className="text-[9px] text-gray-300 mt-0.5 px-0.5">Gelinin veya damadın adını girin</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white px-6 py-5">
+                  <p className="font-bold text-gray-900 mb-1">2 – Özelleştir & Yayınla</p>
+                  <p className="text-sm text-gray-400">Tarih, mekan, isim ve müziği düzenle, tek tıkla yayınla.</p>
+                </div>
+              </div>
+            </Section>
+
+            {/* Kart 3: Chat arayüzü */}
+            <Section>
+              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="h-72 bg-gray-50 flex flex-col justify-end gap-1.5 p-3 relative overflow-hidden">
+                  {/* Chat başlığı */}
+                  <div className="absolute top-0 inset-x-0 h-9 bg-white border-b border-gray-100 flex items-center justify-center shadow-sm">
+                    <p className="text-[10px] text-gray-500 font-medium">Düğün Davetiyesi 💌</p>
+                  </div>
+                  <ChatMsg text="Düğün tarihin belli mi? 👀" type="in" delay={300} />
+                  <ChatMsg text="Evet! Bir dakika, daveti göndereyim" type="out" delay={900} />
+                  <ChatCard delay={1500} />
+                  <ChatMsg text="Vay be, çok güzel! 😍 Kim yaptı?" type="in" delay={2300} />
+                  <ChatMsg text="Bekleriz'den aldım ❤️" type="out" delay={3000} />
+                </div>
+                <div className="bg-white px-6 py-5">
+                  <p className="font-bold text-gray-900 mb-1">3 – Her Yerde Paylaş</p>
+                  <p className="text-sm text-gray-400">WhatsApp, link veya QR koduyla misafirlerine gönder.</p>
+                </div>
+              </div>
+            </Section>
+
           </div>
 
           <Section>
-            <div className="text-center mt-16">
+            <div className="text-center mt-12">
               <Link
                 href="/sablonlar"
                 className="group inline-flex items-center gap-2.5 bg-gray-900 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-purple-700 transition-all duration-300 hover:shadow-xl hover:shadow-purple-200 hover:-translate-y-0.5"
