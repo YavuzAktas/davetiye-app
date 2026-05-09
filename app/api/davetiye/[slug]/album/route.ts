@@ -59,17 +59,27 @@ export async function POST(
   if (!dosya.type.startsWith("image/"))
     return NextResponse.json({ hata: "Sadece resim dosyası kabul edilir." }, { status: 400 });
 
-  const blob = await put(
-    `album/${davetiye.id}/${Date.now()}-${dosya.name.replace(/[^a-z0-9.]/gi, "_")}`,
-    dosya,
-    { access: "public" }
-  );
+  if (!process.env.BLOB_READ_WRITE_TOKEN)
+    return NextResponse.json({ hata: "Depolama yapılandırılmamış." }, { status: 503 });
+
+  let blobUrl: string;
+  try {
+    const blob = await put(
+      `album/${davetiye.id}/${Date.now()}-${dosya.name.replace(/[^a-z0-9.]/gi, "_")}`,
+      dosya,
+      { access: "public" }
+    );
+    blobUrl = blob.url;
+  } catch (err) {
+    console.error("Blob upload hatası:", err);
+    return NextResponse.json({ hata: "Dosya yüklenemedi, lütfen tekrar dene." }, { status: 500 });
+  }
 
   const foto = await prisma.albumFoto.create({
     data: {
       davetiyeId: davetiye.id,
       yukleyenAd: ad,
-      dosyaUrl: blob.url,
+      dosyaUrl: blobUrl,
       onaylandi: false,
     },
   });
