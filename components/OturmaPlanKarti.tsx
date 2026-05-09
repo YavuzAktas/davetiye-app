@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import OturmaPlanIpucu from "@/components/OturmaPlanIpucu";
 import {
   DndContext,
   DragOverlay,
@@ -347,6 +348,8 @@ export default function OturmaPlanKarti({ slug, masalarBaslangic, atanmamisBasla
 
   return (
     <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <OturmaPlanIpucu />
+
       {/* Özet */}
       <div className="flex flex-wrap gap-4 mb-6">
         {[

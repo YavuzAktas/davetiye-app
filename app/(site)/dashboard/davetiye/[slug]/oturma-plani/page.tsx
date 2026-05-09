@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import OturmaPlanKarti from "@/components/OturmaPlanKarti";
-import OturmaPlanIpucu from "@/components/OturmaPlanIpucu";
 
 export const dynamic = "force-dynamic";
 
@@ -72,9 +71,6 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
             <div className="text-xs text-white/30 bg-white/5 border border-white/10 rounded-xl px-4 py-2 hidden sm:block">
               Sürükle &amp; bırak ile misafirleri masalara ata
             </div>
-            <div className="text-xs text-white/30 bg-white/5 border border-white/10 rounded-xl px-4 py-2 sm:hidden">
-              Misafiri basılı tut, masaya sürükle
-            </div>
           </div>
         </div>
 
@@ -100,7 +96,6 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
           />
         )}
       </div>
-      <OturmaPlanIpucu />
     </div>
   );
 }
