@@ -22,6 +22,7 @@ const ORNEK: DavetiyeVeri = {
   user: { name: "Zeynep Arslan", email: null },
   kisi1: "Zeynep",
   kisi2: null,
+  spotifyAktif: false,
 };
 
 export default function OrnekDogumGunuSayfasi() {
