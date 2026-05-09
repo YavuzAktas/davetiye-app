@@ -121,7 +121,7 @@ export async function playlistOlustur(
     body: JSON.stringify({
       name: isim,
       description: "Davetiye.app tarafından oluşturuldu",
-      public: true,
+      public: false,
     }),
   });
   if (!res.ok) {
