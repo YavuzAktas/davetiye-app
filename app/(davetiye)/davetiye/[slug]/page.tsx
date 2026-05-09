@@ -55,6 +55,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     },
     kisi1: (davetiye as any).kisi1 ?? null,
     kisi2: (davetiye as any).kisi2 ?? null,
+    spotifyAktif: (davetiye as any).spotifyAktif ?? false,
   };
 
   /* Davetiye şablonunun tema rengi (FloatingButton için) */
