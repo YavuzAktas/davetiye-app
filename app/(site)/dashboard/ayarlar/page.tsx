@@ -121,6 +121,82 @@ export default async function AyarlarSayfasi() {
           {/* SOL — Statik bilgiler (2/3) */}
           <div className="lg:col-span-2 space-y-5">
 
+            {/* Spotify Bağlantısı — sol kolon, öne çıkarılmış */}
+            <div className="rounded-3xl overflow-hidden border border-[#1DB954]/20" style={{ background: "#0a0f0a" }}>
+              {/* Header band */}
+              <div className="px-6 py-5 flex items-center gap-4" style={{ background: "linear-gradient(135deg,#0d200f,#0a110b)" }}>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)" }}>
+                  <svg viewBox="0 0 24 24" fill="white" className="w-6 h-6">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-base font-bold text-white">Spotify Entegrasyonu</p>
+                  <p className="text-xs font-medium mt-0.5" style={{ color: "#1DB95470" }}>Etkinlik çalma listesi · Misafir şarkı önerileri</p>
+                </div>
+                {spotifyBagli ? (
+                  <span className="shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border" style={{ background: "#1DB95418", color: "#1DB954", borderColor: "#1DB95440" }}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    Bağlı
+                  </span>
+                ) : (
+                  <span className="shrink-0 text-xs font-bold px-3 py-1.5 rounded-full border border-white/10 text-gray-500 bg-white/5">
+                    Bağlı Değil
+                  </span>
+                )}
+              </div>
+
+              <div className="p-6">
+                {spotifyBagli ? (
+                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-2.5 p-3 rounded-2xl border border-[#1DB954]/20 bg-[#1DB954]/[0.07]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-pulse shrink-0" />
+                        <p className="text-xs text-gray-300">Spotify hesabın bağlı. Davetiyelerinde playlist oluşturabilirsin.</p>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["Otomatik ekleme", "Şarkı önerisi", "Playlist yönetimi"].map(f => (
+                          <div key={f} className="text-[10px] text-gray-500 bg-white/4 border border-white/6 rounded-xl px-2.5 py-2 text-center">
+                            <span className="text-[#1DB954] block mb-0.5">✓</span>
+                            {f}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <a
+                      href="/api/auth/spotify"
+                      className="shrink-0 text-xs font-semibold px-4 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors"
+                    >
+                      Yeniden bağla
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+                    <div className="flex-1 space-y-2">
+                      <p className="text-sm text-gray-300 leading-relaxed">
+                        Spotify hesabını bağla — davetliler RSVP verirken şarkı önersin, otomatik olarak etkinliğin çalma listesine eklensin.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {["Şarkı önerisi", "Otomatik playlist", "Anlık ekleme"].map(f => (
+                          <span key={f} className="text-[10px] text-gray-500 bg-white/4 border border-white/6 rounded-lg px-2.5 py-1">✓ {f}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <a
+                      href="/api/auth/spotify"
+                      className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90 hover:scale-[1.02]"
+                      style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)", boxShadow: "0 4px 20px #1DB95440" }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                      </svg>
+                      Spotify ile Bağlan
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Profil Bilgileri */}
             <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
               <div className="px-6 pt-6 pb-4 border-b border-gray-50">
@@ -279,49 +355,6 @@ export default async function AyarlarSayfasi() {
           {/* SAĞ — Aksiyonlar (1/3) */}
           <div className="space-y-4">
             <AyarlarClient plan={user.plan} planIsim={planIsim} />
-
-            {/* Spotify Bağlantısı */}
-            <div className="bg-white border border-gray-100 rounded-3xl p-5">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)" }}>
-                  <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5">
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-900">Spotify</p>
-                  <p className="text-xs text-gray-400">Etkinlik çalma listesi</p>
-                </div>
-                {spotifyBagli && (
-                  <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">Bağlı</span>
-                )}
-              </div>
-              <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-                Spotify hesabını bağla. Davetliler RSVP verirken şarkı önersin, otomatik olarak etkinliğin çalma listesine eklensin.
-              </p>
-              {spotifyBagli ? (
-                <div className="space-y-2">
-                  <p className="text-xs text-emerald-600 font-medium">✓ Spotify hesabın bağlı</p>
-                  <a
-                    href="/api/auth/spotify"
-                    className="block w-full text-center text-xs font-semibold py-2.5 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
-                  >
-                    Yeniden bağla
-                  </a>
-                </div>
-              ) : (
-                <a
-                  href="/api/auth/spotify"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-                  style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)" }}
-                >
-                  <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4">
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                  </svg>
-                  Spotify ile Bağlan
-                </a>
-              )}
-            </div>
           </div>
         </div>
       </div>
