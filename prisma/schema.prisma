@@ -90,6 +90,7 @@ model Davetiye {
   rsvplar       RSVP[]
   albumFotolar        AlbumFoto[]
   aniDefterleri       AniDefteri[]
+  masalar             Masa[]
   spotifyPlaylistId   String?
   spotifyAktif        Boolean  @default(false)
 
@@ -129,14 +130,38 @@ model RSVP {
   katilim    Boolean
   kisiSayisi Int      @default(1)
   mesaj          String?
+  diyet          String?
   sarkiOnerisi   String?
   spotifyTrackId String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   davetiyeId     String
   davetiye       Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  masaAtamasi    MasaAtama?
 
   @@index([davetiyeId])
+}
+
+model Masa {
+  id          String      @id @default(cuid())
+  davetiyeId  String
+  isim        String
+  kapasite    Int         @default(8)
+  sira        Int         @default(0)
+  createdAt   DateTime    @default(now())
+  davetiye    Davetiye    @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  atamalar    MasaAtama[]
+
+  @@index([davetiyeId])
+}
+
+model MasaAtama {
+  id        String   @id @default(cuid())
+  masaId    String
+  rsvpId    String   @unique
+  createdAt DateTime @default(now())
+  masa      Masa     @relation(fields: [masaId], references: [id], onDelete: Cascade)
+  rsvp      RSVP     @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
 }
 
 model OdemeToken {

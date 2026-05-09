@@ -30,6 +30,10 @@ export default function RsvpForm({ davetiyeId, renk, spotifyAktif = false }: Pro
     kisiSayisi: 1,
     mesaj: "",
   });
+  const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
+
+  const toggleDiyet = (key: string) =>
+    setSecilenDiyet(prev => prev.includes(key) ? prev.filter(d => d !== key) : [...prev, key]);
 
   /* Şarkı arama state */
   const [sarkiSorgu, setSarkiSorgu] = useState("");
@@ -86,6 +90,7 @@ export default function RsvpForm({ davetiyeId, renk, spotifyAktif = false }: Pro
           telefon: form.telefon,
           katilim,
           kisiSayisi: form.kisiSayisi,
+          diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
           mesaj: form.mesaj,
           sarkiOnerisi: seciliSarki
             ? `${seciliSarki.isim} - ${seciliSarki.sanatci}`
@@ -192,12 +197,38 @@ export default function RsvpForm({ davetiyeId, renk, spotifyAktif = false }: Pro
                 }
                 className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
               >
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <option key={n} value={n}>
-                    {n} kişi
-                  </option>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                  <option key={n} value={n}>{n} kişi</option>
                 ))}
               </select>
+            </div>
+          )}
+
+          {katilim && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Diyet tercihleri <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { key: "vegan", label: "🌱 Vegan" },
+                  { key: "vejetaryen", label: "🥗 Vejetaryen" },
+                  { key: "glutensiz", label: "🌾 Glutensiz" },
+                  { key: "laktozsuz", label: "🥛 Laktozsuz" },
+                ].map(opt => (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => toggleDiyet(opt.key)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition-all"
+                    style={secilenDiyet.includes(opt.key)
+                      ? { borderColor: renk, color: renk, backgroundColor: renk + "12" }
+                      : { borderColor: "#e5e7eb", color: "#6b7280" }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

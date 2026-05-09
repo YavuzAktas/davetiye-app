@@ -465,6 +465,22 @@ export default async function DavetiyeDetay({ params }: Props) {
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/oturma-plani`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-purple-100 hover:border-purple-200 hover:bg-purple-50/50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                      🪑
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
+                      <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">Yeni</span>
+                    </div>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
+                </Link>
               </div>
             </div>
 

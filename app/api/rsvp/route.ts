@@ -14,6 +14,7 @@ const rsvpSemasi = z.object({
   katilim:      z.boolean(),
   kisiSayisi:   z.number().int().min(1).max(50).default(1),
   mesaj:        z.string().max(500).optional(),
+  diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
   spotifyTrackId: z.string().max(50).optional(),
 });
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, sarkiOnerisi, spotifyTrackId } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, spotifyTrackId } = sonuc.data;
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
@@ -129,6 +130,7 @@ export async function POST(req: NextRequest) {
       katilim,
       kisiSayisi,
       mesaj:         mesaj?.trim()         || null,
+      diyet:         diyet?.trim()         || null,
       sarkiOnerisi:  sarkiOnerisi?.trim()  || null,
       spotifyTrackId: spotifyTrackId       || null,
     },
