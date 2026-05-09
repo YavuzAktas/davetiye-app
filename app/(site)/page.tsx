@@ -718,34 +718,42 @@ export default function Anasayfa() {
             </Section>
 
             {/* Canlı Etkinlik Albümü */}
-            <Section className="md:col-span-2">
-              <div className="h-full bg-[#0c0c14] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-white/[0.06]">
-                <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-indigo-500 opacity-[0.07] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
-                  <div className="flex-1 min-w-0">
+            <Section className="md:col-span-3">
+              <div className="h-full bg-[#0c0c14] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default min-h-[190px] border border-white/[0.06]">
+                <div className="absolute -top-16 -right-24 w-80 h-80 rounded-full bg-indigo-500 opacity-[0.06] blur-3xl group-hover:opacity-[0.12] transition-opacity" />
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-10">
+                  <div className="flex-shrink-0 md:w-64">
                     <div className="w-11 h-11 bg-indigo-500/15 border border-indigo-500/25 rounded-2xl flex items-center justify-center text-xl mb-4">📸</div>
-                    <h3 className="text-white text-xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
+                    <h3 className="text-white text-2xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
                     <p className="text-gray-400 text-sm leading-relaxed mb-5">Misafirler anları fotoğraf olarak paylaşır — hepsi tek albümde toplanır</p>
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       <span className="text-[11px] text-gray-500">Etkinlik sırasında canlı güncellenir</span>
                     </div>
                   </div>
-                  {/* Masonry photo wall */}
-                  <div className="flex-shrink-0 flex gap-2 w-full md:w-52 h-40">
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-75 group-hover:opacity-95 transition-all duration-500" />
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-75" />
+                  {/* Masonry photo wall — tam genişlik */}
+                  <div className="flex-1 flex gap-2.5 h-44">
+                    <div className="flex flex-col gap-2.5 flex-1">
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-70 group-hover:opacity-95 transition-all duration-500" />
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-75" />
                     </div>
-                    <div className="flex flex-col gap-2 flex-1 pt-5">
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-100" />
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-150" />
+                    <div className="flex flex-col gap-2.5 flex-1 pt-6">
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-100" />
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-150" />
                     </div>
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-200" />
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-[250ms]" />
-                      <div className="flex-[1] rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center transition-all duration-500 delay-300 group-hover:border-white/20">
-                        <span className="text-white/50 text-[10px] font-bold group-hover:text-white/70">+24</span>
+                    <div className="flex flex-col gap-2.5 flex-1">
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-200" />
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[250ms]" />
+                    </div>
+                    <div className="flex flex-col gap-2.5 flex-1 pt-3">
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-700 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-300" />
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-lime-400 to-green-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[350ms]" />
+                    </div>
+                    <div className="flex flex-col gap-2.5 flex-1">
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[400ms]" />
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[450ms]" />
+                      <div className="flex-[1] rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-all duration-500 delay-500">
+                        <span className="text-white/40 text-[11px] font-bold group-hover:text-white/60">+24</span>
                       </div>
                     </div>
                   </div>
