@@ -28,6 +28,7 @@ interface Props {
 export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
   const [acik, setAcik] = useState(false);
   const [sekme, setSekme] = useState<"album" | "ani">("album");
+  const [lightbox, setLightbox] = useState<AlbumFoto | null>(null);
 
   /* Fotoğraf state */
   const [fotolar, setFotolar] = useState<AlbumFoto[]>([]);
@@ -145,12 +146,17 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
     }
   }
 
-  /* ESC ile kapat */
+  /* ESC ile kapat — önce lightbox, sonra panel */
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setAcik(false); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (lightbox) setLightbox(null);
+        else setAcik(false);
+      }
+    };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [lightbox]);
 
   /* Body scroll kilitle */
   useEffect(() => {
@@ -176,6 +182,39 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
           onClick={() => setAcik(false)}
         />
+      )}
+
+      {/* ── Lightbox ── */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-70 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-xl transition-colors"
+          >
+            ×
+          </button>
+          <div
+            className="relative max-w-[95vw] max-h-[85dvh] w-full h-full"
+            onClick={e => e.stopPropagation()}
+          >
+            <Image
+              src={lightbox.dosyaUrl}
+              alt={lightbox.yukleyenAd}
+              fill
+              className="object-contain"
+              sizes="95vw"
+            />
+          </div>
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <p className="text-white/80 text-sm font-medium">{lightbox.yukleyenAd}</p>
+            <p className="text-white/40 text-xs mt-0.5">
+              {new Date(lightbox.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
+            </p>
+          </div>
+        </div>
       )}
 
       {/* ── Slide-up panel ── */}
@@ -295,9 +334,13 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                 ) : (
                   <div className="columns-2 gap-2">
                     {fotolar.map(foto => (
-                      <div key={foto.id} className="mb-2 rounded-xl overflow-hidden break-inside-avoid">
+                      <div
+                        key={foto.id}
+                        className="mb-2 rounded-xl overflow-hidden break-inside-avoid cursor-zoom-in group"
+                        onClick={() => setLightbox(foto)}
+                      >
                         <div className="relative w-full" style={{ aspectRatio: "1" }}>
-                          <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover" />
+                          <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
                         </div>
                         <div className="bg-gray-50 px-2.5 py-1.5">
                           <p className="text-xs font-medium text-gray-600">{foto.yukleyenAd}</p>

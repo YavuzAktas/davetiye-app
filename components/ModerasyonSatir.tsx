@@ -31,6 +31,7 @@ export function FotoSatirItem({
 }) {
   const [durum, setDurum] = useState<"idle" | "loading" | "silindi">("idle");
   const [onaylandi, setOnaylandi] = useState(foto.onaylandi);
+  const [lightbox, setLightbox] = useState(false);
 
   async function onayla() {
     setDurum("loading");
@@ -55,9 +56,33 @@ export function FotoSatirItem({
   if (durum === "silindi") return null;
 
   return (
+    <>
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onClick={() => setLightbox(false)}
+        >
+          <button
+            onClick={() => setLightbox(false)}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-xl transition-colors"
+          >
+            ×
+          </button>
+          <div className="relative max-w-[95vw] max-h-[85dvh] w-full h-full" onClick={e => e.stopPropagation()}>
+            <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-contain" sizes="95vw" />
+          </div>
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <p className="text-white/80 text-sm font-medium">{foto.yukleyenAd}</p>
+          </div>
+        </div>
+      )}
+
     <div className="flex items-start gap-4 p-4 rounded-2xl border border-gray-100 hover:border-gray-200 transition-colors bg-white">
-      <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-gray-100">
-        <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover" />
+      <div
+        className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-gray-100 cursor-zoom-in"
+        onClick={() => setLightbox(true)}
+      >
+        <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover hover:scale-105 transition-transform duration-300" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
@@ -107,6 +132,7 @@ export function FotoSatirItem({
         </button>
       </div>
     </div>
+    </>
   );
 }
 
