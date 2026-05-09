@@ -529,7 +529,7 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream, spotifyAktif=false }: { dav
         method:"POST", headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({ davetiyeId, ad:form.ad, katilim:form.katilim==="evet", kisiSayisi:Number(form.kisiSayisi), sarkiOnerisi: seciliSarki ? `${seciliSarki.isim} - ${seciliSarki.sanatci}` : sarkiSorgu.trim() || undefined, spotifyTrackId: seciliSarki?.id }),
       });
-      if (!res.ok) { setHata("Bir hata oluştu."); return; }
+      if (!res.ok) { const d = await res.json().catch(()=>({})); setHata(d.hata || "Bir hata oluştu."); return; }
       setAdim("tamam");
     } catch { setHata("Bir hata oluştu."); }
     finally { setYukleniyor(false); }

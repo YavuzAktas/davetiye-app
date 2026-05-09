@@ -634,7 +634,7 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
           spotifyTrackId: seciliSarki?.id,
         }),
       });
-      if (!res.ok) { setHata("Bir hata oluştu."); return; }
+      if (!res.ok) { const d = await res.json().catch(()=>({})); setHata(d.hata || "Bir hata oluştu."); return; }
       setAdim("tamam");
     } catch { setHata("Bir hata oluştu."); }
     finally { setYukleniyor(false); }
