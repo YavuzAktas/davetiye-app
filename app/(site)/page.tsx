@@ -721,23 +721,33 @@ export default function Anasayfa() {
             <Section className="md:col-span-2">
               <div className="h-full bg-[#0c0c14] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-white/[0.06]">
                 <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-indigo-500 opacity-[0.07] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
-                <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
-                  <div className="flex-1">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
+                  <div className="flex-1 min-w-0">
                     <div className="w-11 h-11 bg-indigo-500/15 border border-indigo-500/25 rounded-2xl flex items-center justify-center text-xl mb-4">📸</div>
                     <h3 className="text-white text-xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">Misafirler anları fotoğraf olarak paylaşır — hepsi tek albümde toplanır</p>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-5">Misafirler anları fotoğraf olarak paylaşır — hepsi tek albümde toplanır</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[11px] text-gray-500">Etkinlik sırasında canlı güncellenir</span>
+                    </div>
                   </div>
-                  <div className="flex-shrink-0 grid grid-cols-3 gap-1.5 w-full md:w-36">
-                    {[
-                      "from-pink-500 to-rose-600",
-                      "from-sky-500 to-blue-600",
-                      "from-emerald-500 to-teal-600",
-                      "from-amber-500 to-orange-600",
-                      "from-purple-500 to-violet-600",
-                      "from-cyan-500 to-blue-500",
-                    ].map((g, i) => (
-                      <div key={i} className={`aspect-square rounded-lg bg-gradient-to-br ${g} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                    ))}
+                  {/* Masonry photo wall */}
+                  <div className="flex-shrink-0 flex gap-2 w-full md:w-52 h-40">
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-75 group-hover:opacity-95 transition-all duration-500" />
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-75" />
+                    </div>
+                    <div className="flex flex-col gap-2 flex-1 pt-5">
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-100" />
+                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-150" />
+                    </div>
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-200" />
+                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 opacity-75 group-hover:opacity-95 transition-all duration-500 delay-[250ms]" />
+                      <div className="flex-[1] rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center transition-all duration-500 delay-300 group-hover:border-white/20">
+                        <span className="text-white/50 text-[10px] font-bold group-hover:text-white/70">+24</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
