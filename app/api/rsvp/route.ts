@@ -134,34 +134,37 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  /* 6. Spotify'a şarkı ekle (arka planda, hata RSVP'yi engellemez) */
+  /* 6. Spotify'a şarkı ekle — response öncesi await et (Vercel'de bg task kesilir) */
   if (
     sarkiOnerisi &&
     davetiye.spotifyAktif &&
     davetiye.spotifyPlaylistId &&
     davetiyeOwner?.spotifyRefreshToken
   ) {
-    (async () => {
-      try {
-        const accessToken = await tokenYenile(davetiyeOwner.spotifyRefreshToken!);
-        let trackUri = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
-        let bulunanId = spotifyTrackId ?? null;
-        if (!trackUri) {
-          const sonuclar = await sarkilaraAra(sarkiOnerisi, accessToken);
-          trackUri = sonuclar[0]?.uri ?? null;
-          bulunanId = sonuclar[0]?.id ?? null;
+    try {
+      const accessToken = await tokenYenile(davetiyeOwner.spotifyRefreshToken!);
+      let trackUri = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
+      let bulunanId = spotifyTrackId ?? null;
+      if (!trackUri) {
+        const sonuclar = await sarkilaraAra(sarkiOnerisi, accessToken);
+        trackUri = sonuclar[0]?.uri ?? null;
+        bulunanId = sonuclar[0]?.id ?? null;
+      }
+      if (trackUri) {
+        const eklendi = await playlistEEkle(davetiye.spotifyPlaylistId!, trackUri, accessToken);
+        console.log("Spotify şarkı eklendi:", eklendi, "trackUri:", trackUri);
+        if (bulunanId) {
+          await prisma.rSVP.update({
+            where: { id: rsvp.id },
+            data: { spotifyTrackId: bulunanId },
+          });
         }
-        if (trackUri) {
-          await playlistEEkle(davetiye.spotifyPlaylistId!, trackUri, accessToken);
-          if (bulunanId) {
-            await prisma.rSVP.update({
-              where: { id: rsvp.id },
-              data: { spotifyTrackId: bulunanId },
-            });
-          }
-        }
-      } catch { /* sessizce geç */ }
-    })();
+      } else {
+        console.log("Spotify: trackUri bulunamadı, sarkiOnerisi:", sarkiOnerisi);
+      }
+    } catch (err) {
+      console.error("Spotify şarkı ekleme hatası:", err);
+    }
   }
 
   /* 7. In-app bildirim */
