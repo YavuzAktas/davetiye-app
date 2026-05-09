@@ -19,11 +19,13 @@ model User {
   kvkkOnayTarih DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  accounts      Account[]
-  davetiyeler   Davetiye[]
-  odemeTokenlar OdemeToken[]
-  sessions      Session[]
-  bildirimleri  Bildirim[]
+  accounts             Account[]
+  davetiyeler          Davetiye[]
+  odemeTokenlar        OdemeToken[]
+  sessions             Session[]
+  bildirimleri         Bildirim[]
+  spotifyRefreshToken  String?
+  spotifyId            String?
 }
 
 model Account {
@@ -85,8 +87,10 @@ model Davetiye {
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   davetliler    Davetli[]
   rsvplar       RSVP[]
-  albumFotolar  AlbumFoto[]
-  aniDefterleri AniDefteri[]
+  albumFotolar        AlbumFoto[]
+  aniDefterleri       AniDefteri[]
+  spotifyPlaylistId   String?
+  spotifyAktif        Boolean  @default(false)
 
   @@index([userId])
   @@index([aktif])
@@ -123,11 +127,13 @@ model RSVP {
   telefon    String?
   katilim    Boolean
   kisiSayisi Int      @default(1)
-  mesaj      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  davetiyeId String
-  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  mesaj          String?
+  sarkiOnerisi   String?
+  spotifyTrackId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  davetiyeId     String
+  davetiye       Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId])
 }

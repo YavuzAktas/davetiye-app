@@ -63,7 +63,13 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
-  const rsvpBileseni = <RsvpForm davetiyeId={davetiye.id} renk={temaRenk} />;
+  const rsvpBileseni = (
+    <RsvpForm
+      davetiyeId={davetiye.id}
+      renk={temaRenk}
+      spotifyAktif={(davetiye as any).spotifyAktif ?? false}
+    />
+  );
 
   let sablon: React.ReactNode;
   if (sablonTipi === "nisan-luks") {

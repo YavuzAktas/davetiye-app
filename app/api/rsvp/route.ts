@@ -3,16 +3,19 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 import { bildirimOlustur } from "@/lib/bildirim";
+import { tokenYenile, sarkilaraAra, playlistEEkle } from "@/lib/spotify";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
 const rsvpSemasi = z.object({
-  davetiyeId: z.string().min(1).max(50),
-  ad:         z.string().min(1).max(100),
-  email:      z.string().email().max(254).optional().or(z.literal("")).transform(v => v || undefined),
-  telefon:    z.string().max(20).optional(),
-  katilim:    z.boolean(),
-  kisiSayisi: z.number().int().min(1).max(50).default(1),
-  mesaj:      z.string().max(500).optional(),
+  davetiyeId:   z.string().min(1).max(50),
+  ad:           z.string().min(1).max(100),
+  email:        z.string().email().max(254).optional().or(z.literal("")).transform(v => v || undefined),
+  telefon:      z.string().max(20).optional(),
+  katilim:      z.boolean(),
+  kisiSayisi:   z.number().int().min(1).max(50).default(1),
+  mesaj:        z.string().max(500).optional(),
+  sarkiOnerisi: z.string().max(200).optional(),
+  spotifyTrackId: z.string().max(50).optional(),
 });
 
 /* ── IP tabanlı rate limiter (module-level, instance başına) */
@@ -61,13 +64,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, sarkiOnerisi, spotifyTrackId } = sonuc.data;
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
     where: { id: davetiyeId },
-    include: { user: true },
+    include: { user: true, _count: false },
   });
+  // Spotify için user'dan refresh token lazım — ayrı sorguda alalım
+  const davetiyeOwner = davetiye ? await prisma.user.findUnique({
+    where: { id: davetiye.userId },
+    select: { spotifyRefreshToken: true },
+  }) : null;
 
   if (!davetiye) {
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
@@ -115,16 +123,48 @@ export async function POST(req: NextRequest) {
   const rsvp = await prisma.rSVP.create({
     data: {
       davetiyeId,
-      ad:         ad.trim(),
-      email:      email?.trim()   || null,
-      telefon:    telefon?.trim() || null,
+      ad:            ad.trim(),
+      email:         email?.trim()         || null,
+      telefon:       telefon?.trim()       || null,
       katilim,
       kisiSayisi,
-      mesaj:      mesaj?.trim()   || null,
+      mesaj:         mesaj?.trim()         || null,
+      sarkiOnerisi:  sarkiOnerisi?.trim()  || null,
+      spotifyTrackId: spotifyTrackId       || null,
     },
   });
 
-  /* 6. In-app bildirim */
+  /* 6. Spotify'a şarkı ekle (arka planda, hata RSVP'yi engellemez) */
+  if (
+    sarkiOnerisi &&
+    davetiye.spotifyAktif &&
+    davetiye.spotifyPlaylistId &&
+    davetiyeOwner?.spotifyRefreshToken
+  ) {
+    (async () => {
+      try {
+        const accessToken = await tokenYenile(davetiyeOwner.spotifyRefreshToken!);
+        let trackUri = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
+        let bulunanId = spotifyTrackId ?? null;
+        if (!trackUri) {
+          const sonuclar = await sarkilaraAra(sarkiOnerisi, accessToken);
+          trackUri = sonuclar[0]?.uri ?? null;
+          bulunanId = sonuclar[0]?.id ?? null;
+        }
+        if (trackUri) {
+          await playlistEEkle(davetiye.spotifyPlaylistId!, trackUri, accessToken);
+          if (bulunanId) {
+            await prisma.rSVP.update({
+              where: { id: rsvp.id },
+              data: { spotifyTrackId: bulunanId },
+            });
+          }
+        }
+      } catch { /* sessizce geç */ }
+    })();
+  }
+
+  /* 7. In-app bildirim */
   bildirimOlustur({
     userId: davetiye.userId,
     tip: "rsvp",

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
+import SpotifyPlaylistKarti from "@/components/SpotifyPlaylistKarti";
 import { SABLONLAR } from "@/lib/sablonlar";
 
 interface Props {
@@ -32,7 +33,10 @@ export default async function DavetiyeDetay({ params }: Props) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect("/giris");
 
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { id: true, spotifyRefreshToken: true },
+  });
   if (!user) redirect("/giris");
 
   const davetiye = await prisma.davetiye.findUnique({
@@ -463,6 +467,15 @@ export default async function DavetiyeDetay({ params }: Props) {
                 </Link>
               </div>
             </div>
+
+            {/* Spotify Playlist */}
+            <SpotifyPlaylistKarti
+              slug={davetiye.slug}
+              spotifyAktif={(davetiye as any).spotifyAktif ?? false}
+              playlistId={(davetiye as any).spotifyPlaylistId ?? null}
+              spotifyBagli={!!user.spotifyRefreshToken}
+              renk={renk}
+            />
 
             {/* RSVP Summary donut-style */}
             {davetiye.rsvplar.length > 0 && (

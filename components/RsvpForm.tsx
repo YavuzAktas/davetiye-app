@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Props {
   davetiyeId: string;
   renk: string;
+  spotifyAktif?: boolean;
 }
 
 type Adim = "secim" | "form" | "tamamlandi";
 
-export default function RsvpForm({ davetiyeId, renk }: Props) {
+type SarkiSonuc = {
+  id: string;
+  uri: string;
+  isim: string;
+  sanatci: string;
+  kapak: string | null;
+};
+
+export default function RsvpForm({ davetiyeId, renk, spotifyAktif = false }: Props) {
   const [adim, setAdim] = useState<Adim>("secim");
   const [katilim, setKatilim] = useState<boolean | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
@@ -21,6 +30,31 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
     kisiSayisi: 1,
     mesaj: "",
   });
+
+  /* Şarkı arama state */
+  const [sarkiSorgu, setSarkiSorgu] = useState("");
+  const [sarkiSonuclar, setSarkiSonuclar] = useState<SarkiSonuc[]>([]);
+  const [seciliSarki, setSeciliSarki] = useState<SarkiSonuc | null>(null);
+  const [sarkiAraniyor, setSarkiAraniyor] = useState(false);
+  const araTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!spotifyAktif || sarkiSorgu.length < 2) {
+      setSarkiSonuclar([]);
+      return;
+    }
+    if (araTimerRef.current) clearTimeout(araTimerRef.current);
+    araTimerRef.current = setTimeout(async () => {
+      setSarkiAraniyor(true);
+      try {
+        const res = await fetch(`/api/sarki/ara?q=${encodeURIComponent(sarkiSorgu)}`);
+        if (res.ok) setSarkiSonuclar(await res.json());
+      } finally {
+        setSarkiAraniyor(false);
+      }
+    }, 400);
+    return () => { if (araTimerRef.current) clearTimeout(araTimerRef.current); };
+  }, [sarkiSorgu, spotifyAktif]);
 
   const handleSecim = (karar: boolean) => {
     setKatilim(karar);
@@ -53,6 +87,10 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
           katilim,
           kisiSayisi: form.kisiSayisi,
           mesaj: form.mesaj,
+          sarkiOnerisi: seciliSarki
+            ? `${seciliSarki.isim} - ${seciliSarki.sanatci}`
+            : sarkiSorgu.trim() || undefined,
+          spotifyTrackId: seciliSarki?.id,
         }),
       });
 
@@ -176,6 +214,73 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
             />
           </div>
+
+          {spotifyAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                🎵 Dans etmek istediğin şarkı? (isteğe bağlı)
+              </label>
+
+              {seciliSarki ? (
+                <div
+                  className="flex items-center gap-3 p-3 rounded-xl border-2"
+                  style={{ borderColor: renk + "44", backgroundColor: renk + "08" }}
+                >
+                  {seciliSarki.kapak && (
+                    <img src={seciliSarki.kapak} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800 truncate">{seciliSarki.isim}</p>
+                    <p className="text-xs text-gray-500 truncate">{seciliSarki.sanatci}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setSeciliSarki(null); setSarkiSorgu(""); }}
+                    className="text-gray-400 hover:text-gray-600 text-lg shrink-0"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Şarkı veya sanatçı adı..."
+                    value={sarkiSorgu}
+                    onChange={e => { setSarkiSorgu(e.target.value); setSeciliSarki(null); }}
+                    maxLength={200}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white text-gray-900 placeholder-gray-400 pr-10"
+                    style={{ "--tw-ring-color": renk } as React.CSSProperties}
+                  />
+                  {sarkiAraniyor && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                    </div>
+                  )}
+                  {sarkiSonuclar.length > 0 && (
+                    <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+                      {sarkiSonuclar.map(s => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => { setSeciliSarki(s); setSarkiSorgu(""); setSarkiSonuclar([]); }}
+                          className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-gray-50 transition-colors text-left"
+                        >
+                          {s.kapak && (
+                            <img src={s.kapak} alt="" className="w-8 h-8 rounded object-cover shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-800 truncate">{s.isim}</p>
+                            <p className="text-xs text-gray-400 truncate">{s.sanatci}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {hata && (
             <p className="text-sm text-red-500 bg-red-50 px-4 py-2 rounded-xl">
