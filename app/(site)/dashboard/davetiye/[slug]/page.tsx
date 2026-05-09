@@ -333,10 +333,10 @@ export default async function DavetiyeDetay({ params }: Props) {
               ) : (
                 <div className="divide-y divide-gray-50">
                   {davetiye.rsvplar.map((rsvp) => (
-                    <div key={rsvp.id} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors">
+                    <div key={rsvp.id} className="px-4 sm:px-6 py-3.5 flex gap-3 hover:bg-gray-50/50 transition-colors">
                       {/* Avatar */}
                       <div
-                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold shrink-0"
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
                         style={rsvp.katilim
                           ? { backgroundColor: renk + "18", color: renk }
                           : { backgroundColor: "#fef2f2", color: "#f87171" }
@@ -345,38 +345,35 @@ export default async function DavetiyeDetay({ params }: Props) {
                         {rsvp.ad[0]?.toUpperCase()}
                       </div>
 
-                      {/* Info */}
+                      {/* İçerik — tek sütun, taşmaz */}
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-800 text-sm">{rsvp.ad}</p>
-                        <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
+                        {/* Üst satır: isim + durum badge */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-semibold text-gray-800 text-sm truncate">{rsvp.ad}</p>
+                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
+                            rsvp.katilim ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-500"
+                          }`}>
+                            {rsvp.katilim ? "✓ Katılıyor" : "✗ Katılmıyor"}
+                          </span>
+                        </div>
+
+                        {/* Alt satır: ikincil bilgiler */}
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                          {rsvp.katilim && rsvp.kisiSayisi > 1 && (
+                            <span className="text-xs text-gray-400 font-medium">{rsvp.kisiSayisi} kişi</span>
+                          )}
+                          {rsvp.katilim && rsvp.diyet && rsvp.diyet.split(",").map(d => (
+                            <span key={d} className="text-[11px] bg-amber-50 border border-amber-100 text-amber-700 px-1.5 py-0.5 rounded-md font-medium">
+                              {DIYET_EMOJI[d] ?? "🍽️"} {d}
+                            </span>
+                          ))}
                           {rsvp.email && (
-                            <p className="text-xs text-gray-400 truncate">{rsvp.email}</p>
+                            <span className="text-xs text-gray-400 truncate max-w-45">{rsvp.email}</span>
                           )}
                           {rsvp.mesaj && (
-                            <p className="text-xs text-gray-400 italic truncate max-w-40">"{rsvp.mesaj}"</p>
+                            <span className="text-xs text-gray-400 italic truncate max-w-45">"{rsvp.mesaj}"</span>
                           )}
                         </div>
-                      </div>
-
-                      {/* Right side */}
-                      <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-                        {rsvp.katilim && rsvp.diyet && rsvp.diyet.split(",").map(d => (
-                          <span key={d} title={d} className="text-xs bg-amber-50 border border-amber-100 text-amber-700 px-2 py-1 rounded-lg font-medium">
-                            {DIYET_EMOJI[d] ?? "🍽️"} {d}
-                          </span>
-                        ))}
-                        {rsvp.katilim && rsvp.kisiSayisi > 1 && (
-                          <span className="text-xs text-gray-400 font-medium">{rsvp.kisiSayisi} kişi</span>
-                        )}
-                        <span
-                          className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-                            rsvp.katilim
-                              ? "bg-emerald-50 text-emerald-700"
-                              : "bg-red-50 text-red-500"
-                          }`}
-                        >
-                          {rsvp.katilim ? "✓ Katılıyor" : "✗ Katılmıyor"}
-                        </span>
                       </div>
                     </div>
                   ))}
