@@ -146,5 +146,9 @@ export async function playlistEEkle(
     },
     body: JSON.stringify({ uris: [trackUri] }),
   });
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "");
+    console.error(`playlistEEkle HTTP ${res.status}: ${errBody} | playlistId: ${playlistId}`);
+  }
   return res.ok;
 }
