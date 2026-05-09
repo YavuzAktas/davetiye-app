@@ -19,12 +19,21 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
   const davetiye = await yetkiKontrol(slug);
   if (!davetiye) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
 
-  const { katilim } = await req.json();
-  if (typeof katilim !== "boolean") return NextResponse.json({ hata: "Geçersiz veri." }, { status: 400 });
+  const body = await req.json();
+  const data: { katilim?: boolean; kisiSayisi?: number } = {};
+
+  if (typeof body.katilim === "boolean") data.katilim = body.katilim;
+  if (typeof body.kisiSayisi === "number" && Number.isInteger(body.kisiSayisi) && body.kisiSayisi >= 1 && body.kisiSayisi <= 20) {
+    data.kisiSayisi = body.kisiSayisi;
+  }
+
+  if (Object.keys(data).length === 0) {
+    return NextResponse.json({ hata: "Geçersiz veri." }, { status: 400 });
+  }
 
   const sonuc = await prisma.rSVP.updateMany({
     where: { id, davetiyeId: davetiye.id },
-    data: { katilim },
+    data,
   });
 
   if (sonuc.count === 0) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
