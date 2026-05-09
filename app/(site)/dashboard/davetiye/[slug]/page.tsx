@@ -11,6 +11,10 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+const DIYET_EMOJI: Record<string, string> = {
+  vegan: "🌱", vejetaryen: "🥗", glutensiz: "🌾", laktozsuz: "🥛",
+};
+
 const EMOJILER: Record<string, string> = {
   dugun: "💒", nisan: "💍", dogumgunu: "🎂", sunnet: "⭐",
   kina: "🕯️", kurumsal: "🏢", diger: "🎉",
@@ -355,7 +359,12 @@ export default async function DavetiyeDetay({ params }: Props) {
                       </div>
 
                       {/* Right side */}
-                      <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                        {rsvp.katilim && rsvp.diyet && rsvp.diyet.split(",").map(d => (
+                          <span key={d} title={d} className="text-xs bg-amber-50 border border-amber-100 text-amber-700 px-2 py-1 rounded-lg font-medium">
+                            {DIYET_EMOJI[d] ?? "🍽️"} {d}
+                          </span>
+                        ))}
                         {rsvp.katilim && rsvp.kisiSayisi > 1 && (
                           <span className="text-xs text-gray-400 font-medium">{rsvp.kisiSayisi} kişi</span>
                         )}
