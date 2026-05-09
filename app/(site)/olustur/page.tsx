@@ -81,9 +81,11 @@ function OlusturIcerigi() {
         body: JSON.stringify({ ...form, baslik: gonderilecekBaslik, sablon: sablonId }),
       });
       const data = await res.json();
-      if (!res.ok) { setHata(data.hata || "Bir hata oluştu."); return; }
-      if (data.premiumGerekli) { setHata(data.hata); setTimeout(() => router.push("/fiyatlar"), 2000); return; }
-      if (data.limitAsimi) { setHata(data.hata); setTimeout(() => router.push("/fiyatlar"), 2000); return; }
+      if (!res.ok) {
+        setHata(data.hata || "Bir hata oluştu.");
+        if (data.upsell) setTimeout(() => router.push("/fiyatlar"), 2000);
+        return;
+      }
       window.open(`/davetiye/${data.slug}`, "_blank");
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }

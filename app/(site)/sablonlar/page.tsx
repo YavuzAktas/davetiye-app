@@ -547,16 +547,36 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 
         {/* Sol: Telefon */}
         <div className="shrink-0 flex flex-col items-center gap-3">
-          <TelefonMockup>
-            <div ref={scrollRef} className="phone-scroll" style={{ height: "100%", overflowY: "auto" }}>
-              {bolumler.map(b => (
-                <div key={b.id} style={{ height: 500, flexShrink: 0 }}>{b.node}</div>
-              ))}
-            </div>
-          </TelefonMockup>
-          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.18)", letterSpacing: "0.1em" }}>
-            ↕ telefonu kaydır
-          </p>
+          <div className="relative">
+            <TelefonMockup>
+              <div ref={scrollRef} className="phone-scroll" style={{ height: "100%", overflowY: "auto" }}>
+                {bolumler.map(b => (
+                  <div key={b.id} style={{ height: 500, flexShrink: 0 }}>{b.node}</div>
+                ))}
+              </div>
+            </TelefonMockup>
+
+            {kilitli && (
+              <div
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2"
+                style={{ borderRadius: 38, backdropFilter: "blur(10px)", background: "rgba(8,1,18,0.78)" }}
+              >
+                <span className="text-4xl">🔒</span>
+                <p className="text-xs font-bold text-white/90 text-center px-6 leading-snug">
+                  Önizleme kilitli
+                </p>
+                <p className="text-[10px] text-white/40 text-center px-8 leading-relaxed">
+                  Standart veya Premium planıyla görüntüle
+                </p>
+              </div>
+            )}
+          </div>
+
+          {!kilitli && (
+            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.18)", letterSpacing: "0.1em" }}>
+              ↕ telefonu kaydır
+            </p>
+          )}
         </div>
 
         {/* Sağ: İçerik */}
