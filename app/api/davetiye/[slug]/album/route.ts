@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
+import { planOzellikVar } from "@/lib/planlar";
 
 /* ── GET: onaylanmış fotoğrafları listele ── */
 export async function GET(
@@ -34,10 +35,12 @@ export async function POST(
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, aktif: true, userId: true, baslik: true },
+    select: { id: true, aktif: true, userId: true, baslik: true, user: { select: { plan: true } } },
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
+  if (!planOzellikVar(davetiye.user.plan, "album"))
+    return NextResponse.json({ hata: "Bu davetiyede albüm özelliği aktif değil." }, { status: 403 });
 
   /* Rate limit: son 1 saatte aynı davette 10 fotoğraf yeterli */
   const birSaatOnce = new Date(Date.now() - 3_600_000);

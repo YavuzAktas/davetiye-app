@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
+import { PLAN_CONFIG, PLAN_META, PlanTipi } from "@/lib/planlar";
 import { SessionSync } from "@/components/SessionSync";
 
 export default async function Dashboard() {
@@ -23,11 +23,12 @@ export default async function Dashboard() {
   });
   if (!user) redirect("/giris");
 
-  const planLimiti = PLAN_LIMITLER[user.plan as PlanTipi] ?? PLAN_LIMITLER.free;
+  const planLimiti = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
+  const planMeta   = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
   const aktifDavetiyeSayisi = user.davetiyeler.filter(d => d.aktif).length;
-  const kullanim = planLimiti.davetiyeLimit === 999
+  const kullanim = planLimiti.maxDavetiye === Infinity
     ? 0
-    : Math.round((aktifDavetiyeSayisi / planLimiti.davetiyeLimit) * 100);
+    : Math.round((aktifDavetiyeSayisi / planLimiti.maxDavetiye) * 100);
 
   const toplamGoruntulenme = user.davetiyeler.reduce((acc, d) => acc + d.goruntulenme, 0);
   const toplamRsvp        = user.davetiyeler.reduce((acc, d) => acc + d.rsvplar.length, 0);
@@ -353,7 +354,7 @@ export default async function Dashboard() {
                         {user.plan === "premium" ? "👑" : user.plan === "standart" ? "⭐" : "🆓"}
                       </span>
                       <p className={`text-lg font-bold ${user.plan === "free" ? "text-gray-800" : "text-white"}`}>
-                        {planLimiti.isim}
+                        {planMeta.isim}
                       </p>
                     </div>
                   </div>
@@ -378,7 +379,7 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Kullanım çubuğu */}
-                {planLimiti.davetiyeLimit !== 999 && (
+                {planLimiti.maxDavetiye !== Infinity && (
                   <div className="mb-4">
                     <div className={`w-full h-2 rounded-full mb-1.5 ${user.plan === "free" ? "bg-gray-100" : "bg-white/20"}`}>
                       <div
@@ -390,7 +391,7 @@ export default async function Dashboard() {
                     </div>
                     <div className="flex justify-between">
                       <p className={`text-xs ${user.plan === "free" ? "text-gray-400" : "text-white/60"}`}>
-                        {aktifDavetiyeSayisi} / {planLimiti.davetiyeLimit} davetiye
+                        {aktifDavetiyeSayisi} / {planLimiti.maxDavetiye} davetiye
                       </p>
                       <p className={`text-xs font-semibold ${
                         kullanim >= 80 ? "text-red-400" : user.plan === "free" ? "text-purple-500" : "text-white/80"
@@ -403,7 +404,7 @@ export default async function Dashboard() {
 
                 {/* Özellikler */}
                 <div className="space-y-2">
-                  {planLimiti.ozellikler.map(o => (
+                  {planMeta.ozellikler.map(o => (
                     <div key={o} className="flex items-center gap-2">
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] shrink-0 ${
                         user.plan === "free" ? "bg-purple-100 text-purple-600" : "bg-white/20 text-white"

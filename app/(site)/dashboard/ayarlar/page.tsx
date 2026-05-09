@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PLAN_LIMITLER, PlanTipi } from "@/lib/planlar";
+import { PLAN_CONFIG, PLAN_META, PlanTipi } from "@/lib/planlar";
 import AyarlarClient from "@/components/AyarlarClient";
 import { SessionSync } from "@/components/SessionSync";
 import SpotifyDurumBilgisi from "@/components/SpotifyDurumBilgisi";
@@ -24,20 +24,21 @@ export default async function AyarlarSayfasi() {
   const spotifyBagli = !!(user as any)?.spotifyRefreshToken;
   if (!user) redirect("/giris");
 
-  const planLimiti    = PLAN_LIMITLER[user.plan as PlanTipi] ?? PLAN_LIMITLER.free;
+  const planLimiti    = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
+  const planMeta      = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
   const aktifSayi     = user.davetiyeler.filter(d => d.aktif).length;
   const toplamGorunt  = user.davetiyeler.reduce((a, d) => a + d.goruntulenme, 0);
   const toplamRsvp    = user.davetiyeler.reduce((a, d) => a + d.rsvplar.length, 0);
   const toplamKatilim = user.davetiyeler.reduce((a, d) => a + d.rsvplar.filter(r => r.katilim).length, 0);
-  const kullanim      = planLimiti.davetiyeLimit === 999
+  const kullanim      = planLimiti.maxDavetiye === Infinity
     ? 100
-    : Math.round((aktifSayi / planLimiti.davetiyeLimit) * 100);
+    : Math.round((aktifSayi / planLimiti.maxDavetiye) * 100);
 
   const uyeOlduTarih = new Intl.DateTimeFormat("tr-TR", {
     day: "numeric", month: "long", year: "numeric",
   }).format(new Date(user.createdAt));
 
-  const planIsim = planLimiti.isim;
+  const planIsim = planMeta.isim;
 
   const planConfig = {
     free:     { emoji: "🆓", gradient: "from-gray-500 to-gray-600",     ring: "ring-gray-200",    label: "text-gray-600" },
@@ -201,7 +202,7 @@ export default async function AyarlarSayfasi() {
                 </div>
 
                 {/* Kullanım çubuğu */}
-                {planLimiti.davetiyeLimit !== 999 && (
+                {planLimiti.maxDavetiye !== Infinity && (
                   <div className="mb-5">
                     <div className="flex justify-between text-xs mb-2">
                       <span className={user.plan === "free" ? "text-gray-500" : "text-white/50"}>
@@ -212,7 +213,7 @@ export default async function AyarlarSayfasi() {
                           ? "text-red-400"
                           : user.plan === "free" ? "text-purple-600" : "text-white"
                       }`}>
-                        {aktifSayi} / {planLimiti.davetiyeLimit}
+                        {aktifSayi} / {planLimiti.maxDavetiye}
                       </span>
                     </div>
                     <div className={`h-2.5 rounded-full overflow-hidden ${user.plan === "free" ? "bg-gray-100" : "bg-white/10"}`}>
@@ -237,7 +238,7 @@ export default async function AyarlarSayfasi() {
 
                 {/* Özellikler grid */}
                 <div className="grid grid-cols-2 gap-2">
-                  {planLimiti.ozellikler.map(o => (
+                  {planMeta.ozellikler.map(o => (
                     <div
                       key={o}
                       className={`flex items-center gap-2 text-xs px-3 py-2 rounded-xl ${

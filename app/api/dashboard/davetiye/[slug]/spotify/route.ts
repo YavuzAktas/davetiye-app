@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { tokenYenile, playlistOlustur } from "@/lib/spotify";
+import { planOzellikVar } from "@/lib/planlar";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -11,6 +12,9 @@ export async function POST(_req: Request, { params }: Params) {
   const { slug } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "muzik")) {
+    return NextResponse.json({ hata: "Müzik özelliği Standart ve Premium planlara özel.", upsell: true }, { status: 403 });
+  }
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -59,6 +63,9 @@ export async function DELETE(_req: Request, { params }: Params) {
   const { slug } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "muzik")) {
+    return NextResponse.json({ hata: "Müzik özelliği Standart ve Premium planlara özel.", upsell: true }, { status: 403 });
+  }
 
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, userId: session.user.id },

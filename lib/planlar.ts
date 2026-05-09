@@ -64,6 +64,21 @@ export const LUKS_SABLON_IDS = new Set([
   "dogumgunu-luks",
 ]);
 
+export const PLAN_META: Record<PlanTipi, { isim: string; ozellikler: string[] }> = {
+  free: {
+    isim: "Ücretsiz",
+    ozellikler: ["1 aktif davetiye", "50 davetli", "Temel şablonlar", "RSVP takibi"],
+  },
+  standart: {
+    isim: "Standart",
+    ozellikler: ["5 aktif davetiye", "200 davetli", "Tüm şablonlar", "QR kod", "Özel renk & font", "Müzik ekleme"],
+  },
+  premium: {
+    isim: "Premium",
+    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Detaylı analitik", "Öncelikli destek"],
+  },
+};
+
 // Geriye dönük uyumluluk — eski import'lar kırılmasın
 export const PLAN_LIMITLER = PLAN_CONFIG;
 export const PREMIUM_SABLON_IDS = LUKS_SABLON_IDS;

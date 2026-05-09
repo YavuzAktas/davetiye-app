@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { authOptions } from "@/lib/auth";
-import { PLAN_LIMITLER, PREMIUM_SABLON_IDS, PlanTipi } from "@/lib/planlar";
+import { PLAN_CONFIG, LUKS_SABLON_IDS, planOzellikVar, PlanTipi } from "@/lib/planlar";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -28,23 +28,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
   }
 
-  if (PREMIUM_SABLON_IDS.has(sablon) && user.plan === "free") {
+  if (LUKS_SABLON_IDS.has(sablon) && !planOzellikVar(user.plan, "luksablonlar")) {
     return NextResponse.json(
-      { hata: "Bu lüks şablon sadece ücretli planlarda kullanılabilir.", premiumGerekli: true },
+      { hata: "Bu lüks şablon Standart ve Premium planlara özel.", upsell: true },
       { status: 403 }
     );
   }
 
-  const planLimiti = PLAN_LIMITLER[user.plan as PlanTipi] ?? PLAN_LIMITLER.free;
+  if (muzik && !planOzellikVar(user.plan, "muzik")) {
+    return NextResponse.json(
+      { hata: "Müzik ekleme Standart ve Premium planlara özel.", upsell: true },
+      { status: 403 }
+    );
+  }
+
+  const planLimiti = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
   const mevcutDavetiyeSayisi = await prisma.davetiye.count({
     where: { userId: user.id, aktif: true },
   });
 
-  if (mevcutDavetiyeSayisi >= planLimiti.davetiyeLimit) {
+  if (mevcutDavetiyeSayisi >= planLimiti.maxDavetiye) {
     return NextResponse.json(
       {
-        hata: `${planLimiti.isim} planında en fazla ${planLimiti.davetiyeLimit} davetiye oluşturabilirsiniz. Planınızı yükseltin.`,
-        limitAsimi: true,
+        hata: `Planınızda en fazla ${planLimiti.maxDavetiye} davetiye oluşturabilirsiniz. Planınızı yükseltin.`,
+        upsell: true,
       },
       { status: 403 }
     );

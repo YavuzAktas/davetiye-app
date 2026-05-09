@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { planOzellikVar } from "@/lib/planlar";
 
 async function davetiyeYetki(slug: string, email: string) {
   const user = await prisma.user.findUnique({ where: { email }, select: { id: true } });
@@ -16,6 +17,10 @@ interface Params { params: Promise<{ slug: string }> }
 export async function GET(_: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
+    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
+  }
+
   const { slug } = await params;
   const yetki = await davetiyeYetki(slug, session.user.email);
   if (!yetki) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
@@ -48,6 +53,10 @@ export async function GET(_: NextRequest, { params }: Params) {
 export async function POST(req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
+    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
+  }
+
   const { slug } = await params;
   const yetki = await davetiyeYetki(slug, session.user.email);
   if (!yetki) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });

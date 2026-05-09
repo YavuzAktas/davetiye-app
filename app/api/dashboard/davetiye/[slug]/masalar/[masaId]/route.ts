@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { planOzellikVar } from "@/lib/planlar";
 
 async function masaYetki(slug: string, masaId: string, email: string) {
   const user = await prisma.user.findUnique({ where: { email }, select: { id: true } });
@@ -18,6 +19,10 @@ interface Params { params: Promise<{ slug: string; masaId: string }> }
 export async function PATCH(req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
+    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
+  }
+
   const { slug, masaId } = await params;
   const masa = await masaYetki(slug, masaId, session.user.email);
   if (!masa) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
@@ -37,6 +42,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 export async function DELETE(_: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
+  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
+    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
+  }
+
   const { slug, masaId } = await params;
   const masa = await masaYetki(slug, masaId, session.user.email);
   if (!masa) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
