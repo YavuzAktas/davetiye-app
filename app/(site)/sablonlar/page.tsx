@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Timer, Music, ClipboardCheck } from "lucide-react";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
 
 /* ─── Sabitler ─── */
@@ -696,89 +697,108 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 }
 
 /* ══════════════════════════════════════════════
-   STANDART KART — dark, gerçek telefon önizlemeli
+   STANDART KART — Airbnb/Apple minimal
 ══════════════════════════════════════════════ */
+const STD_OZELLIKLER = [
+  { Icon: ClipboardCheck, label: "RSVP" },
+  { Icon: MapPin,         label: "Harita" },
+  { Icon: Timer,          label: "Geri Sayım" },
+  { Icon: Music,          label: "Müzik" },
+] as const;
+
 function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
   const router = useRouter();
+  const [hovered, setHovered] = useState(false);
   const r = sablon.renk;
   const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
 
   return (
     <motion.div
-      initial={{ opacity:0, y:16 }}
-      animate={{ opacity:1, y:0 }}
-      transition={{ delay: index * 0.03, duration:0.25 }}
-      whileHover={{
-        y: -8,
-        boxShadow:`0 0 0 1px ${r}55, 0 24px 48px rgba(0,0,0,0.5), 0 0 32px ${r}18`,
-        transition:{ type:"spring", stiffness:300, damping:22 }
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.32 }}
+      whileHover={{ y: -6, boxShadow: `0 16px 48px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)` }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
+      className="relative flex flex-col overflow-hidden cursor-pointer"
+      style={{
+        background: "#fff",
+        borderRadius: 24,
+        boxShadow: "0 1px 4px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.07)",
+        minHeight: 300,
       }}
-      className="group flex flex-col overflow-hidden cursor-pointer"
-      style={{ background:"#0e0c1a", borderRadius:20, boxShadow:"0 0 0 1px rgba(255,255,255,0.06)", minHeight:380 }}
-      onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}>
-
-      {/* ── Üst: Telefon önizleme ── */}
-      <div className="relative overflow-hidden shrink-0" style={{ height:220 }}>
-        {/* Arka plan */}
-        <div className="absolute inset-0" style={{ background:`linear-gradient(160deg,${r}22 0%,${r}08 60%,rgba(14,12,26,0.95) 100%)` }}/>
-        <div className="absolute inset-0" style={{ backgroundImage:`radial-gradient(circle,${r}14 1px,transparent 1px)`, backgroundSize:"16px 16px" }}/>
-        {/* Üst renk şeridi */}
-        <div className="absolute top-0 left-0 right-0" style={{ height:2.5, background:`linear-gradient(90deg,${r},${r}88)` }}/>
-        {/* Ölçekli telefon — flex centered, overflow clips top/bottom */}
+    >
+      {/* ── Önizleme ── */}
+      <div className="relative overflow-hidden shrink-0" style={{ height: 220 }}>
+        {/* Kart arka planı */}
+        <div className="absolute inset-0" style={{ background: `linear-gradient(145deg, #f9f9fb 0%, ${r}0a 100%)` }} />
+        {/* Ölçekli telefon */}
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-          <div style={{ transform:"scale(0.56)", transformOrigin:"center center", width:260, flexShrink:0 }}>
+          <div style={{ transform: "scale(0.56)", transformOrigin: "center center", width: 260, flexShrink: 0 }}>
             <TelefonMockup><StdKapak sablon={sablon} /></TelefonMockup>
           </div>
         </div>
-        {/* Hover overlay */}
-        <motion.div
-          initial={{ opacity:0 }} whileHover={{ opacity:1 }}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ background:`rgba(0,0,0,0.45)`, backdropFilter:"blur(2px)" }}>
-          <span className="text-xs font-bold px-4 py-2 rounded-full text-white"
-            style={{ background:r, boxShadow:`0 4px 16px ${r}60` }}>
-            Önizle →
-          </span>
-        </motion.div>
+        {/* Alt gradient fade → isim */}
+        <div className="absolute bottom-0 left-0 right-0" style={{ height: 72, background: "linear-gradient(to top, #fff 40%, transparent)" }} />
+        <div className="absolute bottom-3 left-4 right-4">
+          <h3 className="font-bold text-gray-900 text-[15px] leading-snug truncate">{sablon.isim}</h3>
+        </div>
       </div>
 
-      {/* ── Alt: Bilgi ── */}
-      <div className="flex flex-col flex-1 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full"
-            style={{ background:`${r}20`, color:r, border:`1px solid ${r}30` }}>
-            {emoji} {sablon.kategori.charAt(0).toUpperCase()+sablon.kategori.slice(1)}
-          </span>
-          {/* Renk noktası */}
-          <div className="w-3 h-3 rounded-full" style={{ background:r, boxShadow:`0 0 8px ${r}80` }}/>
-        </div>
-
-        <h3 className="font-bold text-white text-[15px] mb-1.5 leading-snug">{sablon.isim}</h3>
-        {sablon.aciklama && (
-          <p className="text-[11px] mb-4 leading-relaxed" style={{ color:"rgba(255,255,255,0.38)" }}>
-            {sablon.aciklama}
-          </p>
-        )}
-
-        {/* Özellik etiketleri */}
-        <div className="flex flex-wrap gap-1.5 mb-5">
-          {["💌 RSVP", "📍 Harita", "⏱️ Geri Sayım", "🎵 Müzik"].map(f => (
-            <span key={f} className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-              style={{ background:"rgba(255,255,255,0.06)", color:"rgba(255,255,255,0.45)", border:"1px solid rgba(255,255,255,0.08)" }}>
-              {f}
-            </span>
+      {/* ── Bilgi şeridi ── */}
+      <div className="flex items-center justify-between px-4 py-3">
+        <span
+          className="text-[10px] font-bold px-2.5 py-1 rounded-full"
+          style={{ background: `${r}18`, color: r }}
+        >
+          {emoji} {sablon.kategori.charAt(0).toUpperCase() + sablon.kategori.slice(1)}
+        </span>
+        <div className="flex items-center gap-2.5">
+          {STD_OZELLIKLER.map(({ Icon, label }) => (
+            <div key={label} title={label} style={{ color: `${r}99` }}>
+              <Icon size={13} strokeWidth={2} />
+            </div>
           ))}
         </div>
-
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
-          onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
-          className="mt-auto w-full py-2.5 rounded-xl text-xs font-bold text-white"
-          style={{ background:`linear-gradient(135deg,${r},${r}cc)`, boxShadow:`0 4px 16px ${r}30` }}>
-          Bu Şablonu Seç →
-        </motion.button>
       </div>
+
+      {/* ── Hover CTA (yukarı süzülür) ── */}
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 52 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 52 }}
+            transition={{ type: "spring", stiffness: 400, damping: 32, mass: 0.8 }}
+            className="absolute bottom-0 left-0 right-0 flex gap-2 px-4 py-3"
+            style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)" }}
+          >
+            <motion.button
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.05, duration: 0.18 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white"
+              style={{ background: r, boxShadow: `0 4px 16px ${r}40` }}
+            >
+              Hemen Başla →
+            </motion.button>
+            <motion.button
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.09, duration: 0.18 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
+              className="flex-1 py-2.5 rounded-xl text-xs font-medium text-gray-500 border border-gray-200"
+              style={{ background: "#fff" }}
+            >
+              Canlı Önizle ↗
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
