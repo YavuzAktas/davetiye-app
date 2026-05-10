@@ -69,12 +69,13 @@ function OlusturIcerigi() {
   const [hata, setHata]             = useState("");
   const [aktifTab, setAktifTab]     = useState<"icerik" | "tasarim">("icerik");
 
-  const [notAcik,   setNotAcik]   = useState(false);
-  const [muzikAcik, setMuzikAcik] = useState(false);
-  const [aniAcik,   setAniAcik]   = useState(false);
+  const [notAcik,      setNotAcik]      = useState(false);
+  const [muzikAcik,    setMuzikAcik]    = useState(false);
+  const [spotifyAcik,  setSpotifyAcik]  = useState(false);
+  const [aniAcik,      setAniAcik]      = useState(false);
 
-  const muzikAktif = planOzellikVar(userPlan, "muzik");
-  const aniAktif   = planOzellikVar(userPlan, "album");
+  const muzikAktif   = planOzellikVar(userPlan, "muzik");
+  const aniAktif     = planOzellikVar(userPlan, "album");
 
   const handleSubmit = async () => {
     if (!form.tarih || !form.mekan) { setHata("Lütfen tarih ve mekan alanlarını doldurun."); return; }
@@ -86,7 +87,14 @@ function OlusturIcerigi() {
       const res = await fetch("/api/davetiye/olustur", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, baslik: gonderilecekBaslik, sablon: sablonId }),
+        body: JSON.stringify({
+          ...form,
+          baslik: gonderilecekBaslik,
+          sablon: sablonId,
+          mesaj:       notAcik     ? form.mesaj : null,
+          muzik:       muzikAcik   ? form.muzik : null,
+          spotifyAktif: spotifyAcik,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -360,6 +368,48 @@ function OlusturIcerigi() {
                   {muzikAktif && muzikAcik && (
                     <div className="px-4 pb-4">
                       <MuzikSecici secili={form.muzik} onChange={dosya => setForm({ ...form, muzik: dosya })} />
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎧 Spotify Müzik İsteği */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => muzikAktif && setSpotifyAcik(!spotifyAcik)}
+                    className={`w-full flex items-center justify-between p-4 text-left transition-colors ${muzikAktif ? "hover:bg-gray-50" : "cursor-default"}`}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">🎧</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">Spotify Müzik İsteği</p>
+                        <p className="text-xs text-gray-400">Misafirler davetiyeden şarkı önerebilsin</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {muzikAktif ? (
+                        <>
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full transition-colors ${
+                            spotifyAcik ? "text-green-700 bg-green-100" : "text-gray-400 bg-gray-100"
+                          }`}>{spotifyAcik ? "Açık" : "Kapalı"}</span>
+                          <span className="text-xs text-purple-600 font-medium bg-purple-50 px-2 py-0.5 rounded-full">Standart+</span>
+                          <span className="text-gray-400 text-xs">{spotifyAcik ? "▲" : "▼"}</span>
+                        </>
+                      ) : (
+                        <Link href="/fiyatlar" onClick={e => e.stopPropagation()}
+                          className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors">
+                          Planını Yükselt →
+                        </Link>
+                      )}
+                    </div>
+                  </button>
+                  {muzikAktif && spotifyAcik && (
+                    <div className="px-4 pb-4">
+                      <div className="bg-green-50 rounded-xl p-4 flex gap-3">
+                        <span className="text-xl shrink-0">✅</span>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-700 mb-1">Müzik İsteği Aktif</p>
+                          <p className="text-xs text-gray-500 leading-relaxed">Misafirler davetiye sayfasından Spotify şarkısı önerebilir. Önerilen şarkıları dashboard üzerinden görebilirsin.</p>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

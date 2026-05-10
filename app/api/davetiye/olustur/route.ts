@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
@@ -35,9 +35,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (muzik && !planOzellikVar(user.plan, "muzik")) {
+  if ((muzik || spotifyAktif) && !planOzellikVar(user.plan, "muzik")) {
     return NextResponse.json(
-      { hata: "Müzik ekleme Standart ve Premium planlara özel.", upsell: true },
+      { hata: "Müzik özellikleri Standart ve Premium planlara özel.", upsell: true },
       { status: 403 }
     );
   }
@@ -70,11 +70,12 @@ export async function POST(req: NextRequest) {
       mesaj,
       sablon,
       font:     font  || "font-sans",
-      ozelRenk: renk  || null,
-      muzik:    muzik || null,
-      userId:   user.id,
-      kisi1:    kisi1 || null,
-      kisi2:    kisi2 || null,
+      ozelRenk:    renk  || null,
+      muzik:       muzik || null,
+      spotifyAktif: !!spotifyAktif,
+      userId:      user.id,
+      kisi1:       kisi1 || null,
+      kisi2:       kisi2 || null,
     },
   });
 
