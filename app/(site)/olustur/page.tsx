@@ -4,7 +4,8 @@ import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { PREMIUM_SABLON_IDS } from "@/lib/planlar";
+import { PREMIUM_SABLON_IDS, planOzellikVar } from "@/lib/planlar";
+import Link from "next/link";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
@@ -67,6 +68,13 @@ function OlusturIcerigi() {
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata]             = useState("");
   const [aktifTab, setAktifTab]     = useState<"icerik" | "tasarim">("icerik");
+
+  const [notAcik,   setNotAcik]   = useState(false);
+  const [muzikAcik, setMuzikAcik] = useState(false);
+  const [aniAcik,   setAniAcik]   = useState(false);
+
+  const muzikAktif = planOzellikVar(userPlan, "muzik");
+  const aniAktif   = planOzellikVar(userPlan, "album");
 
   const handleSubmit = async () => {
     if (!form.tarih || !form.mekan) { setHata("Lütfen tarih ve mekan alanlarını doldurun."); return; }
@@ -229,21 +237,11 @@ function OlusturIcerigi() {
                       )}
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Mesaj</label>
-                      <textarea rows={3} placeholder="Özel bir mesaj..."
-                        value={form.mesaj} onChange={e => setForm({ ...form, mesaj: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white resize-none"/>
-                    </div>
                   </div>
                 )}
 
                 {aktifTab === "tasarim" && (
                   <div className="space-y-7">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Arka Plan Müziği</label>
-                      <MuzikSecici secili={form.muzik} onChange={dosya => setForm({ ...form, muzik: dosya })}/>
-                    </div>
                     {!isNisanLuks && !isDugunLuks && (
                       <>
                         <div>
@@ -277,14 +275,14 @@ function OlusturIcerigi() {
                       <div className="text-center py-6 text-sm">
                         <p className="text-2xl mb-2">🌹</p>
                         <p className="font-medium text-gray-600">Bordo &amp; Altın Tasarım</p>
-                        <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.<br/>Müzik seçimi için yukarıya bakın.</p>
+                        <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.</p>
                       </div>
                     )}
                     {isDugunLuks && (
                       <div className="text-center py-6 text-sm">
                         <p className="text-2xl mb-2">💍</p>
                         <p className="font-medium text-gray-600">Lacivert &amp; Şampanya Altın Tasarım</p>
-                        <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.<br/>Müzik seçimi için yukarıya bakın.</p>
+                        <p className="text-xs mt-1 text-gray-400">Bu şablonun rengi sabittir.</p>
                       </div>
                     )}
                   </div>
@@ -298,6 +296,114 @@ function OlusturIcerigi() {
                 </button>
               </div>
             </div>
+
+            {/* ── İsteğe Bağlı Özellikler ── */}
+            {!premiumEngel && (
+              <div className="mt-4 space-y-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-1">İsteğe Bağlı Özellikler</p>
+
+                {/* 📝 Kişisel Not */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                  <button onClick={() => setNotAcik(!notAcik)}
+                    className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">📝</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">Kişisel Not</p>
+                        <p className="text-xs text-gray-400">Misafirlere özel bir mesaj ekle</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full">Tüm Planlar</span>
+                      <span className="text-gray-400 text-xs">{notAcik ? "▲" : "▼"}</span>
+                    </div>
+                  </button>
+                  {notAcik && (
+                    <div className="px-4 pb-4">
+                      <textarea
+                        placeholder="Davetiyenize eklemek istediğiniz özel not veya mesaj..."
+                        value={form.mesaj}
+                        onChange={e => setForm({ ...form, mesaj: e.target.value })}
+                        rows={3}
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white resize-none"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎵 Arka Plan Müziği */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => muzikAktif && setMuzikAcik(!muzikAcik)}
+                    className={`w-full flex items-center justify-between p-4 text-left transition-colors ${muzikAktif ? "hover:bg-gray-50" : "cursor-default"}`}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">🎵</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">Arka Plan Müziği</p>
+                        <p className="text-xs text-gray-400">Davetiye açıldığında çalacak müzik</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {muzikAktif ? (
+                        <>
+                          <span className="text-xs text-purple-600 font-medium bg-purple-50 px-2 py-0.5 rounded-full">Standart+</span>
+                          <span className="text-gray-400 text-xs">{muzikAcik ? "▲" : "▼"}</span>
+                        </>
+                      ) : (
+                        <Link href="/fiyatlar" onClick={e => e.stopPropagation()}
+                          className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors">
+                          Planını Yükselt →
+                        </Link>
+                      )}
+                    </div>
+                  </button>
+                  {muzikAktif && muzikAcik && (
+                    <div className="px-4 pb-4">
+                      <MuzikSecici secili={form.muzik} onChange={dosya => setForm({ ...form, muzik: dosya })} />
+                    </div>
+                  )}
+                </div>
+
+                {/* 📖 Anı Defteri */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => aniAktif && setAniAcik(!aniAcik)}
+                    className={`w-full flex items-center justify-between p-4 text-left transition-colors ${aniAktif ? "hover:bg-gray-50" : "cursor-default"}`}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">📖</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">Anı Defteri</p>
+                        <p className="text-xs text-gray-400">Misafirler fotoğraf ve anı paylaşabilsin</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {aniAktif ? (
+                        <>
+                          <span className="text-xs text-amber-600 font-medium bg-amber-50 px-2 py-0.5 rounded-full">👑 Premium</span>
+                          <span className="text-gray-400 text-xs">{aniAcik ? "▲" : "▼"}</span>
+                        </>
+                      ) : (
+                        <Link href="/fiyatlar" onClick={e => e.stopPropagation()}
+                          className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors">
+                          Planını Yükselt →
+                        </Link>
+                      )}
+                    </div>
+                  </button>
+                  {aniAktif && aniAcik && (
+                    <div className="px-4 pb-4">
+                      <div className="bg-amber-50 rounded-xl p-4 flex gap-3">
+                        <span className="text-xl shrink-0">💡</span>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-700 mb-1">Anı Defteri Etkin</p>
+                          <p className="text-xs text-gray-500 leading-relaxed">Davetiyeni oluşturduktan sonra misafirler fotoğraf yükleyebilir ve anı yazabilir. Dashboard'dan onaylayıp yönetebilirsin.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ── Sağ — Canlı Önizleme ── */}
