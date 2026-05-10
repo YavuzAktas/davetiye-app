@@ -221,14 +221,14 @@ function OlusturIcerigi() {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-2.5 overflow-hidden">
-                      <div className="min-w-0 overflow-hidden">
+                    <div className="flex flex-col sm:flex-row gap-2.5">
+                      <div className="flex-1">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Tarih *</label>
                         <input type="date" value={form.tarih}
                           onChange={e => setForm({ ...form, tarih: e.target.value })}
                           className={DATE_INPUT} />
                       </div>
-                      <div className="min-w-0 overflow-hidden">
+                      <div className="sm:w-36">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Saat</label>
                         <input type="time" value={form.saat}
                           onChange={e => setForm({ ...form, saat: e.target.value })}
