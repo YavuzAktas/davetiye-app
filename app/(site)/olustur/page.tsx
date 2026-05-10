@@ -9,7 +9,7 @@ import Link from "next/link";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
-import MuzikSecici from "@/components/MuzikSecici";
+import SpotifyMuzikSecici from "@/components/SpotifyMuzikSecici";
 
 const FONTLAR = [
   { id: "font-sans",  isim: "Modern",  style: "system-ui" },
@@ -342,7 +342,7 @@ function OlusturIcerigi() {
                   onToggle={() => muzikAktif && setMuzikAcik(!muzikAcik)}
                   upsell={!muzikAktif}
                 >
-                  <MuzikSecici secili={form.muzik} onChange={dosya => setForm({ ...form, muzik: dosya })} />
+                  <SpotifyMuzikSecici secili={form.muzik} onChange={deger => setForm({ ...form, muzik: deger })} />
                 </OzellikKarti>
 
                 {/* 🎧 Spotify Müzik İsteği */}

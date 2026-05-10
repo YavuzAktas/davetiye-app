@@ -2,10 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function MuzikCalar({ muzikUrl }: { muzikUrl: string }) {
+function SpotifyCalar({ trackId }: { trackId: string }) {
+  return (
+    <div className="fixed bottom-4 right-4 z-50 rounded-2xl overflow-hidden shadow-2xl"
+      style={{ width: 300 }}>
+      <iframe
+        style={{ borderRadius: 16 }}
+        src={`https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`}
+        width="300"
+        height="80"
+        frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
+function LocalCalar({ muzikUrl }: { muzikUrl: string }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [calıyor, setCaliyor] = useState(false);
-  const [yuklendi, setYuklendi] = useState(false);
+  const [caliyor, setCaliyor] = useState(false);
 
   useEffect(() => {
     const audio = new Audio(muzikUrl);
@@ -13,54 +29,45 @@ export default function MuzikCalar({ muzikUrl }: { muzikUrl: string }) {
     audio.volume = 0.5;
     audioRef.current = audio;
 
-    audio.addEventListener("canplaythrough", () => setYuklendi(true));
-    audio.addEventListener("play", () => setCaliyor(true));
+    audio.addEventListener("play",  () => setCaliyor(true));
     audio.addEventListener("pause", () => setCaliyor(false));
     audio.addEventListener("ended", () => setCaliyor(false));
 
-    // Autoplay on mount — browsers may block until user interaction
     audio.play().catch(() => {});
 
-    return () => {
-      audio.pause();
-      audio.src = "";
-    };
+    return () => { audio.pause(); audio.src = ""; };
   }, [muzikUrl]);
 
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (audio.paused) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
+    audio.paused ? audio.play().catch(() => {}) : audio.pause();
   };
 
   return (
-    <button
-      onClick={toggle}
-      title={calıyor ? "Müziği durdur" : "Müziği çal"}
-      className="fixed bottom-6 right-6 z-50 w-13 h-13 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-      style={{
-        background: "linear-gradient(135deg, #9b7fa8, #6b4f7a)",
-        width: 52,
-        height: 52,
-      }}
-    >
-      {calıyor ? (
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white">
+    <button onClick={toggle} title={caliyor ? "Müziği durdur" : "Müziği çal"}
+      className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+      style={{ background: "linear-gradient(135deg,#9b7fa8,#6b4f7a)", width: 52, height: 52 }}>
+      {caliyor ? (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
           <rect x="6" y="4" width="4" height="16" rx="1" />
           <rect x="14" y="4" width="4" height="16" rx="1" />
         </svg>
       ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
           <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
       )}
-      {calıyor && (
+      {caliyor && (
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse border-2 border-white" />
       )}
     </button>
   );
+}
+
+export default function MuzikCalar({ muzikUrl }: { muzikUrl: string }) {
+  if (muzikUrl.startsWith("spotify:")) {
+    return <SpotifyCalar trackId={muzikUrl.replace("spotify:", "")} />;
+  }
+  return <LocalCalar muzikUrl={muzikUrl} />;
 }
