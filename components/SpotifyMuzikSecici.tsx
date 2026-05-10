@@ -8,10 +8,11 @@ interface Track {
   artist: string;
   image: string | null;
   duration_ms: number;
+  preview_url: string | null;
 }
 
 interface Props {
-  secili: string; // "spotify:{id}" veya ""
+  secili: string; // "spotify:{id}|{previewUrl}" veya ""
   onChange: (deger: string) => void;
 }
 
@@ -34,7 +35,7 @@ export default function SpotifyMuzikSecici({ secili, onChange }: Props) {
   const [yapilandirilmamis, setYok]     = useState(false);
   const timerRef                         = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const seciliId = secili.startsWith("spotify:") ? secili.replace("spotify:", "") : "";
+  const seciliId = secili.startsWith("spotify:") ? secili.replace("spotify:", "").split("|")[0] : "";
 
   // Dışarıdan secili değişince (kaldırma) local state'i sıfırla
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function SpotifyMuzikSecici({ secili, onChange }: Props) {
 
   const sec = (track: Track) => {
     setSeciliTrack(track);
-    onChange(`spotify:${track.id}`);
+    onChange(`spotify:${track.id}|${track.preview_url ?? ""}`);
     setArama("");
     setSonuclar([]);
   };

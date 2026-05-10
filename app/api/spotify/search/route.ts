@@ -50,6 +50,7 @@ export async function GET(req: NextRequest) {
       artist: t.artists[0]?.name ?? "Bilinmiyor",
       image: t.album?.images?.[2]?.url ?? t.album?.images?.[0]?.url ?? null,
       duration_ms: t.duration_ms,
+      preview_url: t.preview_url ?? null,
     }));
 
     return NextResponse.json({ tracks });

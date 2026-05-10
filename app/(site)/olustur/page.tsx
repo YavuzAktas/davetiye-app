@@ -220,7 +220,7 @@ function OlusturIcerigi() {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Tarih *</label>
                         <input type="date" value={form.tarih}
