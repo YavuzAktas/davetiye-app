@@ -23,6 +23,7 @@ const ORNEK: DavetiyeVeri = {
   kisi1: "Aylin",
   kisi2: "Yavuz",
   spotifyAktif: false,
+  albumAktif: true,
 };
 
 export default function OrnekNisanSayfasi() {

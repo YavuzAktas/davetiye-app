@@ -424,7 +424,7 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
       {/* ════════════════════════════════════
           BÖLÜM 5 — ALBÜM (Polaroid)
       ════════════════════════════════════ */}
-      <section id="anilar" style={{
+      {davetiye.albumAktif && <section id="anilar" style={{
         padding:"80px 24px", textAlign:"center",
         background:`linear-gradient(180deg,${BG} 0%,${BG_DARK} 100%)`,
       }}>
@@ -449,7 +449,7 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
         <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:18, fontStyle:"italic", color:`${CREAM}55` }}>
           Ömür boyu sürecek bir masalın başlangıcı... ◆
         </p>
-      </section>
+      </section>}
 
       {/* ─── Footer ─── */}
       <footer style={{

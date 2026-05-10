@@ -37,6 +37,17 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   const sablonTipi = getSablonTipi(davetiye.sablon);
 
+  /* Davetiye şablonunun tema rengi (FloatingButton için) */
+  const TEMA_RENKLER: Record<string, string> = {
+    "nisan-luks":     "#C4A05A",
+    "dugun-luks":     "#D4AA70",
+    "dogumgunu-luks": "#D4A84B",
+  };
+  const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
+
+  const spotifyAktif = (davetiye as any).spotifyAktif ?? false;
+  const albumAktif   = planOzellikVar(davetiye.user?.plan ?? "free", "album");
+
   const veri: DavetiyeVeri = {
     id: davetiye.id,
     slug: davetiye.slug,
@@ -56,19 +67,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     },
     kisi1: (davetiye as any).kisi1 ?? null,
     kisi2: (davetiye as any).kisi2 ?? null,
-    spotifyAktif: (davetiye as any).spotifyAktif ?? false,
+    spotifyAktif,
+    albumAktif,
   };
-
-  /* Davetiye şablonunun tema rengi (FloatingButton için) */
-  const TEMA_RENKLER: Record<string, string> = {
-    "nisan-luks":     "#C4A05A",
-    "dugun-luks":     "#D4AA70",
-    "dogumgunu-luks": "#D4A84B",
-  };
-  const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
-
-  const spotifyAktif = (davetiye as any).spotifyAktif ?? false;
-  console.log("Davetiye spotifyAktif:", spotifyAktif, "slug:", slug);
 
   const rsvpBileseni = (
     <RsvpForm
@@ -88,8 +89,6 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   } else {
     sablon = <KlasikSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
   }
-
-  const albumAktif = planOzellikVar(davetiye.user?.plan ?? "free", "album");
 
   return (
     <>

@@ -535,7 +535,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       {/* ════════════════════════════════════
           BÖLÜM 5 — ANILAR (Polaroid)
       ════════════════════════════════════ */}
-      <section id="anilar" style={{
+      {davetiye.albumAktif && <section id="anilar" style={{
         padding:"80px 24px", textAlign:"center",
         background:`linear-gradient(180deg,${BG} 0%,${BG_DARK} 100%)`,
       }}>
@@ -575,7 +575,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           fontSize:18, fontStyle:"italic",
           color:`${CREAM}55`,
         }}>Sonsuz bir yolculuğun ilk adımları... ✦</p>
-      </section>
+      </section>}
 
       {/* ─── Footer ─── */}
       <footer style={{

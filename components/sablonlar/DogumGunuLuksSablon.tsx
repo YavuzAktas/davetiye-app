@@ -476,7 +476,7 @@ export default function DogumGunuLuksSablon({ davetiye }: SablonProps) {
       {/* ════════════════════════════════════
           BÖLÜM 5 — GALERİ
       ════════════════════════════════════ */}
-      <section id="galeri" style={{
+      {davetiye.albumAktif && <section id="galeri" style={{
         padding:"80px 24px", textAlign:"center",
         background:`linear-gradient(180deg,${BG} 0%,${BG_DARK} 100%)`,
       }}>
@@ -529,7 +529,7 @@ export default function DogumGunuLuksSablon({ davetiye }: SablonProps) {
           fontSize:18, fontStyle:"italic",
           color:`${CREAM}55`,
         }}>Her yıl daha güzel... ★</p>
-      </section>
+      </section>}
 
       {/* ─── Footer ─── */}
       <footer style={{

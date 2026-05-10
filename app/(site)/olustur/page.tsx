@@ -127,6 +127,7 @@ function OlusturIcerigi() {
     kisi1: form.kisi1 || null,
     kisi2: form.kisi2 || null,
     spotifyAktif: false,
+    albumAktif: false,
   };
 
   return (
