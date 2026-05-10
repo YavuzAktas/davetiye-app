@@ -7,6 +7,7 @@ import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } f
 import RsvpForm from "@/components/RsvpForm";
 import AlbumButonu from "@/components/AlbumButonu";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
+import { planOzellikVar } from "@/lib/planlar";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -88,10 +89,12 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     sablon = <KlasikSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
   }
 
+  const albumAktif = planOzellikVar(davetiye.user?.plan ?? "free", "album");
+
   return (
     <>
       {sablon}
-      <AlbumButonu slug={davetiye.slug} renk={temaRenk} />
+      {albumAktif && <AlbumButonu slug={davetiye.slug} renk={temaRenk} />}
     </>
   );
 }
