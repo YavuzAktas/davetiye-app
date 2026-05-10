@@ -53,21 +53,27 @@ function useAudio(src: string) {
     audio.addEventListener("pause", () => setCaliyor(false));
     audio.addEventListener("ended", () => setCaliyor(false));
 
+    const tryPlay = () => audio.play().catch(() => {});
+
     const p = audio.play();
     if (p !== undefined) {
       p.catch(() => {
-        const resume = () => {
-          audio.play().catch(() => {});
-          document.removeEventListener("click",      resume);
-          document.removeEventListener("touchstart", resume);
-          document.removeEventListener("keydown",    resume);
-        };
-        document.addEventListener("click",      resume, { once: true });
-        document.addEventListener("touchstart", resume, { once: true, passive: true });
-        document.addEventListener("keydown",    resume, { once: true });
+        // Autoplay engellendi — mühür tıklaması veya herhangi bir etkileşimde başlat
+        const resume = () => { tryPlay(); };
+        document.addEventListener("muzik-baslat", resume, { once: true });
+        document.addEventListener("click",        resume, { once: true });
+        document.addEventListener("touchstart",   resume, { once: true, passive: true });
       });
     }
-    return () => { audio.pause(); audio.src = ""; };
+
+    const handleBaslat = () => { if (audio.paused) tryPlay(); };
+    document.addEventListener("muzik-baslat", handleBaslat);
+
+    return () => {
+      audio.pause();
+      audio.src = "";
+      document.removeEventListener("muzik-baslat", handleBaslat);
+    };
   }, [src]);
 
   const toggle = () => {
@@ -112,6 +118,12 @@ function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }
           ctrl.addListener("ready", () => {
             if (alive) setYukleniyor(false);
           });
+          // Mühür tıklaması — controller hazır olunca çal
+          const handleBaslat = () => { ctrl.play(); };
+          document.addEventListener("muzik-baslat", handleBaslat);
+          // Cleanup: alive=false olunca listener kaldır
+          const origCleanup = () => document.removeEventListener("muzik-baslat", handleBaslat);
+          (ctrl as any)._muzikBaslatCleanup = origCleanup;
         }
       );
     };
@@ -136,7 +148,10 @@ function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }
       }
     }
 
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+      controllerRef.current?._muzikBaslatCleanup?.();
+    };
   }, [trackId]);
 
   const toggle = () => {

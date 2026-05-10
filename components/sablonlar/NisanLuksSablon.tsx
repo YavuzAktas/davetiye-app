@@ -201,7 +201,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         {/* Gül Mühür */}
         <div className="relative z-10 flex flex-col items-center"
           style={{ opacity: animating ? 0 : 1, transform: animating ? "scale(0.7)" : "scale(1)", transition:"all 0.55s ease" }}>
-          <RoseSeal size={230} onClick={() => { setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
+          <RoseSeal size={230} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
 
           <div className="mt-10 text-center">
             {tarihKisa && (
