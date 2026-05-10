@@ -354,12 +354,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           }}>↓</div>
         </div>
 
-        {/* Müzik butonu */}
-        {davetiye.muzik && (
-          <div style={{ position:"fixed", bottom:24, right:24, zIndex:40 }}>
-            <MuzikCalar muzikUrl={davetiye.muzik}/>
-          </div>
-        )}
+        {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
       </section>
 
       {/* ════════════════════════════════════

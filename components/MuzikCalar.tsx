@@ -2,118 +2,113 @@
 
 import { useEffect, useRef, useState } from "react";
 
-function ToggleButon({ caliyor, onClick }: { caliyor: boolean; onClick: () => void }) {
+interface Props { muzikUrl: string; renk?: string }
+
+function useAudio(src: string) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [caliyor, setCaliyor] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio(src);
+    audio.loop = true;
+    audio.volume = 0.5;
+    audioRef.current = audio;
+
+    audio.addEventListener("play",  () => setCaliyor(true));
+    audio.addEventListener("pause", () => setCaliyor(false));
+    audio.addEventListener("ended", () => setCaliyor(false));
+
+    const tryPlay = () => audio.play().catch(() => {});
+
+    // Try autoplay immediately
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        // Blocked by browser — start on first user interaction
+        const resume = () => {
+          tryPlay();
+          document.removeEventListener("click",      resume);
+          document.removeEventListener("touchstart", resume);
+          document.removeEventListener("keydown",    resume);
+        };
+        document.addEventListener("click",      resume, { once: true });
+        document.addEventListener("touchstart", resume, { once: true, passive: true });
+        document.addEventListener("keydown",    resume, { once: true });
+      });
+    }
+
+    return () => { audio.pause(); audio.src = ""; };
+  }, [src]);
+
+  const toggle = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.paused ? audio.play().catch(() => {}) : audio.pause();
+  };
+
+  return { caliyor, toggle };
+}
+
+function ToggleButon({
+  caliyor, onClick, renk,
+}: {
+  caliyor: boolean; onClick: () => void; renk: string;
+}) {
   return (
     <button
       onClick={onClick}
       title={caliyor ? "Müziği durdur" : "Müziği çal"}
-      className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-      style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)", width: 52, height: 52 }}
+      className="fixed bottom-6 right-6 z-50 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+      style={{
+        background: `linear-gradient(135deg, ${renk}, ${renk}bb)`,
+        width: 52, height: 52,
+        boxShadow: `0 4px 20px ${renk}55`,
+      }}
     >
       {caliyor ? (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-          <rect x="6" y="4" width="4" height="16" rx="1" />
-          <rect x="14" y="4" width="4" height="16" rx="1" />
-        </svg>
+        <>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+          <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse border-2 border-white"
+            style={{ backgroundColor: renk }} />
+        </>
       ) : (
-        /* Spotify logo */
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
-          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.336.132-.67.469-.747 3.808-.871 7.076-.496 9.713 1.115.293.18.387.563.207.857zm1.223-2.723c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.127-.413.106-.849.517-.974 3.632-1.102 8.147-.568 11.235 1.328.366.226.482.707.258 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.129-1.166-.623-.148-.495.131-1.017.624-1.166 3.532-1.073 9.404-.866 13.115 1.338.445.264.59.838.326 1.282-.264.443-.838.59-1.282.325z" />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
-      )}
-      {caliyor && (
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-pulse border-2 border-[#1DB954]" />
       )}
     </button>
   );
 }
 
-function SpotifyPreviewCalar({ previewUrl }: { previewUrl: string }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [caliyor, setCaliyor] = useState(false);
-
-  useEffect(() => {
-    const audio = new Audio(previewUrl);
-    audio.loop = true;
-    audio.volume = 0.5;
-    audioRef.current = audio;
-
-    audio.addEventListener("play",  () => setCaliyor(true));
-    audio.addEventListener("pause", () => setCaliyor(false));
-    audio.addEventListener("ended", () => setCaliyor(false));
-
-    audio.play().catch(() => {});
-
-    return () => { audio.pause(); audio.src = ""; };
-  }, [previewUrl]);
-
-  const toggle = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.paused ? audio.play().catch(() => {}) : audio.pause();
-  };
-
-  return <ToggleButon caliyor={caliyor} onClick={toggle} />;
+function LocalCalar({ muzikUrl, renk }: Props) {
+  const { caliyor, toggle } = useAudio(muzikUrl);
+  return <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk ?? "#7C3AED"} />;
 }
 
-function LocalCalar({ muzikUrl }: { muzikUrl: string }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [caliyor, setCaliyor] = useState(false);
-
-  useEffect(() => {
-    const audio = new Audio(muzikUrl);
-    audio.loop = true;
-    audio.volume = 0.5;
-    audioRef.current = audio;
-
-    audio.addEventListener("play",  () => setCaliyor(true));
-    audio.addEventListener("pause", () => setCaliyor(false));
-    audio.addEventListener("ended", () => setCaliyor(false));
-
-    audio.play().catch(() => {});
-
-    return () => { audio.pause(); audio.src = ""; };
-  }, [muzikUrl]);
-
-  const toggle = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.paused ? audio.play().catch(() => {}) : audio.pause();
-  };
-
-  return <ToggleButon caliyor={caliyor} onClick={toggle} />;
+function SpotifyPreviewCalar({ previewUrl, renk }: { previewUrl: string; renk: string }) {
+  const { caliyor, toggle } = useAudio(previewUrl);
+  return <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} />;
 }
 
-export default function MuzikCalar({ muzikUrl }: { muzikUrl: string }) {
-  if (muzikUrl.startsWith("spotify:")) {
-    // Format: spotify:{trackId}|{previewUrl}
-    const rest = muzikUrl.slice("spotify:".length);
-    const pipeIdx = rest.indexOf("|");
-    const previewUrl = pipeIdx !== -1 ? rest.slice(pipeIdx + 1) : "";
-
-    if (previewUrl) return <SpotifyPreviewCalar previewUrl={previewUrl} />;
-
-    // Preview URL yoksa — yeşil Spotify butonu, tıklayınca embed açılır
-    const trackId = pipeIdx !== -1 ? rest.slice(0, pipeIdx) : rest;
-    return <SpotifyEmbedFallback trackId={trackId} />;
-  }
-
-  return <LocalCalar muzikUrl={muzikUrl} />;
-}
-
-function SpotifyEmbedFallback({ trackId }: { trackId: string }) {
+function SpotifyEmbedFallback({ trackId, renk }: { trackId: string; renk: string }) {
   const [acik, setAcik] = useState(false);
-
   return (
     <>
       <button
         onClick={() => setAcik(a => !a)}
         title="Spotify ile çal"
-        className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-        style={{ background: "linear-gradient(135deg,#1DB954,#158a3e)", width: 52, height: 52 }}
+        className="fixed bottom-6 right-6 z-50 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: `linear-gradient(135deg, ${renk}, ${renk}bb)`,
+          width: 52, height: 52,
+          boxShadow: `0 4px 20px ${renk}55`,
+        }}
       >
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
-          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.336.132-.67.469-.747 3.808-.871 7.076-.496 9.713 1.115.293.18.387.563.207.857zm1.223-2.723c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.127-.413.106-.849.517-.974 3.632-1.102 8.147-.568 11.235 1.328.366.226.482.707.258 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.129-1.166-.623-.148-.495.131-1.017.624-1.166 3.532-1.073 9.404-.866 13.115 1.338.445.264.59.838.326 1.282-.264.443-.838.59-1.282.325z" />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
       </button>
       {acik && (
@@ -129,4 +124,18 @@ function SpotifyEmbedFallback({ trackId }: { trackId: string }) {
       )}
     </>
   );
+}
+
+export default function MuzikCalar({ muzikUrl, renk = "#7C3AED" }: Props) {
+  if (muzikUrl.startsWith("spotify:")) {
+    const rest = muzikUrl.slice("spotify:".length);
+    const pipeIdx = rest.indexOf("|");
+    const previewUrl = pipeIdx !== -1 ? rest.slice(pipeIdx + 1) : "";
+    const trackId   = pipeIdx !== -1 ? rest.slice(0, pipeIdx) : rest;
+
+    if (previewUrl) return <SpotifyPreviewCalar previewUrl={previewUrl} renk={renk} />;
+    return <SpotifyEmbedFallback trackId={trackId} renk={renk} />;
+  }
+
+  return <LocalCalar muzikUrl={muzikUrl} renk={renk} />;
 }

@@ -70,7 +70,7 @@ export default function KlasikSablon({ davetiye, rsvpBileseni }: SablonProps) {
 
   return (
     <div className={"min-h-screen bg-linear-to-b " + bg}>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} />}
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={aktifRenk} />}
       <div className="h-2 w-full" style={{ backgroundColor: aktifRenk }} />
       <div className="max-w-md mx-auto px-4 py-10">
 

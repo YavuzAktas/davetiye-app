@@ -39,7 +39,8 @@ function TelefonMockup({ children }: { children: React.ReactNode }) {
   );
 }
 
-const INPUT = "w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900";
+const INPUT      = "w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900";
+const DATE_INPUT = "w-full min-w-0 border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white";
 
 function OlusturIcerigi() {
   const searchParams = useSearchParams();
@@ -220,18 +221,18 @@ function OlusturIcerigi() {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      <div>
+                    <div className="grid grid-cols-2 gap-2.5 overflow-hidden">
+                      <div className="min-w-0 overflow-hidden">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Tarih *</label>
                         <input type="date" value={form.tarih}
                           onChange={e => setForm({ ...form, tarih: e.target.value })}
-                          className={INPUT} />
+                          className={DATE_INPUT} />
                       </div>
-                      <div>
+                      <div className="min-w-0 overflow-hidden">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Saat</label>
                         <input type="time" value={form.saat}
                           onChange={e => setForm({ ...form, saat: e.target.value })}
-                          className={INPUT} />
+                          className={DATE_INPUT} />
                       </div>
                     </div>
 
