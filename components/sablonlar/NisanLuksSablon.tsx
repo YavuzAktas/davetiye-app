@@ -124,6 +124,19 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
 
   return (
     <>
+      <style>{`
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+        @keyframes sealIdle{
+          0%,100%{transform:rotate(-1.5deg) translateY(0) scale(1)}
+          50%{transform:rotate(1.5deg) translateY(-6px) scale(1.02)}
+        }
+        @keyframes sealTap{
+          0%{transform:scale(1) rotate(0deg)}
+          30%{transform:scale(0.88) rotate(-2deg)}
+          65%{transform:scale(1.07) rotate(1deg)}
+          100%{transform:scale(1) rotate(0deg)}
+        }
+      `}</style>
       {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══ KAPALI DURUM ══ */}
@@ -475,19 +488,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         }}>Sizi çok seviyoruz 💛</p>
       </footer>
 
-      <style>{`
-        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-        @keyframes sealIdle{
-          0%,100%{transform:rotate(-1.5deg) translateY(0) scale(1)}
-          50%{transform:rotate(1.5deg) translateY(-6px) scale(1.02)}
-        }
-        @keyframes sealTap{
-          0%{transform:scale(1) rotate(0deg)}
-          30%{transform:scale(0.88) rotate(-2deg)}
-          65%{transform:scale(1.07) rotate(1deg)}
-          100%{transform:scale(1) rotate(0deg)}
-        }
-      `}</style>
     </div>
       )}
     </>
