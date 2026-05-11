@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -6,6 +7,7 @@ import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 import SpotifyPlaylistKarti from "@/components/SpotifyPlaylistKarti";
 import RsvpListesi from "@/components/RsvpListesi";
+import YeniDavetiyeToast from "@/components/YeniDavetiyeToast";
 import { SABLONLAR } from "@/lib/sablonlar";
 
 interface Props {
@@ -73,6 +75,9 @@ export default async function DavetiyeDetay({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <Suspense fallback={null}>
+        <YeniDavetiyeToast />
+      </Suspense>
 
       {/* ══ DARK HERO ══ */}
       <div className="relative bg-[#080112] overflow-hidden">

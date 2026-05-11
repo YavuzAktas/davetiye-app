@@ -102,7 +102,7 @@ function OlusturIcerigi() {
         if (data.upsell) setTimeout(() => router.push("/fiyatlar"), 2000);
         return;
       }
-      router.push(`/davetiye/${data.slug}?yeni=1`);
+      router.push(`/dashboard/davetiye/${data.slug}?yeni=1`);
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }
   };
