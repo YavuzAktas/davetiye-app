@@ -70,6 +70,7 @@ export default function EtkilesimButonu({
   const recorderRef   = useRef<MediaRecorder | null>(null);
   const chunksRef     = useRef<Blob[]>([]);
   const timerRef      = useRef<ReturnType<typeof setInterval> | null>(null);
+  const mimeTypeRef   = useRef<string>("");
 
   if (sekmeler.length === 0) return null;
 
@@ -176,18 +177,30 @@ export default function EtkilesimButonu({
       return;
     }
     try {
+      /* Tarayıcının desteklediği ilk MIME tipini seç */
+      const tercihSirasi = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/ogg;codecs=opus",
+        "audio/ogg",
+        "audio/mp4",
+      ];
+      const mimeType = tercihSirasi.find(t => MediaRecorder.isTypeSupported(t)) ?? "";
+      mimeTypeRef.current = mimeType;
+
       chunksRef.current = [];
-      const recorder = new MediaRecorder(stream);
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       recorderRef.current = recorder;
+      /* 250 ms'lik dilimler → stop öncesi veri garantisi */
       recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
       recorder.onstop = () => {
         stream.getTracks().forEach(t => t.stop());
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const blob = new Blob(chunksRef.current, { type: mimeTypeRef.current || "audio/webm" });
         setSesBlob(blob);
         setSesBlobUrl(URL.createObjectURL(blob));
         setKayitDurum("gozden");
       };
-      recorder.start();
+      recorder.start(250);
       setKayitDurum("kayit");
       setKalan(30); setSure(0);
       let elapsed = 0;
@@ -202,6 +215,7 @@ export default function EtkilesimButonu({
     } catch (err: unknown) {
       stream.getTracks().forEach(t => t.stop());
       setSesHata(`Kayıt başlatılamadı: ${(err as { name?: string }).name ?? "Bilinmeyen hata"}.`);
+      setKayitDurum("hata");
     }
   }
 

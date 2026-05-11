@@ -86,8 +86,9 @@ export default async function AlbumModerasyon({ params }: Props) {
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
     include: {
-      albumFotolar: { orderBy: { createdAt: "desc" } },
+      albumFotolar:  { orderBy: { createdAt: "desc" } },
       aniDefterleri: { orderBy: { createdAt: "desc" } },
+      sesliAnilar:   { orderBy: { createdAt: "desc" } },
     },
   });
   if (!davetiye) notFound();
@@ -123,9 +124,9 @@ export default async function AlbumModerasyon({ params }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                {(davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length) > 0 && (
+                {(davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length + davetiye.sesliAnilar.filter(s => !s.onaylandi).length) > 0 && (
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-400">
-                    {davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length} onay bekliyor
+                    {davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length + davetiye.sesliAnilar.filter(s => !s.onaylandi).length} onay bekliyor
                   </span>
                 )}
               </div>
@@ -146,6 +147,7 @@ export default async function AlbumModerasyon({ params }: Props) {
         <ModerasyonIcerik
           baslangicFotolar={davetiye.albumFotolar.map((f) => ({ ...f, createdAt: f.createdAt.toISOString() }))}
           baslangicAnilar={davetiye.aniDefterleri.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
+          baslangicSesliAnilar={davetiye.sesliAnilar.map((s) => ({ ...s, createdAt: s.createdAt.toISOString() }))}
           slug={slug}
           renk={renk}
         />
