@@ -26,10 +26,25 @@ function GoldDivider() {
 
 /* ─── Gül Mühür ─── */
 function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void }) {
+  const [tapped, setTapped] = useState(false);
+
+  const handleClick = () => {
+    if (tapped) return;
+    setTapped(true);
+    onClick?.();
+  };
+
   return (
     <div
-      onClick={onClick}
-      style={{ width: size, height: size, cursor: onClick ? "pointer" : "default", flexShrink: 0, position: "relative" }}
+      onClick={handleClick}
+      style={{
+        width: size, height: size,
+        cursor: onClick ? "pointer" : "default",
+        flexShrink: 0, position: "relative",
+        animation: tapped
+          ? "sealTap 0.4s ease forwards"
+          : "sealIdle 5s ease-in-out infinite",
+      }}
     >
       <Image src="/rose-seal.png" alt="Gül Mühür" fill className="object-contain" />
     </div>
@@ -460,7 +475,19 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         }}>Sizi çok seviyoruz 💛</p>
       </footer>
 
-      <style>{`@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}`}</style>
+      <style>{`
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+        @keyframes sealIdle{
+          0%,100%{transform:rotate(-1.5deg) translateY(0) scale(1)}
+          50%{transform:rotate(1.5deg) translateY(-6px) scale(1.02)}
+        }
+        @keyframes sealTap{
+          0%{transform:scale(1) rotate(0deg)}
+          30%{transform:scale(0.88) rotate(-2deg)}
+          65%{transform:scale(1.07) rotate(1deg)}
+          100%{transform:scale(1) rotate(0deg)}
+        }
+      `}</style>
     </div>
       )}
     </>
