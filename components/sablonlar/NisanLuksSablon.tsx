@@ -212,6 +212,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
     <>
       <style>{`
         @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+        @keyframes butonCik{from{opacity:0;transform:translateY(18px) scale(0.85)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes sealIdle{
           0%,100%{transform:rotate(-1.5deg) translateY(0) scale(1)}
           50%{transform:rotate(1.5deg) translateY(-6px) scale(1.02)}
@@ -231,7 +232,6 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
           50% { transform: translateY(-12px); }
         }
       `}</style>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══ KAPALI DURUM ══ */}
       {!acildi && (
@@ -259,7 +259,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
 
           <div className="relative z-10 flex flex-col items-center"
             style={{ opacity: animating ? 0 : 1, transition:"opacity 0.55s ease" }}>
-            <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
+            <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => { setAcildi(true); document.dispatchEvent(new CustomEvent("davetiye-acildi")); }, 580); }} />
 
             <div className="mt-10 text-center">
               {tarihKisa && (
@@ -285,6 +285,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
       {/* ══ AÇIK DURUM ══ */}
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ════════════════════════════════════
           BÖLÜM 1 — BİZ (Hero kemer)

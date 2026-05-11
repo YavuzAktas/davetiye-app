@@ -73,7 +73,14 @@ export default function EtkilesimButonu({
   const timerRef      = useRef<ReturnType<typeof setInterval> | null>(null);
   const mimeTypeRef   = useRef<string>("");
 
-  if (sekmeler.length === 0) return null;
+  const [gorunur, setGorunur] = useState(false);
+  useEffect(() => {
+    const handler = () => setGorunur(true);
+    document.addEventListener("davetiye-acildi", handler);
+    return () => document.removeEventListener("davetiye-acildi", handler);
+  }, []);
+
+  if (sekmeler.length === 0 || !gorunur) return null;
 
   /* ─ Veri çek ─ */
   useEffect(() => {
@@ -288,6 +295,7 @@ export default function EtkilesimButonu({
 
   return (
     <>
+      <style>{`@keyframes butonCik{from{opacity:0;transform:translateY(18px) scale(0.85)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
       {/* Floating button */}
       <button
         onClick={() => setAcik(true)}
@@ -297,6 +305,7 @@ export default function EtkilesimButonu({
           background: `linear-gradient(135deg, ${renk}f2, ${renk}b8)`,
           boxShadow: `0 4px 18px ${renk}44, 0 1px 3px rgba(0,0,0,0.22)`,
           border: `1px solid rgba(255,255,255,0.15)`,
+          animation: "butonCik 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both",
         }}
       >
         <span style={{ fontSize: 15, lineHeight: 1 }}>{butonEtiket}</span>
@@ -313,7 +322,7 @@ export default function EtkilesimButonu({
 
       {/* Lightbox */}
       {lightbox && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={() => setLightbox(null)}>
+        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={() => setLightbox(null)}>
           <button onClick={() => setLightbox(null)} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-xl">×</button>
           <div className="relative max-w-[95vw] max-h-[85dvh] w-full h-full" onClick={e => e.stopPropagation()}>
             <Image src={lightbox.dosyaUrl} alt={lightbox.yukleyenAd} fill className="object-contain" sizes="95vw" />
