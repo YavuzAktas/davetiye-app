@@ -52,16 +52,19 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
 }
 
 /* ─── Polaroid kart ─── */
-function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number; src?:string }) {
+function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?:boolean; src?:string }) {
   return (
     <div style={{
       background:"#fff",
       borderRadius:4,
       padding:"10px 10px 36px",
-      transform:`rotate(${rotate}deg)`,
-      zIndex,
-      boxShadow:"0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
+      transform: isActive ? `rotate(${rotate}deg) scale(1.12)` : `rotate(${rotate}deg) scale(1)`,
+      boxShadow: isActive 
+        ? "0 25px 50px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.3)"
+        : "0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
       width:170, flexShrink:0,
+      transition: "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease",
+      cursor: "pointer"
     }}>
       <div style={{
         width:"100%", height:190,
@@ -88,6 +91,7 @@ function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number;
 export default function NisanLuksSablon({ davetiye }: SablonProps) {
   const [acildi, setAcildi] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
 
   /* Tarih bilgileri */
   const tarihObj = davetiye.tarih ? new Date(davetiye.tarih) : null;
@@ -319,21 +323,36 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         <div style={{ display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
           <div style={{ position:"relative", width:280, height:280 }}>
             {/* Sol Polaroid */}
-            <div style={{ position:"absolute", top:45, left: -5, zIndex:1, animation:"fadeUp 0.8s ease backwards 0s" }}>
+            <div 
+              onMouseEnter={() => setAktifPolaroid(1)}
+              onMouseLeave={() => setAktifPolaroid(null)}
+              onTouchStart={() => setAktifPolaroid(1)}
+              style={{ position:"absolute", top:45, left: -5, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease backwards 0s" }}
+            >
               <div style={{ animation: "float 6s ease-in-out infinite 0s" }}>
-                <Polaroid rotate={-8} />
+                <Polaroid rotate={-8} isActive={aktifPolaroid === 1} />
               </div>
             </div>
             {/* Orta Polaroid */}
-            <div style={{ position:"absolute", top:20, left: 45, zIndex:2, animation:"fadeUp 0.8s ease backwards 0.2s" }}>
+            <div 
+              onMouseEnter={() => setAktifPolaroid(2)}
+              onMouseLeave={() => setAktifPolaroid(null)}
+              onTouchStart={() => setAktifPolaroid(2)}
+              style={{ position:"absolute", top:20, left: 45, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease backwards 0.2s" }}
+            >
               <div style={{ animation: "float 6.5s ease-in-out infinite 0.5s" }}>
-                <Polaroid rotate={-2} />
+                <Polaroid rotate={-2} isActive={aktifPolaroid === 2} />
               </div>
             </div>
             {/* Sağ Polaroid */}
-            <div style={{ position:"absolute", top:40, left: 95, zIndex:3, animation:"fadeUp 0.8s ease backwards 0.4s" }}>
+            <div 
+              onMouseEnter={() => setAktifPolaroid(3)}
+              onMouseLeave={() => setAktifPolaroid(null)}
+              onTouchStart={() => setAktifPolaroid(3)}
+              style={{ position:"absolute", top:40, left: 95, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease backwards 0.4s" }}
+            >
               <div style={{ animation: "float 7s ease-in-out infinite 1s" }}>
-                <Polaroid rotate={5} />
+                <Polaroid rotate={5} isActive={aktifPolaroid === 3} />
               </div>
             </div>
           </div>
