@@ -94,105 +94,13 @@ function SpotifyPreviewCalar({ previewUrl, renk }: { previewUrl: string; renk: s
   return <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} />;
 }
 
-/* ── Spotify IFrame API — programmatic play/pause, iframe gizli ── */
-function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }) {
-  const containerRef   = useRef<HTMLDivElement>(null);
-  const controllerRef  = useRef<any>(null);
-  const playIntentRef  = useRef(false);
-  const [caliyor, setCaliyor]       = useState(false);
-  const [yukleniyor, setYukleniyor] = useState(true);
-
-  useEffect(() => {
-    let alive = true;
-
-    // Listener erken ekle — controller hazır olmadan event gelebilir
-    const handleBaslat = () => {
-      if (controllerRef.current) {
-        controllerRef.current.play();
-      } else {
-        playIntentRef.current = true;
-      }
-    };
-    document.addEventListener("muzik-baslat", handleBaslat);
-
-    const initController = (IFrameAPI: any) => {
-      if (!alive || !containerRef.current) return;
-      IFrameAPI.createController(
-        containerRef.current,
-        { uri: `spotify:track:${trackId}` },
-        (ctrl: any) => {
-          if (!alive) return;
-          controllerRef.current = ctrl;
-          ctrl.addListener("playback_update", (e: any) => {
-            if (alive) setCaliyor(!e.data.isPaused);
-          });
-          ctrl.addListener("ready", () => {
-            if (!alive) return;
-            setYukleniyor(false);
-            if (playIntentRef.current) {
-              ctrl.play();
-              playIntentRef.current = false;
-            }
-          });
-        }
-      );
-    };
-
-    if ((window as any).SpotifyIframeApi) {
-      // API zaten yüklü
-      initController((window as any).SpotifyIframeApi);
-    } else {
-      // Callback — API yüklenince çağrılır
-      const prev = (window as any).onSpotifyIframeApiReady;
-      (window as any).onSpotifyIframeApiReady = (api: any) => {
-        (window as any).SpotifyIframeApi = api;
-        initController(api);
-        if (prev) prev(api);
-      };
-      if (!document.getElementById("spotify-iframe-api")) {
-        const s = document.createElement("script");
-        s.id  = "spotify-iframe-api";
-        s.src = "https://open.spotify.com/embed/iframe-api/v1";
-        s.async = true;
-        document.head.appendChild(s);
-      }
-    }
-
-    return () => {
-      alive = false;
-      document.removeEventListener("muzik-baslat", handleBaslat);
-    };
-  }, [trackId]);
-
-  const toggle = () => {
-    const ctrl = controllerRef.current;
-    if (!ctrl) return;
-    caliyor ? ctrl.pause() : ctrl.play();
-  };
-
-  return (
-    <>
-      {/* Gizli iframe container — display:none ses bloklar, off-screen kullanıyoruz */}
-      <div ref={containerRef} style={{
-        position: "fixed", left: -9999, top: -9999,
-        width: 300, height: 80, pointerEvents: "none",
-      }} />
-      <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} yukleniyor={yukleniyor} />
-    </>
-  );
-}
-
 /* ── Dispatch ── */
 export default function MuzikCalar({ muzikUrl, renk = "#7C3AED" }: Props) {
   if (muzikUrl.startsWith("spotify:")) {
-    const rest      = muzikUrl.slice("spotify:".length);
-    const pipeIdx   = rest.indexOf("|");
-    const previewUrl = pipeIdx !== -1 ? rest.slice(pipeIdx + 1) : "";
-    const trackId   = pipeIdx !== -1 ? rest.slice(0, pipeIdx) : rest;
-
-    if (previewUrl) return <SpotifyPreviewCalar previewUrl={previewUrl} renk={renk} />;
-    // Preview URL yok → Spotify IFrame API ile tam kontrol
-    return <SpotifyIframeCalar trackId={trackId} renk={renk} />;
+    const pipeIdx    = muzikUrl.indexOf("|");
+    const previewUrl = pipeIdx !== -1 ? muzikUrl.slice(pipeIdx + 1) : "";
+    if (!previewUrl) return null; // preview URL yoksa çalamayız
+    return <SpotifyPreviewCalar previewUrl={previewUrl} renk={renk} />;
   }
 
   return <LocalCalar muzikUrl={muzikUrl} renk={renk} />;
