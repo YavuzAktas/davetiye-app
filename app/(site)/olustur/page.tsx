@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
@@ -166,6 +166,31 @@ function OlusturIcerigi() {
   const [polaroidler,        setPolaroidler]        = useState<[string|null,string|null,string|null]>([null,null,null]);
   const [polaroidYukleniyor, setPolaroidYukleniyor] = useState<[boolean,boolean,boolean]>([false,false,false]);
   const [polaroidAcik,       setPolaroidAcik]       = useState(false);
+
+  /* ── Preview scroll ── */
+  const previewContentRef = useRef<HTMLDivElement>(null);
+  const [previewY, setPreviewY] = useState(0);
+
+  function scrollPreviewTo(sectionId: string) {
+    requestAnimationFrame(() => {
+      if (!previewContentRef.current) return;
+      const el = previewContentRef.current.querySelector(`#${sectionId}`);
+      if (el) setPreviewY((el as HTMLElement).offsetTop);
+    });
+  }
+
+  useEffect(() => {
+    if (dressKodAcik)                        scrollPreviewTo("dresskod");
+    else if (aniAcik || polaroidAcik)        scrollPreviewTo("anilar");
+    else if (spotifyAcik)                    scrollPreviewTo("katilim");
+    else                                     setPreviewY(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dressKodAcik, aniAcik, polaroidAcik, spotifyAcik]);
+
+  useEffect(() => {
+    if (sesliAniAcik || canliDuvarAcik) scrollPreviewTo("katilim");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sesliAniAcik, canliDuvarAcik]);
 
   async function gorselSikistir(file: File, maxPx = 1400, quality = 0.85): Promise<File> {
     return new Promise((resolve) => {
@@ -742,11 +767,12 @@ function OlusturIcerigi() {
               </div>
               <TelefonMockup>
                 <div style={{ width: "100%", height: "100%", position: "relative", overflow: "hidden" }}>
-                  <div style={{
+                  <div ref={previewContentRef} style={{
                     width: NAT_W,
-                    transform: `scale(${SCALE})`,
+                    transform: `scale(${SCALE}) translateY(-${previewY}px)`,
                     transformOrigin: "top left",
                     position: "absolute", top: 0, left: 0,
+                    transition: "transform 0.75s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}>
                     {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
                     {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
