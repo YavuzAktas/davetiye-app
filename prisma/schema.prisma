@@ -93,6 +93,9 @@ model Davetiye {
   masalar             Masa[]
   spotifyPlaylistId   String?
   spotifyAktif        Boolean  @default(false)
+  polaroid1           String?
+  polaroid2           String?
+  polaroid3           String?
 
   @@index([userId])
   @@index([aktif])

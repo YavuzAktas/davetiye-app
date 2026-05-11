@@ -19,6 +19,9 @@ export interface DavetiyeVeri {
   kisi2: string | null;
   spotifyAktif: boolean;
   albumAktif: boolean;
+  polaroid1: string | null;
+  polaroid2: string | null;
+  polaroid3: string | null;
 }
 
 export interface SablonProps {

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif, spotifyPlaylistId: gelenPlaylistId } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif, spotifyPlaylistId: gelenPlaylistId, polaroid1, polaroid2, polaroid3 } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
@@ -93,6 +93,9 @@ export async function POST(req: NextRequest) {
       userId:           user!.id,
       kisi1:            kisi1 || null,
       kisi2:            kisi2 || null,
+      polaroid1:        polaroid1 || null,
+      polaroid2:        polaroid2 || null,
+      polaroid3:        polaroid3 || null,
     },
   });
 

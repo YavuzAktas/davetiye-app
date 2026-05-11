@@ -24,6 +24,9 @@ const ORNEK: DavetiyeVeri = {
   kisi2: "Yavuz",
   spotifyAktif: false,
   albumAktif: true,
+  polaroid1: null,
+  polaroid2: null,
+  polaroid3: null,
 };
 
 export default function OrnekNisanSayfasi() {

@@ -74,6 +74,23 @@ function OlusturIcerigi() {
   const [spotifyAcik, setSpotifyAcik] = useState(false);
   const [aniAcik,     setAniAcik]     = useState(false);
 
+  const hasPolaroid = sablonTipi === "nisan-luks";
+  const [polaroidler, setPolaroidler] = useState<[string|null, string|null, string|null]>([null, null, null]);
+  const [polaroidYukleniyor, setPolaroidYukleniyor] = useState<[boolean, boolean, boolean]>([false, false, false]);
+
+  async function polaroidSec(index: 0|1|2, file: File) {
+    setPolaroidYukleniyor(prev => { const n = [...prev] as typeof prev; n[index] = true; return n; });
+    try {
+      const fd = new FormData();
+      fd.append("dosya", file);
+      const res = await fetch("/api/upload-temp", { method: "POST", body: fd });
+      const json = await res.json();
+      if (res.ok) setPolaroidler(prev => { const n = [...prev] as typeof prev; n[index] = json.url; return n; });
+    } finally {
+      setPolaroidYukleniyor(prev => { const n = [...prev] as typeof prev; n[index] = false; return n; });
+    }
+  }
+
   const muzikAktif = planOzellikVar(userPlan, "muzik");
   const aniAktif   = planOzellikVar(userPlan, "album");
 
@@ -112,6 +129,9 @@ function OlusturIcerigi() {
           muzik:             muzikAcik   ? form.muzik : null,
           spotifyAktif:      spotifyAcik,
           spotifyPlaylistId: spotifyAcik && spMod === "mevcut" ? spSeciliId : null,
+          polaroid1: polaroidler[0],
+          polaroid2: polaroidler[1],
+          polaroid3: polaroidler[2],
         }),
       });
       const data = await res.json();
@@ -144,6 +164,9 @@ function OlusturIcerigi() {
     kisi2: form.kisi2 || null,
     spotifyAktif: false,
     albumAktif: false,
+    polaroid1: polaroidler[0],
+    polaroid2: polaroidler[1],
+    polaroid3: polaroidler[2],
   };
 
   return (
@@ -434,6 +457,44 @@ function OlusturIcerigi() {
                     </div>
                   )}
                 </OzellikKarti>
+
+                {/* 🖼️ Polaroid Fotoğrafları — sadece nisan-luks */}
+                {hasPolaroid && (
+                  <OzellikKarti
+                    emoji="🖼️" baslik="Polaroid Fotoğrafları" alt="Davetiyedeki 3 Polaroid karta fotoğraf ekle"
+                    badge="Tüm Planlar" badgeRenk="green"
+                    acik={true} onToggle={() => {}}
+                  >
+                    <div className="grid grid-cols-3 gap-2">
+                      {([0, 1, 2] as const).map(i => (
+                        <label key={i} className="relative cursor-pointer group">
+                          <div className={`aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center overflow-hidden transition-colors ${
+                            polaroidler[i] ? "border-purple-300 bg-purple-50/40" : "border-gray-200 hover:border-purple-300 hover:bg-purple-50/30"
+                          }`}>
+                            {polaroidYukleniyor[i] ? (
+                              <div className="w-5 h-5 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin" />
+                            ) : polaroidler[i] ? (
+                              <>
+                                <img src={polaroidler[i]!} alt="" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <span className="text-white text-xs font-semibold">Değiştir</span>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-2xl mb-1">📷</span>
+                                <span className="text-xs text-gray-400">{i + 1}. foto</span>
+                              </>
+                            )}
+                          </div>
+                          <input type="file" accept="image/*" className="hidden"
+                            onChange={e => { const f = e.target.files?.[0]; if (f) polaroidSec(i, f); }} />
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-2">İsteğe bağlı — boş bırakılan Polaroidler varsayılan görünür.</p>
+                  </OzellikKarti>
+                )}
 
                 {/* 📖 Anı Defteri */}
                 <OzellikKarti

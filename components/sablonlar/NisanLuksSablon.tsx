@@ -330,29 +330,29 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               style={{ position:"absolute", top:45, left: -5, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease backwards 0s" }}
             >
               <div style={{ animation: "float 6s ease-in-out infinite 0s" }}>
-                <Polaroid rotate={-8} isActive={aktifPolaroid === 1} />
+                <Polaroid rotate={-8} isActive={aktifPolaroid === 1} src={davetiye.polaroid1 ?? undefined} />
               </div>
             </div>
             {/* Orta Polaroid */}
-            <div 
+            <div
               onMouseEnter={() => setAktifPolaroid(2)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(2)}
               style={{ position:"absolute", top:20, left: 45, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease backwards 0.2s" }}
             >
               <div style={{ animation: "float 6.5s ease-in-out infinite 0.5s" }}>
-                <Polaroid rotate={-2} isActive={aktifPolaroid === 2} />
+                <Polaroid rotate={-2} isActive={aktifPolaroid === 2} src={davetiye.polaroid2 ?? undefined} />
               </div>
             </div>
             {/* Sağ Polaroid */}
-            <div 
+            <div
               onMouseEnter={() => setAktifPolaroid(3)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(3)}
               style={{ position:"absolute", top:40, left: 95, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease backwards 0.4s" }}
             >
               <div style={{ animation: "float 7s ease-in-out infinite 1s" }}>
-                <Polaroid rotate={5} isActive={aktifPolaroid === 3} />
+                <Polaroid rotate={5} isActive={aktifPolaroid === 3} src={davetiye.polaroid3 ?? undefined} />
               </div>
             </div>
           </div>
