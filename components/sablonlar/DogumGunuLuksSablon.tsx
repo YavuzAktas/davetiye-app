@@ -129,9 +129,11 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
   const [kalan, setKalan] = useState(calc);
   useEffect(() => {
     if (!tarihObj) return;
+    setKalan(calc());
     const id = setInterval(() => setKalan(calc()), 1000);
     return () => clearInterval(id);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tarihObj?.getTime()]);
 
   const isim = davetiye.kisi1 || davetiye.baslik;
 
@@ -284,13 +286,6 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
             {tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.split(",")[0].toUpperCase()}
           </p>
 
-          {davetiye.mesaj && (
-            <p style={{
-              fontFamily:"var(--font-cormorant),serif",
-              fontSize:14, fontStyle:"italic",
-              color:`${CREAM}55`, marginTop:8,
-            }}>{davetiye.mesaj}</p>
-          )}
         </div>
 
         {/* Aşağı ok */}
@@ -527,6 +522,24 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
           color:`${CREAM}55`,
         }}>Her yıl daha güzel... ★</p>
       </section>}
+
+      {/* ════════════════════════════════════
+          KİŞİSEL NOT
+      ════════════════════════════════════ */}
+      {davetiye.mesaj && (
+        <section style={{ padding:"60px 24px 64px", textAlign:"center", background:BG }}>
+          <div style={{ maxWidth:360, margin:"0 auto" }}>
+            <div style={{ margin:"0 auto 20px", maxWidth:180 }}><GoldDivider /></div>
+            <p style={{
+              fontFamily:"var(--font-cormorant),serif",
+              fontSize:16, fontStyle:"italic",
+              color:`${CREAM}90`, lineHeight:1.85,
+              letterSpacing:"0.03em",
+            }}>{davetiye.mesaj}</p>
+            <div style={{ margin:"20px auto 0", maxWidth:180 }}><GoldDivider /></div>
+          </div>
+        </section>
+      )}
 
       {/* ─── Footer ─── */}
       <footer style={{

@@ -198,9 +198,11 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
   const [kalan, setKalan] = useState(calc);
   useEffect(() => {
     if (!tarihObj) return;
+    setKalan(calc());
     const id = setInterval(() => setKalan(calc()), 1000);
     return () => clearInterval(id);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tarihObj?.getTime()]);
 
   /* İsimler */
   const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
@@ -356,17 +358,6 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
             color:`${CREAM}55`, marginTop:8,
           }}>Bizi bu özel günde yanınızda görmek isteriz</p>
 
-          {davetiye.mesaj && (
-            <>
-              <div style={{ margin:"18px auto 14px", maxWidth:180 }}><GoldDivider /></div>
-              <p style={{
-                fontFamily:"var(--font-cormorant),serif",
-                fontSize:15, fontStyle:"italic",
-                color:`${CREAM}80`, lineHeight:1.7,
-                letterSpacing:"0.04em",
-              }}>{davetiye.mesaj}</p>
-            </>
-          )}
         </div>
 
         <div style={{ marginTop:44, textAlign:"center" }}>
@@ -606,6 +597,24 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
           BÖLÜM 6 — DRESS CODE
       ════════════════════════════════════ */}
       {davetiye.dressKod && <DressCodeSection dressKod={davetiye.dressKod} dressKodRenkler={davetiye.dressKodRenkler} />}
+
+      {/* ════════════════════════════════════
+          KİŞİSEL NOT
+      ════════════════════════════════════ */}
+      {davetiye.mesaj && (
+        <section style={{ padding:"60px 24px 64px", textAlign:"center", background:BG }}>
+          <div style={{ maxWidth:360, margin:"0 auto" }}>
+            <div style={{ margin:"0 auto 20px", maxWidth:180 }}><GoldDivider /></div>
+            <p style={{
+              fontFamily:"var(--font-cormorant),serif",
+              fontSize:16, fontStyle:"italic",
+              color:`${CREAM}90`, lineHeight:1.85,
+              letterSpacing:"0.03em",
+            }}>{davetiye.mesaj}</p>
+            <div style={{ margin:"20px auto 0", maxWidth:180 }}><GoldDivider /></div>
+          </div>
+        </section>
+      )}
 
       {/* ─── Footer ─── */}
       <footer style={{

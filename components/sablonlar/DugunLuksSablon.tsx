@@ -130,9 +130,11 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
   const [kalan, setKalan] = useState(calcKalan);
   useEffect(() => {
     if (!tarihObj) return;
+    setKalan(calcKalan());
     const id = setInterval(() => setKalan(calcKalan()), 1000);
     return () => clearInterval(id);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tarihObj?.getTime()]);
 
   const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
   const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
@@ -280,10 +282,6 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
             {tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.toUpperCase()}
           </p>
 
-          {davetiye.mesaj && (
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, fontStyle:"italic",
-              color:`${CREAM}55`, marginTop:8 }}>{davetiye.mesaj}</p>
-          )}
         </div>
 
         {/* Aşağı ok */}
@@ -447,6 +445,24 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
           Ömür boyu sürecek bir masalın başlangıcı... ◆
         </p>
       </section>}
+
+      {/* ════════════════════════════════════
+          KİŞİSEL NOT
+      ════════════════════════════════════ */}
+      {davetiye.mesaj && (
+        <section style={{ padding:"60px 24px 64px", textAlign:"center", background:BG_MED }}>
+          <div style={{ maxWidth:360, margin:"0 auto" }}>
+            <div style={{ margin:"0 auto 20px", maxWidth:180 }}><GoldDivider /></div>
+            <p style={{
+              fontFamily:"var(--font-cormorant),serif",
+              fontSize:16, fontStyle:"italic",
+              color:`${CREAM}90`, lineHeight:1.85,
+              letterSpacing:"0.03em",
+            }}>{davetiye.mesaj}</p>
+            <div style={{ margin:"20px auto 0", maxWidth:180 }}><GoldDivider /></div>
+          </div>
+        </section>
+      )}
 
       {/* ─── Footer ─── */}
       <footer style={{

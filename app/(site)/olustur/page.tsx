@@ -769,10 +769,6 @@ function OlusturIcerigi() {
                 </div>
               </TelefonMockup>
               <div className="mt-3 flex flex-col items-center gap-1">
-                <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                  <span className="text-sm animate-bounce inline-block">↕</span>
-                  Önizlemeyi fare tekerleğiyle kaydırın
-                </p>
                 <p className="text-[10px] text-gray-300">Değişiklikler anında yansır</p>
               </div>
             </div>
