@@ -1,11 +1,13 @@
 export const dynamic = "force-dynamic";
 
+import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
 import AlbumButonu from "@/components/AlbumButonu";
+import YeniDavetiyeToast from "@/components/YeniDavetiyeToast";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { planOzellikVar } from "@/lib/planlar";
 
@@ -92,6 +94,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <YeniDavetiyeToast />
+      </Suspense>
       {sablon}
       {albumAktif && <AlbumButonu slug={davetiye.slug} renk={temaRenk} />}
     </>
