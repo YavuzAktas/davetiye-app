@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
-import AlbumButonu from "@/components/AlbumButonu";
+import EtkilesimButonu from "@/components/EtkilesimButonu";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { planOzellikVar } from "@/lib/planlar";
 
@@ -100,7 +100,13 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   return (
     <>
       {sablon}
-      {albumAktif && <AlbumButonu slug={davetiye.slug} renk={temaRenk} />}
+      <EtkilesimButonu
+        slug={davetiye.slug}
+        renk={temaRenk}
+        albumAktif={albumAktif}
+        canliDuvarAktif={canliDuvarAktif}
+        sesliAniAktif={sesliAniAktif}
+      />
     </>
   );
 }
