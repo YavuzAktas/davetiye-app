@@ -26,67 +26,12 @@ function GoldDivider() {
 
 /* ─── Gül Mühür ─── */
 function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void }) {
-  const [imgFailed, setImgFailed] = useState(false);
-
   return (
     <div
       onClick={onClick}
-      style={{
-        width: size, height: size,
-        borderRadius: "50%",
-        overflow: "hidden",
-        cursor: onClick ? "pointer" : "default",
-        flexShrink: 0,
-        /* Kalın halka kaldırıldı, sadece gerçekçi bir gölge bırakıldı */
-        boxShadow: `0 15px 40px rgba(0,0,0,0.5)`,
-      }}
+      style={{ width: size, height: size, cursor: onClick ? "pointer" : "default", flexShrink: 0, position: "relative" }}
     >
-      {!imgFailed ? (
-        <div style={{ position:"relative", width:"100%", height:"100%" }}>
-          <Image
-            src="/rose-seal.png"
-            alt="Gül Mühür"
-            fill
-            className="object-cover"
-            onError={() => setImgFailed(true)}
-          />
-        </div>
-      ) : (
-        <div style={{
-          width:"100%", height:"100%",
-          background:`radial-gradient(circle at 38% 32%,
-            #A01C2E 0%,#7A1220 30%,#5C0D18 60%,#3E0810 100%)`,
-          position:"relative",
-        }}>
-          <div style={{
-            position:"absolute", top:"10%", left:"15%",
-            width:"45%", height:"40%", borderRadius:"50%",
-            background:"radial-gradient(ellipse,rgba(255,255,255,0.14) 0%,transparent 70%)",
-          }}/>
-          <svg viewBox="0 0 200 200" style={{ position:"absolute",inset:"8%",width:"84%",height:"84%" }} fill="none">
-            <circle cx="100" cy="100" r="88" stroke="rgba(220,150,130,0.2)" strokeWidth="1.5"/>
-            <circle cx="100" cy="100" r="78" stroke="rgba(220,150,130,0.12)" strokeWidth="0.8"/>
-            {[0,60,120,180,240,300].map(a=>(
-              <ellipse key={a} cx="100" cy="54" rx="14" ry="22"
-                fill="rgba(200,80,80,0.28)" stroke="rgba(240,160,140,0.3)" strokeWidth="0.8"
-                transform={`rotate(${a} 100 100)`}/>
-            ))}
-            {[30,90,150,210,270,330].map(a=>(
-              <ellipse key={a} cx="100" cy="63" rx="11" ry="17"
-                fill="rgba(210,90,90,0.36)"
-                transform={`rotate(${a} 100 100)`}/>
-            ))}
-            {[15,75,135,195,255,315].map(a=>(
-              <ellipse key={a} cx="100" cy="73" rx="8" ry="12"
-                fill="rgba(220,100,100,0.44)"
-                transform={`rotate(${a} 100 100)`}/>
-            ))}
-            <circle cx="100" cy="100" r="12" fill="rgba(215,95,95,0.6)"/>
-            <circle cx="100" cy="100" r="7"  fill="rgba(235,115,115,0.7)"/>
-            <circle cx="100" cy="100" r="3"  fill="rgba(248,145,135,0.8)"/>
-          </svg>
-        </div>
-      )}
+      <Image src="/rose-seal.png" alt="Gül Mühür" fill className="object-contain" />
     </div>
   );
 }
@@ -212,24 +157,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           </div>
         </div>
 
-        {/* Alt Kısım: Müzik Çalar Tasarımı (Görseldeki gibi) */}
-        <div className="w-full px-10 pb-12 pt-6 flex flex-col items-center z-10 opacity-30">
-           <div className="flex items-center gap-10 text-white mb-6">
-             {/* Geri */}
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
-             {/* Play */}
-             <svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" onClick={() => document.dispatchEvent(new CustomEvent("muzik-baslat"))} className="cursor-pointer hover:scale-110 transition-transform"><path d="M8 5v14l11-7z"/></svg>
-             {/* İleri */}
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
-           </div>
-           
-           {/* Süre çubuğu */}
-           <div className="flex items-center justify-between w-full max-w-sm text-[12px] tracking-widest text-white/60 font-sans">
-             <span>00:00</span>
-             <div className="flex-1 h-[2px] bg-white/20 mx-4 relative rounded-full"></div>
-             <span>00:47</span>
-           </div>
-        </div>
 
       </div>
       )}
