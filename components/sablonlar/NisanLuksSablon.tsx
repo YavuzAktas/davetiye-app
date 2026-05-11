@@ -164,7 +164,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           </p>
 
           <div className="relative z-10 flex flex-col items-center"
-            style={{ opacity: animating ? 0 : 1, transform: animating ? "scale(0.7)" : "scale(1)", transition:"all 0.55s ease" }}>
+            style={{ opacity: animating ? 0 : 1, transition:"opacity 0.55s ease" }}>
             <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
 
             <div className="mt-10 text-center">
