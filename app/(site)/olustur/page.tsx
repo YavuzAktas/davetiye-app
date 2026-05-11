@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
@@ -148,6 +148,16 @@ function OlusturIcerigi() {
   });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata]             = useState("");
+  const [tutorialAcik, setTutorialAcik] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("olustur-tutorial-goruldu")) setTutorialAcik(true);
+  }, []);
+
+  function tutorialKapat() {
+    localStorage.setItem("olustur-tutorial-goruldu", "1");
+    setTutorialAcik(false);
+  }
 
   const [notAcik,        setNotAcik]        = useState(false);
   const [muzikAcik,      setMuzikAcik]      = useState(false);
@@ -166,31 +176,6 @@ function OlusturIcerigi() {
   const [polaroidler,        setPolaroidler]        = useState<[string|null,string|null,string|null]>([null,null,null]);
   const [polaroidYukleniyor, setPolaroidYukleniyor] = useState<[boolean,boolean,boolean]>([false,false,false]);
   const [polaroidAcik,       setPolaroidAcik]       = useState(false);
-
-  /* ── Preview scroll ── */
-  const previewContentRef = useRef<HTMLDivElement>(null);
-  const [previewY, setPreviewY] = useState(0);
-
-  function scrollPreviewTo(sectionId: string) {
-    requestAnimationFrame(() => {
-      if (!previewContentRef.current) return;
-      const el = previewContentRef.current.querySelector(`#${sectionId}`);
-      if (el) setPreviewY((el as HTMLElement).offsetTop);
-    });
-  }
-
-  useEffect(() => {
-    if (dressKodAcik)                        scrollPreviewTo("dresskod");
-    else if (aniAcik || polaroidAcik)        scrollPreviewTo("anilar");
-    else if (spotifyAcik)                    scrollPreviewTo("katilim");
-    else                                     setPreviewY(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dressKodAcik, aniAcik, polaroidAcik, spotifyAcik]);
-
-  useEffect(() => {
-    if (sesliAniAcik || canliDuvarAcik) scrollPreviewTo("katilim");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sesliAniAcik, canliDuvarAcik]);
 
   async function gorselSikistir(file: File, maxPx = 1400, quality = 0.85): Promise<File> {
     return new Promise((resolve) => {
@@ -319,6 +304,8 @@ function OlusturIcerigi() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
+      {tutorialAcik && <TutorialModal onKapat={tutorialKapat} />}
 
       {/* ── Üst Bar ── */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
@@ -766,26 +753,95 @@ function OlusturIcerigi() {
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Canlı Önizleme</p>
               </div>
               <TelefonMockup>
-                <div style={{ width: "100%", height: "100%", position: "relative", overflow: "hidden" }}>
-                  <div ref={previewContentRef} style={{
-                    width: NAT_W,
-                    transform: `scale(${SCALE}) translateY(-${previewY}px)`,
-                    transformOrigin: "top left",
-                    position: "absolute", top: 0, left: 0,
-                    transition: "transform 0.75s cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}>
-                    {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                    {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                    {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                    {sablonTipi === "klasik"         && <KlasikSablon        davetiye={previewVeri} rsvpBileseni={null} />}
-                  </div>
+                {/* zoom ile full-size render, scrollbar gizli ama scrollable */}
+                <div style={{
+                  zoom: SCALE,
+                  width: NAT_W,
+                  height: `${Math.ceil(420 / SCALE)}px`,
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  scrollbarWidth: "none",
+                } as React.CSSProperties} className="[&::-webkit-scrollbar]:hidden">
+                  {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+                  {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+                  {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+                  {sablonTipi === "klasik"         && <KlasikSablon        davetiye={previewVeri} rsvpBileseni={null} />}
                 </div>
               </TelefonMockup>
-              <p className="text-xs text-center text-gray-400 mt-3">Yazdıkça önizleme anında güncellenir</p>
+              <div className="mt-3 flex flex-col items-center gap-1">
+                <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                  <span className="text-sm animate-bounce inline-block">↕</span>
+                  Önizlemeyi fare tekerleğiyle kaydırın
+                </p>
+                <p className="text-[10px] text-gray-300">Değişiklikler anında yansır</p>
+              </div>
             </div>
           </div>
 
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TutorialModal({ onKapat }: { onKapat: () => void }) {
+  const adimlar = [
+    {
+      numara: "1",
+      renk: "bg-purple-600",
+      bg: "bg-purple-50 border-purple-100",
+      baslik: "Temel Bilgileri Doldurun",
+      aciklama: "İsimler, tarih, saat ve mekan alanlarını girin. Bunlar davetiyenizde görünecek zorunlu bilgilerdir.",
+    },
+    {
+      numara: "2",
+      renk: "bg-amber-500",
+      bg: "bg-amber-50 border-amber-100",
+      baslik: "İstediğiniz Özellikleri Açın",
+      aciklama: "Müzik, kıyafet kodu, polaroid fotoğrafları ve daha fazlasını sağdaki toggle ile açıp kapatabilirsiniz. Her özelliğin açıklamasını okuyarak karar verin.",
+    },
+    {
+      numara: "📱",
+      renk: "bg-green-600",
+      bg: "bg-green-50 border-green-100",
+      baslik: "Canlı Önizlemeyi Kaydırın",
+      aciklama: "Sağdaki telefon ekranında davetiyenizi gerçek zamanlı görüntüleyin. Fare tekerleğiyle kaydırarak tüm bölümleri inceleyebilirsiniz.",
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onKapat} />
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 z-10">
+
+        <div className="text-center mb-5">
+          <div className="text-4xl mb-2">🎉</div>
+          <h2 className="text-lg font-bold text-gray-900">Davetiye Oluşturucu</h2>
+          <p className="text-xs text-gray-400 mt-1">Nasıl çalışır? Hızlıca öğrenelim.</p>
+        </div>
+
+        <div className="space-y-3 mb-5">
+          {adimlar.map(a => (
+            <div key={a.baslik} className={`flex gap-3 p-3.5 rounded-2xl border ${a.bg}`}>
+              <div className={`w-9 h-9 rounded-full ${a.renk} text-white font-bold text-sm flex items-center justify-center shrink-0`}>
+                {a.numara}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800 text-sm leading-tight">{a.baslik}</p>
+                <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{a.aciklama}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button onClick={onKapat}
+          className="w-full bg-purple-600 text-white py-3.5 rounded-2xl font-bold text-sm hover:bg-purple-700 active:scale-[0.99] transition-all shadow-md shadow-purple-200">
+          Hadi Başlayalım →
+        </button>
+
+        <p className="text-center text-[10px] text-gray-400 mt-2.5">
+          Bu rehber bir daha gösterilmeyecek
+        </p>
       </div>
     </div>
   );
