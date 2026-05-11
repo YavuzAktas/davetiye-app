@@ -169,7 +169,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
       {/* ── Floating action button ── */}
       <button
         onClick={() => setAcik(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 text-white text-sm font-bold px-4 py-3 rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
+        className="fixed bottom-22 right-6 z-40 flex items-center gap-2 text-white text-sm font-bold px-4 py-3 rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
         style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)`, boxShadow: `0 8px 32px ${renk}55` }}
       >
         <span className="text-lg">📸</span>
