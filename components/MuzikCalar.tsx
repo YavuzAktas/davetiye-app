@@ -98,11 +98,22 @@ function SpotifyPreviewCalar({ previewUrl, renk }: { previewUrl: string; renk: s
 function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }) {
   const containerRef   = useRef<HTMLDivElement>(null);
   const controllerRef  = useRef<any>(null);
+  const playIntentRef  = useRef(false);
   const [caliyor, setCaliyor]       = useState(false);
   const [yukleniyor, setYukleniyor] = useState(true);
 
   useEffect(() => {
     let alive = true;
+
+    // Listener erken ekle — controller hazır olmadan event gelebilir
+    const handleBaslat = () => {
+      if (controllerRef.current) {
+        controllerRef.current.play();
+      } else {
+        playIntentRef.current = true;
+      }
+    };
+    document.addEventListener("muzik-baslat", handleBaslat);
 
     const initController = (IFrameAPI: any) => {
       if (!alive || !containerRef.current) return;
@@ -116,14 +127,13 @@ function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }
             if (alive) setCaliyor(!e.data.isPaused);
           });
           ctrl.addListener("ready", () => {
-            if (alive) setYukleniyor(false);
+            if (!alive) return;
+            setYukleniyor(false);
+            if (playIntentRef.current) {
+              ctrl.play();
+              playIntentRef.current = false;
+            }
           });
-          // Mühür tıklaması — controller hazır olunca çal
-          const handleBaslat = () => { ctrl.play(); };
-          document.addEventListener("muzik-baslat", handleBaslat);
-          // Cleanup: alive=false olunca listener kaldır
-          const origCleanup = () => document.removeEventListener("muzik-baslat", handleBaslat);
-          (ctrl as any)._muzikBaslatCleanup = origCleanup;
         }
       );
     };
@@ -150,7 +160,7 @@ function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }
 
     return () => {
       alive = false;
-      controllerRef.current?._muzikBaslatCleanup?.();
+      document.removeEventListener("muzik-baslat", handleBaslat);
     };
   }, [trackId]);
 

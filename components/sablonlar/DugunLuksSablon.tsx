@@ -148,9 +148,12 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
   const scroll = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
 
-  /* ══ KAPALI DURUM ══ */
-  if (!acildi) {
-    return (
+  return (
+    <>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
+
+      {/* ══ KAPALI DURUM ══ */}
+      {!acildi && (
       <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden select-none"
         style={{ background:`radial-gradient(ellipse at 50% 45%,#1E3A6E 0%,${BG} 55%,${BG_DARK} 100%)` }}>
 
@@ -187,12 +190,11 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
           </div>
         </div>
       </div>
-    );
-  }
+      )}
 
-  /* ══ AÇIK DURUM ══ */
-  return (
-    <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
+      {/* ══ AÇIK DURUM ══ */}
+      {acildi && (
+      <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
 
       {/* ─── NAV ─── */}
       <nav style={{
@@ -296,7 +298,6 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
           }}>↓</div>
         </div>
 
-        {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
       </section>
 
       {/* ════════════════════════════════════
@@ -475,6 +476,8 @@ export default function DugunLuksSablon({ davetiye }: SablonProps) {
 
       <style>{`@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}`}</style>
     </div>
+      )}
+    </>
   );
 }
 
