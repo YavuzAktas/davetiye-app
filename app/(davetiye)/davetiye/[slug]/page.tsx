@@ -45,8 +45,10 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
-  const spotifyAktif = (davetiye as any).spotifyAktif ?? false;
-  const albumAktif   = planOzellikVar(davetiye.user?.plan ?? "free", "album");
+  const spotifyAktif    = (davetiye as any).spotifyAktif ?? false;
+  const albumAktif      = planOzellikVar(davetiye.user?.plan ?? "free", "album");
+  const sesliAniAktif   = (davetiye as any).sesliAniAktif  ?? false;
+  const canliDuvarAktif = (davetiye as any).canliDuvarAktif ?? false;
 
   const veri: DavetiyeVeri = {
     id: davetiye.id,
@@ -72,6 +74,8 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     polaroid1: (davetiye as any).polaroid1 ?? null,
     polaroid2: (davetiye as any).polaroid2 ?? null,
     polaroid3: (davetiye as any).polaroid3 ?? null,
+    sesliAniAktif,
+    canliDuvarAktif,
   };
 
   const rsvpBileseni = (

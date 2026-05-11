@@ -4,6 +4,8 @@ import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import MuzikCalar from "@/components/MuzikCalar";
+import SesliAniDefteri from "@/components/SesliAniDefteri";
+import CanliDuvar from "@/components/CanliDuvar";
 
 /* ─── Renkler ─── */
 const BG      = "#3B0A14";
@@ -512,6 +514,24 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           </div>
         )}
       </section>
+
+      {/* ════════════════════════════════════
+          BÖLÜM 6 — SESLİ ANI DEFTERİ
+      ════════════════════════════════════ */}
+      {davetiye.sesliAniAktif && (
+        <section style={{ background: BG_DARK, padding: "0 0 8px" }}>
+          <SesliAniDefteri slug={davetiye.slug} />
+        </section>
+      )}
+
+      {/* ════════════════════════════════════
+          BÖLÜM 7 — CANLI FOTOĞRAF DUVARI
+      ════════════════════════════════════ */}
+      {davetiye.canliDuvarAktif && (
+        <section style={{ background: BG, padding: "0 0 8px" }}>
+          <CanliDuvar slug={davetiye.slug} />
+        </section>
+      )}
 
       {/* ─── Footer ─── */}
       <footer style={{

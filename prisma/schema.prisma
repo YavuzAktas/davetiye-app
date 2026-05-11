@@ -96,9 +96,25 @@ model Davetiye {
   polaroid1           String?
   polaroid2           String?
   polaroid3           String?
+  sesliAniAktif       Boolean  @default(false)
+  canliDuvarAktif     Boolean  @default(false)
+  sesliAnilar         SesliAni[]
 
   @@index([userId])
   @@index([aktif])
+}
+
+model SesliAni {
+  id         String   @id @default(cuid())
+  davetiyeId String
+  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  adSoyad    String
+  dosyaUrl   String
+  sure       Int
+  onaylandi  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([davetiyeId])
 }
 
 model AlbumFoto {

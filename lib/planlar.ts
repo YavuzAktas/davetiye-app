@@ -10,6 +10,8 @@ export type PlanOzellikler = {
   oturmaPlan: boolean;
   album: boolean;
   analitik: boolean;
+  sesliAni: boolean;
+  canliDuvar: boolean;
 };
 
 export const PLAN_CONFIG: Record<PlanTipi, PlanOzellikler> = {
@@ -23,6 +25,8 @@ export const PLAN_CONFIG: Record<PlanTipi, PlanOzellikler> = {
     oturmaPlan:   false,
     album:        false,
     analitik:     false,
+    sesliAni:     false,
+    canliDuvar:   false,
   },
   standart: {
     maxDavetiye:  5,
@@ -34,6 +38,8 @@ export const PLAN_CONFIG: Record<PlanTipi, PlanOzellikler> = {
     oturmaPlan:   false,
     album:        false,
     analitik:     false,
+    sesliAni:     false,
+    canliDuvar:   false,
   },
   premium: {
     maxDavetiye:  Infinity,
@@ -45,6 +51,8 @@ export const PLAN_CONFIG: Record<PlanTipi, PlanOzellikler> = {
     oturmaPlan:   true,
     album:        true,
     analitik:     true,
+    sesliAni:     true,
+    canliDuvar:   true,
   },
 };
 
@@ -75,7 +83,7 @@ export const PLAN_META: Record<PlanTipi, { isim: string; ozellikler: string[] }>
   },
   premium: {
     isim: "Premium",
-    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Detaylı analitik", "Öncelikli destek"],
+    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Sesli Anı Defteri", "Canlı Fotoğraf Duvarı", "Detaylı analitik", "Öncelikli destek"],
   },
 };
 

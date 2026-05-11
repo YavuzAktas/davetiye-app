@@ -69,12 +69,15 @@ function OlusturIcerigi() {
   const [hata, setHata]             = useState("");
   const [aktifTab, setAktifTab]     = useState<"icerik" | "tasarim">("icerik");
 
-  const [notAcik,     setNotAcik]     = useState(false);
-  const [muzikAcik,   setMuzikAcik]   = useState(false);
-  const [spotifyAcik, setSpotifyAcik] = useState(false);
-  const [aniAcik,     setAniAcik]     = useState(false);
+  const [notAcik,       setNotAcik]       = useState(false);
+  const [muzikAcik,     setMuzikAcik]     = useState(false);
+  const [spotifyAcik,   setSpotifyAcik]   = useState(false);
+  const [aniAcik,       setAniAcik]       = useState(false);
+  const [sesliAniAcik,  setSesliAniAcik]  = useState(false);
+  const [canliDuvarAcik, setCanliDuvarAcik] = useState(false);
 
-  const hasPolaroid = sablonTipi === "nisan-luks";
+  const hasPolaroid        = sablonTipi === "nisan-luks";
+  const hasSesliOzellikler = sablonId   === "nisan-luks";
   const [polaroidler, setPolaroidler] = useState<[string|null, string|null, string|null]>([null, null, null]);
   const [polaroidYukleniyor, setPolaroidYukleniyor] = useState<[boolean, boolean, boolean]>([false, false, false]);
 
@@ -91,8 +94,10 @@ function OlusturIcerigi() {
     }
   }
 
-  const muzikAktif = planOzellikVar(userPlan, "muzik");
-  const aniAktif   = planOzellikVar(userPlan, "album");
+  const muzikAktif     = planOzellikVar(userPlan, "muzik");
+  const aniAktif       = planOzellikVar(userPlan, "album");
+  const sesliAniAktif  = planOzellikVar(userPlan, "sesliAni");
+  const canliDuvarAktif = planOzellikVar(userPlan, "canliDuvar");
 
   type SpPlaylist = { id: string; isim: string; kapak: string | null; sarki: number };
   const [spPlaylists,   setSpPlaylists]   = useState<SpPlaylist[] | null>(null);
@@ -132,6 +137,8 @@ function OlusturIcerigi() {
           polaroid1: polaroidler[0],
           polaroid2: polaroidler[1],
           polaroid3: polaroidler[2],
+          sesliAniAktif:   sesliAniAcik,
+          canliDuvarAktif: canliDuvarAcik,
         }),
       });
       const data = await res.json();
@@ -167,6 +174,8 @@ function OlusturIcerigi() {
     polaroid1: polaroidler[0],
     polaroid2: polaroidler[1],
     polaroid3: polaroidler[2],
+    sesliAniAktif: false,
+    canliDuvarAktif: false,
   };
 
   return (
@@ -512,6 +521,44 @@ function OlusturIcerigi() {
                     </div>
                   </div>
                 </OzellikKarti>
+
+                {/* 🎙️ Sesli Anı Defteri — sadece nisan-luks */}
+                {hasSesliOzellikler && (
+                  <OzellikKarti
+                    emoji="🎙️" baslik="Sesli Anı Defteri" alt="Misafirler 30 saniyelik sesli mesaj bırakabilsin"
+                    badge="👑 Premium" badgeRenk="amber"
+                    acik={sesliAniAktif && sesliAniAcik}
+                    onToggle={() => sesliAniAktif && setSesliAniAcik(!sesliAniAcik)}
+                    upsell={!sesliAniAktif}
+                  >
+                    <div className="bg-amber-50 rounded-xl p-4 flex gap-3">
+                      <span className="text-xl shrink-0">🎙️</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-0.5">Sesli Anı Defteri Etkin</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">Misafirler tarayıcıdan sesli anı kaydedebilir. Dashboard'dan onaylayabilirsin.</p>
+                      </div>
+                    </div>
+                  </OzellikKarti>
+                )}
+
+                {/* 🖼️ Canlı Fotoğraf Duvarı — sadece nisan-luks */}
+                {hasSesliOzellikler && (
+                  <OzellikKarti
+                    emoji="🖼️" baslik="Canlı Fotoğraf Duvarı" alt="Misafirler fotoğraf paylaşsın, anında duvarda görünsün"
+                    badge="👑 Premium" badgeRenk="amber"
+                    acik={canliDuvarAktif && canliDuvarAcik}
+                    onToggle={() => canliDuvarAktif && setCanliDuvarAcik(!canliDuvarAcik)}
+                    upsell={!canliDuvarAktif}
+                  >
+                    <div className="bg-amber-50 rounded-xl p-4 flex gap-3">
+                      <span className="text-xl shrink-0">📸</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-0.5">Canlı Fotoğraf Duvarı Etkin</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">Yüklenen fotoğraflar otomatik onaylanır ve anında duvarda görünür.</p>
+                      </div>
+                    </div>
+                  </OzellikKarti>
+                )}
 
                 <div className="h-4" />
               </div>

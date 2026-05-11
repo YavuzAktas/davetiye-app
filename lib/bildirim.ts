@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-type BildirimTip = "rsvp" | "album" | "ani";
+type BildirimTip = "rsvp" | "album" | "ani" | "sesli-ani";
 
 export async function bildirimOlustur({
   userId,

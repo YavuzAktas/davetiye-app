@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif, spotifyPlaylistId: gelenPlaylistId, polaroid1, polaroid2, polaroid3 } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif, spotifyPlaylistId: gelenPlaylistId, polaroid1, polaroid2, polaroid3, sesliAniAktif, canliDuvarAktif } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
@@ -38,6 +38,20 @@ export async function POST(req: NextRequest) {
   if ((muzik || spotifyAktif) && !planOzellikVar(user.plan, "muzik")) {
     return NextResponse.json(
       { hata: "Müzik özellikleri Standart ve Premium planlara özel.", upsell: true },
+      { status: 403 }
+    );
+  }
+
+  if (sesliAniAktif && !planOzellikVar(user.plan, "sesliAni")) {
+    return NextResponse.json(
+      { hata: "Sesli Anı Defteri Premium plana özel.", upsell: true },
+      { status: 403 }
+    );
+  }
+
+  if (canliDuvarAktif && !planOzellikVar(user.plan, "canliDuvar")) {
+    return NextResponse.json(
+      { hata: "Canlı Fotoğraf Duvarı Premium plana özel.", upsell: true },
       { status: 403 }
     );
   }
@@ -96,6 +110,8 @@ export async function POST(req: NextRequest) {
       polaroid1:        polaroid1 || null,
       polaroid2:        polaroid2 || null,
       polaroid3:        polaroid3 || null,
+      sesliAniAktif:    !!sesliAniAktif,
+      canliDuvarAktif:  !!canliDuvarAktif,
     },
   });
 
