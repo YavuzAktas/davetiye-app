@@ -162,13 +162,24 @@ export default function EtkilesimButonu({
     if (!window.MediaRecorder) {
       setSesHata("Tarayıcınız ses kaydını desteklemiyor. Chrome veya Firefox kullanın."); return;
     }
+
+    /* Permissions API ile önce mevcut durumu kontrol et */
+    try {
+      const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
+      if (perm.state === "denied") {
+        setSesHata("Mikrofon erişimi engellenmiş. Chrome'da: adres çubuğu → kilit ikonu → Site ayarları → Mikrofon → İzin ver → sayfayı yenile.");
+        setIzinReddedildi(true);
+        return;
+      }
+    } catch { /* Permissions API desteklenmiyorsa getUserMedia'ya bırak */ }
+
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err: unknown) {
       const name = (err as { name?: string }).name ?? "";
       if (name === "NotAllowedError" || name === "PermissionDeniedError") {
-        setSesHata("Mikrofon izni reddedildi. Adres çubuğundaki kilit ikonundan mikrofon iznini açın.");
+        setSesHata("Mikrofon izni reddedildi. Adres çubuğu → kilit ikonu → Site ayarları → Mikrofon → İzin ver → sayfayı yenile.");
         setIzinReddedildi(true);
       }
       else if (name === "NotFoundError")
@@ -502,19 +513,29 @@ export default function EtkilesimButonu({
                     <input type="text" placeholder="Adınız Soyadınız" value={sesliAd}
                       onChange={e => setSesliAd(e.target.value)} maxLength={60}
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white" />
-                    {sesHata && <p className="text-xs text-red-500">{sesHata}</p>}
-                    {izinReddedildi && (
-                      <button onClick={() => window.location.reload()}
-                        className="w-full py-2.5 rounded-xl text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
-                        🔄 Sayfayı Yenile
-                      </button>
-                    )}
-                    {!izinReddedildi && (
-                      <button onClick={kaydiBaslat}
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
-                        style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
-                        🎙️ Kayıt Başlat
-                      </button>
+                    {izinReddedildi ? (
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 flex flex-col gap-2.5">
+                        <p className="text-xs font-semibold text-amber-800">Mikrofon erişimi engellendi</p>
+                        <ol className="text-xs text-amber-700 space-y-0.5 list-decimal list-inside leading-relaxed">
+                          <li>Adres çubuğundaki <strong>kilit 🔒</strong> ikonuna tıkla</li>
+                          <li><strong>Site ayarları</strong>'nı aç</li>
+                          <li>Mikrofon → <strong>İzin ver</strong> olarak değiştir</li>
+                          <li>Aşağıdaki butona tıkla</li>
+                        </ol>
+                        <button onClick={() => window.location.reload()}
+                          className="w-full py-2.5 rounded-xl text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
+                          🔄 Sayfayı Yenile
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {sesHata && <p className="text-xs text-red-500">{sesHata}</p>}
+                        <button onClick={kaydiBaslat}
+                          className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
+                          style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
+                          🎙️ Kayıt Başlat
+                        </button>
+                      </>
                     )}
                   </div>
                 )}
