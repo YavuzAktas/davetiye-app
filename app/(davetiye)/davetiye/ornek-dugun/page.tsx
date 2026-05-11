@@ -29,6 +29,8 @@ const ORNEK: DavetiyeVeri = {
   polaroid3: null,
   sesliAniAktif: false,
   canliDuvarAktif: false,
+  dressKod: null,
+  dressKodRenkler: null,
 };
 
 export default function OrnekDugunSayfasi() {

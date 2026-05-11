@@ -99,6 +99,8 @@ model Davetiye {
   sesliAniAktif       Boolean  @default(false)
   canliDuvarAktif     Boolean  @default(false)
   sesliAnilar         SesliAni[]
+  dressKod            String?
+  dressKodRenkler     String?
 
   @@index([userId])
   @@index([aktif])

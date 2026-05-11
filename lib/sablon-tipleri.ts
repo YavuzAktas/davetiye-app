@@ -24,6 +24,8 @@ export interface DavetiyeVeri {
   polaroid3: string | null;
   sesliAniAktif: boolean;
   canliDuvarAktif: boolean;
+  dressKod: string | null;
+  dressKodRenkler: string | null;
 }
 
 export interface SablonProps {

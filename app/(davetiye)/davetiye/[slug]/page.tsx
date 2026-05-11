@@ -76,6 +76,8 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     polaroid3: (davetiye as any).polaroid3 ?? null,
     sesliAniAktif,
     canliDuvarAktif,
+    dressKod: (davetiye as any).dressKod ?? null,
+    dressKodRenkler: (davetiye as any).dressKodRenkler ?? null,
   };
 
   const rsvpBileseni = (

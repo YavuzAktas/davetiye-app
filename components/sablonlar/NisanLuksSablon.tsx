@@ -65,17 +65,20 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
     <div style={{
       background:"#fff",
       borderRadius:4,
-      padding:"10px 10px 36px",
-      transform: isActive ? `rotate(${rotate}deg) scale(1.12)` : `rotate(${rotate}deg) scale(1)`,
+      /* Padding inceltildi (üst/yanlar 6px, alt 24px) ve width büyütüldü */
+      padding:"6px 6px 24px",
+      transform: isActive ? `rotate(${rotate}deg) scale(1.08)` : `rotate(${rotate}deg) scale(1)`,
       boxShadow: isActive
-        ? "0 25px 50px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.3)"
-        : "0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
-      width:170, flexShrink:0,
+        ? "0 30px 60px rgba(0,0,0,0.6), 0 10px 20px rgba(0,0,0,0.4)"
+        : "0 15px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3)",
+      width:220, /* 170'ten 220'ye büyütüldü */
+      flexShrink:0,
       transition: "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease",
-      cursor: "pointer"
+      cursor: "pointer",
+      position: "relative"
     }}>
       <div style={{
-        width:"100%", height:190,
+        width:"100%", height:240, /* Yükseklik artırıldı */
         background:`linear-gradient(135deg, #6B1828 0%, #470D1A 100%)`,
         borderRadius:2,
         display:"flex", alignItems:"center", justifyContent:"center",
@@ -154,12 +157,12 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           100%{transform:scale(1) rotate(0deg)}
         }
         @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(40px); }
+          from { opacity: 0; transform: translateY(50px); }
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes float {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          50% { transform: translateY(-12px); }
         }
       `}</style>
       {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
@@ -209,7 +212,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             </div>
           </div>
         </div>
-
 
       </div>
       )}
@@ -312,7 +314,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           BÖLÜM 2 — ANILAR (Polaroid)
       ════════════════════════════════════ */}
       {davetiye.albumAktif && <section id="anilar" style={{
-        padding:"80px 24px", textAlign:"center", background:BG
+        padding:"80px 24px 100px", textAlign:"center", background:BG
       }}>
         <p style={{
           fontFamily:"var(--font-cormorant),serif",
@@ -326,19 +328,19 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           color:CREAM, lineHeight:1.1, marginBottom:24,
         }}>En Güzel Anılar</p>
 
-        <div style={{ maxWidth:200, margin:"0 auto 52px" }}>
+        <div style={{ maxWidth:200, margin:"0 auto 60px" }}>
           <GoldDivider/>
         </div>
 
-        {/* Polaroidler */}
-        <div style={{ display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
-          <div style={{ position:"relative", width:280, height:280 }}>
+        {/* Polaroidler - Yükseklik ve yerleşimler büyüyen polaroidlere göre ayarlandı */}
+        <div style={{ display:"flex", justifyContent:"center", minHeight:420, marginBottom:20 }}>
+          <div style={{ position:"relative", width:340, height:340 }}>
             {/* Sol Polaroid */}
             <div 
               onMouseEnter={() => setAktifPolaroid(1)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(1)}
-              style={{ position:"absolute", top:45, left: -5, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease forwards 0s" }}
+              style={{ position:"absolute", top:60, left: -15, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease backwards 0s" }}
             >
               <div style={{ animation: "float 6s ease-in-out infinite 0s" }}>
                 <Polaroid rotate={-8} isActive={aktifPolaroid === 1} src={davetiye.polaroid1 ?? undefined} />
@@ -349,7 +351,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               onMouseEnter={() => setAktifPolaroid(2)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(2)}
-              style={{ position:"absolute", top:20, left: 45, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease forwards 0.2s" }}
+              style={{ position:"absolute", top:20, left: 60, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease backwards 0.2s" }}
             >
               <div style={{ animation: "float 6.5s ease-in-out infinite 0.5s" }}>
                 <Polaroid rotate={-2} isActive={aktifPolaroid === 2} src={davetiye.polaroid2 ?? undefined} />
@@ -360,10 +362,10 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               onMouseEnter={() => setAktifPolaroid(3)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(3)}
-              style={{ position:"absolute", top:40, left: 95, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease forwards 0.4s" }}
+              style={{ position:"absolute", top:50, left: 135, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease backwards 0.4s" }}
             >
               <div style={{ animation: "float 7s ease-in-out infinite 1s" }}>
-                <Polaroid rotate={5} isActive={aktifPolaroid === 3} src={davetiye.polaroid3 ?? undefined} />
+                <Polaroid rotate={6} isActive={aktifPolaroid === 3} src={davetiye.polaroid3 ?? undefined} />
               </div>
             </div>
           </div>
@@ -523,6 +525,96 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           </div>
         )}
       </section>
+
+      {/* ════════════════════════════════════
+          BÖLÜM 6 — DRESS CODE
+      ════════════════════════════════════ */}
+      {davetiye.dressKod && (() => {
+        let renkler: [string,string,string] = ["#E8C4CC","#F5E6D3","#B5A47A"];
+        try {
+          const parsed = JSON.parse(davetiye.dressKodRenkler ?? "[]");
+          if (Array.isArray(parsed) && parsed.length >= 3) renkler = parsed.slice(0,3) as [string,string,string];
+        } catch { /* varsayılan renkler */ }
+
+        const MOODBOARD = [
+          { ikon:"👗", etiket:"Kadın", ipucu:"Kokteyl elbise\nveya şık takım" },
+          { ikon:"🕴️", etiket:"Erkek",  ipucu:"Takım elbise\nveya blazer" },
+          { ikon:"✨", etiket:"Aksesuar", ipucu:"Sade & zarif\ndokunuşlar" },
+        ];
+
+        return (
+          <section id="dresskod" style={{ padding:"80px 24px 90px", textAlign:"center", background:BG_MED }}>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em",
+              color:GOLD, textTransform:"uppercase", marginBottom:14 }}>Lütfen dikkat</p>
+
+            <p style={{ fontFamily:"var(--font-dancing),cursive",
+              fontSize:"clamp(2.4rem,7vw,3.8rem)", color:CREAM, lineHeight:1.1, marginBottom:8 }}>
+              Kıyafet Kodu
+            </p>
+
+            <p style={{ fontFamily:"var(--font-cormorant),serif",
+              fontSize:"clamp(1.4rem,4vw,2rem)", fontStyle:"italic",
+              color:GOLD, marginBottom:32, letterSpacing:"0.08em" }}>
+              {davetiye.dressKod}
+            </p>
+
+            <div style={{ maxWidth:180, margin:"0 auto 44px" }}><GoldDivider/></div>
+
+            {/* Renk Paleti */}
+            <div style={{ display:"flex", justifyContent:"center", gap:20, marginBottom:52, flexWrap:"wrap" }}>
+              {renkler.map((renk, i) => (
+                <div key={i} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:10 }}>
+                  <div style={{
+                    width:60, height:60, borderRadius:"50%",
+                    background:renk,
+                    boxShadow:`0 4px 18px ${renk}88, 0 0 0 3px ${BG_MED}, 0 0 0 5px ${renk}55`,
+                  }}/>
+                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10,
+                    letterSpacing:"0.15em", color:`${CREAM}50`, textTransform:"uppercase" }}>
+                    {["Ana","Vurgu","Tamamlayıcı"][i]}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Moodboard */}
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em",
+              color:`${GOLD}70`, textTransform:"uppercase", marginBottom:16 }}>İlham Panosu</p>
+
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, maxWidth:360, margin:"0 auto 36px" }}>
+              {MOODBOARD.map((m, i) => (
+                <div key={i} style={{
+                  borderRadius:12, overflow:"hidden",
+                  background:`linear-gradient(160deg, ${renkler[i]}33 0%, ${renkler[(i+1)%3]}44 50%, ${renkler[(i+2)%3]}22 100%)`,
+                  border:`1px solid ${renkler[i]}40`,
+                  padding:"20px 10px 16px",
+                  display:"flex", flexDirection:"column", alignItems:"center", gap:8,
+                  aspectRatio:"2/3",
+                }}>
+                  <span style={{ fontSize:28 }}>{m.ikon}</span>
+                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11,
+                    fontWeight:700, letterSpacing:"0.18em",
+                    color:CREAM, textTransform:"uppercase" }}>{m.etiket}</p>
+                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11,
+                    fontStyle:"italic", color:`${CREAM}70`, lineHeight:1.5,
+                    whiteSpace:"pre-line", textAlign:"center" }}>{m.ipucu}</p>
+                  {/* Küçük renk şeridi */}
+                  <div style={{ marginTop:"auto", display:"flex", gap:4 }}>
+                    {[renkler[i], renkler[(i+1)%3]].map((r,j) => (
+                      <div key={j} style={{ width:18, height:4, borderRadius:2, background:r }}/>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13,
+              fontStyle:"italic", color:`${CREAM}50`, maxWidth:280, margin:"0 auto" }}>
+              Yukarıdaki renk paletinden ilham alarak kıyafetinizi seçebilirsiniz ✦
+            </p>
+          </section>
+        );
+      })()}
 
       {/* ─── Footer ─── */}
       <footer style={{
