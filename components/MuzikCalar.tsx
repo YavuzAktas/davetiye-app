@@ -170,11 +170,10 @@ function SpotifyIframeCalar({ trackId, renk }: { trackId: string; renk: string }
   return (
     <>
       {/*
-        transform: translateZ(0) — Spotify iframe'i position:fixed kullanıyor.
-        transform olan bir parent, fixed child'ların containing block'u olur,
-        böylece iframe -9999px'de kalır, viewport'a sızmaz.
+        Tam kendi boyutu kadar dışarı çıkar → tarayıcı yükler.
+        transform → fixed child'lar için containing block, viewport'a sızmaz.
       */}
-      <div style={{ position: "fixed", left: -9999, top: -9999, transform: "translateZ(0)", pointerEvents: "none" }}>
+      <div style={{ position: "fixed", left: -300, top: -80, transform: "translateZ(0)", pointerEvents: "none" }}>
         <div ref={containerRef} style={{ width: 300, height: 80 }} />
       </div>
       <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} yukleniyor={yukleniyor} />
