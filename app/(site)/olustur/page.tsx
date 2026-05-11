@@ -292,7 +292,7 @@ function OlusturIcerigi() {
     kisi1:          form.kisi1 || null,
     kisi2:          form.kisi2 || null,
     spotifyAktif:   spotifyAcik,
-    albumAktif:     aniAcik,
+    albumAktif:     polaroidAcik,
     polaroid1:      polaroidAcik ? polaroidler[0] : null,
     polaroid2:      polaroidAcik ? polaroidler[1] : null,
     polaroid3:      polaroidAcik ? polaroidler[2] : null,
