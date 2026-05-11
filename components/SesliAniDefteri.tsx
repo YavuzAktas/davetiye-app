@@ -45,8 +45,34 @@ export default function SesliAniDefteri({ slug }: { slug: string }) {
       return;
     }
     setHataMsg("");
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setHataMsg("Tarayıcınız mikrofon erişimini desteklemiyor. Lütfen güncel bir tarayıcı kullanın.");
+      return;
+    }
+    if (!window.MediaRecorder) {
+      setHataMsg("Tarayıcınız ses kaydını desteklemiyor. Chrome veya Firefox ile deneyin.");
+      return;
+    }
+
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err: unknown) {
+      const name = (err as { name?: string }).name ?? "";
+      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+        setHataMsg("Mikrofon izni reddedildi. Tarayıcı adres çubuğundaki kilit/mikrofon ikonuna tıklayıp izin verin, ardından sayfayı yenileyin.");
+      } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+        setHataMsg("Mikrofon bulunamadı. Cihazınızda mikrofon bağlı olduğundan emin olun.");
+      } else if (name === "NotReadableError" || name === "TrackStartError") {
+        setHataMsg("Mikrofon başka bir uygulama tarafından kullanılıyor. Diğer uygulamaları kapatıp tekrar deneyin.");
+      } else {
+        setHataMsg(`Mikrofona erişilemedi: ${name || "Bilinmeyen hata"}. Sayfayı yenileyip tekrar deneyin.`);
+      }
+      return;
+    }
+
+    try {
       chunksRef.current = [];
       const recorder = new MediaRecorder(stream);
       recorderRef.current = recorder;
@@ -81,8 +107,10 @@ export default function SesliAniDefteri({ slug }: { slug: string }) {
           return p - 1;
         });
       }, 1000);
-    } catch {
-      setHataMsg("Mikrofon erişimi reddedildi.");
+    } catch (err: unknown) {
+      stream.getTracks().forEach((t) => t.stop());
+      const name = (err as { name?: string }).name ?? "";
+      setHataMsg(`Kayıt başlatılamadı: ${name || "Bilinmeyen hata"}. Sayfayı yenileyip tekrar deneyin.`);
     }
   }
 
