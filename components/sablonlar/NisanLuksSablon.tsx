@@ -27,7 +27,6 @@ function GoldDivider() {
 /* ─── Gül Mühür ─── */
 function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void }) {
   const [imgFailed, setImgFailed] = useState(false);
-  const ring = Math.round(size * 0.055);
 
   return (
     <div
@@ -38,11 +37,8 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
         overflow: "hidden",
         cursor: onClick ? "pointer" : "default",
         flexShrink: 0,
-        boxShadow: `
-          0 0 0 ${ring}px ${BG},
-          0 0 0 ${ring + 2}px rgba(196,160,90,0.18),
-          0 20px 70px rgba(10,0,6,0.7)
-        `,
+        /* Kalın halka kaldırıldı, sadece gerçekçi bir gölge bırakıldı */
+        boxShadow: `0 15px 40px rgba(0,0,0,0.5)`,
       }}
     >
       {!imgFailed ? (
@@ -172,7 +168,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
 
       {/* ══ KAPALI DURUM ══ */}
       {!acildi && (
-      <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden select-none"
+      <div className="min-h-screen flex flex-col relative overflow-hidden select-none"
         style={{ background:`radial-gradient(ellipse at 50% 45%,#5C1020 0%,${BG} 55%,${BG_DARK} 100%)` }}>
 
         <div className="absolute inset-0 pointer-events-none" style={{
@@ -180,36 +176,61 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           backgroundSize:"30px 30px",
         }}/>
 
-        <p className="relative z-10 text-center px-8 mb-12" style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:"clamp(2.6rem,8vw,4.2rem)",
-          color: CREAM,
-          lineHeight: 1.15,
-          letterSpacing: 1,
-        }}>
-          {isim1}
-          {isim2 && <><span style={{ color:GOLD }}> & </span>{isim2}</>}
-        </p>
+        {/* Orta Alan: İsimler, Mühür ve Tarih */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full mt-8">
+          <p className="relative z-10 text-center px-8 mb-10" style={{
+            fontFamily:"var(--font-dancing),cursive",
+            fontSize:"clamp(2.8rem,9vw,4.5rem)",
+            color: CREAM,
+            lineHeight: 1.15,
+            letterSpacing: 1,
+            textShadow: "0 2px 10px rgba(0,0,0,0.2)"
+          }}>
+            {isim1}
+            {isim2 && <><span style={{ color:GOLD }}> & </span>{isim2}</>}
+          </p>
 
-        <div className="relative z-10 flex flex-col items-center"
-          style={{ opacity: animating ? 0 : 1, transform: animating ? "scale(0.7)" : "scale(1)", transition:"all 0.55s ease" }}>
-          <RoseSeal size={230} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
+          <div className="relative z-10 flex flex-col items-center"
+            style={{ opacity: animating ? 0 : 1, transform: animating ? "scale(0.7)" : "scale(1)", transition:"all 0.55s ease" }}>
+            <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
 
-          <div className="mt-10 text-center">
-            {tarihKisa && (
+            <div className="mt-10 text-center">
+              {tarihKisa && (
+                <p style={{
+                  fontFamily:"var(--font-cormorant),serif",
+                  fontSize:15, letterSpacing:"0.4em",
+                  color:GOLD, marginBottom:12, fontWeight: 600,
+                  textShadow: "0 2px 10px rgba(0,0,0,0.3)"
+                }}>{tarihKisa}</p>
+              )}
               <p style={{
                 fontFamily:"var(--font-cormorant),serif",
-                fontSize:13, letterSpacing:"0.35em",
-                color:GOLD, marginBottom:12,
-              }}>{tarihKisa}</p>
-            )}
-            <p style={{
-              fontFamily:"var(--font-cormorant),serif",
-              fontSize:13, fontStyle:"italic",
-              color:`${GOLD}70`, letterSpacing:"0.15em",
-            }}>Mühüre dokun ✦</p>
+                fontSize:13, fontStyle:"italic",
+                color:`${GOLD}70`, letterSpacing:"0.15em",
+              }}>Mühüre dokun ✦</p>
+            </div>
           </div>
         </div>
+
+        {/* Alt Kısım: Müzik Çalar Tasarımı (Görseldeki gibi) */}
+        <div className="w-full px-10 pb-12 pt-6 flex flex-col items-center z-10 opacity-30">
+           <div className="flex items-center gap-10 text-white mb-6">
+             {/* Geri */}
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+             {/* Play */}
+             <svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" onClick={() => document.dispatchEvent(new CustomEvent("muzik-baslat"))} className="cursor-pointer hover:scale-110 transition-transform"><path d="M8 5v14l11-7z"/></svg>
+             {/* İleri */}
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+           </div>
+           
+           {/* Süre çubuğu */}
+           <div className="flex items-center justify-between w-full max-w-sm text-[12px] tracking-widest text-white/60 font-sans">
+             <span>00:00</span>
+             <div className="flex-1 h-[2px] bg-white/20 mx-4 relative rounded-full"></div>
+             <span>00:47</span>
+           </div>
+        </div>
+
       </div>
       )}
 
