@@ -617,6 +617,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
       )}
 
       {/* ─── Footer ─── */}
+      {!davetiye.mesaj && (
       <footer style={{
         background:BG_DARK,
         padding:"20px 24px 80px",
@@ -628,6 +629,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
           color:CREAM,
         }}>Sizi çok seviyoruz 💛</p>
       </footer>
+      )}
 
     </div>
       )}
