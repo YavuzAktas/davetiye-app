@@ -291,11 +291,17 @@ export default function EtkilesimButonu({
       {/* Floating button */}
       <button
         onClick={() => setAcik(true)}
-        className="fixed bottom-22 right-6 z-40 flex items-center gap-2 text-white text-sm font-bold px-4 py-3 rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
-        style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)`, boxShadow: `0 8px 32px ${renk}55` }}
+        className="fixed bottom-24 right-5 z-40 flex items-center gap-2 text-white rounded-full transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+        style={{
+          padding: "10px 18px 10px 14px",
+          background: `linear-gradient(135deg, ${renk}f2, ${renk}b8)`,
+          boxShadow: `0 4px 18px ${renk}44, 0 1px 3px rgba(0,0,0,0.22)`,
+          border: `1px solid rgba(255,255,255,0.15)`,
+        }}
       >
-        <span className="text-lg">{butonEtiket}</span>
-        <span className="hidden sm:inline">
+        <span style={{ fontSize: 15, lineHeight: 1 }}>{butonEtiket}</span>
+        <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.28)", flexShrink: 0, display: "block" }} />
+        <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
           {sekmeler.length === 1 ? sekmeEtiket[sekmeler[0]].isim : "Anı & Katılım"}
         </span>
       </button>

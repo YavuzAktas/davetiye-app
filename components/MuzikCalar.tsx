@@ -12,28 +12,27 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
     <button
       onClick={onClick}
       title={caliyor ? "Müziği durdur" : "Müziği çal"}
-      className="fixed bottom-6 right-6 z-50 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+      className="fixed bottom-6 right-5 z-50 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
       style={{
-        background: `linear-gradient(135deg, ${renk}, ${renk}bb)`,
-        width: 52, height: 52,
-        boxShadow: `0 4px 20px ${renk}55`,
+        background: `linear-gradient(135deg, ${renk}f0, ${renk}c0)`,
+        width: 46, height: 46,
+        boxShadow: caliyor
+          ? `0 0 0 3px rgba(255,255,255,0.12), 0 4px 18px ${renk}55`
+          : `0 4px 14px ${renk}44`,
+        border: `1px solid rgba(255,255,255,0.15)`,
       }}
     >
       {yukleniyor ? (
-        <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
       ) : caliyor ? (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-          <rect x="6" y="4" width="4" height="16" rx="1" />
-          <rect x="14" y="4" width="4" height="16" rx="1" />
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+          <rect x="6" y="4" width="4" height="16" rx="1.5" />
+          <rect x="14" y="4" width="4" height="16" rx="1.5" />
         </svg>
       ) : (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
           <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
-      )}
-      {caliyor && (
-        <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse border-2 border-white"
-          style={{ backgroundColor: renk }} />
       )}
     </button>
   );
