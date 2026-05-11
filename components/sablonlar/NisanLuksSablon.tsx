@@ -51,9 +51,16 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
   );
 }
 
+function gecerliResimUrl(url?: string): boolean {
+  if (!url) return false;
+  try { const u = new URL(url); return u.protocol === "https:" || u.protocol === "http:"; }
+  catch { return false; }
+}
+
 /* ─── Polaroid kart ─── */
 function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?:boolean; src?:string }) {
   const [imgHata, setImgHata] = useState(false);
+  const gecerli = gecerliResimUrl(src);
   return (
     <div style={{
       background:"#fff",
@@ -75,7 +82,7 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
         overflow: "hidden",
         WebkitTransform: "translateZ(0)",
       }}>
-        {src && !imgHata ? (
+        {gecerli && !imgHata ? (
           <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt=""
             loading="eager" crossOrigin="anonymous"
             onError={() => setImgHata(true)} />
