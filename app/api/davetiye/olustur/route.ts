@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { authOptions } from "@/lib/auth";
 import { PLAN_CONFIG, LUKS_SABLON_IDS, planOzellikVar, PlanTipi } from "@/lib/planlar";
+import { tokenYenile, playlistOlustur } from "@/lib/spotify";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -12,16 +13,15 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, spotifyAktif, spotifyPlaylistId: gelenPlaylistId } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
   }
 
-  // Plan ve davetiye sayısını tek sorguda al — session.user.id ile ekstra findUnique kaldırıldı
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, plan: true },
+    select: { id: true, plan: true, spotifyRefreshToken: true },
   });
 
   if (!user) {
@@ -60,22 +60,39 @@ export async function POST(req: NextRequest) {
   const slug = nanoid(10);
   const tarihSaat = saat ? new Date(`${tarih}T${saat}:00`) : new Date(tarih);
 
+  // Spotify playlist kur — mevcut seçildiyse direkt kullan, yoksa yeni oluştur
+  let spotifyPlaylistId: string | null = gelenPlaylistId ?? null;
+  if (spotifyAktif && !spotifyPlaylistId && user!.spotifyRefreshToken) {
+    try {
+      const accessToken = await tokenYenile(user!.spotifyRefreshToken);
+      const meRes  = await fetch("https://api.spotify.com/v1/me", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const me       = await meRes.json();
+      const playlist = await playlistOlustur(me.id, `🎵 ${baslik}`, accessToken);
+      spotifyPlaylistId = playlist.id;
+    } catch {
+      // Playlist oluşturulamazsa devam et — RSVP'de tekrar denenecek
+    }
+  }
+
   const davetiye = await prisma.davetiye.create({
     data: {
       slug,
       baslik,
       etkinlikTur,
-      tarih: tarihSaat,
+      tarih:        tarihSaat,
       mekan,
       mesaj,
       sablon,
-      font:     font  || "font-sans",
-      ozelRenk:    renk  || null,
-      muzik:       muzik || null,
-      spotifyAktif: !!spotifyAktif,
-      userId:      user.id,
-      kisi1:       kisi1 || null,
-      kisi2:       kisi2 || null,
+      font:             font  || "font-sans",
+      ozelRenk:         renk  || null,
+      muzik:            muzik || null,
+      spotifyAktif:     !!spotifyAktif,
+      spotifyPlaylistId: spotifyPlaylistId,
+      userId:           user!.id,
+      kisi1:            kisi1 || null,
+      kisi2:            kisi2 || null,
     },
   });
 
