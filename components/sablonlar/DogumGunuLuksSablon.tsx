@@ -149,6 +149,8 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
 
   return (
     <>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
+
       {/* ══ KAPALI DURUM ══ */}
       {!acildi && (
       <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden select-none"
@@ -169,7 +171,7 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
 
         <div className="relative z-10 flex flex-col items-center"
           style={{ opacity:animating?0:1, transform:animating?"scale(0.7)":"scale(1)", transition:"all 0.55s ease" }}>
-          <BirthdaySeal size={230} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => { setAcildi(true); document.dispatchEvent(new CustomEvent("davetiye-acildi")); }, 580); }}/>
+          <BirthdaySeal size={230} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }}/>
 
           <div className="mt-10 text-center">
             {tarihKisa && (
@@ -192,7 +194,6 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
       {/* ══ AÇIK DURUM ══ */}
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ─── NAV ─── */}
       <nav style={{

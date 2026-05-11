@@ -9,8 +9,6 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
   caliyor: boolean; onClick: () => void; renk: string; yukleniyor?: boolean;
 }) {
   return (
-    <>
-    <style>{`@keyframes butonCik{from{opacity:0;transform:translateY(18px) scale(0.8)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
     <button
       onClick={onClick}
       title={caliyor ? "Müziği durdur" : "Müziği çal"}
@@ -22,7 +20,6 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
           ? `0 0 0 3px rgba(255,255,255,0.12), 0 4px 18px ${renk}55`
           : `0 4px 14px ${renk}44`,
         border: `1px solid rgba(255,255,255,0.15)`,
-        animation: "butonCik 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both",
       }}
     >
       {yukleniyor ? (
@@ -38,7 +35,6 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
         </svg>
       )}
     </button>
-    </>
   );
 }
 
