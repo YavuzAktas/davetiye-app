@@ -121,33 +121,6 @@ function SwatchDisk({ renk }: { renk: string }) {
   );
 }
 
-/* ─── Moodboard fotoğraf kartı ─── */
-function MoodCard({ src, gold, style }: { src: string; gold: string; style?: React.CSSProperties }) {
-  const [hata, setHata] = useState(false);
-  return (
-    <div style={{
-      borderRadius: 8,
-      overflow: "hidden",
-      border: `1px solid ${gold}40`,
-      boxShadow: `0 6px 24px rgba(0,0,0,0.45), 0 0 0 1px ${gold}18`,
-      background: `linear-gradient(135deg,#3B0A1488,#1A06088A)`,
-      ...style,
-    }}>
-      {!hata ? (
-        <img src={src} alt="" loading="lazy"
-          onError={() => setHata(true)}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-      ) : (
-        <div style={{ width:"100%", height:"100%",
-          background:`linear-gradient(160deg,#3B0A2055,#1A060855)`,
-          display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <span style={{ fontSize: 28, opacity: 0.2 }}>✦</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
 /* ─── Dress Code Bölümü ─── */
 function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dressKodRenkler: string | null }) {
   let renkler: string[] = ["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"];
@@ -180,27 +153,7 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
         {renkler.map((r, i) => <SwatchDisk key={i} renk={r} />)}
       </div>
 
-      {/* 3 — İlham Panosu */}
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em",
-        color:`${GOLD}80`, textTransform:"uppercase", marginBottom:18 }}>
-        İlham Panosu
-      </p>
-
-      {/* Asimetrik grid: sol büyük + sağda 2 yığılmış, dördüncüsü altta uzun */}
-      <div style={{ maxWidth:380, margin:"0 auto 44px",
-        display:"grid", gap:8,
-        gridTemplateColumns:"1.15fr 0.85fr",
-        gridTemplateRows:"160px 160px 130px",
-      }}>
-        <MoodCard src="/moodboard-1.jpg" gold={GOLD}
-          style={{ gridRow:"1 / 3" }} />
-        <MoodCard src="/moodboard-2.jpg" gold={GOLD} />
-        <MoodCard src="/moodboard-3.jpg" gold={GOLD} />
-        <MoodCard src="/moodboard-4.jpg" gold={GOLD}
-          style={{ gridColumn:"1 / 3" }} />
-      </div>
-
-      {/* 4 — Alt not */}
+      {/* 3 — Alt not */}
       <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14,
         fontStyle:"italic", color:`${CREAM}70`,
         maxWidth:320, margin:"0 auto", lineHeight:1.7 }}>

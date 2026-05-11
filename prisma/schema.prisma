@@ -101,6 +101,7 @@ model Davetiye {
   sesliAnilar         SesliAni[]
   dressKod            String?
   dressKodRenkler     String?
+  albumAktif          Boolean  @default(true)
 
   @@index([userId])
   @@index([aktif])

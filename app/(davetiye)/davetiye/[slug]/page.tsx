@@ -46,7 +46,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
   const spotifyAktif    = (davetiye as any).spotifyAktif ?? false;
-  const albumAktif      = planOzellikVar(davetiye.user?.plan ?? "free", "album");
+  const albumAktif      = ((davetiye as any).albumAktif ?? true) && planOzellikVar(davetiye.user?.plan ?? "free", "album");
   const sesliAniAktif   = (davetiye as any).sesliAniAktif  ?? false;
   const canliDuvarAktif = (davetiye as any).canliDuvarAktif ?? false;
 
