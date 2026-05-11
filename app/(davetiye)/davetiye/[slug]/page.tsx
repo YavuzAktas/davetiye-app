@@ -93,7 +93,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   return (
     <>
       {sablon}
-      {albumAktif && sablonTipi !== "nisan-luks" && <AlbumButonu slug={davetiye.slug} renk={temaRenk} />}
+      {albumAktif && <AlbumButonu slug={davetiye.slug} renk={temaRenk} />}
     </>
   );
 }

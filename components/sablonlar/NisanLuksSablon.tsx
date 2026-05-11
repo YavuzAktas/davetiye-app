@@ -3,7 +3,6 @@
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import imageCompression from "browser-image-compression";
 import MuzikCalar from "@/components/MuzikCalar";
 
 /* ─── Renkler ─── */
@@ -96,239 +95,32 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
   );
 }
 
-/* ─────────────────────────────────────────
-   INLINE ALBÜM & ANI BİLEŞENİ
-───────────────────────────────────────── */
-interface AlbumFoto { id: string; yukleyenAd: string; dosyaUrl: string; createdAt: string; }
-interface AniYazisi { id: string; yazarAd: string; icerik: string; createdAt: string; }
-
-function InlineAlbumBolumu({ slug }: { slug: string }) {
-  const [fotolar, setFotolar] = useState<AlbumFoto[]>([]);
-  const [anilar, setAnilar] = useState<AniYazisi[]>([]);
-  const [fotoListeYukleniyor, setFotoListeYukleniyor] = useState(true);
-  const [aniListeYukleniyor, setAniListeYukleniyor] = useState(true);
-
-  const [fotoAd, setFotoAd] = useState("");
-  const [seciliDosya, setSeciliDosya] = useState<File | null>(null);
-  const [onizleme, setOnizleme] = useState<string | null>(null);
-  const [fotoYukleniyor, setFotoYukleniyor] = useState(false);
-  const [fotoBasari, setFotoBasari] = useState(false);
-  const [fotoHata, setFotoHata] = useState("");
-  const dosyaInputRef = useRef<HTMLInputElement>(null);
-
-  const [aniAd, setAniAd] = useState("");
-  const [aniIcerik, setAniIcerik] = useState("");
-  const [aniYukleniyor, setAniYukleniyor] = useState(false);
-  const [aniBasari, setAniBasari] = useState(false);
-  const [aniHata, setAniHata] = useState("");
-
-  const [lightbox, setLightbox] = useState<AlbumFoto | null>(null);
-
-  useEffect(() => {
-    Promise.all([
-      fetch(`/api/davetiye/${slug}/album`).then(r => r.ok ? r.json() : []),
-      fetch(`/api/davetiye/${slug}/ani`).then(r => r.ok ? r.json() : []),
-    ]).then(([f, a]) => {
-      setFotolar(f);
-      setAnilar(a);
-      setFotoListeYukleniyor(false);
-      setAniListeYukleniyor(false);
-    });
-  }, [slug]);
-
-  async function dosyaSec(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setOnizleme(URL.createObjectURL(file));
-    setSeciliDosya(file);
-    setFotoHata("");
-  }
-
-  async function fotoYukle(e: React.SyntheticEvent) {
-    e.preventDefault();
-    if (!seciliDosya || !fotoAd.trim()) return;
-    setFotoYukleniyor(true); setFotoHata("");
-    try {
-      const sikistirilmis = await imageCompression(seciliDosya, { maxSizeMB:1, maxWidthOrHeight:1920, useWebWorker:true });
-      const fd = new FormData();
-      fd.append("ad", fotoAd.trim());
-      fd.append("dosya", sikistirilmis, seciliDosya.name);
-      const res = await fetch(`/api/davetiye/${slug}/album`, { method:"POST", body:fd });
-      const json = await res.json();
-      if (!res.ok) { setFotoHata(json.hata); return; }
-      setFotoBasari(true);
-      setFotoAd(""); setSeciliDosya(null); setOnizleme(null);
-      if (dosyaInputRef.current) dosyaInputRef.current.value = "";
-      setTimeout(() => setFotoBasari(false), 4000);
-    } catch { setFotoHata("Yükleme başarısız, tekrar dene."); }
-    finally { setFotoYukleniyor(false); }
-  }
-
-  async function aniGonder(e: React.SyntheticEvent) {
-    e.preventDefault();
-    if (!aniAd.trim() || !aniIcerik.trim()) return;
-    setAniYukleniyor(true); setAniHata("");
-    try {
-      const res = await fetch(`/api/davetiye/${slug}/ani`, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ ad:aniAd.trim(), icerik:aniIcerik.trim() }),
-      });
-      const json = await res.json();
-      if (!res.ok) { setAniHata(json.hata); return; }
-      setAniBasari(true);
-      setAniAd(""); setAniIcerik("");
-      setTimeout(() => setAniBasari(false), 4000);
-    } catch { setAniHata("Gönderilemedi, tekrar dene."); }
-    finally { setAniYukleniyor(false); }
-  }
-
-  const inputS: React.CSSProperties = {
-    width:"100%", background:"transparent",
-    border:"none", borderBottom:`1px solid ${GOLD}40`,
-    padding:"10px 0 8px", fontSize:13,
-    fontFamily:"var(--font-cormorant),serif",
-    color:CREAM, outline:"none", boxSizing:"border-box",
-  };
-  const lblS: React.CSSProperties = {
-    fontFamily:"var(--font-cormorant),serif",
-    fontSize:10, letterSpacing:"0.28em",
-    color:`${GOLD}80`, textTransform:"uppercase",
-    display:"block", marginBottom:4, marginTop:20,
-  };
-  const btnDisabled = (loading: boolean, ...checks: boolean[]) =>
-    loading || checks.some(c => !c);
-
+/* ─── Polaroid kart ─── */
+function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number; src?:string }) {
   return (
-    <>
-      {lightbox && (
-        <div style={{ position:"fixed", inset:0, zIndex:100, background:"rgba(0,0,0,0.92)", display:"flex", alignItems:"center", justifyContent:"center" }}
-          onClick={() => setLightbox(null)}>
-          <button onClick={() => setLightbox(null)} style={{ position:"absolute", top:16, right:16, background:"rgba(255,255,255,0.1)", border:"none", borderRadius:"50%", width:40, height:40, cursor:"pointer", color:"#fff", fontSize:20 }}>×</button>
-          <img src={lightbox.dosyaUrl} alt={lightbox.yukleyenAd} style={{ maxWidth:"95vw", maxHeight:"85dvh", objectFit:"contain", borderRadius:4 }} onClick={e => e.stopPropagation()} />
-          <div style={{ position:"absolute", bottom:16, textAlign:"center", width:"100%" }}>
-            <p style={{ color:"rgba(255,255,255,0.7)", fontFamily:"var(--font-cormorant),serif", fontSize:13 }}>{lightbox.yukleyenAd}</p>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ FOTOĞRAF ALBÜMÜ ═══ */}
-      <section style={{ padding:"80px 24px", background:BG }}>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em", color:GOLD, textTransform:"uppercase", marginBottom:14, textAlign:"center" }}>Albüm</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(2.4rem,7vw,3.6rem)", color:CREAM, textAlign:"center", lineHeight:1.1, marginBottom:24 }}>Fotoğraflarınızı Paylaşın</p>
-        <div style={{ maxWidth:200, margin:"0 auto 44px" }}><GoldDivider /></div>
-
-        {!fotoListeYukleniyor && fotolar.length > 0 && (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:10, maxWidth:560, margin:"0 auto 48px" }}>
-            {fotolar.map(foto => (
-              <div key={foto.id} onClick={() => setLightbox(foto)} style={{ cursor:"zoom-in", borderRadius:8, overflow:"hidden", border:`1px solid ${GOLD}20`, background:BG_MED }}>
-                <img src={foto.dosyaUrl} alt={foto.yukleyenAd} style={{ width:"100%", aspectRatio:"1", objectFit:"cover", display:"block" }} />
-                <div style={{ padding:"6px 10px", borderTop:`1px solid ${GOLD}15` }}>
-                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${CREAM}65`, margin:0 }}>{foto.yukleyenAd}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+    <div style={{
+      background:"#fff",
+      borderRadius:3,
+      padding:"10px 10px 32px",
+      transform:`rotate(${rotate}deg)`,
+      zIndex,
+      boxShadow:"0 8px 32px rgba(0,0,0,0.45),0 2px 6px rgba(0,0,0,0.3)",
+      width:170, flexShrink:0,
+    }}>
+      <div style={{
+        width:"100%", height:190,
+        background:`linear-gradient(135deg,${BG_MED} 0%,#6B1828 100%)`,
+        borderRadius:2,
+        display:"flex", alignItems:"center", justifyContent:"center",
+        overflow: "hidden"
+      }}>
+        {src ? (
+          <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="Anı" />
+        ) : (
+          <span style={{ fontSize:44, opacity:0.25 }}>📷</span>
         )}
-
-        <div style={{ maxWidth:440, margin:"0 auto" }}>
-          {fotoBasari ? (
-            <div style={{ textAlign:"center", padding:"24px", border:`1px solid ${GOLD}35`, borderRadius:8 }}>
-              <p style={{ color:GOLD, fontSize:22, marginBottom:8 }}>✦</p>
-              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, color:CREAM }}>Fotoğraf alındı. Onaylandıktan sonra görünecek.</p>
-            </div>
-          ) : (
-            <form onSubmit={fotoYukle}>
-              <label style={lblS}>ADINIZ</label>
-              <input type="text" value={fotoAd} onChange={e => setFotoAd(e.target.value)} placeholder="Adınız Soyadınız" maxLength={40} required style={inputS} />
-              <div onClick={() => dosyaInputRef.current?.click()} style={{ border:`1px dashed ${GOLD}40`, borderRadius:8, padding:"28px 16px", textAlign:"center", marginTop:20, cursor:"pointer", background:`${GOLD}06` }}>
-                {onizleme ? (
-                  <img src={onizleme} alt="önizleme" style={{ maxHeight:130, maxWidth:"100%", borderRadius:5, objectFit:"contain" }} />
-                ) : (
-                  <>
-                    <p style={{ color:GOLD, fontSize:20, marginBottom:8 }}>✦</p>
-                    <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, color:`${CREAM}75` }}>Fotoğraf seçin</p>
-                    <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${CREAM}40`, marginTop:4 }}>JPG, PNG, HEIC · max 6 MB</p>
-                  </>
-                )}
-              </div>
-              <input ref={dosyaInputRef} type="file" accept="image/*" style={{ display:"none" }} onChange={dosyaSec} />
-              {fotoHata && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:"#E57373", marginTop:8 }}>{fotoHata}</p>}
-              <button type="submit" disabled={btnDisabled(fotoYukleniyor, !!seciliDosya, !!fotoAd.trim())} style={{
-                width:"100%", marginTop:16, padding:"13px",
-                background: btnDisabled(fotoYukleniyor, !!seciliDosya, !!fotoAd.trim()) ? `${GOLD}12` : BG_MED,
-                color: btnDisabled(fotoYukleniyor, !!seciliDosya, !!fotoAd.trim()) ? `${GOLD}45` : CREAM,
-                border:`1px solid ${GOLD}20`, borderRadius:8,
-                fontFamily:"var(--font-cormorant),serif",
-                fontSize:12, letterSpacing:"0.32em", textTransform:"uppercase" as const,
-                cursor: fotoYukleniyor ? "not-allowed" : "pointer",
-              }}>{fotoYukleniyor ? "YÜKLENİYOR..." : "FOTOĞRAFI GÖNDER"}</button>
-            </form>
-          )}
-        </div>
-      </section>
-
-      {/* ═══ ANI DEFTERİ ═══ */}
-      <section style={{ padding:"80px 24px", background:BG_DARK }}>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em", color:GOLD, textTransform:"uppercase", marginBottom:14, textAlign:"center" }}>Anı Defteri</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(2.4rem,7vw,3.6rem)", color:CREAM, textAlign:"center", lineHeight:1.1, marginBottom:24 }}>İyi Dilek Bırakın</p>
-        <div style={{ maxWidth:200, margin:"0 auto 44px" }}><GoldDivider /></div>
-
-        {!aniListeYukleniyor && anilar.length > 0 && (
-          <div style={{ maxWidth:560, margin:"0 auto 48px", display:"flex", flexDirection:"column", gap:16 }}>
-            {anilar.map(ani => (
-              <div key={ani.id} style={{ background:`${CREAM}05`, border:`1px solid ${GOLD}20`, borderRadius:10, padding:"18px 20px" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-                  <div style={{ width:32, height:32, borderRadius:"50%", background:`${GOLD}18`, border:`1px solid ${GOLD}35`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                    <span style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13, color:GOLD }}>{ani.yazarAd[0].toUpperCase()}</span>
-                  </div>
-                  <div>
-                    <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13, fontWeight:600, color:CREAM, margin:0 }}>{ani.yazarAd}</p>
-                    <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, color:`${GOLD}55`, margin:0 }}>
-                      {new Date(ani.createdAt).toLocaleDateString("tr-TR", { day:"numeric", month:"long" })}
-                    </p>
-                  </div>
-                </div>
-                <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, fontStyle:"italic", color:`${CREAM}75`, lineHeight:1.65, margin:0 }}>
-                  &ldquo;{ani.icerik}&rdquo;
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div style={{ maxWidth:440, margin:"0 auto" }}>
-          {aniBasari ? (
-            <div style={{ textAlign:"center", padding:"24px", border:`1px solid ${GOLD}35`, borderRadius:8 }}>
-              <p style={{ fontSize:24, marginBottom:8 }}>💌</p>
-              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14, color:CREAM }}>Anınız alındı. Onaylandıktan sonra görünecek.</p>
-            </div>
-          ) : (
-            <form onSubmit={aniGonder}>
-              <label style={lblS}>ADINIZ</label>
-              <input type="text" value={aniAd} onChange={e => setAniAd(e.target.value)} placeholder="Adınız Soyadınız" maxLength={40} required style={inputS} />
-              <label style={lblS}>İYİ DİLEĞİNİZ</label>
-              <textarea value={aniIcerik} onChange={e => setAniIcerik(e.target.value)} placeholder="Dileklerinizi veya anılarınızı yazın..." maxLength={600} rows={4} required
-                style={{ ...inputS, border:`1px solid ${GOLD}30`, borderRadius:6, padding:"10px 12px", marginTop:4, resize:"none" as const }}
-              />
-              <div style={{ textAlign:"right", marginTop:4 }}>
-                <span style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, color:`${GOLD}45` }}>{aniIcerik.length}/600</span>
-              </div>
-              {aniHata && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:12, color:"#E57373", marginTop:8 }}>{aniHata}</p>}
-              <button type="submit" disabled={btnDisabled(aniYukleniyor, !!aniAd.trim(), !!aniIcerik.trim())} style={{
-                width:"100%", marginTop:16, padding:"13px",
-                background: btnDisabled(aniYukleniyor, !!aniAd.trim(), !!aniIcerik.trim()) ? `${GOLD}12` : BG_MED,
-                color: btnDisabled(aniYukleniyor, !!aniAd.trim(), !!aniIcerik.trim()) ? `${GOLD}45` : CREAM,
-                border:`1px solid ${GOLD}20`, borderRadius:8,
-                fontFamily:"var(--font-cormorant),serif",
-                fontSize:12, letterSpacing:"0.32em", textTransform:"uppercase" as const,
-                cursor: aniYukleniyor ? "not-allowed" : "pointer",
-              }}>{aniYukleniyor ? "GÖNDERİLİYOR..." : "ANI BIRAK"}</button>
-            </form>
-          )}
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -516,6 +308,50 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       </section>
 
       {/* ════════════════════════════════════
+          BÖLÜM 2 — ANILAR (Polaroid)
+      ════════════════════════════════════ */}
+      {davetiye.albumAktif && <section id="anilar" style={{
+        padding:"80px 24px", textAlign:"center", background:BG
+      }}>
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:11, letterSpacing:"0.38em",
+          color:GOLD, textTransform:"uppercase", marginBottom:14,
+        }}>Bizim Hikayemiz</p>
+
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:"clamp(2.6rem,8vw,4rem)",
+          color:CREAM, lineHeight:1.1, marginBottom:24,
+        }}>En Güzel Anılar</p>
+
+        <div style={{ maxWidth:200, margin:"0 auto 52px" }}>
+          <GoldDivider/>
+        </div>
+
+        {/* Polaroidler */}
+        <div style={{ position:"relative", display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
+          <div style={{ position:"relative", width:280, height:280 }}>
+            <div style={{ position:"absolute", top:20, left:-30 }}>
+              <Polaroid rotate={-9} zIndex={1} />
+            </div>
+            <div style={{ position:"absolute", top:28, left:45 }}>
+              <Polaroid rotate={5} zIndex={2} />
+            </div>
+            <div style={{ position:"absolute", top:4, left:90 }}>
+              <Polaroid rotate={-2} zIndex={3} />
+            </div>
+          </div>
+        </div>
+
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:18, fontStyle:"italic",
+          color:`${CREAM}55`,
+        }}>Sonsuz bir yolculuğun ilk adımları... ✦</p>
+      </section>}
+
+      {/* ════════════════════════════════════
           BÖLÜM 3 — SAYIM (Geri Sayım)
       ════════════════════════════════════ */}
       <section id="sayim" style={{ padding:"80px 24px", textAlign:"center", background:BG_MED }}>
@@ -663,7 +499,71 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         )}
       </section>
 
-      {davetiye.albumAktif && <InlineAlbumBolumu slug={davetiye.slug} />}
+      {/* ════════════════════════════════════
+          BÖLÜM 6 — FOTOĞRAF PAYLAŞ (Yeni)
+      ════════════════════════════════════ */}
+      <section id="fotograf-paylas" style={{ padding:"80px 24px", background:BG_DARK }}>
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:11, letterSpacing:"0.38em",
+          color:GOLD, textTransform:"uppercase", marginBottom:14, textAlign:"center"
+        }}>ANILAR</p>
+
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:"clamp(2.4rem,7vw,3.6rem)",
+          color:CREAM, textAlign:"center", lineHeight:1.1, marginBottom:24,
+        }}>Fotoğraflarınızı Paylaşın</p>
+
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:14, color:`${CREAM}80`, textAlign:"center",
+          marginBottom:40, fontStyle:"italic"
+        }}>Nişanda çektiğiniz fotoğrafları buradan yükleyin,<br/>hep birlikte saklayalım ✦</p>
+
+        <div style={{ maxWidth:480, margin:"0 auto" }}>
+          <label style={{
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:10, letterSpacing:"0.28em",
+            color:CREAM, textTransform:"uppercase",
+            display:"block", marginBottom:4, marginTop:20,
+          }}>ADINIZ</label>
+          <input type="text" placeholder="Adınız Soyadınız" style={{
+            width:"100%", background:"transparent",
+            border:"none", borderBottom:`1px solid ${GOLD}50`,
+            padding:"10px 0 8px", fontSize:14,
+            fontFamily:"var(--font-cormorant),serif",
+            color:CREAM, outline:"none", boxSizing:"border-box",
+          }} />
+
+          <div style={{
+            border:`1px dashed ${GOLD}60`,
+            borderRadius:8, padding:"40px 20px",
+            textAlign:"center", marginTop:30, cursor:"pointer",
+            background:`${BG}40`
+          }}>
+            <div style={{ color:GOLD, marginBottom:10, display: "flex", justifyContent: "center" }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:16, color:CREAM, marginBottom:6 }}>Fotoğraflarınızı buraya bırakın</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${CREAM}60` }}>veya dokunarak seçin · JPG, PNG, HEIC</p>
+          </div>
+
+          <button style={{
+            width:"100%", marginTop:20, padding:"14px",
+            background:BG_MED, color:CREAM, border:`1px solid ${GOLD}20`, borderRadius:8,
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:13, letterSpacing:"0.32em",
+            textTransform:"uppercase", cursor:"pointer"
+          }}>
+            YÜKLE
+          </button>
+        </div>
+      </section>
 
       {/* ─── Footer ─── */}
       <footer style={{
