@@ -56,16 +56,16 @@ function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number;
   return (
     <div style={{
       background:"#fff",
-      borderRadius:3,
-      padding:"10px 10px 32px",
+      borderRadius:4,
+      padding:"10px 10px 36px",
       transform:`rotate(${rotate}deg)`,
       zIndex,
-      boxShadow:"0 8px 32px rgba(0,0,0,0.45),0 2px 6px rgba(0,0,0,0.3)",
+      boxShadow:"0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
       width:170, flexShrink:0,
     }}>
       <div style={{
         width:"100%", height:190,
-        background:`linear-gradient(135deg,${BG_MED} 0%,#6B1828 100%)`,
+        background:`linear-gradient(135deg, #6B1828 0%, #470D1A 100%)`,
         borderRadius:2,
         display:"flex", alignItems:"center", justifyContent:"center",
         overflow: "hidden"
@@ -73,7 +73,9 @@ function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number;
         {src ? (
           <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="Anı" />
         ) : (
-          <span style={{ fontSize:44, opacity:0.25 }}>📷</span>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.12)">
+            <path d="M4 6h3.5l1.5-2h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+          </svg>
         )}
       </div>
     </div>
@@ -135,6 +137,14 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           30%{transform:scale(0.88) rotate(-2deg)}
           65%{transform:scale(1.07) rotate(1deg)}
           100%{transform:scale(1) rotate(0deg)}
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
         }
       `}</style>
       {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
@@ -306,16 +316,25 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         </div>
 
         {/* Polaroidler */}
-        <div style={{ position:"relative", display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
+        <div style={{ display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
           <div style={{ position:"relative", width:280, height:280 }}>
-            <div style={{ position:"absolute", top:20, left:-30 }}>
-              <Polaroid rotate={-9} zIndex={1} />
+            {/* Sol Polaroid */}
+            <div style={{ position:"absolute", top:45, left: -5, zIndex:1, animation:"fadeUp 0.8s ease backwards 0s" }}>
+              <div style={{ animation: "float 6s ease-in-out infinite 0s" }}>
+                <Polaroid rotate={-8} />
+              </div>
             </div>
-            <div style={{ position:"absolute", top:28, left:45 }}>
-              <Polaroid rotate={5} zIndex={2} />
+            {/* Orta Polaroid */}
+            <div style={{ position:"absolute", top:20, left: 45, zIndex:2, animation:"fadeUp 0.8s ease backwards 0.2s" }}>
+              <div style={{ animation: "float 6.5s ease-in-out infinite 0.5s" }}>
+                <Polaroid rotate={-2} />
+              </div>
             </div>
-            <div style={{ position:"absolute", top:4, left:90 }}>
-              <Polaroid rotate={-2} zIndex={3} />
+            {/* Sağ Polaroid */}
+            <div style={{ position:"absolute", top:40, left: 95, zIndex:3, animation:"fadeUp 0.8s ease backwards 0.4s" }}>
+              <div style={{ animation: "float 7s ease-in-out infinite 1s" }}>
+                <Polaroid rotate={5} />
+              </div>
             </div>
           </div>
         </div>
