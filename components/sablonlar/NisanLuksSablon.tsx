@@ -99,6 +99,117 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
   );
 }
 
+/* ─── Hover-aware renk diski ─── */
+function SwatchDisk({ renk }: { renk: string }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: 54, height: 54, borderRadius: "50%",
+        background: renk,
+        boxShadow: hovered
+          ? `0 8px 28px ${renk}cc, 0 0 0 3px ${BG_MED}, 0 0 0 5px ${renk}88`
+          : `0 4px 16px ${renk}66, 0 0 0 3px ${BG_MED}, 0 0 0 5px ${renk}44`,
+        transform: hovered ? "scale(1.18)" : "scale(1)",
+        transition: "transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease",
+        cursor: "default",
+        flexShrink: 0,
+      }}
+    />
+  );
+}
+
+/* ─── Moodboard fotoğraf kartı ─── */
+function MoodCard({ src, gold, style }: { src: string; gold: string; style?: React.CSSProperties }) {
+  const [hata, setHata] = useState(false);
+  return (
+    <div style={{
+      borderRadius: 8,
+      overflow: "hidden",
+      border: `1px solid ${gold}40`,
+      boxShadow: `0 6px 24px rgba(0,0,0,0.45), 0 0 0 1px ${gold}18`,
+      background: `linear-gradient(135deg,#3B0A1488,#1A06088A)`,
+      ...style,
+    }}>
+      {!hata ? (
+        <img src={src} alt="" loading="lazy"
+          onError={() => setHata(true)}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      ) : (
+        <div style={{ width:"100%", height:"100%",
+          background:`linear-gradient(160deg,#3B0A2055,#1A060855)`,
+          display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <span style={{ fontSize: 28, opacity: 0.2 }}>✦</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Dress Code Bölümü ─── */
+function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dressKodRenkler: string | null }) {
+  let renkler: string[] = ["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"];
+  try {
+    const parsed = JSON.parse(dressKodRenkler ?? "[]");
+    if (Array.isArray(parsed) && parsed.length >= 3) renkler = parsed.slice(0, 5);
+  } catch { /* varsayılan */ }
+
+  return (
+    <section id="dresskod" style={{ padding:"80px 24px 90px", textAlign:"center", background:BG_MED }}>
+      {/* 1 — Başlık */}
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11,
+        letterSpacing:"0.38em", color:GOLD, textTransform:"uppercase", marginBottom:14 }}>
+        DRESS CODE
+      </p>
+      <p style={{ fontFamily:"var(--font-dancing),cursive",
+        fontSize:"clamp(2.6rem,8vw,4rem)", color:CREAM, lineHeight:1.1, marginBottom:10 }}>
+        Gecenin Renkleri
+      </p>
+      <p style={{ fontFamily:"var(--font-cormorant),serif",
+        fontSize:"clamp(1.1rem,3.5vw,1.5rem)", fontStyle:"italic",
+        color:`${GOLD}CC`, letterSpacing:"0.1em", marginBottom:28 }}>
+        {dressKod}
+      </p>
+      <div style={{ maxWidth:180, margin:"0 auto 52px" }}><GoldDivider /></div>
+
+      {/* 2 — Renk Paleti */}
+      <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
+        gap:"clamp(12px,4vw,22px)", marginBottom:60, flexWrap:"wrap" }}>
+        {renkler.map((r, i) => <SwatchDisk key={i} renk={r} />)}
+      </div>
+
+      {/* 3 — İlham Panosu */}
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em",
+        color:`${GOLD}80`, textTransform:"uppercase", marginBottom:18 }}>
+        İlham Panosu
+      </p>
+
+      {/* Asimetrik grid: sol büyük + sağda 2 yığılmış, dördüncüsü altta uzun */}
+      <div style={{ maxWidth:380, margin:"0 auto 44px",
+        display:"grid", gap:8,
+        gridTemplateColumns:"1.15fr 0.85fr",
+        gridTemplateRows:"160px 160px 130px",
+      }}>
+        <MoodCard src="/moodboard-1.jpg" gold={GOLD}
+          style={{ gridRow:"1 / 3" }} />
+        <MoodCard src="/moodboard-2.jpg" gold={GOLD} />
+        <MoodCard src="/moodboard-3.jpg" gold={GOLD} />
+        <MoodCard src="/moodboard-4.jpg" gold={GOLD}
+          style={{ gridColumn:"1 / 3" }} />
+      </div>
+
+      {/* 4 — Alt not */}
+      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:14,
+        fontStyle:"italic", color:`${CREAM}70`,
+        maxWidth:320, margin:"0 auto", lineHeight:1.7 }}>
+        Şıklığınızla gecemize renk katmanızı sabırsızlıkla bekliyoruz ✦
+      </p>
+    </section>
+  );
+}
+
 /* ─────────────────────────────────────────
    ANA BİLEŞEN
 ───────────────────────────────────────── */
@@ -529,92 +640,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       {/* ════════════════════════════════════
           BÖLÜM 6 — DRESS CODE
       ════════════════════════════════════ */}
-      {davetiye.dressKod && (() => {
-        let renkler: [string,string,string] = ["#E8C4CC","#F5E6D3","#B5A47A"];
-        try {
-          const parsed = JSON.parse(davetiye.dressKodRenkler ?? "[]");
-          if (Array.isArray(parsed) && parsed.length >= 3) renkler = parsed.slice(0,3) as [string,string,string];
-        } catch { /* varsayılan renkler */ }
-
-        const MOODBOARD = [
-          { ikon:"👗", etiket:"Kadın", ipucu:"Kokteyl elbise\nveya şık takım" },
-          { ikon:"🕴️", etiket:"Erkek",  ipucu:"Takım elbise\nveya blazer" },
-          { ikon:"✨", etiket:"Aksesuar", ipucu:"Sade & zarif\ndokunuşlar" },
-        ];
-
-        return (
-          <section id="dresskod" style={{ padding:"80px 24px 90px", textAlign:"center", background:BG_MED }}>
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.38em",
-              color:GOLD, textTransform:"uppercase", marginBottom:14 }}>Lütfen dikkat</p>
-
-            <p style={{ fontFamily:"var(--font-dancing),cursive",
-              fontSize:"clamp(2.4rem,7vw,3.8rem)", color:CREAM, lineHeight:1.1, marginBottom:8 }}>
-              Kıyafet Kodu
-            </p>
-
-            <p style={{ fontFamily:"var(--font-cormorant),serif",
-              fontSize:"clamp(1.4rem,4vw,2rem)", fontStyle:"italic",
-              color:GOLD, marginBottom:32, letterSpacing:"0.08em" }}>
-              {davetiye.dressKod}
-            </p>
-
-            <div style={{ maxWidth:180, margin:"0 auto 44px" }}><GoldDivider/></div>
-
-            {/* Renk Paleti */}
-            <div style={{ display:"flex", justifyContent:"center", gap:20, marginBottom:52, flexWrap:"wrap" }}>
-              {renkler.map((renk, i) => (
-                <div key={i} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:10 }}>
-                  <div style={{
-                    width:60, height:60, borderRadius:"50%",
-                    background:renk,
-                    boxShadow:`0 4px 18px ${renk}88, 0 0 0 3px ${BG_MED}, 0 0 0 5px ${renk}55`,
-                  }}/>
-                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10,
-                    letterSpacing:"0.15em", color:`${CREAM}50`, textTransform:"uppercase" }}>
-                    {["Ana","Vurgu","Tamamlayıcı"][i]}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Moodboard */}
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.3em",
-              color:`${GOLD}70`, textTransform:"uppercase", marginBottom:16 }}>İlham Panosu</p>
-
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, maxWidth:360, margin:"0 auto 36px" }}>
-              {MOODBOARD.map((m, i) => (
-                <div key={i} style={{
-                  borderRadius:12, overflow:"hidden",
-                  background:`linear-gradient(160deg, ${renkler[i]}33 0%, ${renkler[(i+1)%3]}44 50%, ${renkler[(i+2)%3]}22 100%)`,
-                  border:`1px solid ${renkler[i]}40`,
-                  padding:"20px 10px 16px",
-                  display:"flex", flexDirection:"column", alignItems:"center", gap:8,
-                  aspectRatio:"2/3",
-                }}>
-                  <span style={{ fontSize:28 }}>{m.ikon}</span>
-                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11,
-                    fontWeight:700, letterSpacing:"0.18em",
-                    color:CREAM, textTransform:"uppercase" }}>{m.etiket}</p>
-                  <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11,
-                    fontStyle:"italic", color:`${CREAM}70`, lineHeight:1.5,
-                    whiteSpace:"pre-line", textAlign:"center" }}>{m.ipucu}</p>
-                  {/* Küçük renk şeridi */}
-                  <div style={{ marginTop:"auto", display:"flex", gap:4 }}>
-                    {[renkler[i], renkler[(i+1)%3]].map((r,j) => (
-                      <div key={j} style={{ width:18, height:4, borderRadius:2, background:r }}/>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13,
-              fontStyle:"italic", color:`${CREAM}50`, maxWidth:280, margin:"0 auto" }}>
-              Yukarıdaki renk paletinden ilham alarak kıyafetinizi seçebilirsiniz ✦
-            </p>
-          </section>
-        );
-      })()}
+      {davetiye.dressKod && <DressCodeSection dressKod={davetiye.dressKod} dressKodRenkler={davetiye.dressKodRenkler} />}
 
       {/* ─── Footer ─── */}
       <footer style={{

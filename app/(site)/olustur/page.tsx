@@ -39,13 +39,14 @@ function TelefonMockup({ children }: { children: React.ReactNode }) {
   );
 }
 
-const DRESS_KOD_PRESETLER = [
-  { isim: "Şık & Zarif",     renkler: ["#E8C4CC","#F5E6D3","#B5A47A"] as [string,string,string] },
-  { isim: "Resmi & Klasik",  renkler: ["#1B3A5C","#8B5E3C","#F5EDD8"] as [string,string,string] },
-  { isim: "Siyah Kravat",    renkler: ["#1A1A1A","#D4AA70","#F8F4EC"] as [string,string,string] },
-  { isim: "Beyaz Kıyafet",   renkler: ["#F4F0EA","#E0D4C0","#C8B89A"] as [string,string,string] },
-  { isim: "Bohem & Çiçekli", renkler: ["#8B5A2B","#E8C99A","#7A9B7A"] as [string,string,string] },
-  { isim: "Pastel & Soft",   renkler: ["#B5C4D6","#F2D1B3","#C8A8C8"] as [string,string,string] },
+type DressRenkler = [string,string,string,string,string];
+const DRESS_KOD_PRESETLER: { isim: string; renkler: DressRenkler }[] = [
+  { isim: "Şık & Zarif",     renkler: ["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"] },
+  { isim: "Resmi & Klasik",  renkler: ["#1B3A5C","#8B5E3C","#C4A05A","#2E2E2E","#F5EDD8"] },
+  { isim: "Siyah Kravat",    renkler: ["#1A1A1A","#1A1A1A","#D4AA70","#3D3D3D","#F8F4EC"] },
+  { isim: "Beyaz Kıyafet",   renkler: ["#F4F0EA","#E0D4C0","#C8B89A","#A89880","#6B5A48"] },
+  { isim: "Bohem & Çiçekli", renkler: ["#8B5A2B","#E8C99A","#7A9B7A","#C47A4A","#F2E8D8"] },
+  { isim: "Pastel & Soft",   renkler: ["#B5C4D6","#F2D1B3","#C8A8C8","#A8C4B8","#F5EAE0"] },
 ];
 
 const INPUT      = "w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900";
@@ -80,7 +81,7 @@ function OlusturIcerigi() {
 
   const [dressKodAcik,  setDressKodAcik]  = useState(false);
   const [dressKodMetin, setDressKodMetin] = useState("");
-  const [dressRenkler,  setDressRenkler]  = useState<[string,string,string]>(["#E8C4CC","#F5E6D3","#B5A47A"]);
+  const [dressRenkler,  setDressRenkler]  = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
   const [notAcik,       setNotAcik]       = useState(false);
   const [muzikAcik,     setMuzikAcik]     = useState(false);
   const [spotifyAcik,   setSpotifyAcik]   = useState(false);
@@ -539,9 +540,9 @@ function OlusturIcerigi() {
                               ? "border-purple-400 bg-purple-50 text-purple-700"
                               : "border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50/40"
                           }`}>
-                          <span className="flex gap-1">
-                            {p.renkler.map((r,i) => (
-                              <span key={i} className="w-3 h-3 rounded-full inline-block" style={{ background: r }} />
+                          <span className="flex gap-0.5">
+                            {p.renkler.slice(0,5).map((r,i) => (
+                              <span key={i} className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: r }} />
                             ))}
                           </span>
                           {p.isim}
@@ -555,20 +556,20 @@ function OlusturIcerigi() {
                       onChange={e => setDressKodMetin(e.target.value)}
                       className="w-full border-2 border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white mb-3" />
                     {/* Renk swatchları */}
-                    <label className="text-xs font-semibold text-gray-600 mb-2 block">Renk paleti</label>
-                    <div className="flex gap-3">
-                      {([0,1,2] as const).map(i => (
-                        <label key={i} className="flex flex-col items-center gap-1 cursor-pointer group">
-                          <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden"
+                    <label className="text-xs font-semibold text-gray-600 mb-2 block">Renk paleti (5 renk)</label>
+                    <div className="flex gap-2.5 flex-wrap">
+                      {([0,1,2,3,4] as const).map(i => (
+                        <label key={i} className="flex flex-col items-center gap-1 cursor-pointer">
+                          <div className="w-9 h-9 rounded-full border-2 border-white shadow-md overflow-hidden"
                             style={{ background: dressRenkler[i] }}>
                             <input type="color" value={dressRenkler[i]}
                               onChange={e => {
-                                const n = [...dressRenkler] as [string,string,string];
+                                const n = [...dressRenkler] as DressRenkler;
                                 n[i] = e.target.value; setDressRenkler(n);
                               }}
                               className="opacity-0 w-full h-full cursor-pointer" />
                           </div>
-                          <span className="text-[10px] text-gray-400">{i+1}. renk</span>
+                          <span className="text-[10px] text-gray-400">{i+1}</span>
                         </label>
                       ))}
                     </div>
