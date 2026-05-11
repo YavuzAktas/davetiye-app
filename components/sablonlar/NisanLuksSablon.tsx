@@ -166,8 +166,8 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
 /* ─────────────────────────────────────────
    ANA BİLEŞEN
 ───────────────────────────────────────── */
-export default function NisanLuksSablon({ davetiye }: SablonProps) {
-  const [acildi, setAcildi] = useState(false);
+export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) {
+  const [acildi, setAcildi] = useState(previewModu ?? false);
   const [animating, setAnimating] = useState(false);
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
 
@@ -355,6 +355,18 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             fontSize:14, fontStyle:"italic",
             color:`${CREAM}55`, marginTop:8,
           }}>Bizi bu özel günde yanınızda görmek isteriz</p>
+
+          {davetiye.mesaj && (
+            <>
+              <div style={{ margin:"18px auto 14px", maxWidth:180 }}><GoldDivider /></div>
+              <p style={{
+                fontFamily:"var(--font-cormorant),serif",
+                fontSize:15, fontStyle:"italic",
+                color:`${CREAM}80`, lineHeight:1.7,
+                letterSpacing:"0.04em",
+              }}>{davetiye.mesaj}</p>
+            </>
+          )}
         </div>
 
         <div style={{ marginTop:44, textAlign:"center" }}>

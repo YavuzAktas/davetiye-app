@@ -101,8 +101,8 @@ function Polaroid({ rotate=0, zIndex=0 }: { rotate?:number; zIndex?:number }) {
 /* ─────────────────────────────────────────
    ANA BİLEŞEN
 ───────────────────────────────────────── */
-export default function DugunLuksSablon({ davetiye }: SablonProps) {
-  const [acildi, setAcildi] = useState(false);
+export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) {
+  const [acildi, setAcildi] = useState(previewModu ?? false);
   const [animating, setAnimating] = useState(false);
 
   const tarihObj = davetiye.tarih ? new Date(davetiye.tarih) : null;

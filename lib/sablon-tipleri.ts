@@ -31,4 +31,5 @@ export interface DavetiyeVeri {
 export interface SablonProps {
   davetiye: DavetiyeVeri;
   rsvpBileseni: React.ReactNode;
+  previewModu?: boolean;
 }

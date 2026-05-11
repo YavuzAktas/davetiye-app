@@ -272,7 +272,7 @@ function OlusturIcerigi() {
     etkinlikTur:    sablon.kategori,
     tarih:          form.tarih ? new Date(`${form.tarih}T${form.saat || "12:00"}`) : null,
     mekan:          form.mekan || null,
-    mesaj:          form.mesaj || null,
+    mesaj:          notAcik ? (form.mesaj || null) : null,
     sablon:         sablonId,
     ozelRenk:       form.renk || null,
     font:           form.font || null,
@@ -281,13 +281,13 @@ function OlusturIcerigi() {
     user:           { name: null, email: null },
     kisi1:          form.kisi1 || null,
     kisi2:          form.kisi2 || null,
-    spotifyAktif:   false,
+    spotifyAktif:   spotifyAcik,
     albumAktif:     aniAcik,
     polaroid1:      polaroidler[0],
     polaroid2:      polaroidler[1],
     polaroid3:      polaroidler[2],
-    sesliAniAktif:  false,
-    canliDuvarAktif: false,
+    sesliAniAktif:  sesliAniAcik,
+    canliDuvarAktif: canliDuvarAcik,
     dressKod:       dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
     dressKodRenkler: dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
   };
@@ -748,9 +748,9 @@ function OlusturIcerigi() {
                     transformOrigin: "top left",
                     position: "absolute", top: 0, left: 0,
                   }}>
-                    {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} />}
-                    {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} />}
-                    {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} />}
+                    {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+                    {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+                    {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
                     {sablonTipi === "klasik"         && <KlasikSablon        davetiye={previewVeri} rsvpBileseni={null} />}
                   </div>
                 </div>
