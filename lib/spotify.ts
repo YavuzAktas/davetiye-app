@@ -152,3 +152,24 @@ export async function playlistEEkle(
   }
   return res.ok;
 }
+
+/* Spotify max 100 URI/istek — büyük listeleri parçala */
+export async function playlistCokluEkle(
+  playlistId: string,
+  trackUris: string[],
+  accessToken: string
+) {
+  const unique = [...new Set(trackUris)];
+  for (let i = 0; i < unique.length; i += 100) {
+    const batch = unique.slice(i, i + 100);
+    const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/items`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ uris: batch }),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error(`playlistCokluEkle HTTP ${res.status}: ${errBody}`);
+    }
+  }
+}

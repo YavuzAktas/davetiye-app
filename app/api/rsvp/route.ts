@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 import { bildirimOlustur } from "@/lib/bildirim";
-import { tokenYenile, sarkilaraAra, playlistEEkle } from "@/lib/spotify";
+import { tokenYenile, sarkilaraAra, playlistEEkle, playlistOlustur } from "@/lib/spotify";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
 const rsvpSemasi = z.object({
@@ -136,33 +136,41 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  /* 6. Spotify'a şarkı ekle — response öncesi await et (Vercel'de bg task kesilir) */
-  if (
-    sarkiOnerisi &&
-    davetiye.spotifyAktif &&
-    davetiye.spotifyPlaylistId &&
-    davetiyeOwner?.spotifyRefreshToken
-  ) {
+  /* 6. Spotify'a şarkı ekle */
+  if (sarkiOnerisi && davetiye.spotifyAktif && davetiyeOwner?.spotifyRefreshToken) {
     try {
       const accessToken = await tokenYenile(davetiyeOwner.spotifyRefreshToken!);
-      let trackUri = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
+
+      // Playlist yoksa otomatik oluştur
+      let playlistId = davetiye.spotifyPlaylistId;
+      if (!playlistId) {
+        const meRes  = await fetch("https://api.spotify.com/v1/me", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const me = await meRes.json();
+        const playlist = await playlistOlustur(me.id, `🎵 ${davetiye.baslik}`, accessToken);
+        playlistId = playlist.id;
+        await prisma.davetiye.update({
+          where: { id: davetiye.id },
+          data: { spotifyPlaylistId: playlist.id },
+        });
+      }
+
+      let trackUri  = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
       let bulunanId = spotifyTrackId ?? null;
       if (!trackUri) {
         const sonuclar = await sarkilaraAra(sarkiOnerisi, accessToken);
-        trackUri = sonuclar[0]?.uri ?? null;
-        bulunanId = sonuclar[0]?.id ?? null;
+        trackUri  = sonuclar[0]?.uri ?? null;
+        bulunanId = sonuclar[0]?.id  ?? null;
       }
       if (trackUri) {
-        const eklendi = await playlistEEkle(davetiye.spotifyPlaylistId!, trackUri, accessToken);
-        console.log("Spotify şarkı eklendi:", eklendi, "trackUri:", trackUri);
+        await playlistEEkle(playlistId!, trackUri, accessToken);
         if (bulunanId) {
           await prisma.rSVP.update({
             where: { id: rsvp.id },
             data: { spotifyTrackId: bulunanId },
           });
         }
-      } else {
-        console.log("Spotify: trackUri bulunamadı, sarkiOnerisi:", sarkiOnerisi);
       }
     } catch (err) {
       console.error("Spotify şarkı ekleme hatası:", err);

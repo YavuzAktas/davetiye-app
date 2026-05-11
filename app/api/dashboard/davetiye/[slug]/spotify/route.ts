@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { tokenYenile, playlistOlustur } from "@/lib/spotify";
+import { tokenYenile, playlistOlustur, playlistCokluEkle } from "@/lib/spotify";
 import { planOzellikVar } from "@/lib/planlar";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -51,7 +51,17 @@ export async function POST(_req: Request, { params }: Params) {
       data: { spotifyPlaylistId: playlist.id, spotifyAktif: true },
     });
 
-    return NextResponse.json({ playlistUrl: playlist.url });
+    // Daha önce önerilen şarkıları geriye dönük ekle
+    const mevcutSarkilar = await prisma.rSVP.findMany({
+      where: { davetiyeId: davetiye.id, spotifyTrackId: { not: null } },
+      select: { spotifyTrackId: true },
+    });
+    if (mevcutSarkilar.length > 0) {
+      const uris = mevcutSarkilar.map(r => `spotify:track:${r.spotifyTrackId}`);
+      await playlistCokluEkle(playlist.id, uris, accessToken);
+    }
+
+    return NextResponse.json({ playlistUrl: playlist.url, eklenenSarki: mevcutSarkilar.length });
   } catch (err) {
     console.error("Playlist oluşturma hatası:", err);
     return NextResponse.json({ hata: "Playlist oluşturulamadı." }, { status: 500 });
