@@ -38,7 +38,6 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
         overflow: "hidden",
         cursor: onClick ? "pointer" : "default",
         flexShrink: 0,
-        /* ring halkası: bordeaux rengi ring → görsel white-bg kenarını maskeler */
         boxShadow: `
           0 0 0 ${ring}px ${BG},
           0 0 0 ${ring + 2}px rgba(196,160,90,0.18),
@@ -57,7 +56,6 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
           />
         </div>
       ) : (
-        /* CSS yedek gül */
         <div style={{
           width:"100%", height:"100%",
           background:`radial-gradient(circle at 38% 32%,
@@ -98,7 +96,7 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
 }
 
 /* ─── Polaroid kart ─── */
-function Polaroid({ rotate=0, zIndex=0 }: { rotate?:number; zIndex?:number }) {
+function Polaroid({ rotate=0, zIndex=0, src }: { rotate?:number; zIndex?:number; src?:string }) {
   return (
     <div style={{
       background:"#fff",
@@ -114,8 +112,13 @@ function Polaroid({ rotate=0, zIndex=0 }: { rotate?:number; zIndex?:number }) {
         background:`linear-gradient(135deg,${BG_MED} 0%,#6B1828 100%)`,
         borderRadius:2,
         display:"flex", alignItems:"center", justifyContent:"center",
+        overflow: "hidden"
       }}>
-        <span style={{ fontSize:44, opacity:0.25 }}>📷</span>
+        {src ? (
+          <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="Anı" />
+        ) : (
+          <span style={{ fontSize:44, opacity:0.25 }}>📷</span>
+        )}
       </div>
     </div>
   );
@@ -162,17 +165,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
   /* İsimler */
   const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
   const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
-  const fullName = isim2 ? `${isim1} & ${isim2}` : isim1;
-
-  const whatsapp = encodeURIComponent(
-    `${davetiye.baslik} Nişan Davetiyesi\n` +
-    (tarihStr ? `📅 ${tarihStr}\n` : "") +
-    (davetiye.mekan ? `📍 ${davetiye.mekan}\n` : "") +
-    `Davetiye: ${process.env.NEXT_PUBLIC_URL ?? ""}/davetiye/${davetiye.slug}`
-  );
-
-  const scroll = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
 
   return (
     <>
@@ -183,13 +175,11 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden select-none"
         style={{ background:`radial-gradient(ellipse at 50% 45%,#5C1020 0%,${BG} 55%,${BG_DARK} 100%)` }}>
 
-        {/* Nokta dokusu */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage:`radial-gradient(circle,rgba(196,160,90,0.05) 1px,transparent 1px)`,
           backgroundSize:"30px 30px",
         }}/>
 
-        {/* İsimler — üst */}
         <p className="relative z-10 text-center px-8 mb-12" style={{
           fontFamily:"var(--font-dancing),cursive",
           fontSize:"clamp(2.6rem,8vw,4.2rem)",
@@ -198,10 +188,9 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           letterSpacing: 1,
         }}>
           {isim1}
-          {isim2 && <><span style={{ color:GOLD }}> &amp; </span>{isim2}</>}
+          {isim2 && <><span style={{ color:GOLD }}> & </span>{isim2}</>}
         </p>
 
-        {/* Gül Mühür */}
         <div className="relative z-10 flex flex-col items-center"
           style={{ opacity: animating ? 0 : 1, transform: animating ? "scale(0.7)" : "scale(1)", transition:"all 0.55s ease" }}>
           <RoseSeal size={230} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
@@ -228,39 +217,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
 
-      {/* ─── NAV ─── */}
-      <nav style={{
-        position:"sticky", top:0, zIndex:50,
-        background:"rgba(32,4,12,0.9)",
-        backdropFilter:"blur(14px)",
-        borderBottom:`1px solid rgba(196,160,90,0.18)`,
-      }}>
-        <div style={{
-          maxWidth:640, margin:"0 auto",
-          padding:"11px 20px",
-          display:"flex", alignItems:"center", justifyContent:"space-between",
-        }}>
-          <span style={{ color:GOLD, fontSize:15, cursor:"pointer" }} onClick={() => scroll("biz")}>♥</span>
-          <div style={{ display:"flex", gap:"clamp(10px,4vw,26px)" }}>
-            {[
-              { id:"biz",      label:"BİZ" },
-              { id:"sayim",    label:"SAYIM" },
-              { id:"katilim",  label:"KATILIM" },
-              { id:"mekan",    label:"MEKAN" },
-              { id:"anilar",   label:"ANILAR" },
-            ].map(s => (
-              <button key={s.id} onClick={() => scroll(s.id)} style={{
-                background:"none", border:"none", cursor:"pointer",
-                fontFamily:"var(--font-cormorant),serif",
-                fontSize:11, letterSpacing:"0.22em",
-                color:`${CREAM}80`, padding:"4px 0",
-              }}>{s.label}</button>
-            ))}
-          </div>
-          <div style={{ width:16 }}/>
-        </div>
-      </nav>
-
       {/* ════════════════════════════════════
           BÖLÜM 1 — BİZ (Hero kemer)
       ════════════════════════════════════ */}
@@ -270,12 +226,10 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
         padding:"60px 24px 80px", position:"relative",
         background:`radial-gradient(ellipse at 50% 30%,#5C1020 0%,${BG} 60%)`,
       }}>
-        {/* Köşe süsleri */}
         {(["top-5 left-5","top-5 right-5","bottom-5 left-5","bottom-5 right-5"] as const).map((cls,i) => (
           <span key={i} className={`absolute ${cls}`} style={{ color:`${GOLD}50`, fontSize:14 }}>✦</span>
         ))}
 
-        {/* Kemer çerçeve */}
         <div style={{
           position:"relative", maxWidth:400, width:"100%",
           borderRadius:"130px 130px 18px 18px",
@@ -284,7 +238,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           textAlign:"center",
           boxShadow:`inset 0 0 80px rgba(196,160,90,0.03)`,
         }}>
-          {/* İkinci iç çerçeve */}
           <div style={{
             position:"absolute", inset:9,
             borderRadius:"123px 123px 12px 12px",
@@ -308,7 +261,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             fontFamily:"var(--font-dancing),cursive",
             fontSize:"clamp(1.8rem,5vw,2.6rem)",
             color:GOLD, lineHeight:1.3, margin:"6px 0",
-          }}>&amp;</p>
+          }}>&</p>
 
           {isim2 && (
             <p style={{
@@ -330,16 +283,13 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             {tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.toUpperCase()}
           </p>
 
-          {davetiye.mesaj && (
-            <p style={{
-              fontFamily:"var(--font-cormorant),serif",
-              fontSize:14, fontStyle:"italic",
-              color:`${CREAM}55`, marginTop:8,
-            }}>{davetiye.mesaj}</p>
-          )}
+          <p style={{
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:14, fontStyle:"italic",
+            color:`${CREAM}55`, marginTop:8,
+          }}>Bizi bu özel günde yanınızda görmek isteriz</p>
         </div>
 
-        {/* Aşağı ok */}
         <div style={{ marginTop:44, textAlign:"center" }}>
           <p style={{
             fontFamily:"var(--font-cormorant),serif",
@@ -355,11 +305,54 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             animation:"bounce 2s infinite",
           }}>↓</div>
         </div>
-
       </section>
 
       {/* ════════════════════════════════════
-          BÖLÜM 2 — SAYIM (Geri Sayım)
+          BÖLÜM 2 — ANILAR (Polaroid)
+      ════════════════════════════════════ */}
+      {davetiye.albumAktif && <section id="anilar" style={{
+        padding:"80px 24px", textAlign:"center", background:BG
+      }}>
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:11, letterSpacing:"0.38em",
+          color:GOLD, textTransform:"uppercase", marginBottom:14,
+        }}>Bizim Hikayemiz</p>
+
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:"clamp(2.6rem,8vw,4rem)",
+          color:CREAM, lineHeight:1.1, marginBottom:24,
+        }}>En Güzel Anılar</p>
+
+        <div style={{ maxWidth:200, margin:"0 auto 52px" }}>
+          <GoldDivider/>
+        </div>
+
+        {/* Polaroidler */}
+        <div style={{ position:"relative", display:"flex", justifyContent:"center", minHeight:340, marginBottom:40 }}>
+          <div style={{ position:"relative", width:280, height:280 }}>
+            <div style={{ position:"absolute", top:20, left:-30 }}>
+              <Polaroid rotate={-9} zIndex={1} />
+            </div>
+            <div style={{ position:"absolute", top:28, left:45 }}>
+              <Polaroid rotate={5} zIndex={2} />
+            </div>
+            <div style={{ position:"absolute", top:4, left:90 }}>
+              <Polaroid rotate={-2} zIndex={3} />
+            </div>
+          </div>
+        </div>
+
+        <p style={{
+          fontFamily:"var(--font-dancing),cursive",
+          fontSize:18, fontStyle:"italic",
+          color:`${CREAM}55`,
+        }}>Sonsuz bir yolculuğun ilk adımları... ✦</p>
+      </section>}
+
+      {/* ════════════════════════════════════
+          BÖLÜM 3 — SAYIM (Geri Sayım)
       ════════════════════════════════════ */}
       <section id="sayim" style={{ padding:"80px 24px", textAlign:"center", background:BG_MED }}>
         <p style={{
@@ -376,7 +369,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           {tarihObj && tarihObj > new Date() ? "Sayıyoruz..." : "Kutlama Zamanı! 🎊"}
         </p>
 
-        {/* Sayım rakamları */}
         <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-start", gap:"clamp(8px,3vw,16px)", flexWrap:"wrap" }}>
           {[
             { val: kalan.gun,    lbl:"GÜN" },
@@ -411,14 +403,10 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
             </div>
           ))}
         </div>
-
-        <div style={{ maxWidth:300, margin:"52px auto 0" }}>
-          <div style={{ height:1, background:`linear-gradient(to right,transparent,${GOLD}30,transparent)` }}/>
-        </div>
       </section>
 
       {/* ════════════════════════════════════
-          BÖLÜM 3 — KATILIM (RSVP)
+          BÖLÜM 4 — KATILIM (RSVP)
       ════════════════════════════════════ */}
       <section id="katilim" style={{ padding:"80px 24px", background:BG_DARK }}>
         <div style={{ maxWidth:480, margin:"0 auto" }}>
@@ -453,9 +441,9 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
       </section>
 
       {/* ════════════════════════════════════
-          BÖLÜM 4 — MEKAN
+          BÖLÜM 5 — MEKAN
       ════════════════════════════════════ */}
-      <section id="mekan" style={{ padding:"80px 24px", textAlign:"center", background:BG_MED }}>
+      <section id="mekan" style={{ padding:"80px 24px", textAlign:"center", background:BG }}>
         <p style={{
           fontFamily:"var(--font-cormorant),serif",
           fontSize:11, letterSpacing:"0.38em",
@@ -468,7 +456,6 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           color:CREAM, marginBottom:44,
         }}>Nerede Buluşuyoruz?</p>
 
-        {/* 3 sütun */}
         <div style={{
           display:"flex", justifyContent:"center",
           gap:"clamp(24px,6vw,60px)", flexWrap:"wrap", marginBottom:40,
@@ -494,123 +481,101 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
           ))}
         </div>
 
-        {/* Harita */}
         {davetiye.mekan && (
-          <>
-            <div style={{
-              maxWidth:560, margin:"0 auto 28px",
-              borderRadius:12, overflow:"hidden",
-              border:`1px solid ${GOLD}22`,
-              boxShadow:"0 8px 32px rgba(0,0,0,0.4)",
-            }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&output=embed`}
-                width="100%" height="260"
-                style={{ border:0, display:"block" }}
-                loading="lazy"
-                allowFullScreen
-              />
-            </div>
-            <a
-              href={`https://maps.google.com/?q=${encodeURIComponent(davetiye.mekan)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display:"inline-flex", alignItems:"center", gap:8,
-                fontFamily:"var(--font-cormorant),serif",
-                fontSize:13, letterSpacing:"0.22em",
-                color:CREAM, border:`1px solid ${GOLD}38`,
-                padding:"12px 28px", borderRadius:8,
-                textDecoration:"none", textTransform:"uppercase",
-              }}
-            >📍 Yol Tarifi Al</a>
-          </>
+          <div style={{
+            maxWidth:560, margin:"0 auto 28px",
+            borderRadius:12, overflow:"hidden",
+            border:`1px solid ${GOLD}22`,
+            boxShadow:"0 8px 32px rgba(0,0,0,0.4)",
+          }}>
+            <iframe
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              width="100%" height="260"
+              style={{ border:0, display:"block" }}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
         )}
       </section>
 
       {/* ════════════════════════════════════
-          BÖLÜM 5 — ANILAR (Polaroid)
+          BÖLÜM 6 — FOTOĞRAF PAYLAŞ (Yeni)
       ════════════════════════════════════ */}
-      {davetiye.albumAktif && <section id="anilar" style={{
-        padding:"80px 24px", textAlign:"center",
-        background:`linear-gradient(180deg,${BG} 0%,${BG_DARK} 100%)`,
-      }}>
+      <section id="fotograf-paylas" style={{ padding:"80px 24px", background:BG_DARK }}>
         <p style={{
           fontFamily:"var(--font-cormorant),serif",
           fontSize:11, letterSpacing:"0.38em",
-          color:GOLD, textTransform:"uppercase", marginBottom:14,
-        }}>Bizim Hikayemiz</p>
+          color:GOLD, textTransform:"uppercase", marginBottom:14, textAlign:"center"
+        }}>ANILAR</p>
 
         <p style={{
           fontFamily:"var(--font-dancing),cursive",
-          fontSize:"clamp(2.6rem,8vw,4rem)",
-          color:CREAM, lineHeight:1.1, marginBottom:24,
-        }}>En Güzel Anılar</p>
+          fontSize:"clamp(2.4rem,7vw,3.6rem)",
+          color:CREAM, textAlign:"center", lineHeight:1.1, marginBottom:24,
+        }}>Fotoğraflarınızı Paylaşın</p>
 
-        <div style={{ maxWidth:200, margin:"0 auto 52px" }}>
-          <GoldDivider/>
-        </div>
+        <p style={{
+          fontFamily:"var(--font-cormorant),serif",
+          fontSize:14, color:`${CREAM}80`, textAlign:"center",
+          marginBottom:40, fontStyle:"italic"
+        }}>Nişanda çektiğiniz fotoğrafları buradan yükleyin,<br/>hep birlikte saklayalım ✦</p>
 
-        {/* Polaroidler */}
-        <div style={{ position:"relative", display:"flex", justifyContent:"center", minHeight:290, marginBottom:52 }}>
-          <div style={{ position:"relative", width:280, height:280 }}>
-            <div style={{ position:"absolute", top:20, left:-30 }}>
-              <Polaroid rotate={-9} zIndex={1}/>
+        <div style={{ maxWidth:480, margin:"0 auto" }}>
+          <label style={{
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:10, letterSpacing:"0.28em",
+            color:CREAM, textTransform:"uppercase",
+            display:"block", marginBottom:4, marginTop:20,
+          }}>ADINIZ</label>
+          <input type="text" placeholder="Adınız Soyadınız" style={{
+            width:"100%", background:"transparent",
+            border:"none", borderBottom:`1px solid ${GOLD}50`,
+            padding:"10px 0 8px", fontSize:14,
+            fontFamily:"var(--font-cormorant),serif",
+            color:CREAM, outline:"none", boxSizing:"border-box",
+          }} />
+
+          <div style={{
+            border:`1px dashed ${GOLD}60`,
+            borderRadius:8, padding:"40px 20px",
+            textAlign:"center", marginTop:30, cursor:"pointer",
+            background:`${BG}40`
+          }}>
+            <div style={{ color:GOLD, marginBottom:10, display: "flex", justifyContent: "center" }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
             </div>
-            <div style={{ position:"absolute", top:28, left:45 }}>
-              <Polaroid rotate={5} zIndex={2}/>
-            </div>
-            <div style={{ position:"absolute", top:4, left:90 }}>
-              <Polaroid rotate={-2} zIndex={3}/>
-            </div>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:16, color:CREAM, marginBottom:6 }}>Fotoğraflarınızı buraya bırakın</p>
+            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${CREAM}60` }}>veya dokunarak seçin · JPG, PNG, HEIC</p>
           </div>
-        </div>
 
-        <p style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:18, fontStyle:"italic",
-          color:`${CREAM}55`,
-        }}>Sonsuz bir yolculuğun ilk adımları... ✦</p>
-      </section>}
+          <button style={{
+            width:"100%", marginTop:20, padding:"14px",
+            background:BG_MED, color:CREAM, border:`1px solid ${GOLD}20`, borderRadius:8,
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:13, letterSpacing:"0.32em",
+            textTransform:"uppercase", cursor:"pointer"
+          }}>
+            YÜKLE
+          </button>
+        </div>
+      </section>
 
       {/* ─── Footer ─── */}
       <footer style={{
         background:BG_DARK,
-        borderTop:`1px solid ${GOLD}12`,
-        padding:"40px 24px",
+        padding:"20px 24px 80px",
         textAlign:"center",
       }}>
         <p style={{
           fontFamily:"var(--font-dancing),cursive",
-          fontSize:"clamp(1.8rem,5vw,2.6rem)",
-          color:`${CREAM}65`, marginBottom:22,
-        }}>{fullName}</p>
-
-        <a
-          href={`https://wa.me/?text=${whatsapp}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display:"inline-flex", alignItems:"center", gap:8,
-            background:"#25D366", color:"#fff",
-            padding:"10px 22px", borderRadius:8,
-            fontSize:13,
-            fontFamily:"var(--font-cormorant),serif",
-            textDecoration:"none", letterSpacing:"0.1em",
-            marginBottom:24,
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          Paylaş
-        </a>
-
-        <p style={{
-          fontFamily:"var(--font-cormorant),serif",
-          fontSize:11, letterSpacing:"0.2em",
-          color:`${GOLD}35`,
-        }}>bekleriz.com ile oluşturuldu ✦</p>
+          fontSize:"clamp(2.4rem,7vw,3.6rem)",
+          color:CREAM,
+        }}>Sizi çok seviyoruz 💛</p>
       </footer>
 
       <style>{`@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}`}</style>
@@ -667,8 +632,8 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
   };
 
   const gonder = async () => {
-    if (!form.ad.trim())  { setHata("Lütfen adınızı girin."); return; }
-    if (!form.katilim)    { setHata("Lütfen katılım durumunu seçin."); return; }
+    if (!form.ad.trim()) { setHata("Lütfen adınızı girin."); return; }
+    if (!form.katilim)   { setHata("Lütfen katılım durumunu seçin."); return; }
     setYukleniyor(true); setHata("");
     try {
       const res = await fetch("/api/rsvp", {
@@ -716,20 +681,19 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
 
   return (
     <div>
-      <label style={labelStyle}>Adınız Soyadınız</label>
+      <label style={labelStyle}>ADINIZ SOYADINIZ</label>
       <input type="text" value={form.ad}
         onChange={e => setForm({...form, ad:e.target.value})}
         placeholder="örn. Selin Kaya" style={fieldStyle}/>
 
-      <label style={labelStyle}>Kaç Kişi?</label>
+      <label style={labelStyle}>KAÇ KİŞİ?</label>
       <select value={form.kisiSayisi}
         onChange={e => setForm({...form, kisiSayisi:e.target.value})}
         style={fieldStyle}>
-        <option value="">Seçiniz</option>
         {[1,2,3,4,5].map(n=><option key={n} value={n}>{n} kişi</option>)}
       </select>
 
-      <label style={labelStyle}>Katılım Durumu</label>
+      <label style={labelStyle}>KATILIM DURUMU</label>
       <select value={form.katilim}
         onChange={e => setForm({...form, katilim:e.target.value})}
         style={fieldStyle}>
@@ -806,7 +770,7 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
         cursor: yukleniyor ? "not-allowed" : "pointer",
         opacity: yukleniyor ? 0.7 : 1,
       }}>
-        {yukleniyor ? "Gönderiliyor..." : "BİLDİR"}
+        {yukleniyor ? "GÖNDERİLİYOR..." : "BİLDİR"}
       </button>
 
       {/* KVKK Bildirimi */}
@@ -814,11 +778,7 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
         fontFamily:"var(--font-cormorant),serif",
         color:"rgba(139,90,74,0.65)", textAlign:"center" }}>
         Girdiğiniz bilgiler yalnızca katılım bildirimini davet sahibine iletmek amacıyla
-        işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.{" "}
-        <a href="/kvkk" target="_blank" rel="noopener noreferrer"
-          style={{ color:"rgba(139,90,74,0.85)", textDecoration:"underline" }}>
-          KVKK Aydınlatma Metni
-        </a>
+        işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.
       </p>
     </div>
   );
