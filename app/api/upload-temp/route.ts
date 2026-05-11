@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const dosya = form.get("dosya") as File | null;
 
   if (!dosya) return NextResponse.json({ hata: "Dosya gerekli." }, { status: 400 });
-  if (dosya.size > 6_000_000) return NextResponse.json({ hata: "Dosya max 6 MB." }, { status: 400 });
+  if (dosya.size > 10_000_000) return NextResponse.json({ hata: "Dosya max 10 MB." }, { status: 400 });
   if (!dosya.type.startsWith("image/")) return NextResponse.json({ hata: "Sadece resim." }, { status: 400 });
 
   const blob = await put(

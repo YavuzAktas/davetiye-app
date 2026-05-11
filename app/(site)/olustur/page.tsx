@@ -95,11 +95,34 @@ function OlusturIcerigi() {
   const [polaroidler, setPolaroidler] = useState<[string|null, string|null, string|null]>([null, null, null]);
   const [polaroidYukleniyor, setPolaroidYukleniyor] = useState<[boolean, boolean, boolean]>([false, false, false]);
 
+  async function gorselSikistir(file: File, maxPx = 1400, quality = 0.85): Promise<File> {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const { naturalWidth: w, naturalHeight: h } = img;
+        const scale = Math.min(1, maxPx / Math.max(w, h));
+        const canvas = document.createElement("canvas");
+        canvas.width  = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          blob => resolve(blob ? new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }) : file),
+          "image/jpeg", quality
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+
   async function polaroidSec(index: 0|1|2, file: File) {
     setPolaroidYukleniyor(prev => { const n = [...prev] as typeof prev; n[index] = true; return n; });
     try {
+      const sikistirilmis = await gorselSikistir(file);
       const fd = new FormData();
-      fd.append("dosya", file);
+      fd.append("dosya", sikistirilmis);
       const res = await fetch("/api/upload-temp", { method: "POST", body: fd });
       const json = await res.json();
       if (res.ok) setPolaroidler(prev => { const n = [...prev] as typeof prev; n[index] = json.url; return n; });
