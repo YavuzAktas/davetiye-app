@@ -67,6 +67,7 @@ export default function EtkilesimButonu({
   const [sesBlob,         setSesBlob]         = useState<Blob | null>(null);
   const [sesBlobUrl,      setSesBlobUrl]      = useState<string | null>(null);
   const [sesHata,         setSesHata]         = useState("");
+  const [izinReddedildi,  setIzinReddedildi]  = useState(false);
   const recorderRef   = useRef<MediaRecorder | null>(null);
   const chunksRef     = useRef<Blob[]>([]);
   const timerRef      = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -166,8 +167,10 @@ export default function EtkilesimButonu({
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err: unknown) {
       const name = (err as { name?: string }).name ?? "";
-      if (name === "NotAllowedError" || name === "PermissionDeniedError")
-        setSesHata("Mikrofon izni reddedildi. Adres çubuğundaki kilit ikonundan izin verip sayfayı yenileyin.");
+      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+        setSesHata("Mikrofon izni reddedildi. Adres çubuğundaki kilit ikonundan mikrofon iznini açın.");
+        setIzinReddedildi(true);
+      }
       else if (name === "NotFoundError")
         setSesHata("Mikrofon bulunamadı.");
       else if (name === "NotReadableError")
@@ -244,7 +247,7 @@ export default function EtkilesimButonu({
   function sesliYenidenBasla() {
     if (sesBlobUrl) URL.revokeObjectURL(sesBlobUrl);
     setSesBlob(null); setSesBlobUrl(null);
-    setSure(0); setKalan(30); setSesHata("");
+    setSure(0); setKalan(30); setSesHata(""); setIzinReddedildi(false);
     setKayitDurum("bekliyor");
   }
 
@@ -500,11 +503,19 @@ export default function EtkilesimButonu({
                       onChange={e => setSesliAd(e.target.value)} maxLength={60}
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white" />
                     {sesHata && <p className="text-xs text-red-500">{sesHata}</p>}
-                    <button onClick={kaydiBaslat}
-                      className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
-                      style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
-                      🎙️ Kayıt Başlat
-                    </button>
+                    {izinReddedildi && (
+                      <button onClick={() => window.location.reload()}
+                        className="w-full py-2.5 rounded-xl text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
+                        🔄 Sayfayı Yenile
+                      </button>
+                    )}
+                    {!izinReddedildi && (
+                      <button onClick={kaydiBaslat}
+                        className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
+                        style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
+                        🎙️ Kayıt Başlat
+                      </button>
+                    )}
                   </div>
                 )}
 

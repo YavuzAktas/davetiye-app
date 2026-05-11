@@ -53,13 +53,14 @@ function RoseSeal({ size = 220, onClick }: { size?: number; onClick?: () => void
 
 /* ─── Polaroid kart ─── */
 function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?:boolean; src?:string }) {
+  const [imgHata, setImgHata] = useState(false);
   return (
     <div style={{
       background:"#fff",
       borderRadius:4,
       padding:"10px 10px 36px",
       transform: isActive ? `rotate(${rotate}deg) scale(1.12)` : `rotate(${rotate}deg) scale(1)`,
-      boxShadow: isActive 
+      boxShadow: isActive
         ? "0 25px 50px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.3)"
         : "0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
       width:170, flexShrink:0,
@@ -71,10 +72,13 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
         background:`linear-gradient(135deg, #6B1828 0%, #470D1A 100%)`,
         borderRadius:2,
         display:"flex", alignItems:"center", justifyContent:"center",
-        overflow: "hidden"
+        overflow: "hidden",
+        WebkitTransform: "translateZ(0)",
       }}>
-        {src ? (
-          <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="Anı" />
+        {src && !imgHata ? (
+          <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt=""
+            loading="eager" crossOrigin="anonymous"
+            onError={() => setImgHata(true)} />
         ) : (
           <svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.12)">
             <path d="M4 6h3.5l1.5-2h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
@@ -327,7 +331,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               onMouseEnter={() => setAktifPolaroid(1)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(1)}
-              style={{ position:"absolute", top:45, left: -5, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease backwards 0s" }}
+              style={{ position:"absolute", top:45, left: -5, zIndex: aktifPolaroid === 1 ? 10 : 1, animation:"fadeUp 0.8s ease forwards 0s" }}
             >
               <div style={{ animation: "float 6s ease-in-out infinite 0s" }}>
                 <Polaroid rotate={-8} isActive={aktifPolaroid === 1} src={davetiye.polaroid1 ?? undefined} />
@@ -338,7 +342,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               onMouseEnter={() => setAktifPolaroid(2)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(2)}
-              style={{ position:"absolute", top:20, left: 45, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease backwards 0.2s" }}
+              style={{ position:"absolute", top:20, left: 45, zIndex: aktifPolaroid === 2 ? 10 : 2, animation:"fadeUp 0.8s ease forwards 0.2s" }}
             >
               <div style={{ animation: "float 6.5s ease-in-out infinite 0.5s" }}>
                 <Polaroid rotate={-2} isActive={aktifPolaroid === 2} src={davetiye.polaroid2 ?? undefined} />
@@ -349,7 +353,7 @@ export default function NisanLuksSablon({ davetiye }: SablonProps) {
               onMouseEnter={() => setAktifPolaroid(3)}
               onMouseLeave={() => setAktifPolaroid(null)}
               onTouchStart={() => setAktifPolaroid(3)}
-              style={{ position:"absolute", top:40, left: 95, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease backwards 0.4s" }}
+              style={{ position:"absolute", top:40, left: 95, zIndex: aktifPolaroid === 3 ? 10 : 3, animation:"fadeUp 0.8s ease forwards 0.4s" }}
             >
               <div style={{ animation: "float 7s ease-in-out infinite 1s" }}>
                 <Polaroid rotate={5} isActive={aktifPolaroid === 3} src={davetiye.polaroid3 ?? undefined} />
