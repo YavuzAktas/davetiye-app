@@ -80,6 +80,8 @@ export default function EtkilesimButonu({
     return () => document.removeEventListener("davetiye-acildi", handler);
   }, []);
 
+  if (sekmeler.length === 0 || !gorunur) return null;
+
   /* ─ Veri çek ─ */
   useEffect(() => {
     if (!acik) return;
@@ -88,8 +90,6 @@ export default function EtkilesimButonu({
     if (sekme === "sesli") fetchSesliAnilar();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acik, sekme]);
-
-  if (sekmeler.length === 0 || !gorunur) return null;
 
   async function fetchFotolar() {
     setFotoListeYuk(true);
