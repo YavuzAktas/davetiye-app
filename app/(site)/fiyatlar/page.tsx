@@ -86,10 +86,26 @@ const TABLO = [
 
 const SSS = [
   { soru: "Ücretsiz plan ne kadar süre kullanılabilir?", cevap: "Ücretsiz plan süresiz kullanılabilir. Daha fazla özellik için istediğiniz zaman yükseltebilirsiniz." },
-  { soru: "Ödeme güvenli mi?", cevap: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz güvende." },
+  { soru: "Ödeme güvenli mi?", cevap: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz tarafımızca saklanmaz." },
   { soru: "İptal edebilir miyim?", cevap: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Dijital hizmet ödeme sonrası hemen başlatılır; ödeme öncesinde cayma hakkı istisnası ayrıca onaylanır. Hizmetin hiç kullanılmadığı durumlarda destek@bekleriz.com üzerinden iade değerlendirmesi isteyebilirsiniz." },
   { soru: "Fatura alabilir miyim?", cevap: "Ödeme belgesi için destek@bekleriz.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir." },
 ];
+
+type FaturaBilgileri = {
+  adSoyad: string;
+  telefon: string;
+  kimlikVergiNo: string;
+  sehir: string;
+  adres: string;
+};
+
+const BOS_FATURA_BILGILERI: FaturaBilgileri = {
+  adSoyad: "",
+  telefon: "",
+  kimlikVergiNo: "",
+  sehir: "",
+  adres: "",
+};
 
 export default function FiyatlarSayfasi() {
   const { data: session, status } = useSession();
@@ -100,6 +116,8 @@ export default function FiyatlarSayfasi() {
   const [sssRef, sssVisible] = useInView();
   const [odeModal, setOdeModal] = useState<string | null>(null);
   const [odemeOnaylari, setOdemeOnaylari] = useState<Record<string, boolean>>({});
+  const [faturaModalPlan, setFaturaModalPlan] = useState<{ planId: string; fiyat: number } | null>(null);
+  const [faturaBilgileri, setFaturaBilgileri] = useState<FaturaBilgileri>(BOS_FATURA_BILGILERI);
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
@@ -126,6 +144,11 @@ export default function FiyatlarSayfasi() {
     };
   }, [odeModal]);
 
+  useEffect(() => {
+    if (!session?.user?.name || faturaBilgileri.adSoyad) return;
+    setFaturaBilgileri(prev => ({ ...prev, adSoyad: session.user?.name ?? "" }));
+  }, [session?.user?.name, faturaBilgileri.adSoyad]);
+
   const handleOdeme = async (planId: string, fiyat: number) => {
     if (!session) { router.push("/giris"); return; }
     if (planId === "free" || kullaniciPlan === planId) return;
@@ -134,15 +157,28 @@ export default function FiyatlarSayfasi() {
       return;
     }
 
+    setFaturaModalPlan({ planId, fiyat });
+  };
+
+  const faturaAlaniGuncelle = (alan: keyof FaturaBilgileri, deger: string) => {
+    setFaturaBilgileri(prev => ({ ...prev, [alan]: deger }));
+  };
+
+  const odemeBaslat = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!faturaModalPlan) return;
+
+    const { planId, fiyat } = faturaModalPlan;
     setYukleniyor(planId);
     try {
       const res = await fetch("/api/odeme/baslat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, fiyat }),
+        body: JSON.stringify({ planId, fiyat, faturaBilgileri }),
       });
       const data = await res.json();
       if (data.checkoutFormContent) {
+        setFaturaModalPlan(null);
         setOdeModal(data.checkoutFormContent);
       } else {
         alert(data.hata ?? "Ödeme başlatılamadı, tekrar deneyin.");
@@ -221,6 +257,116 @@ export default function FiyatlarSayfasi() {
             <div id="iyzipay-checkout-form" className="responsive" />
           </div>
         </div>
+      </div>
+    )}
+    {faturaModalPlan && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+        onClick={e => { if (e.target === e.currentTarget && !yukleniyor) setFaturaModalPlan(null); }}
+      >
+        <form
+          onSubmit={odemeBaslat}
+          className="w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden"
+        >
+          <div className="px-6 py-5 border-b border-gray-100 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Fatura Bilgileri</p>
+              <h2 className="text-xl font-bold text-gray-900 mt-1">{planIsmi(faturaModalPlan.planId)} planı</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Bu bilgiler ödeme sağlayıcısı iyzico ile paylaşılır ve ödeme kaydında saklanır.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setFaturaModalPlan(null)}
+              disabled={!!yukleniyor}
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-gray-500"
+            >
+              x
+            </button>
+          </div>
+
+          <div className="px-6 py-5 space-y-4">
+            <label className="block">
+              <span className="block text-xs font-semibold text-gray-600 mb-1.5">Ad soyad</span>
+              <input
+                required
+                minLength={3}
+                value={faturaBilgileri.adSoyad}
+                onChange={e => faturaAlaniGuncelle("adSoyad", e.target.value)}
+                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                placeholder="Ad Soyad"
+              />
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <label className="block">
+                <span className="block text-xs font-semibold text-gray-600 mb-1.5">Telefon</span>
+                <input
+                  required
+                  value={faturaBilgileri.telefon}
+                  onChange={e => faturaAlaniGuncelle("telefon", e.target.value)}
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                  placeholder="+905xxxxxxxxx"
+                  inputMode="tel"
+                />
+              </label>
+              <label className="block">
+                <span className="block text-xs font-semibold text-gray-600 mb-1.5">TCKN / Vergi No</span>
+                <input
+                  required
+                  value={faturaBilgileri.kimlikVergiNo}
+                  onChange={e => faturaAlaniGuncelle("kimlikVergiNo", e.target.value.replace(/\D/g, "").slice(0, 11))}
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                  placeholder="10 veya 11 hane"
+                  inputMode="numeric"
+                />
+              </label>
+            </div>
+
+            <label className="block">
+              <span className="block text-xs font-semibold text-gray-600 mb-1.5">Şehir</span>
+              <input
+                required
+                value={faturaBilgileri.sehir}
+                onChange={e => faturaAlaniGuncelle("sehir", e.target.value)}
+                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                placeholder="İstanbul"
+              />
+            </label>
+
+            <label className="block">
+              <span className="block text-xs font-semibold text-gray-600 mb-1.5">Fatura adresi</span>
+              <textarea
+                required
+                minLength={10}
+                value={faturaBilgileri.adres}
+                onChange={e => faturaAlaniGuncelle("adres", e.target.value)}
+                className="w-full min-h-24 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 resize-none"
+                placeholder="Açık adres"
+              />
+            </label>
+          </div>
+
+          <div className="px-6 py-5 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <button
+              type="button"
+              onClick={() => setFaturaModalPlan(null)}
+              disabled={!!yukleniyor}
+              className="px-5 py-3 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+            >
+              Vazgeç
+            </button>
+            <button
+              type="submit"
+              disabled={!!yukleniyor}
+              className="px-5 py-3 rounded-2xl text-sm font-bold bg-gray-900 text-white hover:bg-purple-700 disabled:opacity-50"
+            >
+              {yukleniyor ? "Ödeme hazırlanıyor..." : "Ödemeye Devam Et"}
+            </button>
+          </div>
+        </form>
       </div>
     )}
     <div className="overflow-x-hidden">

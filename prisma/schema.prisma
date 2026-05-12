@@ -189,32 +189,42 @@ model MasaAtama {
 }
 
 model OdemeToken {
-  id         String   @id @default(cuid())
-  token      String   @unique
-  userId     String
-  planId     String
-  kullanildi Boolean  @default(false)
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  token              String   @unique
+  userId             String
+  planId             String
+  kullanildi         Boolean  @default(false)
+  expiresAt          DateTime
+  createdAt          DateTime @default(now())
+  aliciAdSoyad       String?
+  aliciTelefon       String?
+  aliciKimlikVergiNo String?
+  aliciSehir         String?
+  aliciAdres         String?
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model OdemeKaydi {
-  id             String   @id @default(cuid())
-  userId         String?
-  userEmail      String?
-  planId         String
-  token          String?  @unique
-  paymentId      String?
-  conversationId String?
-  price          String?
-  paidPrice      String?
-  currency       String   @default("TRY")
-  paymentStatus  String?
-  createdAt      DateTime @default(now())
-  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id                 String   @id @default(cuid())
+  userId             String?
+  userEmail          String?
+  planId             String
+  token              String?  @unique
+  paymentId          String?
+  conversationId     String?
+  price              String?
+  paidPrice          String?
+  currency           String   @default("TRY")
+  paymentStatus      String?
+  aliciAdSoyad       String?
+  aliciTelefon       String?
+  aliciKimlikVergiNo String?
+  aliciSehir         String?
+  aliciAdres         String?
+  createdAt          DateTime @default(now())
+  user               User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([createdAt])

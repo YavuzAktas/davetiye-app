@@ -5,6 +5,66 @@ import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 
+type FaturaBilgileri = {
+  adSoyad: string;
+  telefon: string;
+  kimlikVergiNo: string;
+  sehir: string;
+  adres: string;
+};
+
+function metinTemizle(deger: unknown, max = 160): string {
+  return typeof deger === "string" ? deger.trim().replace(/\s+/g, " ").slice(0, max) : "";
+}
+
+function telefonNormalizeEt(deger: unknown): string {
+  const ham = typeof deger === "string" ? deger.trim() : "";
+  const rakamlar = ham.replace(/\D/g, "");
+
+  if (rakamlar.length === 10 && rakamlar.startsWith("5")) return `+90${rakamlar}`;
+  if (rakamlar.length === 11 && rakamlar.startsWith("05")) return `+9${rakamlar}`;
+  if (rakamlar.length === 12 && rakamlar.startsWith("90")) return `+${rakamlar}`;
+
+  return ham.startsWith("+") ? ham.replace(/[^\d+]/g, "") : ham;
+}
+
+function faturaBilgileriniOku(body: any): { bilgiler?: FaturaBilgileri; hata?: string } {
+  const fatura = body?.faturaBilgileri ?? {};
+  const bilgiler: FaturaBilgileri = {
+    adSoyad: metinTemizle(fatura.adSoyad, 120),
+    telefon: telefonNormalizeEt(fatura.telefon),
+    kimlikVergiNo: metinTemizle(fatura.kimlikVergiNo, 20).replace(/\D/g, ""),
+    sehir: metinTemizle(fatura.sehir, 60),
+    adres: metinTemizle(fatura.adres, 300),
+  };
+
+  if (bilgiler.adSoyad.length < 3 || !bilgiler.adSoyad.includes(" ")) {
+    return { hata: "Fatura için ad ve soyad bilgisi gereklidir." };
+  }
+  if (!/^\+90\d{10}$/.test(bilgiler.telefon)) {
+    return { hata: "Telefon numarasını +90 ile başlayan geçerli bir mobil numara olarak girin." };
+  }
+  if (!/^\d{10,11}$/.test(bilgiler.kimlikVergiNo)) {
+    return { hata: "T.C. kimlik veya vergi numarası 10 ya da 11 haneli olmalıdır." };
+  }
+  if (bilgiler.sehir.length < 2) {
+    return { hata: "Fatura şehri gereklidir." };
+  }
+  if (bilgiler.adres.length < 10) {
+    return { hata: "Fatura adresi en az 10 karakter olmalıdır." };
+  }
+
+  return { bilgiler };
+}
+
+function adSoyadBol(adSoyad: string): { ad: string; soyad: string } {
+  const parcalar = adSoyad.trim().split(/\s+/);
+  return {
+    ad: parcalar.slice(0, -1).join(" ") || parcalar[0] || "Ad",
+    soyad: parcalar.at(-1) || "Soyad",
+  };
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // 1. IP tabanlı limit: 5 deneme / 15 dk
   const clientIp = ipAlNextRequest(req);
@@ -37,7 +97,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
   }
 
-  const { planId } = await req.json();
+  const body = await req.json();
+  const { planId } = body;
 
   const PLAN_FIYATLARI: Record<string, number> = { standart: 299, premium: 599 };
   const fiyat = PLAN_FIYATLARI[planId];
@@ -45,19 +106,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
   }
 
-  const iyzicoBaseUrl = process.env.IYZICO_BASE_URL ?? "https://sandbox-api.iyzipay.com";
-  const sandbox = iyzicoBaseUrl.includes("sandbox");
-  const identityNumber = process.env.IYZICO_BUYER_IDENTITY_NUMBER ?? (sandbox ? "74300864791" : "");
-  const gsmNumber = process.env.IYZICO_BUYER_GSM ?? (sandbox ? "+905350000000" : "");
-  const buyerCity = process.env.IYZICO_BUYER_CITY ?? (sandbox ? "Istanbul" : "");
-  const buyerAddress = process.env.IYZICO_BUYER_ADDRESS ?? (sandbox ? "Türkiye" : "");
-
-  if (!identityNumber || !gsmNumber || !buyerCity || !buyerAddress) {
-    return NextResponse.json(
-      { hata: "Ödeme yapılandırması eksik. Lütfen destek ile iletişime geçin." },
-      { status: 503 },
-    );
+  const { bilgiler: faturaBilgileri, hata } = faturaBilgileriniOku(body);
+  if (!faturaBilgileri) {
+    return NextResponse.json({ hata }, { status: 400 });
   }
+
+  const { ad, soyad } = adSoyadBol(faturaBilgileri.adSoyad);
 
   const request = {
     locale: "tr",
@@ -71,27 +125,27 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     enabledInstallments: [1, 2, 3, 6, 9],
     buyer: {
       id: user.id,
-      name: user.name?.split(" ")[0] || "Ad",
-      surname: user.name?.split(" ").slice(1).join(" ") || "Soyad",
-      gsmNumber,
+      name: ad,
+      surname: soyad,
+      gsmNumber: faturaBilgileri.telefon,
       email: user.email!,
-      identityNumber,
-      registrationAddress: buyerAddress,
+      identityNumber: faturaBilgileri.kimlikVergiNo,
+      registrationAddress: faturaBilgileri.adres,
       ip: clientIp,
-      city: buyerCity,
+      city: faturaBilgileri.sehir,
       country: "Turkey",
     },
     shippingAddress: {
-      contactName: user.name || "Kullanıcı",
-      city: buyerCity,
+      contactName: faturaBilgileri.adSoyad,
+      city: faturaBilgileri.sehir,
       country: "Turkey",
-      address: buyerAddress,
+      address: faturaBilgileri.adres,
     },
     billingAddress: {
-      contactName: user.name || "Kullanıcı",
-      city: buyerCity,
+      contactName: faturaBilgileri.adSoyad,
+      city: faturaBilgileri.sehir,
       country: "Turkey",
-      address: buyerAddress,
+      address: faturaBilgileri.adres,
     },
     basketItems: [
       {
@@ -121,6 +175,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       userId:    user.id,
       planId,
       expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat
+      aliciAdSoyad: faturaBilgileri.adSoyad,
+      aliciTelefon: faturaBilgileri.telefon,
+      aliciKimlikVergiNo: faturaBilgileri.kimlikVergiNo,
+      aliciSehir: faturaBilgileri.sehir,
+      aliciAdres: faturaBilgileri.adres,
     },
   });
 

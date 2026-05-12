@@ -36,6 +36,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       planId: true,
       kullanildi: true,
       expiresAt: true,
+      aliciAdSoyad: true,
+      aliciTelefon: true,
+      aliciKimlikVergiNo: true,
+      aliciSehir: true,
+      aliciAdres: true,
       user: { select: { email: true } },
     },
   });
@@ -71,6 +76,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       paidPrice: result.paidPrice ? String(result.paidPrice) : null,
       currency: result.currency ? String(result.currency) : "TRY",
       paymentStatus: result.paymentStatus ? String(result.paymentStatus) : null,
+      aliciAdSoyad: odemeToken.aliciAdSoyad,
+      aliciTelefon: odemeToken.aliciTelefon,
+      aliciKimlikVergiNo: odemeToken.aliciKimlikVergiNo,
+      aliciSehir: odemeToken.aliciSehir,
+      aliciAdres: odemeToken.aliciAdres,
     },
   });
 
