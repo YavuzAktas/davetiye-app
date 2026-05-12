@@ -399,8 +399,11 @@ export default function EtkilesimButonu({
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yüklediğiniz fotoğraf davet sahibine iletilir; onaylanan fotoğraflar davetiye
-                        sayfasında görünür. Silme talepleri için{" "}
+                        Adınız ve yüklediğiniz fotoğraf davet sahibine iletilir;{" "}
+                        {canliDuvarAktif
+                          ? "Canlı Duvar açık olduğu için fotoğrafınız gönderimden sonra davetiye sayfasında görünebilir."
+                          : "davet sahibi onaylarsa fotoğrafınız davetiye sayfasında görünür."}{" "}
+                        Silme talepleri için{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
                         </a>{" "}

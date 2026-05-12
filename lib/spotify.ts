@@ -60,7 +60,6 @@ export async function tokenYenile(refreshToken: string) {
     throw new Error(`Token yenilenemedi — HTTP ${res.status}: ${errBody}`);
   }
   const json = await res.json();
-  console.log("Token yenilendi, scope:", json.scope);
   return json.access_token as string;
 }
 
@@ -115,7 +114,6 @@ export async function playlistOlustur(
   const safeIsim = isim.replace(/[^\x20-\x7EÀ-ɏЀ-ӿ]/g, "").trim() || "Etkinlik Listesi";
   const url = `https://api.spotify.com/v1/me/playlists`;
   const body = JSON.stringify({ name: safeIsim, description: "Bekleriz tarafindan olusturuldu", public: false });
-  console.log("Spotify playlist POST url:", url, "body:", body);
   const res = await fetch(url, {
     method: "POST",
     headers: {

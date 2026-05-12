@@ -77,7 +77,7 @@ export default function GizlilikSayfasi() {
             <ul>
               <li><strong>Hizmet sunumu:</strong> Davetiye oluşturma, düzenleme ve paylaşım özelliklerini çalıştırmak</li>
               <li><strong>RSVP iletimi:</strong> Misafirlerin katılım bildirimlerini davet sahibine iletmek</li>
-              <li><strong>Albüm ve anı yönetimi:</strong> Fotoğraf, yazılı anı ve sesli anıları moderasyon sonrası davetiye sayfasında göstermek</li>
+              <li><strong>Albüm ve anı yönetimi:</strong> Fotoğrafları Canlı Duvar etkinse gönderim sonrası, diğer fotoğraf/yazılı/sesli anıları moderasyon sonrası davetiye sayfasında göstermek</li>
               <li><strong>Entegrasyon:</strong> Spotify bağlantısı ile şarkı önerilerini etkinlik çalma listesine eklemek</li>
               <li><strong>Kimlik doğrulama:</strong> Hesabınıza güvenli erişim sağlamak</li>
               <li><strong>Ödeme:</strong> Plan yükseltme işlemlerini gerçekleştirmek</li>

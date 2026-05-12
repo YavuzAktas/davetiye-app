@@ -66,7 +66,7 @@ export default function KvkkSayfasi() {
               <li>Üyelik kaydının oluşturulması ve kimlik doğrulama</li>
               <li>Dijital davetiye oluşturma, düzenleme ve paylaşım hizmetinin sunulması</li>
               <li>RSVP (katılım bildirimi) toplanması ve davet sahibine iletilmesi</li>
-              <li>Misafir fotoğrafları, yazılı ve sesli anıların moderasyon sonrası yayınlanması</li>
+              <li>Misafir fotoğrafları, yazılı ve sesli anıların moderasyon sonrası veya Canlı Duvar etkinse fotoğrafların gönderim sonrası yayınlanması</li>
               <li>Spotify entegrasyonu ile şarkı önerilerinin çalma listesine eklenmesi</li>
               <li>Ödeme işlemlerinin gerçekleştirilmesi ve planın güncellenmesi</li>
               <li>Teknik destek ve müşteri hizmetleri sunulması</li>
@@ -88,7 +88,7 @@ export default function KvkkSayfasi() {
                 <tbody>
                   <tr><td>Üyelik ve hizmet sunumu</td><td>Sözleşmenin kurulması/ifası (m.5/2-c)</td></tr>
                   <tr><td>Davetiye, RSVP, misafir listesi ve anı özellikleri</td><td>Sözleşmenin ifası (m.5/2-c), ilgili kişinin kendisi tarafından alenileştirme şartları varsa m.5/2-d ve meşru menfaat (m.5/2-f)</td></tr>
-                  <tr><td>İsteğe bağlı medya, sesli anı ve Spotify özellikleri</td><td>Özelliğin talep edilmesi halinde sözleşmenin ifası (m.5/2-c) ve gerektiğinde açık rıza</td></tr>
+                  <tr><td>İsteğe bağlı medya, Canlı Duvar, sesli anı ve Spotify özellikleri</td><td>Özelliğin talep edilmesi halinde sözleşmenin ifası (m.5/2-c) ve gerektiğinde açık rıza</td></tr>
                   <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c), kanuni yükümlülük (m.5/2-ç)</td></tr>
                   <tr><td>Güvenlik, log kayıtları</td><td>Meşru menfaat (m.5/2-f)</td></tr>
                   <tr><td>Yasal yükümlülükler</td><td>Kanuni yükümlülük (m.5/2-ç)</td></tr>

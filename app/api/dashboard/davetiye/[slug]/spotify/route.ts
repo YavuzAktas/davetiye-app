@@ -33,13 +33,11 @@ export async function POST(_req: Request, { params }: Params) {
 
   try {
     const accessToken = await tokenYenile(user.spotifyRefreshToken);
-    console.log("Spotify spotifyId:", user.spotifyId);
     // /me endpoint ile gerçek profili doğrula
     const meRes = await fetch("https://api.spotify.com/v1/me", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const me = await meRes.json();
-    console.log("Spotify /me id:", me.id, "stored id:", user.spotifyId);
     const gerçekId = me.id ?? user.spotifyId;
     if (me.id && me.id !== user.spotifyId) {
       await prisma.user.update({ where: { id: session.user.id }, data: { spotifyId: me.id } });
