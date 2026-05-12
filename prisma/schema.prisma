@@ -26,6 +26,7 @@ model User {
   odemeKayitlari      OdemeKaydi[]
   sessions            Session[]
   bildirimleri        Bildirim[]
+  geciciYuklemeler    GeciciYukleme[]
   spotifyRefreshToken String?
   spotifyId           String?
 }
@@ -217,6 +218,20 @@ model OdemeKaydi {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+model GeciciYukleme {
+  id         String    @id @default(cuid())
+  userId     String
+  dosyaUrl   String    @unique
+  tip        String    @default("polaroid")
+  kullanildi Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  usedAt     DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([kullanildi, createdAt])
 }
 
 model Davetli {

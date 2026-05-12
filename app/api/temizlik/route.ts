@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { del } from "@vercel/blob";
 
 // Vercel Cron veya manuel tetikleme için CRON_SECRET ile korunur
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -12,6 +13,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const birYilOnce = new Date(simdi.getTime() - 365 * 24 * 60 * 60 * 1000);
   const otuzGunOnce = new Date(simdi.getTime() - 30 * 24 * 60 * 60 * 1000);
   const onYilOnce = new Date(simdi.getTime() - 10 * 365 * 24 * 60 * 60 * 1000);
+  const birGunOnce = new Date(simdi.getTime() - 24 * 60 * 60 * 1000);
 
   // 1) Etkinlik tarihi 1 yıldan önce geçmiş davetiyelerin misafir verilerini sil
   //    (KVKK politikası: "etkinlik tarihinden itibaren en geç 1 yıl içinde silinir")
@@ -49,12 +51,36 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
   });
 
+  // 4) Davetiye oluşturulmadan kalan geçici polaroid dosyalarını sil
+  const eskiGeciciYuklemeler = await prisma.geciciYukleme.findMany({
+    where: {
+      kullanildi: false,
+      createdAt: { lt: birGunOnce },
+    },
+    select: { id: true, dosyaUrl: true },
+    take: 100,
+  });
+
+  let silinenGeciciYukleme = 0;
+  for (const yukleme of eskiGeciciYuklemeler) {
+    try {
+      if (process.env.BLOB_READ_WRITE_TOKEN) {
+        await del(yukleme.dosyaUrl);
+      }
+      await prisma.geciciYukleme.delete({ where: { id: yukleme.id } });
+      silinenGeciciYukleme++;
+    } catch (err) {
+      console.error("Geçici yükleme temizlenemedi:", err);
+    }
+  }
+
   return NextResponse.json({
     basarili: true,
     silinenRsvp: silinenRsvp.count,
     silinenDavetli: silinenDavetli.count,
     silinenToken: silinenToken.count,
     silinenOdemeKaydi: silinenOdemeKaydi.count,
+    silinenGeciciYukleme,
     tarih: simdi.toISOString(),
   });
 }

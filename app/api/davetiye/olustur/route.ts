@@ -118,5 +118,20 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  const kullanilanPolaroidler = [polaroid1, polaroid2, polaroid3].filter(Boolean) as string[];
+  if (kullanilanPolaroidler.length > 0) {
+    await prisma.geciciYukleme.updateMany({
+      where: {
+        userId: user.id,
+        dosyaUrl: { in: kullanilanPolaroidler },
+        kullanildi: false,
+      },
+      data: {
+        kullanildi: true,
+        usedAt: new Date(),
+      },
+    });
+  }
+
   return NextResponse.json({ slug: davetiye.slug });
 }
