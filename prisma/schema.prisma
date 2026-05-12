@@ -258,6 +258,21 @@ model MedyaSilmeKuyrugu {
   @@index([createdAt])
 }
 
+model ImhaKaydi {
+  id             String   @id @default(cuid())
+  kaynak         String
+  islemTuru      String
+  veriKategorisi String
+  adet           Int
+  yontem         String
+  gerekce        String
+  detay          Json?
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([kaynak])
+}
+
 model Davetli {
   id         String   @id @default(cuid())
   ad         String

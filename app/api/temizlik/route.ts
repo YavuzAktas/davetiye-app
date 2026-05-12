@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { del } from "@vercel/blob";
 import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 import { cronSecretEksik, cronYetkiliMi } from "@/lib/cron-auth";
+import { imhaKayitlariOlustur } from "@/lib/imha-kaydi";
 
 // Vercel Cron veya manuel tetikleme için CRON_SECRET ile korunur
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -120,6 +121,57 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       createdAt: true,
     },
   });
+
+  await imhaKayitlariOlustur([
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "periyodik-imha",
+      veriKategorisi: "RSVP kayıtları",
+      adet: silinenRsvp.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "Etkinlik tarihinden itibaren 1 yıllık saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "periyodik-imha",
+      veriKategorisi: "Davetli listesi kayıtları",
+      adet: silinenDavetli.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "Etkinlik tarihinden itibaren 1 yıllık saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "periyodik-imha",
+      veriKategorisi: "Süresi dolmuş ödeme tokenları",
+      adet: silinenToken.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "Ödeme token saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "yasal-saklama-sonu-imha",
+      veriKategorisi: "Ödeme kayıtları",
+      adet: silinenOdemeKaydi.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "10 yıllık yasal saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "gecici-yukleme-imha",
+      veriKategorisi: "Kullanılmamış geçici medya yüklemeleri",
+      adet: silinenGeciciYukleme,
+      yontem: "Vercel Blob ve veritabanı kayıt silme",
+      gerekce: "Davetiye oluşturulmadan kalan geçici yükleme saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
+      islemTuru: "medya-silme-kuyrugu-imha",
+      veriKategorisi: "Önceden silinemeyen medya dosyaları",
+      adet: kuyruktanSilinenMedya,
+      yontem: "Vercel Blob silme ve kuyruk kaydı silme",
+      gerekce: "Önceki silme talebinin yeniden denenmesi",
+    },
+  ]);
 
   return NextResponse.json({
     basarili: true,
