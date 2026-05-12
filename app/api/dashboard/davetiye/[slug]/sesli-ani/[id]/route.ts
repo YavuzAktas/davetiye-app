@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { del } from "@vercel/blob";
 import { planOzellikVar } from "@/lib/planlar";
+import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -52,7 +52,7 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   const ani = await prisma.sesliAni.findFirst({ where: { id, davetiyeId: davetiye.id } });
   if (!ani) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
-  try { await del(ani.dosyaUrl); } catch { /* blob zaten silinmiş olabilir */ }
+  await blobSilVeyaKuyrugaAl(ani.dosyaUrl, "sesli-ani-silme");
 
   await prisma.sesliAni.delete({ where: { id } });
   return NextResponse.json({ tamam: true });

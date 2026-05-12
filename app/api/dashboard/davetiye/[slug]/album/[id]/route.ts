@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { del } from "@vercel/blob";
 import { planOzellikVar } from "@/lib/planlar";
+import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -54,7 +54,7 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   const foto = await prisma.albumFoto.findFirst({ where: { id, davetiyeId: davetiye.id } });
   if (!foto) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
-  try { await del(foto.dosyaUrl); } catch { /* blob zaten silinmiş olabilir */ }
+  await blobSilVeyaKuyrugaAl(foto.dosyaUrl, "album-foto-silme");
 
   await prisma.albumFoto.delete({ where: { id } });
   return NextResponse.json({ tamam: true });

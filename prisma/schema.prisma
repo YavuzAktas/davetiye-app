@@ -234,6 +234,20 @@ model GeciciYukleme {
   @@index([kullanildi, createdAt])
 }
 
+model MedyaSilmeKuyrugu {
+  id             String    @id @default(cuid())
+  dosyaUrl       String    @unique
+  kaynak         String
+  denemeSayisi   Int       @default(0)
+  sonHata        String?
+  sonrakiDeneme  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([sonrakiDeneme])
+  @@index([createdAt])
+}
+
 model Davetli {
   id         String   @id @default(cuid())
   ad         String

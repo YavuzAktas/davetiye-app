@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { del } from "@vercel/blob";
+import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 
 // Vercel Cron veya manuel tetikleme için CRON_SECRET ile korunur
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -63,14 +64,45 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   let silinenGeciciYukleme = 0;
   for (const yukleme of eskiGeciciYuklemeler) {
-    try {
-      if (process.env.BLOB_READ_WRITE_TOKEN) {
-        await del(yukleme.dosyaUrl);
-      }
+    const silindi = await blobSilVeyaKuyrugaAl(yukleme.dosyaUrl, "gecici-yukleme-temizlik");
+    if (silindi) {
       await prisma.geciciYukleme.delete({ where: { id: yukleme.id } });
       silinenGeciciYukleme++;
+    }
+  }
+
+  // 5) Önceden silinemeyen medya dosyalarını yeniden dene
+  const silmeKuyrugu = await prisma.medyaSilmeKuyrugu.findMany({
+    where: {
+      OR: [
+        { sonrakiDeneme: null },
+        { sonrakiDeneme: { lte: simdi } },
+      ],
+    },
+    orderBy: { createdAt: "asc" },
+    take: 50,
+  });
+
+  let kuyruktanSilinenMedya = 0;
+  for (const kayit of silmeKuyrugu) {
+    try {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        throw new Error("BLOB_READ_WRITE_TOKEN eksik");
+      }
+      await del(kayit.dosyaUrl);
+      await prisma.medyaSilmeKuyrugu.delete({ where: { id: kayit.id } });
+      await prisma.geciciYukleme.deleteMany({ where: { dosyaUrl: kayit.dosyaUrl } });
+      kuyruktanSilinenMedya++;
     } catch (err) {
-      console.error("Geçici yükleme temizlenemedi:", err);
+      const denemeSayisi = kayit.denemeSayisi + 1;
+      await prisma.medyaSilmeKuyrugu.update({
+        where: { id: kayit.id },
+        data: {
+          denemeSayisi,
+          sonHata: err instanceof Error ? err.message.slice(0, 500) : String(err).slice(0, 500),
+          sonrakiDeneme: new Date(Date.now() + Math.min(60, denemeSayisi * 10) * 60_000),
+        },
+      });
     }
   }
 
@@ -81,6 +113,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     silinenToken: silinenToken.count,
     silinenOdemeKaydi: silinenOdemeKaydi.count,
     silinenGeciciYukleme,
+    kuyruktanSilinenMedya,
     tarih: simdi.toISOString(),
   });
 }
