@@ -1,12 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { del } from "@vercel/blob";
 import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 
+function cronYetkiliMi(authHeader: string | null, cronSecret: string | undefined): boolean {
+  const secret = cronSecret?.trim();
+  if (!secret) return false;
+
+  const beklenen = `Bearer ${secret}`;
+  if (!authHeader || authHeader.length !== beklenen.length) return false;
+
+  return timingSafeEqual(Buffer.from(authHeader), Buffer.from(beklenen));
+}
+
+function cronSecretEksik(): boolean {
+  return !process.env.CRON_SECRET?.trim();
+}
+
 // Vercel Cron veya manuel tetikleme için CRON_SECRET ile korunur
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (cronSecretEksik()) {
+    return NextResponse.json(
+      { hata: "Temizlik görevi yapılandırılmamış." },
+      { status: 503 },
+    );
+  }
+
+  if (!cronYetkiliMi(req.headers.get("authorization"), process.env.CRON_SECRET)) {
     return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
   }
 
