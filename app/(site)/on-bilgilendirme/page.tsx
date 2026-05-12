@@ -81,7 +81,7 @@ export default function OnBilgilendirmeSayfasi() {
                 Tüketici, mesafeli sözleşmelerde kural olarak 14 gün içinde cayma hakkına sahiptir.
                 Ancak elektronik ortamda anında ifa edilen hizmetlerde veya cayma hakkı süresi
                 dolmadan önce tüketicinin onayı ile ifasına başlanan hizmetlerde cayma hakkı
-                kullanılamayabilir.
+                istisnası uygulanabilir.
               </p>
               <p>
                 Ödeme ekranındaki onayı işaretleyerek dijital hizmetin ödeme sonrası hemen

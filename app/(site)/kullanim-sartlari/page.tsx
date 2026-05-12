@@ -110,13 +110,19 @@ export default function KullanimSartlariSayfasi() {
               </p>
               <ul>
                 <li>
-                  Dijital içerik ve hizmet satın alımlarında, hizmet ifasına başlandıktan sonra
-                  (davetiye oluşturma özelliğine erişim sağlandığında) cayma hakkı kullanılamaz.
-                  Satın alma sırasında bu husus açıkça onaylanmaktadır.
+                  Tüketici, mesafeli sözleşmelerde kural olarak 14 gün içinde cayma hakkına
+                  sahiptir. Ancak elektronik ortamda anında ifa edilen hizmetlerde veya cayma
+                  hakkı süresi dolmadan önce tüketicinin onayı ile ifasına başlanan hizmetlerde
+                  cayma hakkı istisnası uygulanabilir.
                 </li>
                 <li>
-                  Hizmetin hiç kullanılmadığı ve satın alma tarihinden itibaren <strong>14 gün</strong>{" "}
-                  içindeki başvurularda iade değerlendirmeye alınır.
+                  Ödeme öncesindeki onay kutusunu işaretleyerek ücretli plan özelliklerinin ödeme
+                  sonrası hemen tanımlanmasını talep ettiğinizi ve cayma hakkı istisnası hakkında
+                  bilgilendirildiğinizi kabul edersiniz.
+                </li>
+                <li>
+                  Hizmetin hiç kullanılmadığı durumlarda, satın alma tarihinden itibaren{" "}
+                  <strong>14 gün</strong> içindeki başvurular iade değerlendirmesine alınır.
                 </li>
                 <li>
                   İade talepleri için <a href="mailto:destek@bekleriz.com">destek@bekleriz.com</a>{" "}

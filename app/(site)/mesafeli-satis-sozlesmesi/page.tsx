@@ -71,7 +71,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
                 Kullanıcı, mesafeli sözleşmelerde kural olarak 14 gün içinde cayma hakkına
                 sahiptir. Ancak elektronik ortamda anında ifa edilen hizmetler veya cayma hakkı
                 süresi dolmadan önce tüketicinin onayı ile ifasına başlanan hizmetler bakımından
-                cayma hakkı kullanılamayabilir.
+                cayma hakkı istisnası uygulanabilir.
               </p>
               <p>
                 Kullanıcı, ödeme öncesinde ilgili onay kutusunu işaretleyerek plan özelliklerinin
