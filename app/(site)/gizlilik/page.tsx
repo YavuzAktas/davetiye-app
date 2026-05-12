@@ -200,8 +200,9 @@ export default function GizlilikSayfasi() {
           baslik: "Politika Güncellemeleri",
           icerik: (
             <p>
-              Bu politika zaman zaman güncellenebilir. Önemli değişikliklerde kayıtlı e-posta
-              adresinize bildirim gönderilir. Güncel politikaya her zaman bu sayfadan ulaşabilirsiniz.
+              Bu politika zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayımlanır;
+              gerekli görüldüğünde kayıtlı e-posta adresiniz veya platform içi uygun kanallar
+              üzerinden ayrıca bilgilendirme yapılabilir. Güncel politikaya her zaman bu sayfadan ulaşabilirsiniz.
               Politikanın son güncelleme tarihi sayfanın başında belirtilmektedir.
             </p>
           ),

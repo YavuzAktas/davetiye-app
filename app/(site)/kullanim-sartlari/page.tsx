@@ -230,10 +230,10 @@ export default function KullanimSartlariSayfasi() {
           baslik: "Şartlardaki Değişiklikler",
           icerik: (
             <p>
-              Bu Şartlar zaman zaman güncellenebilir. Önemli değişiklikler en az{" "}
-              <strong>15 gün önceden</strong> kayıtlı e-posta adresinize bildirilir.
-              Bildirimin ardından platformu kullanmaya devam etmeniz değişiklikleri kabul
-              ettiğiniz anlamına gelir.
+              Bu Şartlar zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayımlanır;
+              gerekli görüldüğünde kayıtlı e-posta adresiniz veya platform içi uygun kanallar
+              üzerinden ayrıca bilgilendirme yapılabilir. Güncel şartlara her zaman bu sayfadan
+              ulaşabilirsiniz.
             </p>
           ),
         },
