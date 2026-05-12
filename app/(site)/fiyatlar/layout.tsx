@@ -36,7 +36,7 @@ const faqSchema = {
       name: "Ödeme güvenli mi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz güvende.",
+        text: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz tarafımızca saklanmaz.",
       },
     },
     {

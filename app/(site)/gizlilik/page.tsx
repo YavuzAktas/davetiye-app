@@ -124,7 +124,8 @@ export default function GizlilikSayfasi() {
               </ul>
               <p>
                 Yurt dışı aktarım gerektiren hizmetlerde KVKK m.9 kapsamındaki güncel aktarım şartları,
-                uygun güvenceler ve sağlayıcı sözleşmeleri ayrıca değerlendirilir.
+                uygun güvenceler, sağlayıcı sözleşmeleri, alt işleyenler, barındırma bölgeleri ve bildirim
+                yükümlülükleri düzenli olarak değerlendirilir.
               </p>
               <p>
                 Kişisel verileriniz bu hizmetler dışında hiçbir üçüncü tarafla ticari amaçla

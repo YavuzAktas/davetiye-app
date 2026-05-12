@@ -126,7 +126,8 @@ export default function KvkkSayfasi() {
               <p>
                 Yurt dışına aktarım gerektiren hizmetlerde KVKK m.9 kapsamında yeterlilik kararı, uygun güvence
                 (standart sözleşme dahil) veya kanunda öngörülen istisnai haller değerlendirilir; aktarım yapılan
-                sağlayıcılarla gerekli sözleşmesel ve teknik tedbirlerin kurulması esastır.
+                sağlayıcılarla gerekli sözleşmesel ve teknik tedbirlerin kurulması, alt işleyen/barındırma bölgesi
+                kontrollerinin yapılması ve gerekli bildirim yükümlülüklerinin takip edilmesi esastır.
               </p>
             </>
           ),
