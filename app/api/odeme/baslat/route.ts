@@ -45,7 +45,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
   }
 
-  const sandbox = (process.env.IYZICO_BASE_URL ?? "").includes("sandbox");
+  const iyzicoBaseUrl = process.env.IYZICO_BASE_URL ?? "https://sandbox-api.iyzipay.com";
+  const sandbox = iyzicoBaseUrl.includes("sandbox");
   const identityNumber = process.env.IYZICO_BUYER_IDENTITY_NUMBER ?? (sandbox ? "74300864791" : "");
   const gsmNumber = process.env.IYZICO_BUYER_GSM ?? (sandbox ? "+905350000000" : "");
   const buyerCity = process.env.IYZICO_BUYER_CITY ?? (sandbox ? "Istanbul" : "");

@@ -145,9 +145,9 @@ export default function FiyatlarSayfasi() {
       if (data.checkoutFormContent) {
         setOdeModal(data.checkoutFormContent);
       } else {
-        alert("Ödeme başlatılamadı, tekrar deneyin.");
+        alert(data.hata ?? "Ödeme başlatılamadı, tekrar deneyin.");
       }
-    } catch { alert("Bir hata oluştu."); }
+    } catch { alert("Ödeme başlatılırken bir hata oluştu."); }
     finally { setYukleniyor(null); }
   };
 
