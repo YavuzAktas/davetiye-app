@@ -134,7 +134,7 @@ export default function KvkkSayfasi() {
                 <tbody>
                   <tr><td>Üyelik ve hesap bilgileri</td><td>Hesap silinene kadar; uyuşmazlık ve yasal yükümlülükler için gerekli kayıtlar en fazla 3 yıl</td></tr>
                   <tr><td>Ödeme kayıtları</td><td>10 yıl (Vergi Usul Kanunu)</td></tr>
-                  <tr><td>RSVP misafir bilgileri</td><td>Etkinlik tarihinden itibaren en geç 1 yıl; davetiye veya hesap silinirse daha erken</td></tr>
+                  <tr><td>RSVP ve davetli listesi misafir bilgileri</td><td>Etkinlik tarihinden itibaren en geç 1 yıl; davetiye veya hesap silinirse daha erken</td></tr>
                   <tr><td>Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri</td><td>Davetiye veya hesap silinene kadar; ilgili kişinin silme talebi halinde ayrıca değerlendirilir</td></tr>
                   <tr><td>Spotify entegrasyon tokenları</td><td>Bağlantı kaldırılana veya hesap silinene kadar</td></tr>
                   <tr><td>Log ve güvenlik kayıtları</td><td>2 yıl</td></tr>

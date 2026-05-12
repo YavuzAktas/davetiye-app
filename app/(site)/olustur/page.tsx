@@ -475,6 +475,14 @@ function OlusturIcerigi() {
                     aciklama="Aşağıdaki özellikler isteğe bağlıdır — istediğinizi açın"
                   />
                   <div className="space-y-2.5">
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                      <p className="text-xs text-amber-800 leading-relaxed">
+                        <span className="font-semibold">Üçüncü kişi verileri: </span>
+                        Davetiyeye başkasına veya çocuğa ait ad, fotoğraf ya da mesaj ekliyorsanız,
+                        bu paylaşım için gerekli yetkiye sahip olduğunuzdan ve ilgili kişileri
+                        bilgilendirdiğinizden emin olun.
+                      </p>
+                    </div>
 
                     {/* 📝 Kişisel Not */}
                     <OzellikKarti

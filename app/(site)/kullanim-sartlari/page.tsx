@@ -57,6 +57,7 @@ export default function KullanimSartlariSayfasi() {
               <li>Hesap oluşturmak için en az <strong>18 yaşında</strong> olmanız gerekmektedir.</li>
               <li>Hesap bilgilerinizin doğruluğundan ve güncel tutulmasından siz sorumlusunuz.</li>
               <li>Hesap şifrenizi gizli tutmakla yükümlüsünüz; yetkisiz erişimleri derhal bildirmelisiniz.</li>
+              <li>Davetiyeye çocuk veya üçüncü kişilere ait ad, fotoğraf, ses ya da iletişim bilgisi eklerseniz, bu paylaşım için gerekli yetkiyi aldığınızı ve ilgili kişileri bilgilendirdiğinizi kabul edersiniz.</li>
               <li>Her gerçek veya tüzel kişi yalnızca bir hesap açabilir.</li>
               <li>Hesabınızı başkasına devredemez veya paylaşamazsınız.</li>
             </ul>

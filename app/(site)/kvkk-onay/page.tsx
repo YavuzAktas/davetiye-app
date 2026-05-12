@@ -50,7 +50,7 @@ function KvkkOnayIcerigi() {
         <p><strong className="text-gray-800">Neden işleniyor?</strong><br/>
           Hizmetin sunulması, RSVP takibi ve iletişim amacıyla (KVKK m.5/2-c).</p>
         <p><strong className="text-gray-800">Ne kadar süre saklanıyor?</strong><br/>
-          Hesap silinene kadar; etkinlik tarihinden 1 yıl sonra RSVP verileri otomatik silinir.</p>
+          Hesap silinene kadar; RSVP ve davetli listesi verileri etkinlik tarihinden itibaren en geç 1 yıl içinde periyodik temizlikle silinir.</p>
         <p>
           Tüm ayrıntılar için{" "}
           <Link href="/kvkk" target="_blank" className="text-purple-600 font-semibold hover:underline">

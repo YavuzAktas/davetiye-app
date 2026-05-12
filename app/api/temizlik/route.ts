@@ -13,7 +13,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const otuzGunOnce = new Date(simdi.getTime() - 30 * 24 * 60 * 60 * 1000);
   const onYilOnce = new Date(simdi.getTime() - 10 * 365 * 24 * 60 * 60 * 1000);
 
-  // 1) Etkinlik tarihi 1 yıldan önce geçmiş davetiyelerinin RSVP kayıtlarını sil
+  // 1) Etkinlik tarihi 1 yıldan önce geçmiş davetiyelerin misafir verilerini sil
   //    (KVKK politikası: "etkinlik tarihinden itibaren en geç 1 yıl içinde silinir")
   const eskiDavetiyeIdleri = await prisma.davetiye.findMany({
     where: {
@@ -27,7 +27,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const idler = eskiDavetiyeIdleri.map(d => d.id);
 
-  const silinen = await prisma.rSVP.deleteMany({
+  const silinenRsvp = await prisma.rSVP.deleteMany({
+    where: { davetiyeId: { in: idler } },
+  });
+
+  const silinenDavetli = await prisma.davetli.deleteMany({
     where: { davetiyeId: { in: idler } },
   });
 
@@ -47,7 +51,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json({
     basarili: true,
-    silinenRsvp: silinen.count,
+    silinenRsvp: silinenRsvp.count,
+    silinenDavetli: silinenDavetli.count,
     silinenToken: silinenToken.count,
     silinenOdemeKaydi: silinenOdemeKaydi.count,
     tarih: simdi.toISOString(),

@@ -196,15 +196,15 @@ export default function DavetlilerSayfasi() {
                 </p>
                 <p className="text-xs text-amber-800 leading-relaxed mb-3">
                   Sisteme girdiğiniz ad, telefon ve e-posta bilgileri üçüncü kişilere aittir.
-                  Bu verileri girerek, söz konusu bilgilerin yalnızca davetiye gönderimi amacıyla
-                  kullanılacağını ve davetiye silindiğinde otomatik olarak sistemmizden
-                  kaldırılacağını kabul etmiş olursunuz.
+                  Bu verileri yalnızca davetiye gönderimi amacıyla eklemeli; davetlileri gerekli
+                  şekilde bilgilendirdiğinizden veya bu paylaşım için yetkili olduğunuzdan emin
+                  olmalısınız.
                 </p>
                 <ul className="text-xs text-amber-700 space-y-1 mb-4 list-none">
                   <li>✓ Yalnızca gerekli bilgileri girin — telefon ve e-posta isteğe bağlıdır</li>
                   <li>✓ Veriler yalnızca davetiye paylaşımı için işlenir, başka amaçla kullanılmaz</li>
-                  <li>✓ Davetiye silindiğinde tüm misafir verileri de kalıcı olarak silinir</li>
-                  <li>✓ Bu veriler için <strong>meşru menfaat</strong> hukuki dayanağı uygulanır (KVKK m.5/2-f)</li>
+                  <li>✓ Hesap silindiğinde veya saklama süresi dolduğunda misafir verileri silinir</li>
+                  <li>✓ Hukuki dayanak ve bilgilendirme sorumluluğu, veriyi sisteme ekleyen davet sahibine aittir</li>
                 </ul>
                 <button
                   onClick={kvkkKapat}
@@ -295,7 +295,7 @@ export default function DavetlilerSayfasi() {
                 Davetli Ekle
               </button>
               <p className="text-[11px] text-gray-400 leading-relaxed mt-1">
-                Girilen bilgiler yalnızca bu davetiye için saklanır ve davetiye silindiğinde otomatik olarak silinir.
+                Girilen bilgiler yalnızca bu davetiye için saklanır; hesap silindiğinde veya saklama süresi dolduğunda silinir.
               </p>
             </div>
 
@@ -437,7 +437,7 @@ export default function DavetlilerSayfasi() {
               </p>
             </div>
             <p className="text-[11px] text-gray-400 leading-relaxed mt-3">
-              İçe aktarılan veriler yalnızca bu davetiye kapsamında saklanır ve davetiye silindiğinde otomatik olarak silinir.
+              İçe aktarılan veriler yalnızca bu davetiye kapsamında saklanır; hesap silindiğinde veya saklama süresi dolduğunda silinir.
             </p>
           </div>
         )}
