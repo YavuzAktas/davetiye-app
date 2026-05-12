@@ -23,6 +23,9 @@ export async function DELETE(): Promise<NextResponse> {
           sesliAnilar: { select: { dosyaUrl: true } },
         },
       },
+      geciciYuklemeler: {
+        select: { dosyaUrl: true },
+      },
     },
   });
 
@@ -38,6 +41,7 @@ export async function DELETE(): Promise<NextResponse> {
     davetiye.albumFotolar.forEach((foto) => blobUrlSet.add(foto.dosyaUrl));
     davetiye.sesliAnilar.forEach((ani) => blobUrlSet.add(ani.dosyaUrl));
   }
+  user.geciciYuklemeler.forEach((yukleme) => blobUrlSet.add(yukleme.dosyaUrl));
 
   if (blobUrlSet.size > 0) {
     await bloblariSilVeyaKuyrugaAl([...blobUrlSet], "hesap-silme");
