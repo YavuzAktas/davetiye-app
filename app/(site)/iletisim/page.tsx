@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata: Metadata = {
   title: "İletişim",
@@ -80,23 +81,27 @@ export default function IletisimSayfasi() {
           <div className="space-y-2 text-sm">
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Ticaret Unvanı</span>
-              <span className="text-gray-700 font-medium">Bekleriz</span>
+              <span className="text-gray-700 font-medium">{YASAL_BILGILER.unvan}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Adres</span>
-              <span className="text-gray-700">[Şirket tescilinde güncellenecek]</span>
+              <span className="text-gray-700">{YASAL_BILGILER.adres}</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-gray-400 w-28 shrink-0">Telefon</span>
+              <span className="text-gray-700">{YASAL_BILGILER.telefon}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">MERSİS No</span>
-              <span className="text-gray-700">[Şirket tescilinde güncellenecek]</span>
+              <span className="text-gray-700">{YASAL_BILGILER.mersisVergi}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">Web Sitesi</span>
-              <span className="text-gray-700">bekleriz.com</span>
+              <span className="text-gray-700">{YASAL_BILGILER.webKisa}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-gray-400 w-28 shrink-0">E-posta</span>
-              <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:underline">destek@bekleriz.com</a>
+              <a href={`mailto:${YASAL_BILGILER.destekEposta}`} className="text-purple-600 hover:underline">{YASAL_BILGILER.destekEposta}</a>
             </div>
           </div>
         </div>

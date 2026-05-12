@@ -1,16 +1,9 @@
 import YasalSayfa from "@/components/YasalSayfa";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Mesafeli Satış Sözleşmesi",
   description: "Bekleriz ücretli plan satın alımları için mesafeli satış sözleşmesi.",
-};
-
-const SATICI_BILGILERI = {
-  unvan: "DOLDURULACAK - Bekleriz / Satıcı-Sağlayıcı Ticari Unvanı",
-  adres: "DOLDURULACAK - Açık adres",
-  telefon: "DOLDURULACAK - Telefon numarası",
-  eposta: "destek@bekleriz.com",
-  mersisVergi: "DOLDURULACAK - MERSİS / vergi bilgisi",
 };
 
 export default function MesafeliSatisSozlesmesiSayfasi() {
@@ -30,11 +23,11 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
               </p>
               <table>
                 <tbody>
-                  <tr><th>Satıcı / sağlayıcı</th><td>{SATICI_BILGILERI.unvan}</td></tr>
-                  <tr><th>Açık adres</th><td>{SATICI_BILGILERI.adres}</td></tr>
-                  <tr><th>Telefon</th><td>{SATICI_BILGILERI.telefon}</td></tr>
-                  <tr><th>E-posta</th><td>{SATICI_BILGILERI.eposta}</td></tr>
-                  <tr><th>MERSİS / vergi bilgisi</th><td>{SATICI_BILGILERI.mersisVergi}</td></tr>
+                  <tr><th>Satıcı / sağlayıcı</th><td>{YASAL_BILGILER.unvan}</td></tr>
+                  <tr><th>Açık adres</th><td>{YASAL_BILGILER.adres}</td></tr>
+                  <tr><th>Telefon</th><td>{YASAL_BILGILER.telefon}</td></tr>
+                  <tr><th>E-posta</th><td>{YASAL_BILGILER.destekEposta}</td></tr>
+                  <tr><th>MERSİS / vergi bilgisi</th><td>{YASAL_BILGILER.mersisVergi}</td></tr>
                 </tbody>
               </table>
             </>
@@ -58,6 +51,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
                 <tr><th>Standart Plan</th><td>₺299, KDV dahil, tek seferlik ödeme</td></tr>
                 <tr><th>Premium Plan</th><td>₺599, KDV dahil, tek seferlik ödeme</td></tr>
                 <tr><th>Ödeme yöntemi</th><td>iyzico ödeme altyapısı üzerinden kredi/banka kartı ve desteklenen diğer ödeme yöntemleri.</td></tr>
+                <tr><th>Ödeme için aktarılan alıcı bilgileri</th><td>{ODEME_ALICI_VERILERI.join(", ")}.</td></tr>
                 <tr><th>Teslimat</th><td>Fiziksel teslimat yoktur; plan özellikleri ödeme sonrası dijital olarak hesaba tanımlanır.</td></tr>
               </tbody>
             </table>

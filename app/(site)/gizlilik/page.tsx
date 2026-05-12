@@ -1,4 +1,5 @@
 import YasalSayfa from "@/components/YasalSayfa";
+import { ODEME_ALICI_VERILERI } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Gizlilik Politikası",
@@ -103,6 +104,8 @@ export default function GizlilikSayfasi() {
                 <li>
                   <strong>İyzico Ödeme Hizmetleri A.Ş.</strong> — Ödeme altyapısı.
                   Kart bilgileriniz yalnızca iyzico altyapısında işlenir, tarafımızca saklanmaz.
+                  Ödeme işlemi için aktarılabilecek alıcı/fatura bilgileri:{" "}
+                  {ODEME_ALICI_VERILERI.join(", ")}.
                 </li>
                 <li>
                   <strong>Resend Inc.</strong> — İşlemsel e-posta (şifre sıfırlama ve bildirimler).

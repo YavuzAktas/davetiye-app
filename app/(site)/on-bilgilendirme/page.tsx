@@ -1,17 +1,9 @@
 import YasalSayfa from "@/components/YasalSayfa";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Ön Bilgilendirme Formu",
   description: "Bekleriz ücretli plan satın alımları için ön bilgilendirme formu.",
-};
-
-const SATICI_BILGILERI = {
-  unvan: "DOLDURULACAK - Bekleriz / Satıcı-Sağlayıcı Ticari Unvanı",
-  adres: "DOLDURULACAK - Açık adres",
-  telefon: "DOLDURULACAK - Telefon numarası",
-  eposta: "destek@bekleriz.com",
-  mersisVergi: "DOLDURULACAK - MERSİS / vergi bilgisi",
-  web: "https://bekleriz.com",
 };
 
 export default function OnBilgilendirmeSayfasi() {
@@ -26,12 +18,12 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Unvan</th><td>{SATICI_BILGILERI.unvan}</td></tr>
-                <tr><th>Açık adres</th><td>{SATICI_BILGILERI.adres}</td></tr>
-                <tr><th>Telefon</th><td>{SATICI_BILGILERI.telefon}</td></tr>
-                <tr><th>E-posta</th><td>{SATICI_BILGILERI.eposta}</td></tr>
-                <tr><th>MERSİS / vergi bilgisi</th><td>{SATICI_BILGILERI.mersisVergi}</td></tr>
-                <tr><th>Web sitesi</th><td>{SATICI_BILGILERI.web}</td></tr>
+                <tr><th>Unvan</th><td>{YASAL_BILGILER.unvan}</td></tr>
+                <tr><th>Açık adres</th><td>{YASAL_BILGILER.adres}</td></tr>
+                <tr><th>Telefon</th><td>{YASAL_BILGILER.telefon}</td></tr>
+                <tr><th>E-posta</th><td>{YASAL_BILGILER.destekEposta}</td></tr>
+                <tr><th>MERSİS / vergi bilgisi</th><td>{YASAL_BILGILER.mersisVergi}</td></tr>
+                <tr><th>Web sitesi</th><td>{YASAL_BILGILER.web}</td></tr>
               </tbody>
             </table>
           ),
@@ -60,6 +52,7 @@ export default function OnBilgilendirmeSayfasi() {
                 <tr><th>Premium Plan</th><td>₺599, KDV dahil, tek seferlik ödeme</td></tr>
                 <tr><th>Ek masraf</th><td>Platform tarafından ayrıca kargo, teslimat veya kurulum bedeli alınmaz.</td></tr>
                 <tr><th>Ödeme altyapısı</th><td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri Bekleriz tarafından saklanmaz.</td></tr>
+                <tr><th>Ödeme için aktarılan alıcı bilgileri</th><td>{ODEME_ALICI_VERILERI.join(", ")}.</td></tr>
               </tbody>
             </table>
           ),

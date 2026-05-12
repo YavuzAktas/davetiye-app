@@ -1,4 +1,5 @@
 import YasalSayfa from "@/components/YasalSayfa";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "KVKK Aydınlatma Metni",
@@ -23,10 +24,12 @@ export default function KvkkSayfasi() {
               </p>
               <table>
                 <tbody>
-                  <tr><th>Ticaret Unvanı</th><td>Bekleriz</td></tr>
-                  <tr><th>Hizmet Adresi</th><td>Türkiye</td></tr>
-                  <tr><th>E-posta</th><td>kvkk@bekleriz.com</td></tr>
-                  <tr><th>Web Sitesi</th><td>bekleriz.com</td></tr>
+                  <tr><th>Ticaret Unvanı</th><td>{YASAL_BILGILER.unvan}</td></tr>
+                  <tr><th>Hizmet Adresi</th><td>{YASAL_BILGILER.adres}</td></tr>
+                  <tr><th>Telefon</th><td>{YASAL_BILGILER.telefon}</td></tr>
+                  <tr><th>E-posta</th><td>{YASAL_BILGILER.kvkkEposta}</td></tr>
+                  <tr><th>MERSİS / vergi bilgisi</th><td>{YASAL_BILGILER.mersisVergi}</td></tr>
+                  <tr><th>Web Sitesi</th><td>{YASAL_BILGILER.webKisa}</td></tr>
                 </tbody>
               </table>
             </>
@@ -48,7 +51,7 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Görsel</strong></td><td>Profil fotoğrafı</td><td>Google (isteğe bağlı)</td></tr>
                   <tr><td><strong>Hizmet kullanım</strong></td><td>Oluşturulan davetiyeler, etkinlik tarihi/mekanı, şablon, renk, font, müzik ve masa planı tercihleri</td><td>Platform kullanımı</td></tr>
                   <tr><td><strong>İçerik ve medya</strong></td><td>Davetiye metinleri, anı defteri mesajları, yüklenen fotoğraflar, polaroid görselleri ve sesli anı kayıtları</td><td>Kullanıcı veya davetli yüklemeleri</td></tr>
-                  <tr><td><strong>Ödeme</strong></td><td>Plan bilgisi, ödeme doğrulama tokenı ve işlem durumu (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
+                  <tr><td><strong>Ödeme</strong></td><td>Plan bilgisi, ödeme doğrulama tokenı, işlem durumu, ödeme tutarı ve ödeme sağlayıcısına aktarılan alıcı/fatura bilgileri (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
                   <tr><td><strong>Entegrasyon</strong></td><td>Spotify kullanıcı/playlist bilgisi, şarkı önerileri ve bağlantı tokenları</td><td>Spotify bağlantısı ve RSVP formu</td></tr>
                   <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
                   <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
@@ -115,6 +118,11 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Spotify AB</strong></td><td>İsteğe bağlı müzik entegrasyonu</td><td>Yurt dışı</td></tr>
                 </tbody>
               </table>
+              <p>
+                Ödeme başlatılırken iyzico'ya aktarılabilecek alıcı/fatura bilgileri şunlardır:{" "}
+                {ODEME_ALICI_VERILERI.join(", ")}. Kart bilgileri iyzico altyapısında işlenir;
+                Bekleriz tarafından saklanmaz.
+              </p>
               <p>
                 Yurt dışına aktarım gerektiren hizmetlerde KVKK m.9 kapsamında yeterlilik kararı, uygun güvence
                 (standart sözleşme dahil) veya kanunda öngörülen istisnai haller değerlendirilir; aktarım yapılan
