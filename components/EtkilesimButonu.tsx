@@ -366,13 +366,13 @@ export default function EtkilesimButonu({
             <div className="p-5 space-y-6">
               <div className="bg-gray-50 rounded-2xl p-4">
                 <p className="text-sm font-bold text-gray-700 mb-3">
-                  {canliDuvarAktif ? "Anı fotoğrafı ekle — anında duvarda!" : "Etkinlikten fotoğraf paylaş"}
+                  {canliDuvarAktif ? "Canlı Duvar için fotoğraf paylaş" : "Etkinlikten fotoğraf paylaş"}
                 </p>
                 {fotoBasari ? (
                   <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
                     <p className="text-2xl mb-1">✅</p>
                     <p className="text-sm font-semibold text-emerald-700">
-                      {canliDuvarAktif ? "Fotoğraf duvara eklendi!" : "Yüklendi! Onay sonrası görünecek."}
+                      Yüklendi! Onay sonrası görünecek.
                     </p>
                   </div>
                 ) : (
@@ -399,10 +399,8 @@ export default function EtkilesimButonu({
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yüklediğiniz fotoğraf davet sahibine iletilir;{" "}
-                        {canliDuvarAktif
-                          ? "Canlı Duvar açık olduğu için fotoğrafınız gönderimden sonra davetiye sayfasında görünebilir."
-                          : "davet sahibi onaylarsa fotoğrafınız davetiye sayfasında görünür."}{" "}
+                        Adınız ve yüklediğiniz fotoğraf davet sahibine iletilir; davet sahibi onaylarsa
+                        fotoğrafınız davetiye sayfasında görünür.{" "}
                         Silme talepleri için{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com

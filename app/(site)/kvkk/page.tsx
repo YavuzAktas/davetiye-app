@@ -66,7 +66,7 @@ export default function KvkkSayfasi() {
               <li>Üyelik kaydının oluşturulması ve kimlik doğrulama</li>
               <li>Dijital davetiye oluşturma, düzenleme ve paylaşım hizmetinin sunulması</li>
               <li>RSVP (katılım bildirimi) toplanması ve davet sahibine iletilmesi</li>
-              <li>Misafir fotoğrafları, yazılı ve sesli anıların moderasyon sonrası veya Canlı Duvar etkinse fotoğrafların gönderim sonrası yayınlanması</li>
+              <li>Misafir fotoğrafları, yazılı ve sesli anıların davet sahibi onayı sonrası yayınlanması</li>
               <li>Spotify entegrasyonu ile şarkı önerilerinin çalma listesine eklenmesi</li>
               <li>Ödeme işlemlerinin gerçekleştirilmesi ve planın güncellenmesi</li>
               <li>Teknik destek ve müşteri hizmetleri sunulması</li>

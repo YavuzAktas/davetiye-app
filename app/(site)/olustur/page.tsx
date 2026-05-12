@@ -708,8 +708,8 @@ function OlusturIcerigi() {
                     {hasSesliOzellikler && (
                       <OzellikKarti
                         icon="📸" baslik="Canlı Fotoğraf Duvarı"
-                        aciklama="Misafirlerin yüklediği fotoğraflar büyük ekranda anında yayınlanır"
-                        misafirGorur="Salonunuzdaki ekrana davetiye.link/duvar açılırsa fotoğraflar canlı akar"
+                        aciklama="Misafirlerin yüklediği fotoğraflar onayınızdan sonra duvarda yayınlanır"
+                        misafirGorur="Salonunuzdaki ekrana davetiye.link/duvar açılırsa onaylanan fotoğraflar canlı akar"
                         planEtiketi={!canliDuvarAktif ? "Premium" : undefined}
                         locked={!canliDuvarAktif}
                         lockedMsg="Premium →"
@@ -717,7 +717,7 @@ function OlusturIcerigi() {
                       >
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
                           <span className="text-base shrink-0">✅</span>
-                          <p className="text-xs text-gray-600 leading-relaxed">Canlı Duvar aktif. Misafir fotoğrafları otomatik onaylanır ve anında duvarda görünür.</p>
+                          <p className="text-xs text-gray-600 leading-relaxed">Canlı Duvar aktif. Misafir fotoğrafları dashboard üzerinden onayladıktan sonra duvarda görünür.</p>
                         </div>
                       </OzellikKarti>
                     )}

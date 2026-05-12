@@ -40,7 +40,6 @@ export async function POST(
       aktif: true,
       userId: true,
       baslik: true,
-      canliDuvarAktif: true,
       user: { select: { plan: true } },
     },
   });
@@ -86,13 +85,12 @@ export async function POST(
     return NextResponse.json({ hata: "Dosya yüklenemedi, lütfen tekrar dene." }, { status: 500 });
   }
 
-  const otomatikYayin = davetiye.canliDuvarAktif;
   const foto = await prisma.albumFoto.create({
     data: {
       davetiyeId: davetiye.id,
       yukleyenAd: ad,
       dosyaUrl: blobUrl,
-      onaylandi: otomatikYayin,
+      onaylandi: false,
     },
   });
 
@@ -100,14 +98,9 @@ export async function POST(
     userId: davetiye.userId,
     tip: "album",
     baslik: `${ad} fotoğraf yükledi 📸`,
-    mesaj: otomatikYayin
-      ? `"${davetiye.baslik}" için yeni bir fotoğraf canlı duvarda yayınlandı.`
-      : `"${davetiye.baslik}" için yeni bir fotoğraf onay bekliyor.`,
+    mesaj: `"${davetiye.baslik}" için yeni bir fotoğraf onay bekliyor.`,
     davetiyeSlug: slug,
   });
 
-  return NextResponse.json({
-    id: foto.id,
-    mesaj: otomatikYayin ? "Fotoğraf canlı duvarda yayınlandı." : "Fotoğraf yüklendi, onay bekleniyor.",
-  }, { status: 201 });
+  return NextResponse.json({ id: foto.id, mesaj: "Fotoğraf yüklendi, onay bekleniyor." }, { status: 201 });
 }
