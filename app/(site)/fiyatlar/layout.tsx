@@ -44,7 +44,7 @@ const faqSchema = {
       name: "İptal edebilir miyim?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Dijital hizmet satın alma anında başladığından cayma hakkı uygulanmaz.",
+        text: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Dijital hizmet ödeme sonrası hemen başlatılır; ödeme öncesinde cayma hakkı istisnası ayrıca onaylanır.",
       },
     },
     {

@@ -77,6 +77,8 @@ export default function YasalSayfa({ etiket, baslik, sonGuncelleme, bolumler }: 
             <Link href="/kvkk" className="text-sm text-purple-600 hover:underline">KVKK Aydınlatma Metni</Link>
             <Link href="/gizlilik" className="text-sm text-purple-600 hover:underline">Gizlilik Politikası</Link>
             <Link href="/kullanim-sartlari" className="text-sm text-purple-600 hover:underline">Kullanım Şartları</Link>
+            <Link href="/on-bilgilendirme" className="text-sm text-purple-600 hover:underline">Ön Bilgilendirme Formu</Link>
+            <Link href="/mesafeli-satis-sozlesmesi" className="text-sm text-purple-600 hover:underline">Mesafeli Satış Sözleşmesi</Link>
             <Link href="/iletisim" className="text-sm text-purple-600 hover:underline">İletişim</Link>
           </div>
         </div>

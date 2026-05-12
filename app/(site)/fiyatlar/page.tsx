@@ -87,7 +87,7 @@ const TABLO = [
 const SSS = [
   { soru: "Ücretsiz plan ne kadar süre kullanılabilir?", cevap: "Ücretsiz plan süresiz kullanılabilir. Daha fazla özellik için istediğiniz zaman yükseltebilirsiniz." },
   { soru: "Ödeme güvenli mi?", cevap: "Tüm ödemeler iyzico altyapısıyla SSL şifreli bağlantı üzerinden işlenir. Kart bilgileriniz güvende." },
-  { soru: "İptal edebilir miyim?", cevap: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Satın alma sırasında onayladığınız üzere, dijital hizmet satın alma anında başladığından cayma hakkı uygulanmaz. Sorunlar için destek@bekleriz.com adresine yazabilirsiniz." },
+  { soru: "İptal edebilir miyim?", cevap: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Dijital hizmet ödeme sonrası hemen başlatılır; ödeme öncesinde cayma hakkı istisnası ayrıca onaylanır. Hizmetin hiç kullanılmadığı durumlarda destek@bekleriz.com üzerinden iade değerlendirmesi isteyebilirsiniz." },
   { soru: "Fatura alabilir miyim?", cevap: "Ödeme belgesi için destek@bekleriz.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir." },
 ];
 
@@ -169,10 +169,18 @@ export default function FiyatlarSayfasi() {
         className="mt-0.5 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
       />
       <span className={`text-[10px] leading-tight ${koyu ? "text-purple-200/70" : "text-gray-500"}`}>
-        <Link href="/kullanim-sartlari" target="_blank" className="underline underline-offset-2">
-          Ön bilgilendirme ve kullanım şartlarını
+        <Link href="/on-bilgilendirme" target="_blank" className="underline underline-offset-2">
+          Ön Bilgilendirme Formu
         </Link>
-        {" "}okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve bu nedenle cayma hakkı istisnasını kabul ediyorum.
+        {", "}
+        <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="underline underline-offset-2">
+          Mesafeli Satış Sözleşmesi
+        </Link>
+        {" ve "}
+        <Link href="/kullanim-sartlari" target="_blank" className="underline underline-offset-2">
+          Kullanım Şartları
+        </Link>
+        {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
       </span>
     </label>
   );
