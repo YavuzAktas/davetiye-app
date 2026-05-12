@@ -83,7 +83,7 @@ export const PLAN_META: Record<PlanTipi, { isim: string; ozellikler: string[] }>
   },
   premium: {
     isim: "Premium",
-    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Sesli Anı Defteri", "Canlı Fotoğraf Duvarı", "Detaylı analitik", "Öncelikli destek"],
+    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Sesli Anı Defteri", "Canlı Fotoğraf Duvarı", "Görüntülenme takibi", "Öncelikli destek"],
   },
 };
 

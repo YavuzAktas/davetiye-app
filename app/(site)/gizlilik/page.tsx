@@ -23,8 +23,8 @@ export default function GizlilikSayfasi() {
                 kullandığımızı açıklamaktadır.
               </p>
               <p>
-                Bu politika, <strong>6698 sayılı KVKK</strong>, <strong>AB GDPR</strong> (yurt
-                dışındaki kullanıcılar için) ve diğer ilgili mevzuat çerçevesinde hazırlanmıştır.
+                Bu politika, <strong>6698 sayılı KVKK</strong> ve uygulanabilir olduğu ölçüde
+                ilgili diğer veri koruma mevzuatı dikkate alınarak hazırlanmıştır.
               </p>
             </>
           ),
@@ -64,7 +64,7 @@ export default function GizlilikSayfasi() {
               </ul>
               <p><strong>Teknik olarak otomatik toplanan:</strong></p>
               <ul>
-                <li>IP adresi (güvenlik amaçlı, loglanmaz)</li>
+                <li>IP adresi (güvenlik, oran sınırlama ve ödeme güvenliği amacıyla)</li>
                 <li>Oturum çerezleri (JWT)</li>
                 <li>Tarayıcı türü (hata ayıklama için)</li>
               </ul>
@@ -92,7 +92,8 @@ export default function GizlilikSayfasi() {
             <>
               <p>
                 Platformun çalışması için aşağıdaki güvenilir üçüncü taraf hizmetlerden
-                yararlanıyoruz. Bu hizmetlerle veri işleme anlaşmaları (DPA) imzalanmıştır:
+                yararlanıyoruz. Bu sağlayıcıların veri işleme koşulları ve sözleşmesel güvenceleri
+                hizmetin niteliğine göre değerlendirilir:
               </p>
               <ul>
                 <li>
@@ -134,9 +135,9 @@ export default function GizlilikSayfasi() {
           icerik: (
             <ul>
               <li>Tüm şifreler <strong>bcrypt</strong> algoritması ile güvenli şekilde saklanır (düz metin tutulmaz)</li>
-              <li>Platform HTTPS (TLS 1.3) ile şifreli iletişim kullanır</li>
+              <li>Platform HTTPS/TLS ile şifreli iletişim kullanır</li>
               <li>Oturum bilgileri imzalı JWT token ile yönetilir</li>
-              <li>Veritabanı erişimi kısıtlı ve güvenlik duvarı arkasındadır</li>
+              <li>Veritabanı erişimleri yetkilendirme ve sağlayıcı güvenlik kontrolleriyle sınırlandırılır</li>
               <li>Ödeme bilgileri tarafımızca saklanmaz; PCI DSS uyumlu iyzico altyapısı kullanılır</li>
               <li>Veri ihlali durumunda KVKK m.12/5 ve Kurul kararları uyarınca, ihlalin öğrenilmesinden itibaren en kısa sürede ve en geç 72 saat içinde Kurul'a bildirim yapılması hedeflenir</li>
             </ul>
@@ -151,8 +152,9 @@ export default function GizlilikSayfasi() {
                 Analitik, reklamcılık veya izleme çerezleri kullanılmamaktadır.
               </p>
               <ul>
-                <li><strong>next-auth.session-token:</strong> Oturumunuzu açık tutmak için (30 gün, HttpOnly)</li>
-                <li><strong>next-auth.csrf-token:</strong> Güvenlik doğrulaması için (oturum süresi)</li>
+                <li><strong>next-auth.session-token</strong> veya <strong>__Secure-next-auth.session-token:</strong> Oturumunuzu açık tutmak için (30 gün, HttpOnly)</li>
+                <li><strong>next-auth.csrf-token</strong> veya <strong>__Host-next-auth.csrf-token:</strong> Güvenlik doğrulaması için (oturum süresi)</li>
+                <li><strong>cerez-bilgi-goruldu:</strong> Çerez bilgilendirme bandının kapatıldığını hatırlamak için (tarayıcı yerel depolama)</li>
               </ul>
               <p>
                 Zorunlu çerezler tarayıcı ayarlarından engellenemez; engellendiğinde platform

@@ -302,7 +302,7 @@ function GirisIcerigi() {
                       <Link href="/gizlilik" target="_blank" className="text-purple-500 hover:underline">
                         Gizlilik Politikası
                       </Link>
-                      {"'nı okudum; kullanım şartlarını kabul ediyorum. (Zorunlu)"}
+                      {"'nı okudum; kullanım şartlarını kabul ediyor ve 18 yaşında veya daha büyük olduğumu beyan ediyorum. (Zorunlu)"}
                     </KvkkCheckbox>
                   </div>
 

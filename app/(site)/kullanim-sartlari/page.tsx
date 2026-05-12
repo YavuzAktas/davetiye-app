@@ -193,7 +193,8 @@ export default function KullanimSartlariSayfasi() {
               </ul>
               <p>
                 Şartlara aykırı davranış tespit edilmesi hâlinde Bekleriz, hesabı önceden
-                bildirmeksizin feshedebilir. Aktif aboneliğin kalan süresi iade edilmez.
+                bildirmeksizin feshedebilir. Ücret iadesi talepleri bu Şartlar'daki iade politikası
+                ve emredici tüketici mevzuatı hükümlerine göre değerlendirilir.
               </p>
             </>
           ),
@@ -207,8 +208,8 @@ export default function KullanimSartlariSayfasi() {
                 dostane çözüm yolları denenir.
               </p>
               <p>
-                Çözüme kavuşturulamazsa <strong>İstanbul (Çağlayan) Mahkemeleri ve İcra Daireleri</strong>
-                yetkilidir.
+                Çözüme kavuşturulamazsa, tüketicilere ilişkin emredici yetki kuralları saklı kalmak
+                kaydıyla <strong>İstanbul (Çağlayan) Mahkemeleri ve İcra Daireleri</strong> yetkilidir.
               </p>
               <p>
                 Tüketici uyuşmazlıklarında <strong>Tüketici Hakem Heyeti</strong> veya

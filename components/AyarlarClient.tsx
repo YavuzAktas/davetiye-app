@@ -82,7 +82,7 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
           <div className="relative">
             <p className="text-white/60 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Premium&apos;a Geç</p>
             <h3 className="text-white text-lg font-bold mb-1">👑 Sınırsız her şey</h3>
-            <p className="text-white/70 text-sm mb-4">Müzik, analitik, sınırsız davetiye ve öncelikli destek.</p>
+            <p className="text-white/70 text-sm mb-4">Müzik, görüntülenme takibi, sınırsız davetiye ve öncelikli destek.</p>
             <Link
               href="/fiyatlar"
               className="inline-flex items-center gap-2 bg-white text-amber-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-amber-50 transition-all"

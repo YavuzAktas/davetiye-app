@@ -177,9 +177,10 @@ export default function KvkkSayfasi() {
                 </tbody>
               </table>
               <p>
-                Başvurunuzda; ad soyadınız, T.C. kimlik numaranız (veya yabancı uyruklu iseniz
-                pasaport numarası), tebligata esas adres, e-posta adresiniz ve talebinizin
-                konusunu açıkça belirtiniz.
+                Başvurunuzda; ad soyadınız, hesabınızla ilişkili e-posta adresiniz ve talebinizin
+                konusunu açıkça belirtiniz. Kimliğinizi doğrulamak için ek bilgi gerekirse sizinle
+                ayrıca iletişime geçilebilir; e-posta ile gerekmedikçe T.C. kimlik numarası, pasaport
+                numarası veya benzeri resmi kimlik bilgilerini paylaşmamanızı öneririz.
               </p>
               <p>
                 Başvurunuzun reddedilmesi, verilen cevabın yetersiz bulunması veya süresinde
@@ -199,9 +200,10 @@ export default function KvkkSayfasi() {
                   <tr><th>Çerez</th><th>Amaç</th><th>Süre</th><th>Zorunlu</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td><code>next-auth.session-token</code></td><td>Oturum yönetimi (JWT)</td><td>30 gün</td><td>Evet</td></tr>
-                  <tr><td><code>next-auth.csrf-token</code></td><td>CSRF güvenliği</td><td>Oturum</td><td>Evet</td></tr>
+                  <tr><td><code>next-auth.session-token</code> / <code>__Secure-next-auth.session-token</code></td><td>Oturum yönetimi (JWT)</td><td>30 gün</td><td>Evet</td></tr>
+                  <tr><td><code>next-auth.csrf-token</code> / <code>__Host-next-auth.csrf-token</code></td><td>CSRF güvenliği</td><td>Oturum</td><td>Evet</td></tr>
                   <tr><td><code>next-auth.callback-url</code></td><td>Yönlendirme</td><td>Oturum</td><td>Evet</td></tr>
+                  <tr><td><code>cerez-bilgi-goruldu</code></td><td>Çerez bilgilendirme bandının kapatıldığını hatırlama</td><td>Tarayıcıda saklanır</td><td>Evet</td></tr>
                 </tbody>
               </table>
               <p>

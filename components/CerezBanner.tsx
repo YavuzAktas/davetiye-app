@@ -34,7 +34,7 @@ export default function CerezBanner() {
               <p className="text-white/35 text-xs mt-0.5 leading-relaxed">
                 Reklam veya izleme çerezi yoktur.{" "}
                 <Link
-                  href="/gizlilik#cerezler"
+                  href="/gizlilik#bolum-6"
                   className="underline underline-offset-2 hover:text-white/60 transition-colors"
                 >
                   Çerez Politikası

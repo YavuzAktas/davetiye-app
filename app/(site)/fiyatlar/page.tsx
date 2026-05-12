@@ -63,7 +63,7 @@ const PLANLAR = [
     fiyatLabel: "₺599",
     alt: "tek seferlik",
     aciklama: "Profesyonel kullanım",
-    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Özel tasarım", "Müzik ekleme", "Detaylı analitik", "Öncelikli destek"],
+    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Oturma planı", "Albüm & Anı", "Görüntülenme takibi", "Öncelikli destek"],
     populer: false,
     buton: "Premium'a Geç",
   },
@@ -80,7 +80,7 @@ const TABLO = [
   { ozellik: "Müzik ekleme", free: "—", standart: "✓", premium: "✓" },
   { ozellik: "Oturma planı", free: "—", standart: "—", premium: "✓" },
   { ozellik: "Albüm & Anı", free: "—", standart: "—", premium: "✓" },
-  { ozellik: "Detaylı analitik", free: "—", standart: "—", premium: "✓" },
+  { ozellik: "Görüntülenme takibi", free: "—", standart: "—", premium: "✓" },
   { ozellik: "Öncelikli destek", free: "—", standart: "—", premium: "✓" },
 ];
 

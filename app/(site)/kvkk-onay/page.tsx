@@ -103,7 +103,7 @@ function KvkkOnayIcerigi() {
             <Link href="/gizlilik" target="_blank" className="text-purple-500 hover:underline">
               Gizlilik Politikası
             </Link>
-            {"'nı okudum ve kabul ediyorum. (Zorunlu)"}
+            {"'nı okudum ve kabul ediyorum; 18 yaşında veya daha büyük olduğumu beyan ediyorum. (Zorunlu)"}
           </span>
         </label>
 
