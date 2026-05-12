@@ -90,7 +90,7 @@ function GirisIcerigi() {
     e.preventDefault();
     setHata("");
     if (kayitSifre !== kayitSifre2) { setHata("Şifreler eşleşmiyor."); return; }
-    if (!kullanim) { setHata("Kullanım şartlarını kabul etmeniz zorunludur."); return; }
+    if (!kullanim) { setHata("Yasal bilgilendirme ve kullanım şartları onayı zorunludur."); return; }
     setYukleme(true);
     const res = await fetch("/api/auth/kayit", {
       method:"POST", headers:{"Content-Type":"application/json"},
@@ -213,15 +213,15 @@ function GirisIcerigi() {
                 Google ile {mod === "giris" ? "Giriş Yap" : "Kayıt Ol"}
               </button>
 
-              {/* Google KVKK notu */}
+              {/* Google yasal bilgilendirme notu */}
               <p className="text-xs text-gray-400 text-center leading-relaxed">
-                Google hesabınızla giriş yaparak{" "}
+                Google hesabınızla devam ederek{" "}
                 <Link href="/kullanim-sartlari" className="text-purple-500 hover:underline">kullanım şartlarını</Link>
                 {", "}
                 <Link href="/gizlilik" className="text-purple-500 hover:underline">gizlilik politikasını</Link>
                 {" ve "}
                 <Link href="/kvkk" className="text-purple-600 font-semibold hover:underline">KVKK aydınlatma metnini</Link>
-                {" "}okuduğunuzu ve kabul ettiğinizi onaylarsınız.
+                {" "}inceleyebilirsiniz. Dashboard'a geçmeden önce yasal bilgilendirme onayı alınır.
               </p>
             </div>
           )}
@@ -271,7 +271,7 @@ function GirisIcerigi() {
                     <Link href="/kullanim-sartlari" className="text-purple-500 hover:underline">kullanım şartlarını</Link>
                     {" ve "}
                     <Link href="/kvkk" className="text-purple-600 font-semibold hover:underline">KVKK metnini</Link>
-                    {" "}kabul edersiniz.
+                    {" "}yeniden inceleyebilirsiniz.
                   </p>
                 </form>
               )}
@@ -288,9 +288,13 @@ function GirisIcerigi() {
                   <input type="password" required placeholder="Şifre tekrar" value={kayitSifre2}
                     onChange={e=>setKayitSifre2(e.target.value)} className={inputCls}/>
 
-                  {/* Kullanım Şartları onayı */}
+                  {/* Yasal bilgilendirme ve kullanım şartları onayı */}
                   <div className="space-y-3 pt-2 pb-1">
                     <KvkkCheckbox id="kullanim" checked={kullanim} onChange={setKullanim}>
+                      <Link href="/kvkk" target="_blank" className="text-purple-600 font-semibold hover:underline">
+                        KVKK Aydınlatma Metni
+                      </Link>
+                      {" ile "}
                       <Link href="/kullanim-sartlari" target="_blank" className="text-purple-500 hover:underline">
                         Kullanım Şartları
                       </Link>
@@ -298,7 +302,7 @@ function GirisIcerigi() {
                       <Link href="/gizlilik" target="_blank" className="text-purple-500 hover:underline">
                         Gizlilik Politikası
                       </Link>
-                      {"'nı okudum ve kabul ediyorum. (Zorunlu)"}
+                      {"'nı okudum; kullanım şartlarını kabul ediyorum. (Zorunlu)"}
                     </KvkkCheckbox>
                   </div>
 

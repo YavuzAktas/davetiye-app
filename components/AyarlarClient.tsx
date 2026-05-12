@@ -168,12 +168,15 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-700 group-hover:text-red-700 transition-colors">Hesabı Sil</p>
-                <p className="text-xs text-gray-400">Tüm veriler kalıcı silinir</p>
+                <p className="text-xs text-gray-400">İçerikler silinir; yasal ödeme kayıtları saklanır</p>
               </div>
             </button>
           ) : (
             <div className="mx-1 border border-red-200 bg-red-50 rounded-2xl p-4">
               <p className="text-sm font-semibold text-red-800 mb-1">Bu işlem geri alınamaz!</p>
+              <p className="text-xs text-red-600 mb-3">
+                Davetiyeler, RSVP, misafir listeleri ve yüklediğiniz medya silinir. Yasal saklama yükümlülüğü olan ödeme kayıtları tutulabilir.
+              </p>
               <p className="text-xs text-red-600 mb-3">Onaylamak için <strong>SİL</strong> yaz:</p>
               <input
                 type="text"

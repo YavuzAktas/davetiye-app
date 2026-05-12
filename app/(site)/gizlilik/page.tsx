@@ -38,14 +38,15 @@ export default function GizlilikSayfasi() {
                 <li>Ad soyad, e-posta adresi</li>
                 <li>Şifre (bcrypt ile şifrelenmiş — düz metin olarak saklanmaz)</li>
                 <li>Google ile girişte: profil fotoğrafı, Google hesap kimliği</li>
-                <li>KVKK/kullanım şartları onay tarihi</li>
+                <li>KVKK aydınlatma ve kullanım şartları kayıt tarihi</li>
               </ul>
               <p><strong>Platform kullanımı sırasında:</strong></p>
               <ul>
                 <li>Oluşturulan davetiyeler ve içerikleri</li>
                 <li>Şablon tercihleri, renk ve font seçimleri</li>
-                <li>Müzik tercihleri</li>
+                <li>Müzik tercihleri, Spotify bağlantısı, playlist bilgisi ve şarkı önerileri</li>
                 <li>Davetiye görüntülenme sayısı</li>
+                <li>Masa planı, misafir listesi ve davetli notları</li>
               </ul>
               <p><strong>RSVP (katılım bildirimi) formlarından:</strong></p>
               <ul>
@@ -53,6 +54,13 @@ export default function GizlilikSayfasi() {
                 <li>E-posta ve telefon (isteğe bağlı)</li>
                 <li>Katılım durumu ve kişi sayısı</li>
                 <li>Misafir notu (isteğe bağlı)</li>
+                <li>Diyet tercihi ve şarkı önerisi (isteğe bağlı)</li>
+              </ul>
+              <p><strong>Albüm ve anı özelliklerinden:</strong></p>
+              <ul>
+                <li>Fotoğraf yükleyen kişinin adı ve yüklediği fotoğraf</li>
+                <li>Anı defteri yazarı ve mesaj içeriği</li>
+                <li>Sesli anı bırakan kişinin adı, ses kaydı ve kayıt süresi</li>
               </ul>
               <p><strong>Teknik olarak otomatik toplanan:</strong></p>
               <ul>
@@ -68,7 +76,9 @@ export default function GizlilikSayfasi() {
           icerik: (
             <ul>
               <li><strong>Hizmet sunumu:</strong> Davetiye oluşturma, düzenleme ve paylaşım özelliklerini çalıştırmak</li>
-              <li><strong>RSVP iletimi:</strong> Misafirlerin katılım bildirimlerini davet sahibine e-posta ile iletmek</li>
+              <li><strong>RSVP iletimi:</strong> Misafirlerin katılım bildirimlerini davet sahibine iletmek</li>
+              <li><strong>Albüm ve anı yönetimi:</strong> Fotoğraf, yazılı anı ve sesli anıları moderasyon sonrası davetiye sayfasında göstermek</li>
+              <li><strong>Entegrasyon:</strong> Spotify bağlantısı ile şarkı önerilerini etkinlik çalma listesine eklemek</li>
               <li><strong>Kimlik doğrulama:</strong> Hesabınıza güvenli erişim sağlamak</li>
               <li><strong>Ödeme:</strong> Plan yükseltme işlemlerini gerçekleştirmek</li>
               <li><strong>Güvenlik:</strong> Yetkisiz erişim ve sahteciliği engellemek</li>
@@ -94,17 +104,24 @@ export default function GizlilikSayfasi() {
                   Kart bilgileriniz yalnızca iyzico altyapısında işlenir, tarafımızca saklanmaz.
                 </li>
                 <li>
-                  <strong>Resend Inc.</strong> — İşlemsel e-posta (RSVP bildirimleri).
-                  Veriler ABD'de Standart Sözleşme Maddeleri güvencesiyle işlenir.
+                  <strong>Resend Inc.</strong> — İşlemsel e-posta (şifre sıfırlama ve bildirimler).
+                  Veriler yurt dışında işlenebilir.
                 </li>
                 <li>
-                  <strong>Supabase Inc.</strong> — PostgreSQL veritabanı (AB bölgesi, AWS eu-west-1).
+                  <strong>Supabase Inc.</strong> — PostgreSQL veritabanı ve seçilen barındırma bölgesi.
                 </li>
                 <li>
-                  <strong>Vercel Inc.</strong> — Uygulama barındırma.
-                  Veriler ABD'de Standart Sözleşme Maddeleri güvencesiyle işlenir.
+                  <strong>Vercel Inc.</strong> — Uygulama ve yüklenen medya dosyalarının barındırılması.
+                  Dosyalar sağlayıcının altyapısında yurt dışında işlenebilir.
+                </li>
+                <li>
+                  <strong>Spotify AB</strong> — İsteğe bağlı müzik entegrasyonu ve playlist yönetimi.
                 </li>
               </ul>
+              <p>
+                Yurt dışı aktarım gerektiren hizmetlerde KVKK m.9 kapsamındaki güncel aktarım şartları,
+                uygun güvenceler ve sağlayıcı sözleşmeleri ayrıca değerlendirilir.
+              </p>
               <p>
                 Kişisel verileriniz bu hizmetler dışında hiçbir üçüncü tarafla ticari amaçla
                 paylaşılmaz, satılmaz veya kiralanmaz.
@@ -121,7 +138,7 @@ export default function GizlilikSayfasi() {
               <li>Oturum bilgileri imzalı JWT token ile yönetilir</li>
               <li>Veritabanı erişimi kısıtlı ve güvenlik duvarı arkasındadır</li>
               <li>Ödeme bilgileri tarafımızca saklanmaz; PCI DSS uyumlu iyzico altyapısı kullanılır</li>
-              <li>Veri ihlali durumunda KVKK m.12/5 gereği 72 saat içinde Kurul'a bildirim yapılır</li>
+              <li>Veri ihlali durumunda KVKK m.12/5 ve Kurul kararları uyarınca, ihlalin öğrenilmesinden itibaren en kısa sürede ve en geç 72 saat içinde Kurul'a bildirim yapılması hedeflenir</li>
             </ul>
           ),
         },

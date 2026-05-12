@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ hata: "Tüm alanlar zorunludur." }, { status: 400 });
 
     if (!kullanim)
-      return NextResponse.json({ hata: "Kullanım şartlarını kabul etmeniz zorunludur." }, { status: 400 });
+      return NextResponse.json({ hata: "Yasal bilgilendirme ve kullanım şartları onayı zorunludur." }, { status: 400 });
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim()))
@@ -40,6 +40,9 @@ export async function POST(req: NextRequest) {
         name:          ad.trim(),
         email:         email.toLowerCase().trim(),
         password:      hash,
+        // Kullanıcı kayıt ekranında KVKK aydınlatmasını okuduğunu ve kullanım
+        // şartlarını kabul ettiğini işaretler. Bu alan açık rıza değil,
+        // aydınlatma/kabul kaydı olarak kullanılır.
         kvkkOnay:      true,
         kvkkOnayTarih: new Date(),
       },

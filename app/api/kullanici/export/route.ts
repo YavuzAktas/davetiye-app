@@ -13,6 +13,7 @@ export async function GET(): Promise<NextResponse> {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
+      odemeKayitlari: true,
       davetiyeler: {
         include: {
           rsvplar:   true,
@@ -37,6 +38,13 @@ export async function GET(): Promise<NextResponse> {
       kvkkOnayTarih: user.kvkkOnayTarih,
       kayitTarihi:  user.createdAt,
     },
+    odemeKayitlari: user.odemeKayitlari.map(o => ({
+      plan: o.planId,
+      odemeDurumu: o.paymentStatus,
+      tutar: o.paidPrice,
+      paraBirimi: o.currency,
+      tarih: o.createdAt,
+    })),
     davetiyeler: user.davetiyeler.map(d => ({
       id:            d.id,
       slug:          d.slug,

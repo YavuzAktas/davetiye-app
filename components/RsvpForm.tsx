@@ -323,8 +323,10 @@ export default function RsvpForm({ davetiyeId, renk, spotifyAktif = false }: Pro
           <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
             <p className="text-[11px] text-gray-400 leading-relaxed">
               <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-              Girdiğiniz bilgiler (ad soyad{form.email ? ", e-posta" : ""}) yalnızca
-              katılım durumunuzu davet sahibine iletmek amacıyla{" "}
+              Girdiğiniz bilgiler (ad soyad{form.email ? ", e-posta" : ""}{form.telefon ? ", telefon" : ""},
+              katılım durumu, kişi sayısı, varsa not, diyet tercihi ve şarkı önerisi) yalnızca
+              katılım durumunuzu davet sahibine iletmek, etkinlik planlamasını yapmak ve seçtiyseniz
+              şarkı önerinizi Spotify listesine eklemek amacıyla{" "}
               <span className="font-medium text-gray-500">Bekleriz</span> tarafından
               işlenmektedir. Etkinlik tarihinden itibaren en geç 1 yıl içinde silinir.
               Verilerinizin silinmesini talep etmek için{" "}

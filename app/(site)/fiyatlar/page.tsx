@@ -99,6 +99,7 @@ export default function FiyatlarSayfasi() {
   const [tableRef, tableVisible] = useInView();
   const [sssRef, sssVisible] = useInView();
   const [odeModal, setOdeModal] = useState<string | null>(null);
+  const [odemeOnaylari, setOdemeOnaylari] = useState<Record<string, boolean>>({});
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
@@ -128,6 +129,10 @@ export default function FiyatlarSayfasi() {
   const handleOdeme = async (planId: string, fiyat: number) => {
     if (!session) { router.push("/giris"); return; }
     if (planId === "free" || kullaniciPlan === planId) return;
+    if (!odemeOnaylari[planId]) {
+      alert("Ön bilgilendirme ve cayma hakkı istisnası onayını işaretlemeniz gerekiyor.");
+      return;
+    }
 
     setYukleniyor(planId);
     try {
@@ -154,6 +159,23 @@ export default function FiyatlarSayfasi() {
 
   const planIsmi = (id: string) =>
     id === "free" ? "Ücretsiz" : id === "standart" ? "Standart" : "Premium";
+
+  const odemeOnayi = (planId: string, koyu = false) => (
+    <label className="flex items-start gap-2.5 mb-3 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={!!odemeOnaylari[planId]}
+        onChange={e => setOdemeOnaylari(prev => ({ ...prev, [planId]: e.target.checked }))}
+        className="mt-0.5 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+      />
+      <span className={`text-[10px] leading-tight ${koyu ? "text-purple-200/70" : "text-gray-500"}`}>
+        <Link href="/kullanim-sartlari" target="_blank" className="underline underline-offset-2">
+          Ön bilgilendirme ve kullanım şartlarını
+        </Link>
+        {" "}okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve bu nedenle cayma hakkı istisnasını kabul ediyorum.
+      </span>
+    </label>
+  );
 
   return (
     <>
@@ -297,6 +319,7 @@ export default function FiyatlarSayfasi() {
                           ))}
                         </ul>
 
+                        {odemeOnayi(plan.id, true)}
                         <button
                           onClick={() => handleOdeme(plan.id, plan.fiyat)}
                           disabled={disabled}
@@ -310,7 +333,7 @@ export default function FiyatlarSayfasi() {
                         </button>
                         {!aktif && (
                           <p className="text-[10px] text-purple-300/60 mt-3 text-center leading-tight px-2">
-                            Ödemeye geçerek dijital hizmetin anında ifasını ve cayma hakkınızın bulunmadığını onaylamış olursunuz.
+                            Ödeme iyzico altyapısı üzerinden güvenli şekilde tamamlanır.
                           </p>
                         )}
                       </div>
@@ -351,6 +374,7 @@ export default function FiyatlarSayfasi() {
                         ))}
                       </ul>
 
+                      {plan.id !== "free" && !aktif && odemeOnayi(plan.id)}
                       <button
                         onClick={() => handleOdeme(plan.id, plan.fiyat)}
                         disabled={disabled}
@@ -366,7 +390,7 @@ export default function FiyatlarSayfasi() {
                       </button>
                       {plan.id !== "free" && !aktif && (
                         <p className="text-[10px] text-gray-400 mt-3 text-center leading-tight px-2">
-                          Ödemeye geçerek dijital hizmetin anında ifasını ve cayma hakkınızın bulunmadığını onaylamış olursunuz.
+                          Ödeme iyzico altyapısı üzerinden güvenli şekilde tamamlanır.
                         </p>
                       )}
                     </div>

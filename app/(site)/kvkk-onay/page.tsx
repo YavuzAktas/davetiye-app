@@ -18,7 +18,7 @@ function KvkkOnayIcerigi() {
 
   async function onayla(e: React.FormEvent) {
     e.preventDefault();
-    if (!kvkk)     { setHata("KVKK Aydınlatma Metnini onaylamanız gerekiyor."); return; }
+    if (!kvkk)     { setHata("KVKK Aydınlatma Metnini okuduğunuzu onaylamanız gerekiyor."); return; }
     if (!kullanim) { setHata("Kullanım Şartlarını kabul etmeniz gerekiyor."); return; }
     setHata("");
     setYuk(true);
@@ -40,13 +40,13 @@ function KvkkOnayIcerigi() {
       <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-5">🔐</div>
       <h1 className="text-xl font-bold text-gray-900 text-center mb-1">Gizlilik Onayı Gerekli</h1>
       <p className="text-sm text-gray-500 text-center mb-6 leading-relaxed">
-        Platformumuzu kullanmadan önce kişisel veri işleme politikamızı onaylamanız gerekmektedir.
+        Platformumuzu kullanmadan önce kişisel veri işleme süreçlerimiz hakkında bilgilendirildiğinizi kaydetmemiz gerekmektedir.
       </p>
 
       {/* Özet bilgi kutusu */}
       <div className="bg-gray-50 rounded-2xl p-4 mb-6 space-y-2 text-xs text-gray-600 leading-relaxed">
         <p><strong className="text-gray-800">Hangi veriler işleniyor?</strong><br/>
-          Adınız, e-posta adresiniz ve oluşturduğunuz davetiye içerikleri.</p>
+          Adınız, e-posta adresiniz, oluşturduğunuz davetiye içerikleri ve hizmeti kullanırken paylaştığınız medya/içerikler.</p>
         <p><strong className="text-gray-800">Neden işleniyor?</strong><br/>
           Hizmetin sunulması, RSVP takibi ve iletişim amacıyla (KVKK m.5/2-c).</p>
         <p><strong className="text-gray-800">Ne kadar süre saklanıyor?</strong><br/>
@@ -77,8 +77,8 @@ function KvkkOnayIcerigi() {
             <Link href="/kvkk" target="_blank" className="text-purple-600 font-semibold hover:underline">
               KVKK Aydınlatma Metni
             </Link>
-            {"'ni okudum; kişisel verilerimin açıklanan amaçlarla işlenmesine "}
-            <span className="font-semibold text-gray-800">açıkça onay veriyorum.</span>
+            {"'ni okudum; kişisel verilerimin metinde açıklanan amaç ve hukuki sebeplerle işleneceği konusunda "}
+            <span className="font-semibold text-gray-800">bilgilendirildim.</span>
             {" (Zorunlu)"}
           </span>
         </label>
@@ -117,12 +117,12 @@ function KvkkOnayIcerigi() {
           className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ background: "linear-gradient(135deg,#7C3AED,#EC4899)" }}
         >
-          {yukleniyor ? "Kaydediliyor..." : "Onaylıyorum, Devam Et"}
+          {yukleniyor ? "Kaydediliyor..." : "Okudum, Devam Et"}
         </button>
       </form>
 
       <p className="text-[10px] text-gray-400 text-center mt-4 leading-relaxed">
-        Onay tarihiniz kayıt altına alınır. İstediğiniz zaman hesabınızı silebilir ve verilerinizi talep edebilirsiniz.
+        Bilgilendirme tarihiniz kayıt altına alınır. İstediğiniz zaman hesabınızı silebilir ve verilerinizi talep edebilirsiniz.
       </p>
     </div>
   );

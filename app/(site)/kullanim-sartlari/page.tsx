@@ -91,8 +91,9 @@ export default function KullanimSartlariSayfasi() {
               <p>Platformumuz ücretsiz ve ücretli plan seçenekleri sunmaktadır.</p>
               <ul>
                 <li>Ücretli planlar <strong>iyzico</strong> güvenceli ödeme altyapısı üzerinden işlenir.</li>
-                <li>Plan ücretleri aylık veya yıllık olarak tahsil edilir; fiyatlar <a href="/fiyatlar">fiyatlar sayfasında</a> belirtilmiştir.</li>
-                <li>Ödeme başarısız olursa hesabınız ücretsiz plana düşürülebilir.</li>
+                <li>Ücretli planlar tek seferlik ödeme ile sunulur; abonelik veya otomatik yenileme yoktur.</li>
+                <li>Plan ücretleri ve kapsamları <a href="/fiyatlar">fiyatlar sayfasında</a> belirtilmiştir.</li>
+                <li>Ödeme başarısız olursa plan yükseltme işlemi tamamlanmaz ve mevcut planınız korunur.</li>
                 <li>Fiyatlar KDV dahildir. KDV oranı yasal mevzuata göre değişebilir.</li>
               </ul>
             </>
@@ -186,7 +187,7 @@ export default function KullanimSartlariSayfasi() {
                 silebilirsiniz. Hesap silindiğinde:
               </p>
               <ul>
-                <li>Tüm davetiyeleriniz ve içerikleriniz kalıcı olarak silinir.</li>
+                <li>Tüm davetiyeleriniz, yüklediğiniz medya dosyaları ve içerikleriniz kalıcı olarak silinir.</li>
                 <li>RSVP ve misafir verileri silinir.</li>
                 <li>Yasal saklama yükümlülüğü olan ödeme kayıtları mevzuat gereği saklanmaya devam eder.</li>
               </ul>

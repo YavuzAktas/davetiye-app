@@ -46,11 +46,14 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>İletişim</strong></td><td>E-posta adresi</td><td>Üyelik formu / Google</td></tr>
                   <tr><td><strong>Güvenlik</strong></td><td>Şifre (şifrelenmiş)</td><td>Üyelik formu</td></tr>
                   <tr><td><strong>Görsel</strong></td><td>Profil fotoğrafı</td><td>Google (isteğe bağlı)</td></tr>
-                  <tr><td><strong>Hizmet kullanım</strong></td><td>Oluşturulan davetiyeler, şablon tercihleri</td><td>Platform kullanımı</td></tr>
-                  <tr><td><strong>Ödeme</strong></td><td>Plan bilgisi (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
-                  <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi</td><td>Otomatik (teknik)</td></tr>
-                  <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon (gönüllü)</td><td>RSVP formu</td></tr>
-                  <tr><td><strong>Onay kayıtları</strong></td><td>KVKK onay tarihi</td><td>Üyelik formu</td></tr>
+                  <tr><td><strong>Hizmet kullanım</strong></td><td>Oluşturulan davetiyeler, etkinlik tarihi/mekanı, şablon, renk, font, müzik ve masa planı tercihleri</td><td>Platform kullanımı</td></tr>
+                  <tr><td><strong>İçerik ve medya</strong></td><td>Davetiye metinleri, anı defteri mesajları, yüklenen fotoğraflar, polaroid görselleri ve sesli anı kayıtları</td><td>Kullanıcı veya davetli yüklemeleri</td></tr>
+                  <tr><td><strong>Ödeme</strong></td><td>Plan bilgisi, ödeme doğrulama tokenı ve işlem durumu (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
+                  <tr><td><strong>Entegrasyon</strong></td><td>Spotify kullanıcı/playlist bilgisi, şarkı önerileri ve bağlantı tokenları</td><td>Spotify bağlantısı ve RSVP formu</td></tr>
+                  <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
+                  <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
+                  <tr><td><strong>Misafir listesi</strong></td><td>Davet sahibi tarafından girilen ad, telefon, e-posta ve notlar</td><td>Davet sahibi girişi</td></tr>
+                  <tr><td><strong>Bilgilendirme kayıtları</strong></td><td>KVKK aydınlatma/kullanım şartları kayıt tarihi</td><td>Üyelik ve onay ekranları</td></tr>
                 </tbody>
               </table>
             </>
@@ -63,6 +66,8 @@ export default function KvkkSayfasi() {
               <li>Üyelik kaydının oluşturulması ve kimlik doğrulama</li>
               <li>Dijital davetiye oluşturma, düzenleme ve paylaşım hizmetinin sunulması</li>
               <li>RSVP (katılım bildirimi) toplanması ve davet sahibine iletilmesi</li>
+              <li>Misafir fotoğrafları, yazılı ve sesli anıların moderasyon sonrası yayınlanması</li>
+              <li>Spotify entegrasyonu ile şarkı önerilerinin çalma listesine eklenmesi</li>
               <li>Ödeme işlemlerinin gerçekleştirilmesi ve planın güncellenmesi</li>
               <li>Teknik destek ve müşteri hizmetleri sunulması</li>
               <li>Platform güvenliğinin ve bütünlüğünün sağlanması</li>
@@ -81,8 +86,10 @@ export default function KvkkSayfasi() {
                   <tr><th>Amaç</th><th>Hukuki Dayanak</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Üyelik ve hizmet sunumu</td><td>Sözleşmenin ifası (m.5/2-c)</td></tr>
-                  <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c)</td></tr>
+                  <tr><td>Üyelik ve hizmet sunumu</td><td>Sözleşmenin kurulması/ifası (m.5/2-c)</td></tr>
+                  <tr><td>Davetiye, RSVP, misafir listesi ve anı özellikleri</td><td>Sözleşmenin ifası (m.5/2-c), ilgili kişinin kendisi tarafından alenileştirme şartları varsa m.5/2-d ve meşru menfaat (m.5/2-f)</td></tr>
+                  <tr><td>İsteğe bağlı medya, sesli anı ve Spotify özellikleri</td><td>Özelliğin talep edilmesi halinde sözleşmenin ifası (m.5/2-c) ve gerektiğinde açık rıza</td></tr>
+                  <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c), kanuni yükümlülük (m.5/2-ç)</td></tr>
                   <tr><td>Güvenlik, log kayıtları</td><td>Meşru menfaat (m.5/2-f)</td></tr>
                   <tr><td>Yasal yükümlülükler</td><td>Kanuni yükümlülük (m.5/2-ç)</td></tr>
                 </tbody>
@@ -100,16 +107,18 @@ export default function KvkkSayfasi() {
                   <tr><th>Alıcı</th><th>Amaç</th><th>Konum</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td><strong>Google LLC</strong></td><td>OAuth kimlik doğrulama</td><td>ABD (SCCs)</td></tr>
+                  <tr><td><strong>Google LLC</strong></td><td>OAuth kimlik doğrulama</td><td>Yurt dışı</td></tr>
                   <tr><td><strong>İyzico Ödeme Hizmetleri A.Ş.</strong></td><td>Ödeme altyapısı</td><td>Türkiye</td></tr>
-                  <tr><td><strong>Resend Inc.</strong></td><td>İşlemsel e-posta gönderimi</td><td>ABD (SCCs)</td></tr>
-                  <tr><td><strong>Supabase Inc.</strong></td><td>Veritabanı barındırma</td><td>AB (AWS eu-west)</td></tr>
-                  <tr><td><strong>Vercel Inc.</strong></td><td>Uygulama barındırma</td><td>ABD (SCCs)</td></tr>
+                  <tr><td><strong>Resend Inc.</strong></td><td>İşlemsel e-posta gönderimi</td><td>Yurt dışı</td></tr>
+                  <tr><td><strong>Supabase Inc.</strong></td><td>Veritabanı barındırma</td><td>Yurt dışı / seçilen bölge</td></tr>
+                  <tr><td><strong>Vercel Inc.</strong></td><td>Uygulama ve dosya barındırma</td><td>Yurt dışı / seçilen bölge</td></tr>
+                  <tr><td><strong>Spotify AB</strong></td><td>İsteğe bağlı müzik entegrasyonu</td><td>Yurt dışı</td></tr>
                 </tbody>
               </table>
               <p>
-                Yurt dışına aktarımlarda KVKK m.9 kapsamında gerekli güvenceler (Standart Sözleşme Maddeleri)
-                sağlanmaktadır.
+                Yurt dışına aktarım gerektiren hizmetlerde KVKK m.9 kapsamında yeterlilik kararı, uygun güvence
+                (standart sözleşme dahil) veya kanunda öngörülen istisnai haller değerlendirilir; aktarım yapılan
+                sağlayıcılarla gerekli sözleşmesel ve teknik tedbirlerin kurulması esastır.
               </p>
             </>
           ),
@@ -123,11 +132,13 @@ export default function KvkkSayfasi() {
                   <tr><th>Veri</th><th>Saklama Süresi</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Üyelik ve hesap bilgileri</td><td>Hesap silinene kadar + 3 yıl</td></tr>
+                  <tr><td>Üyelik ve hesap bilgileri</td><td>Hesap silinene kadar; uyuşmazlık ve yasal yükümlülükler için gerekli kayıtlar en fazla 3 yıl</td></tr>
                   <tr><td>Ödeme kayıtları</td><td>10 yıl (Vergi Usul Kanunu)</td></tr>
-                  <tr><td>RSVP misafir bilgileri</td><td>Davetiye silinene kadar + 1 yıl</td></tr>
+                  <tr><td>RSVP misafir bilgileri</td><td>Etkinlik tarihinden itibaren en geç 1 yıl; davetiye veya hesap silinirse daha erken</td></tr>
+                  <tr><td>Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri</td><td>Davetiye veya hesap silinene kadar; ilgili kişinin silme talebi halinde ayrıca değerlendirilir</td></tr>
+                  <tr><td>Spotify entegrasyon tokenları</td><td>Bağlantı kaldırılana veya hesap silinene kadar</td></tr>
                   <tr><td>Log ve güvenlik kayıtları</td><td>2 yıl</td></tr>
-                  <tr><td>KVKK onay kayıtları</td><td>Hesap silinmesinden itibaren 3 yıl</td></tr>
+                  <tr><td>KVKK aydınlatma/kabul kayıtları</td><td>Hesap silinmesinden itibaren en fazla 3 yıl</td></tr>
                 </tbody>
               </table>
               <p>Saklama süreleri dolduğunda veriler otomatik olarak silinir veya anonim hale getirilir.</p>

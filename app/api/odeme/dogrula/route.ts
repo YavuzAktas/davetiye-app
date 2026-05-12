@@ -31,7 +31,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // eşzamanlı iki istek aynı token'ı ikinci kez aktive edemez.
   const odemeToken = await prisma.odemeToken.findUnique({
     where: { token },
-    select: { userId: true, planId: true, kullanildi: true, expiresAt: true },
+    select: {
+      userId: true,
+      planId: true,
+      kullanildi: true,
+      expiresAt: true,
+      user: { select: { email: true } },
+    },
   });
 
   if (!odemeToken || odemeToken.expiresAt < new Date()) {
@@ -51,6 +57,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   await prisma.user.update({
     where: { id: odemeToken.userId },
     data: { plan: odemeToken.planId },
+  });
+
+  await prisma.odemeKaydi.create({
+    data: {
+      userId: odemeToken.userId,
+      userEmail: odemeToken.user.email,
+      planId: odemeToken.planId,
+      token,
+      paymentId: result.paymentId ? String(result.paymentId) : null,
+      conversationId: result.conversationId ? String(result.conversationId) : null,
+      price: result.price ? String(result.price) : null,
+      paidPrice: result.paidPrice ? String(result.paidPrice) : null,
+      currency: result.currency ? String(result.currency) : "TRY",
+      paymentStatus: result.paymentStatus ? String(result.paymentStatus) : null,
+    },
   });
 
   return new NextResponse(null, {

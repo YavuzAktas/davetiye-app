@@ -45,6 +45,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
   }
 
+  const sandbox = (process.env.IYZICO_BASE_URL ?? "").includes("sandbox");
+  const identityNumber = process.env.IYZICO_BUYER_IDENTITY_NUMBER ?? (sandbox ? "74300864791" : "");
+  const gsmNumber = process.env.IYZICO_BUYER_GSM ?? (sandbox ? "+905350000000" : "");
+  const buyerCity = process.env.IYZICO_BUYER_CITY ?? (sandbox ? "Istanbul" : "");
+  const buyerAddress = process.env.IYZICO_BUYER_ADDRESS ?? (sandbox ? "Türkiye" : "");
+
+  if (!identityNumber || !gsmNumber || !buyerCity || !buyerAddress) {
+    return NextResponse.json(
+      { hata: "Ödeme yapılandırması eksik. Lütfen destek ile iletişime geçin." },
+      { status: 503 },
+    );
+  }
+
   const request = {
     locale: "tr",
     conversationId: `${user.id}-${planId}-${Date.now()}`,
@@ -59,30 +72,25 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       id: user.id,
       name: user.name?.split(" ")[0] || "Ad",
       surname: user.name?.split(" ").slice(1).join(" ") || "Soyad",
-      // TODO (production): Kullanıcıdan telefon numarası toplanmalı
-      gsmNumber: "+905350000000",
+      gsmNumber,
       email: user.email!,
-      // Sandbox test değeri. TODO (production): iyzico canlıya geçişte
-      // TC kimlik no toplamak KVKK kapsamında özel nitelikli veri sayılır;
-      // iyzico'nun "11111111111" placeholder'ına production'da izin verip
-      // vermediğini iyzico ile teyit et.
-      identityNumber: "74300864791",
-      registrationAddress: "Türkiye",
+      identityNumber,
+      registrationAddress: buyerAddress,
       ip: clientIp,
-      city: "Istanbul",
+      city: buyerCity,
       country: "Turkey",
     },
     shippingAddress: {
       contactName: user.name || "Kullanıcı",
-      city: "Istanbul",
+      city: buyerCity,
       country: "Turkey",
-      address: "Türkiye",
+      address: buyerAddress,
     },
     billingAddress: {
       contactName: user.name || "Kullanıcı",
-      city: "Istanbul",
+      city: buyerCity,
       country: "Turkey",
-      address: "Türkiye",
+      address: buyerAddress,
     },
     basketItems: [
       {

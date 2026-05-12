@@ -11,6 +11,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const simdi = new Date();
   const birYilOnce = new Date(simdi.getTime() - 365 * 24 * 60 * 60 * 1000);
   const otuzGunOnce = new Date(simdi.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const onYilOnce = new Date(simdi.getTime() - 10 * 365 * 24 * 60 * 60 * 1000);
 
   // 1) Etkinlik tarihi 1 yıldan önce geçmiş davetiyelerinin RSVP kayıtlarını sil
   //    (KVKK politikası: "etkinlik tarihinden itibaren en geç 1 yıl içinde silinir")
@@ -37,10 +38,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
   });
 
+  // 3) Yasal saklama süresi dolan ödeme kayıtlarını sil
+  const silinenOdemeKaydi = await prisma.odemeKaydi.deleteMany({
+    where: {
+      createdAt: { lt: onYilOnce },
+    },
+  });
+
   return NextResponse.json({
     basarili: true,
     silinenRsvp: silinen.count,
     silinenToken: silinenToken.count,
+    silinenOdemeKaydi: silinenOdemeKaydi.count,
     tarih: simdi.toISOString(),
   });
 }
