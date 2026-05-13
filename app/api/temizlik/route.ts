@@ -87,7 +87,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  // 6) Önceden silinemeyen medya dosyalarını yeniden dene
+  // 6) Süresi dolmuş rate limit sayaçlarını temizle
+  const silinenRateLimitKaydi = await prisma.rateLimitKaydi.deleteMany({
+    where: {
+      sifirAt: { lt: birGunOnce },
+    },
+  });
+
+  // 7) Önceden silinemeyen medya dosyalarını yeniden dene
   const silmeKuyrugu = await prisma.medyaSilmeKuyrugu.findMany({
     where: {
       OR: [
@@ -181,6 +188,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
     {
       kaynak: "temizlik-cron",
+      islemTuru: "guvenlik-log-imha",
+      veriKategorisi: "Rate limit sayaç kayıtları",
+      adet: silinenRateLimitKaydi.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "Rate limit penceresinin dolması ve günlük güvenlik log saklama süresinin aşılması",
+    },
+    {
+      kaynak: "temizlik-cron",
       islemTuru: "medya-silme-kuyrugu-imha",
       veriKategorisi: "Önceden silinemeyen medya dosyaları",
       adet: kuyruktanSilinenMedya,
@@ -197,6 +212,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     silinenOdemeKaydi: silinenOdemeKaydi.count,
     silinenYasalOnayKaydi: silinenYasalOnayKaydi.count,
     silinenGeciciYukleme,
+    silinenRateLimitKaydi: silinenRateLimitKaydi.count,
     kuyruktanSilinenMedya,
     kuyruktaKalanMedya: kalanMedyaKuyrugu._count.id,
     medyaSilmeEnYuksekDeneme: kalanMedyaKuyrugu._max.denemeSayisi ?? 0,

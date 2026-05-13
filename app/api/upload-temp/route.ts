@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
 
   const ip = ipAlNextRequest(req);
   if (
-    !ipIzinVer("upload-temp-ip", ip, 20, 60 * 60_000) ||
-    !ipIzinVer("upload-temp-user", session.user.id, 20, 60 * 60_000)
+    !(await ipIzinVer("upload-temp-ip", ip, 20, 60 * 60_000)) ||
+    !(await ipIzinVer("upload-temp-user", session.user.id, 20, 60 * 60_000))
   ) {
     return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
   }

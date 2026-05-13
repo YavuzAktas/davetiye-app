@@ -33,7 +33,7 @@ export async function POST(
 ): Promise<NextResponse> {
   const { slug } = await params;
   const ip = ipAlNextRequest(req);
-  if (!ipIzinVer("ani-defteri", ip, 10, 60_000)) {
+  if (!(await ipIzinVer("ani-defteri", ip, 10, 60_000))) {
     return NextResponse.json({ hata: "Çok fazla istek. Lütfen bir dakika bekleyin." }, { status: 429 });
   }
 

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { tokenYenile, sarkilaraAra, playlistEEkle, playlistOlustur } from "@/lib/spotify";
+import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
 const rsvpSemasi = z.object({
@@ -19,24 +20,6 @@ const rsvpSemasi = z.object({
   spotifyTrackId: z.string().max(50).optional(),
 });
 
-/* ── IP tabanlı rate limiter (module-level, instance başına) */
-const IP_LIMIT   = 10;         // istek / pencere
-const IP_PENCERE = 60_000;     // 1 dakika
-
-const ipSayac = new Map<string, { sayi: number; sifirAt: number }>();
-
-function ipIzinVer(ip: string): boolean {
-  const simdi = Date.now();
-  const kayit = ipSayac.get(ip);
-  if (!kayit || simdi > kayit.sifirAt) {
-    ipSayac.set(ip, { sayi: 1, sifirAt: simdi + IP_PENCERE });
-    return true;
-  }
-  if (kayit.sayi >= IP_LIMIT) return false;
-  kayit.sayi++;
-  return true;
-}
-
 /* ── DB tabanlı per-davetiye limitler ───────────────────── */
 const LIMIT_DAKIKA      = 5;
 const LIMIT_SAAT        = 100;
@@ -45,12 +28,9 @@ const LIMIT_MUKERRER_DK = 10;
 /* ── Handler ────────────────────────────────────────────── */
 export async function POST(req: NextRequest) {
   /* 1. IP kontrolü */
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown";
+  const ip = ipAlNextRequest(req);
 
-  if (!ipIzinVer(ip)) {
+  if (!(await ipIzinVer("rsvp", ip, 10, 60_000))) {
     return NextResponse.json(
       { hata: "Çok fazla istek. Lütfen bir dakika bekleyin." },
       { status: 429 }

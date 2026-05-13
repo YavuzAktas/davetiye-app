@@ -10,7 +10,7 @@ const KAYIT_TAMAMLANAMADI =
 // 5 kayıt denemesi / IP / saat
 export async function POST(req: NextRequest) {
   const ip = ipAlNextRequest(req);
-  if (!ipIzinVer("kayit", ip, 5, 60 * 60_000)) {
+  if (!(await ipIzinVer("kayit", ip, 5, 60 * 60_000))) {
     return NextResponse.json(
       { hata: "Çok fazla kayıt denemesi. Lütfen bir saat bekleyin." },
       { status: 429 },

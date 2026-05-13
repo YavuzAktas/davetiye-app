@@ -19,7 +19,7 @@ export async function POST(
   const path = (nextauth ?? []).join("/");
   if (path === "callback/credentials") {
     const ip = ipAlNextRequest(req);
-    if (!ipIzinVer("giris", ip, 10, 15 * 60_000)) {
+    if (!(await ipIzinVer("giris", ip, 10, 15 * 60_000))) {
       return NextResponse.json(
         { error: "Çok fazla giriş denemesi. Lütfen 15 dakika bekleyin." },
         { status: 429 },

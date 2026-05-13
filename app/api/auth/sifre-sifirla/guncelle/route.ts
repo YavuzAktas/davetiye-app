@@ -5,7 +5,7 @@ import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   const ip = ipAlNextRequest(req);
-  if (!ipIzinVer("sifre-sifirla-guncelle", ip, 10, 60 * 60_000)) {
+  if (!(await ipIzinVer("sifre-sifirla-guncelle", ip, 10, 60 * 60_000))) {
     return NextResponse.json(
       { hata: "Çok fazla şifre sıfırlama denemesi. Lütfen bir saat bekleyin." },
       { status: 429 },

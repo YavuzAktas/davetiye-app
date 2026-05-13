@@ -7,7 +7,7 @@ import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 // 3 sıfırlama isteği / IP / saat
 export async function POST(req: NextRequest) {
   const ip = ipAlNextRequest(req);
-  if (!ipIzinVer("sifre-sifirla", ip, 3, 60 * 60_000)) {
+  if (!(await ipIzinVer("sifre-sifirla", ip, 3, 60 * 60_000))) {
     return NextResponse.json(
       { hata: "Çok fazla istek. Lütfen bir saat bekleyin." },
       { status: 429 },

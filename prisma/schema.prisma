@@ -68,6 +68,19 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model RateLimitKaydi {
+  id        String   @id @default(cuid())
+  ad        String
+  anahtar   String
+  sayi      Int      @default(0)
+  sifirAt   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ad, anahtar])
+  @@index([sifirAt])
+}
+
 model Davetiye {
   id                String       @id @default(cuid())
   slug              String       @unique

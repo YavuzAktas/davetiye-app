@@ -1,28 +1,41 @@
-/**
- * Module-level in-memory IP rate limiter.
- * Vercel warm instance'larında etkilidir; cold start'ta sayaç sıfırlanır.
- * Her limiter adı bağımsız bir pencere tutar.
- */
-const haritalar = new Map<string, Map<string, { sayi: number; sifirAt: number }>>();
+import { prisma } from "@/lib/prisma";
 
-export function ipIzinVer(
+function temizAnahtar(anahtar: string) {
+  return anahtar.trim().slice(0, 255) || "unknown";
+}
+
+export async function ipIzinVer(
   ad: string,
-  ip: string,
+  anahtar: string,
   limit: number,
   pencereMs: number,
-): boolean {
-  if (!haritalar.has(ad)) haritalar.set(ad, new Map());
-  const harita = haritalar.get(ad)!;
+): Promise<boolean> {
+  const simdi = new Date();
+  const sifirAt = new Date(simdi.getTime() + pencereMs);
+  const temizAd = ad.trim().slice(0, 100);
+  const temizKey = temizAnahtar(anahtar);
 
-  const simdi = Date.now();
-  const kayit = harita.get(ip);
+  const kayit = await prisma.rateLimitKaydi.upsert({
+    where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
+    create: { ad: temizAd, anahtar: temizKey, sayi: 1, sifirAt },
+    update: { updatedAt: simdi },
+    select: { sayi: true, sifirAt: true },
+  });
 
-  if (!kayit || simdi > kayit.sifirAt) {
-    harita.set(ip, { sayi: 1, sifirAt: simdi + pencereMs });
+  if (kayit.sifirAt <= simdi) {
+    await prisma.rateLimitKaydi.update({
+      where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
+      data: { sayi: 1, sifirAt },
+    });
     return true;
   }
+
   if (kayit.sayi >= limit) return false;
-  kayit.sayi++;
+
+  await prisma.rateLimitKaydi.update({
+    where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
+    data: { sayi: { increment: 1 } },
+  });
   return true;
 }
 

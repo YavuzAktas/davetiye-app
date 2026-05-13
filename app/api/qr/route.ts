@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   }
 
   const ip = ipAlNextRequest(req);
-  if (!ipIzinVer("qr", ip, 30, 60_000)) {
+  if (!(await ipIzinVer("qr", ip, 30, 60_000))) {
     return NextResponse.json({ hata: "Çok fazla istek." }, { status: 429 });
   }
 

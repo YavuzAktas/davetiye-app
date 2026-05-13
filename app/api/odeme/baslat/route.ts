@@ -68,7 +68,7 @@ function adSoyadBol(adSoyad: string): { ad: string; soyad: string } {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // 1. IP tabanlı limit: 5 deneme / 15 dk
   const clientIp = ipAlNextRequest(req);
-  if (!ipIzinVer("odeme-ip", clientIp, 5, 15 * 60_000)) {
+  if (!(await ipIzinVer("odeme-ip", clientIp, 5, 15 * 60_000))) {
     return NextResponse.json(
       { hata: "Çok fazla ödeme isteği. Lütfen 15 dakika bekleyin." },
       { status: 429 },
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   // 2. Kullanıcı tabanlı limit: 3 deneme / saat
-  if (!ipIzinVer("odeme-kullanici", session.user.id, 3, 60 * 60_000)) {
+  if (!(await ipIzinVer("odeme-kullanici", session.user.id, 3, 60 * 60_000))) {
     return NextResponse.json(
       { hata: "Saatlik ödeme deneme sınırına ulaşıldı. Lütfen bekleyin." },
       { status: 429 },
