@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { put } from "@vercel/blob";
+import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -16,11 +17,15 @@ export async function POST(req: NextRequest) {
 
   if (!dosya) return NextResponse.json({ hata: "Dosya gerekli." }, { status: 400 });
   if (dosya.size > 10_000_000) return NextResponse.json({ hata: "Dosya max 10 MB." }, { status: 400 });
-  if (!dosya.type.startsWith("image/")) return NextResponse.json({ hata: "Sadece resim." }, { status: 400 });
+
+  const guvenliDosya = await dogrulaGorselDosya(dosya);
+  if (!guvenliDosya) {
+    return NextResponse.json({ hata: "Sadece JPG, PNG, WEBP veya GIF dosyası kabul edilir." }, { status: 400 });
+  }
 
   const blob = await put(
-    `polaroid/${session.user.id}/${Date.now()}-${dosya.name.replace(/[^a-z0-9.]/gi, "_")}`,
-    dosya,
+    `polaroid/${session.user.id}/${Date.now()}.${guvenliDosya.ext}`,
+    guvenliDosya.blob,
     { access: "public" }
   );
 

@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { planOzellikVar } from "@/lib/planlar";
+import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
 
 /* ── GET: onaylanmış fotoğrafları listele ── */
 export async function GET(
@@ -66,8 +67,10 @@ export async function POST(
     return NextResponse.json({ hata: "Dosya gerekli." }, { status: 400 });
   if (dosya.size > 6_000_000)
     return NextResponse.json({ hata: "Dosya max 6 MB olabilir." }, { status: 400 });
-  if (!dosya.type.startsWith("image/"))
-    return NextResponse.json({ hata: "Sadece resim dosyası kabul edilir." }, { status: 400 });
+
+  const guvenliDosya = await dogrulaGorselDosya(dosya);
+  if (!guvenliDosya)
+    return NextResponse.json({ hata: "Sadece JPG, PNG, WEBP veya GIF dosyası kabul edilir." }, { status: 400 });
 
   if (!process.env.BLOB_READ_WRITE_TOKEN)
     return NextResponse.json({ hata: "Depolama yapılandırılmamış." }, { status: 503 });
@@ -75,8 +78,8 @@ export async function POST(
   let blobUrl: string;
   try {
     const blob = await put(
-      `album/${davetiye.id}/${Date.now()}-${dosya.name.replace(/[^a-z0-9.]/gi, "_")}`,
-      dosya,
+      `album/${davetiye.id}/${Date.now()}.${guvenliDosya.ext}`,
+      guvenliDosya.blob,
       { access: "public" }
     );
     blobUrl = blob.url;

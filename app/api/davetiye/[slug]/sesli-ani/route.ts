@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { planOzellikVar } from "@/lib/planlar";
+import { dogrulaSesDosya } from "@/lib/dosya-dogrulama";
 
 /* ── GET: onaylanmış sesli anıları listele ── */
 export async function GET(
@@ -71,10 +72,12 @@ export async function POST(
     return NextResponse.json({ hata: "Ses dosyası gerekli." }, { status: 400 });
   if (dosya.size > 5_000_000)
     return NextResponse.json({ hata: "Dosya max 5 MB olabilir." }, { status: 400 });
-  if (!dosya.type.startsWith("audio/"))
-    return NextResponse.json({ hata: "Sadece ses dosyası kabul edilir." }, { status: 400 });
   if (sure > 30 || sure < 1)
     return NextResponse.json({ hata: "Ses kaydı 1–30 saniye arasında olmalı." }, { status: 400 });
+
+  const guvenliDosya = await dogrulaSesDosya(dosya);
+  if (!guvenliDosya)
+    return NextResponse.json({ hata: "Sadece WEBM, OGG, MP3, M4A veya WAV ses dosyası kabul edilir." }, { status: 400 });
 
   if (!process.env.BLOB_READ_WRITE_TOKEN)
     return NextResponse.json({ hata: "Depolama yapılandırılmamış." }, { status: 503 });
@@ -82,8 +85,8 @@ export async function POST(
   let blobUrl: string;
   try {
     const blob = await put(
-      `sesli-ani/${davetiye.id}/${Date.now()}-${dosya.name.replace(/[^a-z0-9.]/gi, "_")}`,
-      dosya,
+      `sesli-ani/${davetiye.id}/${Date.now()}.${guvenliDosya.ext}`,
+      guvenliDosya.blob,
       { access: "public" }
     );
     blobUrl = blob.url;
