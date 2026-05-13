@@ -6,6 +6,7 @@ import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 
 type FaturaBilgileri = {
+  faturaTipi: "bireysel" | "kurumsal";
   adSoyad: string;
   telefon: string;
   kimlikVergiNo: string;
@@ -30,7 +31,9 @@ function telefonNormalizeEt(deger: unknown): string {
 
 function faturaBilgileriniOku(body: any): { bilgiler?: FaturaBilgileri; hata?: string } {
   const fatura = body?.faturaBilgileri ?? {};
+  const faturaTipi = fatura.faturaTipi === "kurumsal" ? "kurumsal" : "bireysel";
   const bilgiler: FaturaBilgileri = {
+    faturaTipi,
     adSoyad: metinTemizle(fatura.adSoyad, 120),
     telefon: telefonNormalizeEt(fatura.telefon),
     kimlikVergiNo: metinTemizle(fatura.kimlikVergiNo, 20).replace(/\D/g, ""),
@@ -38,19 +41,19 @@ function faturaBilgileriniOku(body: any): { bilgiler?: FaturaBilgileri; hata?: s
     adres: metinTemizle(fatura.adres, 300),
   };
 
-  if (bilgiler.adSoyad.length < 3 || !bilgiler.adSoyad.includes(" ")) {
+  if (bilgiler.adSoyad.length < 3 || (faturaTipi === "bireysel" && !bilgiler.adSoyad.includes(" "))) {
     return { hata: "Fatura için ad ve soyad bilgisi gereklidir." };
   }
   if (!/^\+90\d{10}$/.test(bilgiler.telefon)) {
     return { hata: "Telefon numarasını +90 ile başlayan geçerli bir mobil numara olarak girin." };
   }
-  if (!/^\d{10,11}$/.test(bilgiler.kimlikVergiNo)) {
+  if (faturaTipi === "kurumsal" && !/^\d{10,11}$/.test(bilgiler.kimlikVergiNo)) {
     return { hata: "T.C. kimlik veya vergi numarası 10 ya da 11 haneli olmalıdır." };
   }
   if (bilgiler.sehir.length < 2) {
     return { hata: "Fatura şehri gereklidir." };
   }
-  if (bilgiler.adres.length < 10) {
+  if (faturaTipi === "kurumsal" && bilgiler.adres.length < 10) {
     return { hata: "Fatura adresi en az 10 karakter olmalıdır." };
   }
 
@@ -112,6 +115,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { ad, soyad } = adSoyadBol(faturaBilgileri.adSoyad);
+  const kurumsalFatura = faturaBilgileri.faturaTipi === "kurumsal";
+  const iyzicoKimlikNo = kurumsalFatura ? faturaBilgileri.kimlikVergiNo : "11111111111";
+  const iyzicoAdres = kurumsalFatura
+    ? faturaBilgileri.adres
+    : `${faturaBilgileri.sehir} - Bireysel dijital hizmet alımı`;
 
   const request = {
     locale: "tr",
@@ -129,8 +137,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       surname: soyad,
       gsmNumber: faturaBilgileri.telefon,
       email: user.email!,
-      identityNumber: faturaBilgileri.kimlikVergiNo,
-      registrationAddress: faturaBilgileri.adres,
+      identityNumber: iyzicoKimlikNo,
+      registrationAddress: iyzicoAdres,
       ip: clientIp,
       city: faturaBilgileri.sehir,
       country: "Turkey",
@@ -139,13 +147,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       contactName: faturaBilgileri.adSoyad,
       city: faturaBilgileri.sehir,
       country: "Turkey",
-      address: faturaBilgileri.adres,
+      address: iyzicoAdres,
     },
     billingAddress: {
       contactName: faturaBilgileri.adSoyad,
       city: faturaBilgileri.sehir,
       country: "Turkey",
-      address: faturaBilgileri.adres,
+      address: iyzicoAdres,
     },
     basketItems: [
       {
@@ -177,9 +185,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat
       aliciAdSoyad: faturaBilgileri.adSoyad,
       aliciTelefon: faturaBilgileri.telefon,
-      aliciKimlikVergiNo: faturaBilgileri.kimlikVergiNo,
+      aliciKimlikVergiNo: kurumsalFatura ? faturaBilgileri.kimlikVergiNo : null,
       aliciSehir: faturaBilgileri.sehir,
-      aliciAdres: faturaBilgileri.adres,
+      aliciAdres: kurumsalFatura ? faturaBilgileri.adres : null,
     },
   });
 

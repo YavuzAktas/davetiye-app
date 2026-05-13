@@ -92,6 +92,7 @@ const SSS = [
 ];
 
 type FaturaBilgileri = {
+  faturaTipi: "bireysel" | "kurumsal";
   adSoyad: string;
   telefon: string;
   kimlikVergiNo: string;
@@ -100,6 +101,7 @@ type FaturaBilgileri = {
 };
 
 const BOS_FATURA_BILGILERI: FaturaBilgileri = {
+  faturaTipi: "bireysel",
   adSoyad: "",
   telefon: "",
   kimlikVergiNo: "",
@@ -299,10 +301,10 @@ export default function FiyatlarSayfasi() {
         >
           <div className="px-6 py-5 border-b border-gray-100 flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Fatura Bilgileri</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Ödeme Bilgileri</p>
               <h2 className="text-xl font-bold text-gray-900 mt-1">{planIsmi(faturaModalPlan.planId)} planı</h2>
               <p className="text-sm text-gray-500 mt-1">
-                Bu bilgiler ödeme sağlayıcısı iyzico ile paylaşılır ve ödeme kaydında saklanır.
+                Bireysel kullanımda yalnızca ödeme için gerekli minimum bilgileri alıyoruz.
               </p>
             </div>
             <button
@@ -316,19 +318,55 @@ export default function FiyatlarSayfasi() {
           </div>
 
           <div className="px-6 py-5 space-y-4">
+            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-gray-100 p-1">
+              {[
+                { id: "bireysel", label: "Bireysel", desc: "Minimum bilgi" },
+                { id: "kurumsal", label: "Kurumsal Fatura", desc: "Vergi bilgileri" },
+              ].map(secenek => {
+                const aktif = faturaBilgileri.faturaTipi === secenek.id;
+                return (
+                  <button
+                    key={secenek.id}
+                    type="button"
+                    onClick={() => faturaAlaniGuncelle("faturaTipi", secenek.id)}
+                    className={`rounded-xl px-3 py-2.5 text-left transition-all ${
+                      aktif
+                        ? "bg-white text-purple-700 shadow-sm"
+                        : "text-gray-500 hover:text-gray-800"
+                    }`}
+                  >
+                    <span className="block text-xs font-bold">{secenek.label}</span>
+                    <span className="block text-[10px] mt-0.5">{secenek.desc}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className={`rounded-2xl border px-4 py-3 text-xs leading-relaxed ${
+              faturaBilgileri.faturaTipi === "kurumsal"
+                ? "border-purple-100 bg-purple-50 text-purple-800"
+                : "border-emerald-100 bg-emerald-50 text-emerald-800"
+            }`}>
+              {faturaBilgileri.faturaTipi === "kurumsal"
+                ? "Kurumsal fatura talebi için vergi numarası ve fatura adresi alınır."
+                : "Bireysel kullanımda TCKN ve açık adres istemiyoruz; ödeme güvenliği için ad, telefon ve şehir yeterlidir."}
+            </div>
+
             <label className="block">
-              <span className="block text-xs font-semibold text-gray-600 mb-1.5">Ad soyad</span>
+              <span className="block text-xs font-semibold text-gray-600 mb-1.5">
+                {faturaBilgileri.faturaTipi === "kurumsal" ? "Unvan / Yetkili ad soyad" : "Ad soyad"}
+              </span>
               <input
                 required
                 minLength={3}
                 value={faturaBilgileri.adSoyad}
                 onChange={e => faturaAlaniGuncelle("adSoyad", e.target.value)}
                 className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
-                placeholder="Ad Soyad"
+                placeholder={faturaBilgileri.faturaTipi === "kurumsal" ? "Firma unvanı veya ad soyad" : "Ad Soyad"}
               />
             </label>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className={`grid grid-cols-1 gap-4 ${faturaBilgileri.faturaTipi === "kurumsal" ? "sm:grid-cols-2" : ""}`}>
               <label className="block">
                 <span className="block text-xs font-semibold text-gray-600 mb-1.5">Telefon</span>
                 <input
@@ -340,17 +378,19 @@ export default function FiyatlarSayfasi() {
                   inputMode="tel"
                 />
               </label>
-              <label className="block">
-                <span className="block text-xs font-semibold text-gray-600 mb-1.5">TCKN / Vergi No</span>
-                <input
-                  required
-                  value={faturaBilgileri.kimlikVergiNo}
-                  onChange={e => faturaAlaniGuncelle("kimlikVergiNo", e.target.value.replace(/\D/g, "").slice(0, 11))}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
-                  placeholder="10 veya 11 hane"
-                  inputMode="numeric"
-                />
-              </label>
+              {faturaBilgileri.faturaTipi === "kurumsal" && (
+                <label className="block">
+                  <span className="block text-xs font-semibold text-gray-600 mb-1.5">Vergi No / TCKN</span>
+                  <input
+                    required
+                    value={faturaBilgileri.kimlikVergiNo}
+                    onChange={e => faturaAlaniGuncelle("kimlikVergiNo", e.target.value.replace(/\D/g, "").slice(0, 11))}
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                    placeholder="10 veya 11 hane"
+                    inputMode="numeric"
+                  />
+                </label>
+              )}
             </div>
 
             <label className="block">
@@ -364,17 +404,19 @@ export default function FiyatlarSayfasi() {
               />
             </label>
 
-            <label className="block">
-              <span className="block text-xs font-semibold text-gray-600 mb-1.5">Fatura adresi</span>
-              <textarea
-                required
-                minLength={10}
-                value={faturaBilgileri.adres}
-                onChange={e => faturaAlaniGuncelle("adres", e.target.value)}
-                className="w-full min-h-24 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 resize-none"
-                placeholder="Açık adres"
-              />
-            </label>
+            {faturaBilgileri.faturaTipi === "kurumsal" && (
+              <label className="block">
+                <span className="block text-xs font-semibold text-gray-600 mb-1.5">Fatura adresi</span>
+                <textarea
+                  required
+                  minLength={10}
+                  value={faturaBilgileri.adres}
+                  onChange={e => faturaAlaniGuncelle("adres", e.target.value)}
+                  className="w-full min-h-24 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 resize-none"
+                  placeholder="Açık fatura adresi"
+                />
+              </label>
+            )}
           </div>
 
           <div className="px-6 py-5 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:justify-end">
