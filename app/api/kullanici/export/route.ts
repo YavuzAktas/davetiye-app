@@ -12,28 +12,134 @@ export async function GET(): Promise<NextResponse> {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    include: {
-      odemeKayitlari: true,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      plan: true,
+      kvkkOnay: true,
+      kvkkOnayTarih: true,
+      createdAt: true,
+      updatedAt: true,
+      spotifyId: true,
+      spotifyRefreshToken: true,
+      odemeKayitlari: {
+        select: {
+          planId: true,
+          paymentStatus: true,
+          paidPrice: true,
+          currency: true,
+          createdAt: true,
+        },
+      },
       davetiyeler: {
-        include: {
+        select: {
+          id: true,
+          slug: true,
+          baslik: true,
+          etkinlikTur: true,
+          tarih: true,
+          mekan: true,
+          mesaj: true,
+          sablon: true,
+          muzik: true,
+          aktif: true,
+          goruntulenme: true,
+          font: true,
+          ozelRenk: true,
+          kisi1: true,
+          kisi2: true,
+          spotifyPlaylistId: true,
+          spotifyAktif: true,
+          polaroid1: true,
+          polaroid2: true,
+          polaroid3: true,
+          sesliAniAktif: true,
+          canliDuvarAktif: true,
+          albumAktif: true,
+          dressKod: true,
+          dressKodRenkler: true,
+          createdAt: true,
+          updatedAt: true,
           rsvplar: {
-            include: {
+            select: {
+              ad: true,
+              email: true,
+              telefon: true,
+              katilim: true,
+              kisiSayisi: true,
+              mesaj: true,
+              diyet: true,
+              sarkiOnerisi: true,
+              spotifyTrackId: true,
+              createdAt: true,
+              updatedAt: true,
               masaAtamasi: {
-                include: {
-                  masa: true,
+                select: {
+                  createdAt: true,
+                  masa: {
+                    select: {
+                      isim: true,
+                      kapasite: true,
+                      sira: true,
+                    },
+                  },
                 },
               },
             },
           },
-          davetliler: true,
-          albumFotolar: true,
-          aniDefterleri: true,
-          sesliAnilar: true,
+          davetliler: {
+            select: {
+              ad: true,
+              telefon: true,
+              email: true,
+              notlar: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+          albumFotolar: {
+            select: {
+              yukleyenAd: true,
+              dosyaUrl: true,
+              onaylandi: true,
+              createdAt: true,
+            },
+          },
+          aniDefterleri: {
+            select: {
+              yazarAd: true,
+              icerik: true,
+              onaylandi: true,
+              createdAt: true,
+            },
+          },
+          sesliAnilar: {
+            select: {
+              adSoyad: true,
+              dosyaUrl: true,
+              sure: true,
+              onaylandi: true,
+              createdAt: true,
+            },
+          },
           masalar: {
-            include: {
+            select: {
+              isim: true,
+              kapasite: true,
+              sira: true,
+              createdAt: true,
               atamalar: {
-                include: {
-                  rsvp: true,
+                select: {
+                  createdAt: true,
+                  rsvp: {
+                    select: {
+                      ad: true,
+                      email: true,
+                      telefon: true,
+                      kisiSayisi: true,
+                    },
+                  },
                 },
               },
             },

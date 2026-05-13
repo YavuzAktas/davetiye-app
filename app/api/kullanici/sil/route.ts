@@ -22,12 +22,12 @@ export async function DELETE(): Promise<NextResponse> {
           polaroid2: true,
           polaroid3: true,
           albumFotolar: { select: { dosyaUrl: true } },
-          aniDefterleri: { select: { id: true } },
           sesliAnilar: { select: { dosyaUrl: true } },
           _count: {
             select: {
               rsvplar: true,
               davetliler: true,
+              aniDefterleri: true,
             },
           },
         },
@@ -53,7 +53,7 @@ export async function DELETE(): Promise<NextResponse> {
     rsvpAdet += davetiye._count.rsvplar;
     davetliAdet += davetiye._count.davetliler;
     albumFotoAdet += davetiye.albumFotolar.length;
-    aniDefteriAdet += davetiye.aniDefterleri.length;
+    aniDefteriAdet += davetiye._count.aniDefterleri;
     sesliAniAdet += davetiye.sesliAnilar.length;
 
     [davetiye.polaroid1, davetiye.polaroid2, davetiye.polaroid3].forEach((url) => {
