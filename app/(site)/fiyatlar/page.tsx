@@ -109,6 +109,8 @@ const BOS_FATURA_BILGILERI: FaturaBilgileri = {
   adres: "",
 };
 
+type FaturaHatalari = Partial<Record<keyof FaturaBilgileri | "genel", string>>;
+
 export default function FiyatlarSayfasi() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -120,6 +122,7 @@ export default function FiyatlarSayfasi() {
   const [odemeOnaylari, setOdemeOnaylari] = useState<Record<string, boolean>>({});
   const [faturaModalPlan, setFaturaModalPlan] = useState<{ planId: string; fiyat: number } | null>(null);
   const [faturaBilgileri, setFaturaBilgileri] = useState<FaturaBilgileri>(BOS_FATURA_BILGILERI);
+  const [faturaHatalari, setFaturaHatalari] = useState<FaturaHatalari>({});
 
   // Plan session'dan direkt okunur — ayrı API isteği gerekmez
   const kullaniciPlan = session?.user?.plan ?? "free";
@@ -159,16 +162,52 @@ export default function FiyatlarSayfasi() {
       return;
     }
 
+    setFaturaHatalari({});
     setFaturaModalPlan({ planId, fiyat });
   };
 
   const faturaAlaniGuncelle = (alan: keyof FaturaBilgileri, deger: string) => {
     setFaturaBilgileri(prev => ({ ...prev, [alan]: deger }));
+    setFaturaHatalari(prev => ({ ...prev, [alan]: undefined, genel: undefined }));
+  };
+
+  const telefonGecerli = (deger: string) => {
+    const rakamlar = deger.replace(/\D/g, "");
+    return (
+      (rakamlar.length === 10 && rakamlar.startsWith("5")) ||
+      (rakamlar.length === 11 && rakamlar.startsWith("05")) ||
+      (rakamlar.length === 12 && rakamlar.startsWith("90"))
+    );
+  };
+
+  const faturaFormunuDogrula = () => {
+    const hatalar: FaturaHatalari = {};
+    const kurumsal = faturaBilgileri.faturaTipi === "kurumsal";
+
+    if (faturaBilgileri.adSoyad.trim().length < 3 || (!kurumsal && !faturaBilgileri.adSoyad.trim().includes(" "))) {
+      hatalar.adSoyad = kurumsal ? "Unvan veya yetkili ad soyad girin." : "Ad ve soyad girin.";
+    }
+    if (!telefonGecerli(faturaBilgileri.telefon)) {
+      hatalar.telefon = "Geçerli bir mobil numara girin. Örnek: 05xxxxxxxxx";
+    }
+    if (faturaBilgileri.sehir.trim().length < 2) {
+      hatalar.sehir = "Şehir bilgisini girin.";
+    }
+    if (kurumsal && !/^\d{10,11}$/.test(faturaBilgileri.kimlikVergiNo)) {
+      hatalar.kimlikVergiNo = "Vergi no veya TCKN 10 ya da 11 haneli olmalıdır.";
+    }
+    if (kurumsal && faturaBilgileri.adres.trim().length < 10) {
+      hatalar.adres = "Fatura adresi en az 10 karakter olmalıdır.";
+    }
+
+    setFaturaHatalari(hatalar);
+    return Object.keys(hatalar).length === 0;
   };
 
   const odemeBaslat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!faturaModalPlan) return;
+    if (!faturaFormunuDogrula()) return;
 
     const { planId, fiyat } = faturaModalPlan;
     setYukleniyor(planId);
@@ -183,9 +222,9 @@ export default function FiyatlarSayfasi() {
         setFaturaModalPlan(null);
         setOdeModal(data.checkoutFormContent);
       } else {
-        alert(data.hata ?? "Ödeme başlatılamadı, tekrar deneyin.");
+        setFaturaHatalari({ genel: data.hata ?? "Ödeme başlatılamadı, tekrar deneyin." });
       }
-    } catch { alert("Ödeme başlatılırken bir hata oluştu."); }
+    } catch { setFaturaHatalari({ genel: "Ödeme başlatılırken bir hata oluştu." }); }
     finally { setYukleniyor(null); }
   };
 
@@ -197,6 +236,16 @@ export default function FiyatlarSayfasi() {
 
   const planIsmi = (id: string) =>
     id === "free" ? "Ücretsiz" : id === "standart" ? "Standart" : "Premium";
+
+  const faturaAlanClass = (alan: keyof FaturaBilgileri) =>
+    faturaHatalari[alan]
+      ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-red-100"
+      : "border-gray-200 focus:border-purple-400 focus:ring-purple-100";
+
+  const faturaAlanHatasi = (alan: keyof FaturaBilgileri) =>
+    faturaHatalari[alan] ? (
+      <p className="mt-1.5 text-xs font-medium text-red-500">{faturaHatalari[alan]}</p>
+    ) : null;
 
   const odemeOnayi = (planId: string, koyu = false) => {
     const secili = !!odemeOnaylari[planId];
@@ -291,19 +340,20 @@ export default function FiyatlarSayfasi() {
     )}
     {faturaModalPlan && (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
         style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
         onClick={e => { if (e.target === e.currentTarget && !yukleniyor) setFaturaModalPlan(null); }}
       >
         <form
+          noValidate
           onSubmit={odemeBaslat}
-          className="w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden"
+          className="flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
         >
-          <div className="px-6 py-5 border-b border-gray-100 flex items-start justify-between gap-4">
+          <div className="shrink-0 px-5 py-4 sm:px-6 border-b border-gray-100 flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Ödeme Bilgileri</p>
               <h2 className="text-xl font-bold text-gray-900 mt-1">{planIsmi(faturaModalPlan.planId)} planı</h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
                 Bireysel kullanımda yalnızca ödeme için gerekli minimum bilgileri alıyoruz.
               </p>
             </div>
@@ -317,7 +367,7 @@ export default function FiyatlarSayfasi() {
             </button>
           </div>
 
-          <div className="px-6 py-5 space-y-4">
+          <div className="flex-1 overflow-y-auto px-5 py-4 sm:px-6 space-y-3.5">
             <div className="grid grid-cols-2 gap-2 rounded-2xl border border-gray-100 bg-gray-50 p-1">
               {[
                 { id: "bireysel", label: "Bireysel", desc: "Kişisel kullanım" },
@@ -341,6 +391,13 @@ export default function FiyatlarSayfasi() {
                 );
               })}
             </div>
+
+            {faturaHatalari.genel && (
+              <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-600">
+                <span>⚠</span>
+                <span>{faturaHatalari.genel}</span>
+              </div>
+            )}
 
             <div className="relative overflow-hidden rounded-2xl border border-purple-100 bg-linear-to-br from-purple-50 via-white to-pink-50 px-4 py-3">
               <div className="absolute -right-8 -top-10 h-24 w-24 rounded-full bg-purple-200/30 blur-2xl" />
@@ -369,38 +426,37 @@ export default function FiyatlarSayfasi() {
                 {faturaBilgileri.faturaTipi === "kurumsal" ? "Unvan / Yetkili ad soyad" : "Ad soyad"}
               </span>
               <input
-                required
-                minLength={3}
                 value={faturaBilgileri.adSoyad}
                 onChange={e => faturaAlaniGuncelle("adSoyad", e.target.value)}
-                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                className={`w-full rounded-2xl border px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-4 ${faturaAlanClass("adSoyad")}`}
                 placeholder={faturaBilgileri.faturaTipi === "kurumsal" ? "Firma unvanı veya ad soyad" : "Ad Soyad"}
               />
+              {faturaAlanHatasi("adSoyad")}
             </label>
 
             <div className={`grid grid-cols-1 gap-4 ${faturaBilgileri.faturaTipi === "kurumsal" ? "sm:grid-cols-2" : ""}`}>
               <label className="block">
                 <span className="block text-xs font-semibold text-gray-600 mb-1.5">Telefon</span>
                 <input
-                  required
                   value={faturaBilgileri.telefon}
                   onChange={e => faturaAlaniGuncelle("telefon", e.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                  className={`w-full rounded-2xl border px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-4 ${faturaAlanClass("telefon")}`}
                   placeholder="+905xxxxxxxxx"
                   inputMode="tel"
                 />
+                {faturaAlanHatasi("telefon")}
               </label>
               {faturaBilgileri.faturaTipi === "kurumsal" && (
                 <label className="block">
                   <span className="block text-xs font-semibold text-gray-600 mb-1.5">Vergi No / TCKN</span>
                   <input
-                    required
                     value={faturaBilgileri.kimlikVergiNo}
                     onChange={e => faturaAlaniGuncelle("kimlikVergiNo", e.target.value.replace(/\D/g, "").slice(0, 11))}
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                    className={`w-full rounded-2xl border px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-4 ${faturaAlanClass("kimlikVergiNo")}`}
                     placeholder="10 veya 11 hane"
                     inputMode="numeric"
                   />
+                  {faturaAlanHatasi("kimlikVergiNo")}
                 </label>
               )}
             </div>
@@ -408,30 +464,29 @@ export default function FiyatlarSayfasi() {
             <label className="block">
               <span className="block text-xs font-semibold text-gray-600 mb-1.5">Şehir</span>
               <input
-                required
                 value={faturaBilgileri.sehir}
                 onChange={e => faturaAlaniGuncelle("sehir", e.target.value)}
-                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                className={`w-full rounded-2xl border px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-4 ${faturaAlanClass("sehir")}`}
                 placeholder="İstanbul"
               />
+              {faturaAlanHatasi("sehir")}
             </label>
 
             {faturaBilgileri.faturaTipi === "kurumsal" && (
               <label className="block">
                 <span className="block text-xs font-semibold text-gray-600 mb-1.5">Fatura adresi</span>
                 <textarea
-                  required
-                  minLength={10}
                   value={faturaBilgileri.adres}
                   onChange={e => faturaAlaniGuncelle("adres", e.target.value)}
-                  className="w-full min-h-24 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 resize-none"
+                  className={`w-full min-h-20 rounded-2xl border px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-4 resize-none ${faturaAlanClass("adres")}`}
                   placeholder="Açık fatura adresi"
                 />
+                {faturaAlanHatasi("adres")}
               </label>
             )}
           </div>
 
-          <div className="px-6 py-5 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:justify-end">
+          <div className="shrink-0 px-5 py-4 sm:px-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:justify-end">
             <button
               type="button"
               onClick={() => setFaturaModalPlan(null)}
