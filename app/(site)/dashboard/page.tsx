@@ -14,14 +14,48 @@ export default async function Dashboard() {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      plan: true,
       davetiyeler: {
         orderBy: { createdAt: "desc" },
-        include: { rsvplar: true },
+        select: {
+          id: true,
+          slug: true,
+          baslik: true,
+          etkinlikTur: true,
+          tarih: true,
+          mekan: true,
+          sablon: true,
+          aktif: true,
+          goruntulenme: true,
+          _count: {
+            select: { rsvplar: true },
+          },
+        },
       },
     },
   });
   if (!user) redirect("/giris");
+
+  const davetiyeIdleri = user.davetiyeler.map((davetiye) => davetiye.id);
+  const rsvpGruplari = davetiyeIdleri.length > 0
+    ? await prisma.rSVP.groupBy({
+        by: ["davetiyeId", "katilim"],
+        where: { davetiyeId: { in: davetiyeIdleri } },
+        _count: { _all: true },
+      })
+    : [];
+
+  const rsvpSayilari = new Map<string, { katiliyor: number; katilmiyor: number }>();
+  for (const grup of rsvpGruplari) {
+    const sayilar = rsvpSayilari.get(grup.davetiyeId) ?? { katiliyor: 0, katilmiyor: 0 };
+    if (grup.katilim) sayilar.katiliyor = grup._count._all;
+    else sayilar.katilmiyor = grup._count._all;
+    rsvpSayilari.set(grup.davetiyeId, sayilar);
+  }
 
   const planLimiti = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
   const planMeta   = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
@@ -31,8 +65,8 @@ export default async function Dashboard() {
     : Math.round((aktifDavetiyeSayisi / planLimiti.maxDavetiye) * 100);
 
   const toplamGoruntulenme = user.davetiyeler.reduce((acc, d) => acc + d.goruntulenme, 0);
-  const toplamRsvp        = user.davetiyeler.reduce((acc, d) => acc + d.rsvplar.length, 0);
-  const toplamKatilim     = user.davetiyeler.reduce((acc, d) => acc + d.rsvplar.filter(r => r.katilim).length, 0);
+  const toplamRsvp        = user.davetiyeler.reduce((acc, d) => acc + d._count.rsvplar, 0);
+  const toplamKatilim     = [...rsvpSayilari.values()].reduce((acc, sayilar) => acc + sayilar.katiliyor, 0);
   const katilimOrani      = toplamRsvp > 0 ? Math.round((toplamKatilim / toplamRsvp) * 100) : 0;
 
   const EMOJILER: Record<string, string> = {
@@ -203,11 +237,13 @@ export default async function Dashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {user.davetiyeler.map((davetiye) => {
                   const sablon = SABLONLAR.find(s => s.id === davetiye.sablon) || SABLONLAR[0];
-                  const katilimSayisi = davetiye.rsvplar.filter(r => r.katilim).length;
-                  const katilmiyorSayisi = davetiye.rsvplar.filter(r => !r.katilim).length;
+                  const davetiyeRsvp = rsvpSayilari.get(davetiye.id) ?? { katiliyor: 0, katilmiyor: 0 };
+                  const katilimSayisi = davetiyeRsvp.katiliyor;
+                  const katilmiyorSayisi = davetiyeRsvp.katilmiyor;
+                  const toplamDavetiyeRsvp = davetiye._count.rsvplar;
                   const emoji = EMOJILER[davetiye.etkinlikTur] ?? "🎉";
-                  const katilimYuzde = davetiye.rsvplar.length > 0
-                    ? Math.round((katilimSayisi / davetiye.rsvplar.length) * 100)
+                  const katilimYuzde = toplamDavetiyeRsvp > 0
+                    ? Math.round((katilimSayisi / toplamDavetiyeRsvp) * 100)
                     : 0;
 
                   return (
@@ -252,7 +288,7 @@ export default async function Dashboard() {
                         )}
 
                         {/* RSVP bar */}
-                        {davetiye.rsvplar.length > 0 && (
+                        {toplamDavetiyeRsvp > 0 && (
                           <div className="mb-4">
                             <div className="flex justify-between text-xs mb-1.5">
                               <span className="text-gray-400">Katılım oranı</span>
