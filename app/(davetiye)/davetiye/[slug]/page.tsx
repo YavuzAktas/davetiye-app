@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
@@ -12,12 +13,57 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 300;
+
+function davetiyeCacheTag(slug: string) {
+  return `davetiye:${slug}`;
+}
+
+function publicDavetiyeGetir(slug: string) {
+  return unstable_cache(
+    async () => prisma.davetiye.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        slug: true,
+        baslik: true,
+        etkinlikTur: true,
+        tarih: true,
+        mekan: true,
+        mesaj: true,
+        sablon: true,
+        ozelRenk: true,
+        font: true,
+        muzik: true,
+        kisi1: true,
+        kisi2: true,
+        spotifyAktif: true,
+        polaroid1: true,
+        polaroid2: true,
+        polaroid3: true,
+        sesliAniAktif: true,
+        canliDuvarAktif: true,
+        dressKod: true,
+        dressKodRenkler: true,
+        albumAktif: true,
+        aktif: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            plan: true,
+          },
+        },
+      },
+    }),
+    ["public-davetiye", slug],
+    { revalidate, tags: [davetiyeCacheTag(slug)] },
+  )();
+}
+
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    select: { baslik: true },
-  });
+  const davetiye = await publicDavetiyeGetir(slug);
   if (!davetiye) return { title: "Davetiye Bulunamadı" };
   return { title: davetiye.baslik };
 }
@@ -25,42 +71,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function DavetiyeSayfasi({ params }: Props) {
   const { slug } = await params;
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    select: {
-      id: true,
-      slug: true,
-      baslik: true,
-      etkinlikTur: true,
-      tarih: true,
-      mekan: true,
-      mesaj: true,
-      sablon: true,
-      ozelRenk: true,
-      font: true,
-      muzik: true,
-      goruntulenme: true,
-      kisi1: true,
-      kisi2: true,
-      spotifyAktif: true,
-      polaroid1: true,
-      polaroid2: true,
-      polaroid3: true,
-      sesliAniAktif: true,
-      canliDuvarAktif: true,
-      dressKod: true,
-      dressKodRenkler: true,
-      albumAktif: true,
-      aktif: true,
-      user: {
-        select: {
-          name: true,
-          email: true,
-          plan: true,
-        },
-      },
-    },
-  });
+  const davetiye = await publicDavetiyeGetir(slug);
 
   if (!davetiye || !davetiye.aktif) notFound();
 
@@ -91,7 +102,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     ozelRenk: davetiye.ozelRenk ?? null,
     font: davetiye.font ?? null,
     muzik: davetiye.muzik,
-    goruntulenme: davetiye.goruntulenme,
+    goruntulenme: 0,
     user: {
       name: davetiye.user?.name ?? null,
       email: davetiye.user?.email ?? null,

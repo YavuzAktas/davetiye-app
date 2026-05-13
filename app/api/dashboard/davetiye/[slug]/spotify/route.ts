@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -6,6 +7,10 @@ import { tokenYenile, playlistOlustur, playlistCokluEkle } from "@/lib/spotify";
 import { planOzellikVar } from "@/lib/planlar";
 
 type Params = { params: Promise<{ slug: string }> };
+
+function davetiyeCacheTag(slug: string) {
+  return `davetiye:${slug}`;
+}
 
 /* POST — Spotify playlist oluştur + davetiyeye bağla */
 export async function POST(_req: Request, { params }: Params) {
@@ -48,6 +53,7 @@ export async function POST(_req: Request, { params }: Params) {
       where: { id: davetiye.id },
       data: { spotifyPlaylistId: playlist.id, spotifyAktif: true },
     });
+    revalidateTag(davetiyeCacheTag(slug));
 
     // Daha önce önerilen şarkıları geriye dönük ekle
     const mevcutSarkilar = await prisma.rSVP.findMany({
@@ -85,6 +91,7 @@ export async function DELETE(_req: Request, { params }: Params) {
     where: { id: davetiye.id },
     data: { spotifyAktif: false, spotifyPlaylistId: null },
   });
+  revalidateTag(davetiyeCacheTag(slug));
 
   return NextResponse.json({ tamam: true });
 }
