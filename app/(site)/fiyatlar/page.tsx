@@ -196,30 +196,58 @@ export default function FiyatlarSayfasi() {
   const planIsmi = (id: string) =>
     id === "free" ? "Ücretsiz" : id === "standart" ? "Standart" : "Premium";
 
-  const odemeOnayi = (planId: string, koyu = false) => (
-    <label className="flex items-start gap-2.5 mb-3 cursor-pointer">
-      <input
-        type="checkbox"
-        checked={!!odemeOnaylari[planId]}
-        onChange={e => setOdemeOnaylari(prev => ({ ...prev, [planId]: e.target.checked }))}
-        className="mt-0.5 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-      />
-      <span className={`text-[10px] leading-tight ${koyu ? "text-purple-200/70" : "text-gray-500"}`}>
-        <Link href="/on-bilgilendirme" target="_blank" className="underline underline-offset-2">
-          Ön Bilgilendirme Formu
-        </Link>
-        {", "}
-        <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="underline underline-offset-2">
-          Mesafeli Satış Sözleşmesi
-        </Link>
-        {" ve "}
-        <Link href="/kullanim-sartlari" target="_blank" className="underline underline-offset-2">
-          Kullanım Şartları
-        </Link>
-        {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
-      </span>
-    </label>
-  );
+  const odemeOnayi = (planId: string, koyu = false) => {
+    const secili = !!odemeOnaylari[planId];
+
+    return (
+      <label
+        className={`group mb-3 flex cursor-pointer items-start gap-3 rounded-2xl border p-3 transition-all ${
+          koyu
+            ? secili
+              ? "border-purple-400/60 bg-purple-500/15 shadow-lg shadow-purple-950/30"
+              : "border-white/10 bg-white/[0.04] hover:border-purple-400/35 hover:bg-white/[0.07]"
+            : secili
+            ? "border-purple-300 bg-purple-50/80 shadow-sm shadow-purple-100"
+            : "border-gray-100 bg-gray-50/80 hover:border-purple-200 hover:bg-white hover:shadow-sm"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={!!odemeOnaylari[planId]}
+          onChange={e => setOdemeOnaylari(prev => ({ ...prev, [planId]: e.target.checked }))}
+          className="sr-only"
+        />
+        <span
+          aria-hidden="true"
+          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border transition-all ${
+            secili
+              ? "border-transparent bg-linear-to-br from-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/25"
+              : koyu
+              ? "border-white/20 bg-white/5 text-transparent group-hover:border-purple-300/50"
+              : "border-gray-300 bg-white text-transparent group-hover:border-purple-300"
+          }`}
+        >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none">
+            <path d="M4.5 10.4 8.2 14 15.5 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+        <span className={`text-[10.5px] leading-relaxed ${koyu ? "text-purple-100/75" : "text-gray-600"}`}>
+          <Link href="/on-bilgilendirme" target="_blank" className="underline underline-offset-2">
+            Ön Bilgilendirme Formu
+          </Link>
+          {", "}
+          <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="underline underline-offset-2">
+            Mesafeli Satış Sözleşmesi
+          </Link>
+          {" ve "}
+          <Link href="/kullanim-sartlari" target="_blank" className="underline underline-offset-2">
+            Kullanım Şartları
+          </Link>
+          {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
+        </span>
+      </label>
+    );
+  };
 
   return (
     <>
