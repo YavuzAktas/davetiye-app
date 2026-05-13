@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
+const KAYIT_TAMAMLANAMADI =
+  "Kayıt tamamlanamadı. Bilgileri kontrol edip tekrar deneyin veya giriş yapmayı deneyin.";
+
 // 5 kayıt denemesi / IP / saat
 export async function POST(req: NextRequest) {
   const ip = ipAlNextRequest(req);
@@ -33,7 +36,7 @@ export async function POST(req: NextRequest) {
     const temizEmail = email.toLowerCase().trim();
     const mevcut = await prisma.user.findUnique({ where: { email: temizEmail } });
     if (mevcut)
-      return NextResponse.json({ hata: "Bu e-posta adresi zaten kayıtlı." }, { status: 400 });
+      return NextResponse.json({ hata: KAYIT_TAMAMLANAMADI }, { status: 400 });
 
     const hash = await bcrypt.hash(sifre, 12);
 
@@ -59,6 +62,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch {
-    return NextResponse.json({ hata: "Kayıt sırasında bir hata oluştu." }, { status: 500 });
+    return NextResponse.json({ hata: KAYIT_TAMAMLANAMADI }, { status: 500 });
   }
 }
