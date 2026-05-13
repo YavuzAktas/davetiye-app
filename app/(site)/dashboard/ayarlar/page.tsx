@@ -14,22 +14,41 @@ export default async function AyarlarSayfasi() {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: {
-      davetiyeler: {
-        include: { rsvplar: true },
-      },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      plan: true,
+      createdAt: true,
+      spotifyRefreshToken: true,
     },
   });
 
-  const spotifyBagli = !!(user as any)?.spotifyRefreshToken;
   if (!user) redirect("/giris");
+
+  const [davetiyeGruplari, rsvpGruplari] = await Promise.all([
+    prisma.davetiye.groupBy({
+      by: ["aktif"],
+      where: { userId: user.id },
+      _count: { _all: true },
+      _sum: { goruntulenme: true },
+    }),
+    prisma.rSVP.groupBy({
+      by: ["katilim"],
+      where: { davetiye: { userId: user.id } },
+      _count: { _all: true },
+    }),
+  ]);
 
   const planLimiti    = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
   const planMeta      = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
-  const aktifSayi     = user.davetiyeler.filter(d => d.aktif).length;
-  const toplamGorunt  = user.davetiyeler.reduce((a, d) => a + d.goruntulenme, 0);
-  const toplamRsvp    = user.davetiyeler.reduce((a, d) => a + d.rsvplar.length, 0);
-  const toplamKatilim = user.davetiyeler.reduce((a, d) => a + d.rsvplar.filter(r => r.katilim).length, 0);
+  const spotifyBagli  = !!user.spotifyRefreshToken;
+  const aktifSayi     = davetiyeGruplari.find((grup) => grup.aktif)?._count._all ?? 0;
+  const toplamDavetiye = davetiyeGruplari.reduce((a, grup) => a + grup._count._all, 0);
+  const toplamGorunt  = davetiyeGruplari.reduce((a, grup) => a + (grup._sum.goruntulenme ?? 0), 0);
+  const toplamRsvp    = rsvpGruplari.reduce((a, grup) => a + grup._count._all, 0);
+  const toplamKatilim = rsvpGruplari.find((grup) => grup.katilim)?._count._all ?? 0;
   const kullanim      = planLimiti.maxDavetiye === Infinity
     ? 100
     : Math.round((aktifSayi / planLimiti.maxDavetiye) * 100);
@@ -331,7 +350,7 @@ export default async function AyarlarSayfasi() {
               <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase mb-5">Hesap İstatistikleri</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                  { n: user.davetiyeler.length, l: "Davetiye",      icon: "📨", color: "bg-purple-50 text-purple-600" },
+                  { n: toplamDavetiye,          l: "Davetiye",      icon: "📨", color: "bg-purple-50 text-purple-600" },
                   { n: toplamGorunt,            l: "Görüntülenme",  icon: "👁️", color: "bg-blue-50 text-blue-600" },
                   { n: toplamRsvp,              l: "RSVP",          icon: "✉️", color: "bg-amber-50 text-amber-600" },
                   { n: toplamKatilim,           l: "Katılım",       icon: "✅", color: "bg-emerald-50 text-emerald-600" },
