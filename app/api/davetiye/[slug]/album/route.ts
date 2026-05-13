@@ -80,8 +80,8 @@ export async function POST(
     return NextResponse.json({ hata: "Ad en az 2 karakter olmalı." }, { status: 400 });
   if (!dosya)
     return NextResponse.json({ hata: "Dosya gerekli." }, { status: 400 });
-  if (dosya.size > 6_000_000)
-    return NextResponse.json({ hata: "Dosya max 6 MB olabilir." }, { status: 400 });
+  if (dosya.size > 4_000_000)
+    return NextResponse.json({ hata: "Dosya max 4 MB olabilir." }, { status: 400 });
 
   const guvenliDosya = await dogrulaGorselDosya(dosya);
   if (!guvenliDosya)

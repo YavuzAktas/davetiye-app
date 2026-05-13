@@ -290,7 +290,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                         <>
                           <p className="text-3xl mb-2">🖼️</p>
                           <p className="text-sm text-gray-500">Fotoğraf seç</p>
-                          <p className="text-xs text-gray-400 mt-0.5">max 6 MB</p>
+                          <p className="text-xs text-gray-400 mt-0.5">max 4 MB</p>
                         </>
                       )}
                     </div>

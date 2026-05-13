@@ -55,18 +55,16 @@ async function metadataTemizle(
   let output: Buffer;
 
   try {
-    if (detected.ext === "jpg") {
-      output = await sharp(input, { failOn: "warning" })
+    if (["jpg", "png", "webp", "gif"].includes(detected.ext)) {
+      output = await sharp(input, { failOn: "warning", animated: false })
         .rotate()
-        .jpeg({ quality: 88, mozjpeg: true })
-        .toBuffer();
-    } else if (detected.ext === "png") {
-      output = await sharp(input, { failOn: "warning" })
-        .png({ compressionLevel: 9 })
-        .toBuffer();
-    } else if (detected.ext === "webp") {
-      output = await sharp(input, { failOn: "warning" })
-        .webp({ quality: 88 })
+        .resize({
+          width: 1600,
+          height: 1600,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .webp({ quality: 82, effort: 5 })
         .toBuffer();
     } else {
       output = input;
@@ -77,9 +75,9 @@ async function metadataTemizle(
 
   const blobBuffer = output.buffer.slice(output.byteOffset, output.byteOffset + output.byteLength) as ArrayBuffer;
   return {
-    blob: new Blob([blobBuffer], { type: detected.mime }),
-    ext: detected.ext,
-    mime: detected.mime,
+    blob: new Blob([blobBuffer], { type: "image/webp" }),
+    ext: "webp",
+    mime: "image/webp",
   };
 }
 

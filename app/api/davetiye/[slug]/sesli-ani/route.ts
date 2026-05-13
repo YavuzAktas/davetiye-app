@@ -85,8 +85,8 @@ export async function POST(
     return NextResponse.json({ hata: "Ad Soyad en az 2 karakter olmalı." }, { status: 400 });
   if (!dosya)
     return NextResponse.json({ hata: "Ses dosyası gerekli." }, { status: 400 });
-  if (dosya.size > 5_000_000)
-    return NextResponse.json({ hata: "Dosya max 5 MB olabilir." }, { status: 400 });
+  if (dosya.size > 4_000_000)
+    return NextResponse.json({ hata: "Dosya max 4 MB olabilir." }, { status: 400 });
   if (sure > 30 || sure < 1)
     return NextResponse.json({ hata: "Ses kaydı 1–30 saniye arasında olmalı." }, { status: 400 });
 
