@@ -40,6 +40,7 @@ export default function EtkilesimButonu({
   /* ─ Fotoğraf state ─ */
   const [fotolar,           setFotolar]           = useState<AlbumFoto[]>([]);
   const [fotoListeYuk,      setFotoListeYuk]      = useState(false);
+  const [fotoListeYuklendi, setFotoListeYuklendi] = useState(false);
   const [fotoAd,            setFotoAd]            = useState("");
   const [seciliDosya,       setSeciliDosya]       = useState<File | null>(null);
   const [onizleme,          setOnizleme]          = useState<string | null>(null);
@@ -51,6 +52,7 @@ export default function EtkilesimButonu({
   /* ─ Anı state ─ */
   const [anilar,          setAnilar]          = useState<AniYazisi[]>([]);
   const [aniListeYuk,     setAniListeYuk]     = useState(false);
+  const [aniListeYuklendi, setAniListeYuklendi] = useState(false);
   const [aniAd,           setAniAd]           = useState("");
   const [aniIcerik,       setAniIcerik]       = useState("");
   const [aniYukleniyor,   setAniYukleniyor]   = useState(false);
@@ -60,6 +62,7 @@ export default function EtkilesimButonu({
   /* ─ Sesli anı state ─ */
   const [sesliAnilar,     setSesliAnilar]     = useState<SesliAni[]>([]);
   const [sesliListeYuk,   setSesliListeYuk]   = useState(false);
+  const [sesliListeYuklendi, setSesliListeYuklendi] = useState(false);
   const [kayitDurum,      setKayitDurum]      = useState<KayitDurum>("bekliyor");
   const [sesliAd,         setSesliAd]         = useState("");
   const [kalan,           setKalan]           = useState(30);
@@ -84,19 +87,40 @@ export default function EtkilesimButonu({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acik, sekme]);
 
-  async function fetchFotolar() {
+  async function fetchFotolar(force = false) {
+    if (fotoListeYuk || (fotoListeYuklendi && !force)) return;
     setFotoListeYuk(true);
-    try { const r = await fetch(`/api/davetiye/${slug}/album`);  if (r.ok) setFotolar(await r.json()); }
+    try {
+      const r = await fetch(`/api/davetiye/${slug}/album`);
+      if (r.ok) {
+        setFotolar(await r.json());
+        setFotoListeYuklendi(true);
+      }
+    }
     finally { setFotoListeYuk(false); }
   }
-  async function fetchAnilar() {
+  async function fetchAnilar(force = false) {
+    if (aniListeYuk || (aniListeYuklendi && !force)) return;
     setAniListeYuk(true);
-    try { const r = await fetch(`/api/davetiye/${slug}/ani`);    if (r.ok) setAnilar(await r.json()); }
+    try {
+      const r = await fetch(`/api/davetiye/${slug}/ani`);
+      if (r.ok) {
+        setAnilar(await r.json());
+        setAniListeYuklendi(true);
+      }
+    }
     finally { setAniListeYuk(false); }
   }
-  async function fetchSesliAnilar() {
+  async function fetchSesliAnilar(force = false) {
+    if (sesliListeYuk || (sesliListeYuklendi && !force)) return;
     setSesliListeYuk(true);
-    try { const r = await fetch(`/api/davetiye/${slug}/sesli-ani`); if (r.ok) setSesliAnilar(await r.json()); }
+    try {
+      const r = await fetch(`/api/davetiye/${slug}/sesli-ani`);
+      if (r.ok) {
+        setSesliAnilar(await r.json());
+        setSesliListeYuklendi(true);
+      }
+    }
     finally { setSesliListeYuk(false); }
   }
 
@@ -125,7 +149,7 @@ export default function EtkilesimButonu({
       setFotoBasari(true);
       setFotoAd(""); setSeciliDosya(null); setOnizleme(null);
       if (dosyaInputRef.current) dosyaInputRef.current.value = "";
-      fetchFotolar();
+      fetchFotolar(true);
       setTimeout(() => setFotoBasari(false), 4000);
     } catch { setFotoHata("Yükleme başarısız, tekrar dene."); }
     finally { setFotoYukleniyor(false); }
@@ -145,6 +169,7 @@ export default function EtkilesimButonu({
       const json = await res.json();
       if (!res.ok) { setAniHata(json.hata); return; }
       setAniBasari(true); setAniAd(""); setAniIcerik("");
+      fetchAnilar(true);
       setTimeout(() => setAniBasari(false), 4000);
     } catch { setAniHata("Gönderilemedi, tekrar dene."); }
     finally { setAniYukleniyor(false); }
@@ -248,7 +273,7 @@ export default function EtkilesimButonu({
     const res = await fetch(`/api/davetiye/${slug}/sesli-ani`, { method: "POST", body: form });
     if (res.ok) {
       setKayitDurum("tamam");
-      fetchSesliAnilar();
+      fetchSesliAnilar(true);
     } else {
       const d = await res.json().catch(() => ({}));
       setSesHata(d.hata ?? "Bir hata oluştu."); setKayitDurum("hata");
