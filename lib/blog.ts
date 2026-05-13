@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
-import html from "remark-html";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
+import remarkRehype from "remark-rehype";
 
 export type Post = {
   slug: string;
@@ -46,7 +48,11 @@ export async function getPostBySlug(slug: string): Promise<PostWithContent | nul
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
-  const processed = await remark().use(html, { sanitize: false }).process(content);
+  const processed = await remark()
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
+    .process(content);
   return { slug, ...data, content: processed.toString() } as PostWithContent;
 }
 
