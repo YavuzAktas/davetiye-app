@@ -7,6 +7,10 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+type GoogleProfile = {
+  email_verified?: boolean;
+};
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
@@ -14,9 +18,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      // E-posta/şifre ile kayıtlı kullanıcı aynı e-posta ile Google'a girerse
-      // otomatik olarak hesapları birleştirilir, yeni kullanıcı açılmaz.
-      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -51,23 +52,10 @@ export const authOptions: NextAuthOptions = {
     signIn: "/giris",
   },
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === "google" && user?.email) {
-        const mevcut = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
-        if (mevcut) {
-          await prisma.user.update({
-            where: { email: user.email },
-            data: {
-              // Profil resmi yoksa Google'dan al
-              ...(mevcut.image ? {} : { image: user.image }),
-              // İsim yoksa Google'dan al
-              ...(mevcut.name  ? {} : { name:  user.name  }),
-              // kvkkOnay burada set edilmiyor — kullanıcı /kvkk-onay sayfasında aktif onay verecek
-            },
-          });
-        }
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        const googleProfile = profile as GoogleProfile | undefined;
+        return googleProfile?.email_verified === true;
       }
       return true;
     },
