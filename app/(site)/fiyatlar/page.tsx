@@ -486,7 +486,16 @@ export default function FiyatlarSayfasi() {
             )}
           </div>
 
-          <div className="shrink-0 px-5 py-4 sm:px-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:justify-end">
+          <div className="shrink-0 px-5 py-4 sm:px-6 bg-gray-50 border-t border-gray-100">
+            <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-gray-500">
+              <span className="inline-flex items-center gap-1.5 text-purple-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                iyzico ile güvenli ödeme
+              </span>
+              <span>Kart bilgileriniz saklanmaz</span>
+              <span>3D Secure destekli</span>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
             <button
               type="button"
               onClick={() => setFaturaModalPlan(null)}
@@ -502,6 +511,7 @@ export default function FiyatlarSayfasi() {
             >
               {yukleniyor ? "Ödeme hazırlanıyor..." : "Ödemeye Devam Et"}
             </button>
+            </div>
           </div>
         </form>
       </div>

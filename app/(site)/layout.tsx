@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import NavLinks from "@/components/NavLinks";
 
 /* ── Header ─────────────────────────────── */
@@ -134,11 +135,29 @@ function Footer() {
       </div>
 
       <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/20">© 2025 Bekleriz. Tüm hakları saklıdır.</p>
-          <p className="text-xs text-white/20 flex items-center gap-1.5">
-            <span>🇹🇷</span> Türkiye&apos;de geliştirildi
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-5">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+              <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white/20">
+                Güvenli ödeme altyapısı
+              </p>
+              <div className="relative h-7 w-72 sm:w-92 opacity-70">
+                <Image
+                  src="/logo_band_white@3x.png"
+                  alt="iyzico ile öde, Mastercard, Visa, American Express ve Troy"
+                  fill
+                  sizes="(max-width: 640px) 288px, 368px"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+              <p className="text-xs text-white/20">© 2025 Bekleriz. Tüm hakları saklıdır.</p>
+              <p className="text-xs text-white/20 flex items-center gap-1.5">
+                <span>🇹🇷</span> Türkiye&apos;de geliştirildi
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
