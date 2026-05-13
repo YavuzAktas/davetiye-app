@@ -4,10 +4,19 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { put } from "@vercel/blob";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
+import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+
+  const ip = ipAlNextRequest(req);
+  if (
+    !ipIzinVer("upload-temp-ip", ip, 20, 60 * 60_000) ||
+    !ipIzinVer("upload-temp-user", session.user.id, 20, 60 * 60_000)
+  ) {
+    return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
+  }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN)
     return NextResponse.json({ hata: "Depolama yapılandırılmamış." }, { status: 503 });
