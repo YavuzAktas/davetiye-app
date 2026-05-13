@@ -119,6 +119,7 @@ model Davetiye {
   albumAktif        Boolean      @default(true)
 
   @@index([userId])
+  @@index([userId, aktif])
   @@index([aktif])
 }
 
@@ -133,6 +134,7 @@ model SesliAni {
   createdAt  DateTime @default(now())
 
   @@index([davetiyeId])
+  @@index([davetiyeId, onaylandi, createdAt])
 }
 
 model AlbumFoto {
@@ -145,6 +147,7 @@ model AlbumFoto {
   createdAt  DateTime @default(now())
 
   @@index([davetiyeId])
+  @@index([davetiyeId, onaylandi, createdAt])
 }
 
 model AniDefteri {
@@ -157,6 +160,7 @@ model AniDefteri {
   createdAt  DateTime @default(now())
 
   @@index([davetiyeId])
+  @@index([davetiyeId, onaylandi, createdAt])
 }
 
 model RSVP {
@@ -177,6 +181,8 @@ model RSVP {
   masaAtamasi    MasaAtama?
 
   @@index([davetiyeId])
+  @@index([davetiyeId, createdAt])
+  @@index([davetiyeId, ad, createdAt])
 }
 
 model Masa {
@@ -217,6 +223,7 @@ model OdemeToken {
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([expiresAt])
 }
 
 model OdemeKaydi {

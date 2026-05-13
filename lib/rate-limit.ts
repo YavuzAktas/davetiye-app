@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 function temizAnahtar(anahtar: string) {
@@ -15,27 +17,60 @@ export async function ipIzinVer(
   const temizAd = ad.trim().slice(0, 100);
   const temizKey = temizAnahtar(anahtar);
 
-  const kayit = await prisma.rateLimitKaydi.upsert({
-    where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
-    create: { ad: temizAd, anahtar: temizKey, sayi: 1, sifirAt },
-    update: { updatedAt: simdi },
-    select: { sayi: true, sifirAt: true },
+  const guncelPencere = await prisma.rateLimitKaydi.updateMany({
+    where: {
+      ad: temizAd,
+      anahtar: temizKey,
+      sifirAt: { gt: simdi },
+      sayi: { lt: limit },
+    },
+    data: {
+      sayi: { increment: 1 },
+    },
   });
+  if (guncelPencere.count > 0) return true;
 
-  if (kayit.sifirAt <= simdi) {
-    await prisma.rateLimitKaydi.update({
-      where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
-      data: { sayi: 1, sifirAt },
+  const sifirlananPencere = await prisma.rateLimitKaydi.updateMany({
+    where: {
+      ad: temizAd,
+      anahtar: temizKey,
+      sifirAt: { lte: simdi },
+    },
+    data: {
+      sayi: 1,
+      sifirAt,
+    },
+  });
+  if (sifirlananPencere.count > 0) return true;
+
+  try {
+    await prisma.rateLimitKaydi.create({
+      data: {
+        id: randomUUID(),
+        ad: temizAd,
+        anahtar: temizKey,
+        sayi: 1,
+        sifirAt,
+      },
     });
-    return true;
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      const eszamanliOlusanPencere = await prisma.rateLimitKaydi.updateMany({
+        where: {
+          ad: temizAd,
+          anahtar: temizKey,
+          sifirAt: { gt: simdi },
+          sayi: { lt: limit },
+        },
+        data: {
+          sayi: { increment: 1 },
+        },
+      });
+      return eszamanliOlusanPencere.count > 0;
+    }
+    throw err;
   }
 
-  if (kayit.sayi >= limit) return false;
-
-  await prisma.rateLimitKaydi.update({
-    where: { ad_anahtar: { ad: temizAd, anahtar: temizKey } },
-    data: { sayi: { increment: 1 } },
-  });
   return true;
 }
 
