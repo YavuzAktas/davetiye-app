@@ -1,3 +1,5 @@
+import sharp from "sharp";
+
 type DogrulanmisDosya = {
   blob: Blob;
   ext: string;
@@ -45,6 +47,42 @@ function detectAudio(bytes: Uint8Array) {
   return null;
 }
 
+async function metadataTemizle(
+  buffer: ArrayBuffer,
+  detected: { ext: string; mime: string }
+): Promise<DogrulanmisDosya | null> {
+  const input = Buffer.from(buffer);
+  let output: Buffer;
+
+  try {
+    if (detected.ext === "jpg") {
+      output = await sharp(input, { failOn: "warning" })
+        .rotate()
+        .jpeg({ quality: 88, mozjpeg: true })
+        .toBuffer();
+    } else if (detected.ext === "png") {
+      output = await sharp(input, { failOn: "warning" })
+        .png({ compressionLevel: 9 })
+        .toBuffer();
+    } else if (detected.ext === "webp") {
+      output = await sharp(input, { failOn: "warning" })
+        .webp({ quality: 88 })
+        .toBuffer();
+    } else {
+      output = input;
+    }
+  } catch {
+    return null;
+  }
+
+  const blobBuffer = output.buffer.slice(output.byteOffset, output.byteOffset + output.byteLength) as ArrayBuffer;
+  return {
+    blob: new Blob([blobBuffer], { type: detected.mime }),
+    ext: detected.ext,
+    mime: detected.mime,
+  };
+}
+
 async function dogrulaDosya(
   dosya: File,
   detect: (bytes: Uint8Array) => { ext: string; mime: string } | null
@@ -62,8 +100,14 @@ async function dogrulaDosya(
   };
 }
 
-export function dogrulaGorselDosya(dosya: File) {
-  return dogrulaDosya(dosya, detectImage);
+export async function dogrulaGorselDosya(dosya: File) {
+  const buffer = await dosya.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  const signature = bytes.slice(0, MAX_SIGNATURE_BYTES);
+  const detected = detectImage(signature);
+
+  if (!detected) return null;
+  return metadataTemizle(buffer, detected);
 }
 
 export function dogrulaSesDosya(dosya: File) {
