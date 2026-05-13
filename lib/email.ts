@@ -2,6 +2,27 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
+const HTML_ESCAPE_MAP: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+function escapeHtml(value: string | number) {
+  return String(value).replace(/[&<>"']/g, (char) => HTML_ESCAPE_MAP[char]);
+}
+
+function sanitizeSubject(value: string) {
+  return value
+    .replace(/[\r\n]+/g, " ")
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 180);
+}
+
 export async function rsvpBildirimiGonder({
   sahipEmail,
   sahipAd,
@@ -21,7 +42,14 @@ export async function rsvpBildirimiGonder({
   kisiSayisi: number;
   misafirNot?: string | null;
 }) {
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_URL}/dashboard/davetiye/${davetiyeSlug}`;
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_URL}/dashboard/davetiye/${encodeURIComponent(davetiyeSlug)}`;
+  const guvenliSahipAd = escapeHtml(sahipAd);
+  const guvenliDavetiyeBaslik = escapeHtml(davetiyeBaslik);
+  const guvenliMisafirAd = escapeHtml(misafirAd);
+  const guvenliMisafirNot = misafirNot ? escapeHtml(misafirNot) : null;
+  const guvenliKisiSayisi = escapeHtml(Math.max(0, Math.trunc(kisiSayisi)));
+  const guvenliDashboardUrl = escapeHtml(dashboardUrl);
+  const subject = sanitizeSubject(`${katilim ? "🎉" : "😔"} ${misafirAd} - ${davetiyeBaslik}`);
 
   const html = `
     <!DOCTYPE html>
@@ -42,17 +70,17 @@ export async function rsvpBildirimiGonder({
 
         <div style="padding:24px;">
           <p style="color:#374151;font-size:15px;margin:0 0 16px;">
-            Merhaba <strong>${sahipAd}</strong>,
+            Merhaba <strong>${guvenliSahipAd}</strong>,
           </p>
           <p style="color:#374151;font-size:15px;margin:0 0 20px;">
-            <strong>${davetiyeBaslik}</strong> davetiyeniz için yeni bir bildirim var.
+            <strong>${guvenliDavetiyeBaslik}</strong> davetiyeniz için yeni bir bildirim var.
           </p>
 
           <div style="background:#f9fafb;border-radius:12px;padding:16px;margin-bottom:20px;">
             <table style="width:100%;border-collapse:collapse;">
               <tr>
                 <td style="color:#6b7280;font-size:13px;padding:4px 0;">Misafir</td>
-                <td style="color:#111827;font-size:13px;font-weight:500;text-align:right;">${misafirAd}</td>
+                <td style="color:#111827;font-size:13px;font-weight:500;text-align:right;">${guvenliMisafirAd}</td>
               </tr>
               <tr>
                 <td style="color:#6b7280;font-size:13px;padding:4px 0;">Durum</td>
@@ -65,19 +93,19 @@ export async function rsvpBildirimiGonder({
               ${katilim ? `
               <tr>
                 <td style="color:#6b7280;font-size:13px;padding:4px 0;">Kişi sayısı</td>
-                <td style="color:#111827;font-size:13px;font-weight:500;text-align:right;">${kisiSayisi} kişi</td>
+                <td style="color:#111827;font-size:13px;font-weight:500;text-align:right;">${guvenliKisiSayisi} kişi</td>
               </tr>
               ` : ""}
-              ${misafirNot ? `
+              ${guvenliMisafirNot ? `
               <tr>
                 <td style="color:#6b7280;font-size:13px;padding:4px 0;vertical-align:top;">Not</td>
-                <td style="color:#111827;font-size:13px;text-align:right;font-style:italic;">"${misafirNot}"</td>
+                <td style="color:#111827;font-size:13px;text-align:right;font-style:italic;">"${guvenliMisafirNot}"</td>
               </tr>
               ` : ""}
             </table>
           </div>
 
-          <a href="${dashboardUrl}" style="display:block;background:#7c3aed;color:white;text-align:center;padding:12px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:500;">
+          <a href="${guvenliDashboardUrl}" style="display:block;background:#7c3aed;color:white;text-align:center;padding:12px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:500;">
             Tüm katılımları görüntüle
           </a>
         </div>
@@ -96,7 +124,7 @@ export async function rsvpBildirimiGonder({
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: sahipEmail,
-      subject: `${katilim ? "🎉" : "😔"} ${misafirAd} - ${davetiyeBaslik}`,
+      subject,
       html,
     });
   } catch (error) {
@@ -105,6 +133,7 @@ export async function rsvpBildirimiGonder({
 }
 
 export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
+  const guvenliResetUrl = escapeHtml(resetUrl);
   const html = `
     <!DOCTYPE html>
     <html>
@@ -124,7 +153,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
             Bu bağlantı <strong>1 saat</strong> geçerlidir.
           </p>
           <div style="text-align:center;margin-bottom:28px;">
-            <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;">
+            <a href="${guvenliResetUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;">
               Şifremi Sıfırla
             </a>
           </div>
@@ -132,7 +161,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
             Bu talebi siz yapmadıysanız bu e-postayı görmezden gelebilirsiniz.
             Şifreniz değişmeyecektir.<br><br>
             Bağlantı çalışmıyorsa şu adresi tarayıcınıza kopyalayın:<br>
-            <span style="color:#7C3AED;word-break:break-all;">${resetUrl}</span>
+            <span style="color:#7C3AED;word-break:break-all;">${guvenliResetUrl}</span>
           </p>
         </div>
         <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
