@@ -83,15 +83,49 @@ export default async function AlbumModerasyon({ params }: Props) {
   }
 
   // ── Premium kullanıcı: tam veri yükle ──
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    include: {
-      albumFotolar:  { orderBy: { createdAt: "desc" } },
-      aniDefterleri: { orderBy: { createdAt: "desc" } },
-      sesliAnilar:   { orderBy: { createdAt: "desc" } },
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { slug, userId: user.id },
+    select: {
+      baslik: true,
+      albumFotolar: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          yukleyenAd: true,
+          dosyaUrl: true,
+          onaylandi: true,
+          createdAt: true,
+        },
+      },
+      aniDefterleri: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          yazarAd: true,
+          icerik: true,
+          onaylandi: true,
+          createdAt: true,
+        },
+      },
+      sesliAnilar: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          adSoyad: true,
+          dosyaUrl: true,
+          sure: true,
+          onaylandi: true,
+          createdAt: true,
+        },
+      },
     },
   });
   if (!davetiye) notFound();
+
+  const bekleyenIcerikSayisi =
+    davetiye.albumFotolar.filter((f) => !f.onaylandi).length +
+    davetiye.aniDefterleri.filter((a) => !a.onaylandi).length +
+    davetiye.sesliAnilar.filter((s) => !s.onaylandi).length;
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
@@ -124,9 +158,9 @@ export default async function AlbumModerasyon({ params }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                {(davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length + davetiye.sesliAnilar.filter(s => !s.onaylandi).length) > 0 && (
+                {bekleyenIcerikSayisi > 0 && (
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-400">
-                    {davetiye.albumFotolar.filter(f => !f.onaylandi).length + davetiye.aniDefterleri.filter(a => !a.onaylandi).length + davetiye.sesliAnilar.filter(s => !s.onaylandi).length} onay bekliyor
+                    {bekleyenIcerikSayisi} onay bekliyor
                   </span>
                 )}
               </div>

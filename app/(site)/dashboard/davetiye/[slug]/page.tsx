@@ -37,18 +37,38 @@ export default async function DavetiyeDetay({ params }: Props) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect("/giris");
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { id: true, spotifyRefreshToken: true },
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { slug, user: { email: session.user.email } },
+    select: {
+      slug: true,
+      baslik: true,
+      etkinlikTur: true,
+      tarih: true,
+      mekan: true,
+      sablon: true,
+      muzik: true,
+      aktif: true,
+      goruntulenme: true,
+      createdAt: true,
+      spotifyAktif: true,
+      spotifyPlaylistId: true,
+      user: { select: { spotifyRefreshToken: true } },
+      rsvplar: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          ad: true,
+          email: true,
+          mesaj: true,
+          katilim: true,
+          kisiSayisi: true,
+          diyet: true,
+        },
+      },
+    },
   });
-  if (!user) redirect("/giris");
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    include: { rsvplar: { orderBy: { createdAt: "desc" } } },
-  });
-
-  if (!davetiye || davetiye.userId !== user.id) notFound();
+  if (!davetiye) notFound();
 
   const sablon = SABLONLAR.find(s => s.id === davetiye.sablon) ?? SABLONLAR[0];
   const renk = sablon.renk;
@@ -416,9 +436,9 @@ export default async function DavetiyeDetay({ params }: Props) {
             {/* Spotify Playlist */}
             <SpotifyPlaylistKarti
               slug={davetiye.slug}
-              spotifyAktif={(davetiye as any).spotifyAktif ?? false}
-              playlistId={(davetiye as any).spotifyPlaylistId ?? null}
-              spotifyBagli={!!user.spotifyRefreshToken}
+              spotifyAktif={davetiye.spotifyAktif}
+              playlistId={davetiye.spotifyPlaylistId}
+              spotifyBagli={!!davetiye.user.spotifyRefreshToken}
               renk={renk}
             />
 
