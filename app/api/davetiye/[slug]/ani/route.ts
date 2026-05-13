@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { planOzellikVar } from "@/lib/planlar";
+import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 /* ── GET: onaylanmış anıları listele ── */
 export async function GET(
@@ -31,6 +32,10 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<NextResponse> {
   const { slug } = await params;
+  const ip = ipAlNextRequest(req);
+  if (!ipIzinVer("ani-defteri", ip, 10, 60_000)) {
+    return NextResponse.json({ hata: "Çok fazla istek. Lütfen bir dakika bekleyin." }, { status: 429 });
+  }
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
@@ -41,7 +46,17 @@ export async function POST(
   if (!planOzellikVar(davetiye.user.plan, "album"))
     return NextResponse.json({ hata: "Bu davetiyede anı özelliği aktif değil." }, { status: 403 });
 
-  const body = await req.json();
+  const birSaatOnce = new Date(Date.now() - 3_600_000);
+  const sonSaatSayisi = await prisma.aniDefteri.count({
+    where: { davetiyeId: davetiye.id, createdAt: { gte: birSaatOnce } },
+  });
+  if (sonSaatSayisi >= 30)
+    return NextResponse.json({ hata: "Saatlik anı gönderim limiti doldu." }, { status: 429 });
+
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== "object")
+    return NextResponse.json({ hata: "Geçersiz istek." }, { status: 400 });
+
   const ad = (body.ad as string | undefined)?.trim();
   const icerik = (body.icerik as string | undefined)?.trim();
 
