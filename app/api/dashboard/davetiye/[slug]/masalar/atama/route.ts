@@ -7,11 +7,11 @@ import { planOzellikVar } from "@/lib/planlar";
 interface Params { params: Promise<{ slug: string }> }
 
 async function davetiyeYetki(slug: string, email: string) {
-  const user = await prisma.user.findUnique({ where: { email }, select: { id: true } });
-  if (!user) return null;
-  const d = await prisma.davetiye.findUnique({ where: { slug }, select: { id: true, userId: true } });
-  if (!d || d.userId !== user.id) return null;
-  return { davetiyeId: d.id };
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { slug, user: { email } },
+    select: { id: true },
+  });
+  return davetiye ? { davetiyeId: davetiye.id } : null;
 }
 
 export async function POST(req: NextRequest, { params }: Params) {
@@ -28,13 +28,22 @@ export async function POST(req: NextRequest, { params }: Params) {
   const { rsvpId, masaId } = await req.json();
   if (!rsvpId) return NextResponse.json({ hata: "rsvpId gerekli" }, { status: 400 });
 
+  const rsvp = await prisma.rSVP.findFirst({
+    where: { id: rsvpId, davetiyeId: yetki.davetiyeId, katilim: true },
+    select: { id: true },
+  });
+  if (!rsvp) return NextResponse.json({ hata: "Misafir bulunamadı" }, { status: 404 });
+
   if (!masaId) {
     await prisma.masaAtama.deleteMany({ where: { rsvpId } });
     return NextResponse.json({ basarili: true });
   }
 
-  const masa = await prisma.masa.findUnique({ where: { id: masaId } });
-  if (!masa || masa.davetiyeId !== yetki.davetiyeId) {
+  const masa = await prisma.masa.findFirst({
+    where: { id: masaId, davetiyeId: yetki.davetiyeId },
+    select: { id: true },
+  });
+  if (!masa) {
     return NextResponse.json({ hata: "Masa bulunamadı" }, { status: 404 });
   }
 

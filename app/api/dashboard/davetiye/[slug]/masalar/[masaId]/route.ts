@@ -5,13 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { planOzellikVar } from "@/lib/planlar";
 
 async function masaYetki(slug: string, masaId: string, email: string) {
-  const user = await prisma.user.findUnique({ where: { email }, select: { id: true } });
-  if (!user) return null;
-  const d = await prisma.davetiye.findUnique({ where: { slug }, select: { id: true, userId: true } });
-  if (!d || d.userId !== user.id) return null;
-  const masa = await prisma.masa.findUnique({ where: { id: masaId } });
-  if (!masa || masa.davetiyeId !== d.id) return null;
-  return masa;
+  return prisma.masa.findFirst({
+    where: { id: masaId, davetiye: { slug, user: { email } } },
+    select: { id: true },
+  });
 }
 
 interface Params { params: Promise<{ slug: string; masaId: string }> }
