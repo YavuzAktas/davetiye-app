@@ -1,13 +1,13 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { PREMIUM_SABLON_IDS, planOzellikVar } from "@/lib/planlar";
 import Link from "next/link";
 import { getSablonTipi } from "@/lib/sablon-registry";
-import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import SpotifyMuzikSecici from "@/components/SpotifyMuzikSecici";
 
@@ -19,6 +19,11 @@ const FONTLAR = [
 
 const NAT_W = 390;
 const SCALE = 204 / NAT_W;
+
+const KlasikSablon = dynamic(() => import("@/components/sablonlar/KlasikSablon"));
+const NisanLuksSablon = dynamic(() => import("@/components/sablonlar/NisanLuksSablon"));
+const DugunLuksSablon = dynamic(() => import("@/components/sablonlar/DugunLuksSablon"));
+const DogumGunuLuksSablon = dynamic(() => import("@/components/sablonlar/DogumGunuLuksSablon"));
 
 type DressRenkler = [string,string,string,string,string];
 const DRESS_KOD_PRESETLER: { isim: string; renkler: DressRenkler }[] = [

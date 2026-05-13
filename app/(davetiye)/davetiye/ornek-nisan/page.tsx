@@ -1,4 +1,4 @@
-import { NisanLuksSablon } from "@/components/sablonlar";
+import NisanLuksSablon from "@/components/sablonlar/NisanLuksSablon";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 
 export const metadata = {
