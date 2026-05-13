@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { bloblariSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 import { imhaKayitlariOlustur } from "@/lib/imha-kaydi";
+import { yasalOnayKayitlariniHesapSilindiIsaretle } from "@/lib/yasal-onay-kaydi";
 
 export async function DELETE(): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
@@ -70,6 +71,7 @@ export async function DELETE(): Promise<NextResponse> {
   // Cascade: Account, Session, OdemeToken, Davetiye (→ RSVP, Davetli, medya kayıtları) silinir.
   // OdemeKaydi kayıtları yasal saklama amacıyla userId=null yapılarak korunur.
   await prisma.user.delete({ where: { id: user.id } });
+  await yasalOnayKayitlariniHesapSilindiIsaretle(user.id);
 
   await imhaKayitlariOlustur([
     {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
+import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
 // 5 kayıt denemesi / IP / saat
 export async function POST(req: NextRequest) {
@@ -29,16 +30,17 @@ export async function POST(req: NextRequest) {
     if (sifre.length < 8)
       return NextResponse.json({ hata: "Şifre en az 8 karakter olmalıdır." }, { status: 400 });
 
-    const mevcut = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    const temizEmail = email.toLowerCase().trim();
+    const mevcut = await prisma.user.findUnique({ where: { email: temizEmail } });
     if (mevcut)
       return NextResponse.json({ hata: "Bu e-posta adresi zaten kayıtlı." }, { status: 400 });
 
     const hash = await bcrypt.hash(sifre, 12);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name:          ad.trim(),
-        email:         email.toLowerCase().trim(),
+        email:         temizEmail,
         password:      hash,
         // Kullanıcı kayıt ekranında KVKK aydınlatmasını okuduğunu ve kullanım
         // şartlarını kabul ettiğini işaretler. Bu alan açık rıza değil,
@@ -46,6 +48,13 @@ export async function POST(req: NextRequest) {
         kvkkOnay:      true,
         kvkkOnayTarih: new Date(),
       },
+    });
+
+    await yasalOnayKaydiOlustur({
+      userId: user.id,
+      email: user.email,
+      onayTipi: "kayit-yasal-bilgilendirme-ve-kullanim-sartlari",
+      kaynak: "email-kayit",
     });
 
     return NextResponse.json({ ok: true });

@@ -22,6 +22,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const birYilOnce = new Date(simdi.getTime() - 365 * 24 * 60 * 60 * 1000);
   const otuzGunOnce = new Date(simdi.getTime() - 30 * 24 * 60 * 60 * 1000);
   const onYilOnce = new Date(simdi.getTime() - 10 * 365 * 24 * 60 * 60 * 1000);
+  const ucYilOnce = new Date(simdi.getTime() - 3 * 365 * 24 * 60 * 60 * 1000);
   const birGunOnce = new Date(simdi.getTime() - 24 * 60 * 60 * 1000);
 
   // 1) Etkinlik tarihi 1 yıldan önce geçmiş davetiyelerin misafir verilerini sil
@@ -60,7 +61,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
   });
 
-  // 4) Davetiye oluşturulmadan kalan geçici polaroid dosyalarını sil
+  // 4) Hesap silinmesinden sonra saklama süresi dolan yasal onay kayıtlarını sil
+  const silinenYasalOnayKaydi = await prisma.yasalOnayKaydi.deleteMany({
+    where: {
+      hesapSilindiAt: { lt: ucYilOnce },
+    },
+  });
+
+  // 5) Davetiye oluşturulmadan kalan geçici polaroid dosyalarını sil
   const eskiGeciciYuklemeler = await prisma.geciciYukleme.findMany({
     where: {
       kullanildi: false,
@@ -79,7 +87,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  // 5) Önceden silinemeyen medya dosyalarını yeniden dene
+  // 6) Önceden silinemeyen medya dosyalarını yeniden dene
   const silmeKuyrugu = await prisma.medyaSilmeKuyrugu.findMany({
     where: {
       OR: [
@@ -157,6 +165,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
     {
       kaynak: "temizlik-cron",
+      islemTuru: "yasal-saklama-sonu-imha",
+      veriKategorisi: "Yasal bilgilendirme ve kabul kayıtları",
+      adet: silinenYasalOnayKaydi.count,
+      yontem: "veritabanı kayıt silme",
+      gerekce: "Hesap silinmesinden sonra 3 yıllık saklama süresinin dolması",
+    },
+    {
+      kaynak: "temizlik-cron",
       islemTuru: "gecici-yukleme-imha",
       veriKategorisi: "Kullanılmamış geçici medya yüklemeleri",
       adet: silinenGeciciYukleme,
@@ -179,6 +195,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     silinenDavetli: silinenDavetli.count,
     silinenToken: silinenToken.count,
     silinenOdemeKaydi: silinenOdemeKaydi.count,
+    silinenYasalOnayKaydi: silinenYasalOnayKaydi.count,
     silinenGeciciYukleme,
     kuyruktanSilinenMedya,
     kuyruktaKalanMedya: kalanMedyaKuyrugu._count.id,

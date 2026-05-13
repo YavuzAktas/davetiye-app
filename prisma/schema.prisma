@@ -273,6 +273,22 @@ model ImhaKaydi {
   @@index([kaynak])
 }
 
+model YasalOnayKaydi {
+  id            String    @id @default(cuid())
+  userId        String?
+  emailHash     String?
+  onayTipi      String
+  metinSurumu   String
+  kaynak        String
+  hesapSilindiAt DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+  @@index([emailHash])
+  @@index([hesapSilindiAt])
+  @@index([createdAt])
+}
+
 model Davetli {
   id         String   @id @default(cuid())
   ad         String
