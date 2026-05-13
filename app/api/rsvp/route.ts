@@ -50,15 +50,25 @@ export async function POST(req: NextRequest) {
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
     where: { id: davetiyeId },
-    include: { user: true, _count: false },
+    select: {
+      id: true,
+      userId: true,
+      baslik: true,
+      slug: true,
+      aktif: true,
+      spotifyAktif: true,
+      spotifyPlaylistId: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          spotifyRefreshToken: true,
+        },
+      },
+    },
   });
-  // Spotify için user'dan refresh token lazım — ayrı sorguda alalım
-  const davetiyeOwner = davetiye ? await prisma.user.findUnique({
-    where: { id: davetiye.userId },
-    select: { spotifyRefreshToken: true },
-  }) : null;
 
-  if (!davetiye) {
+  if (!davetiye || !davetiye.aktif) {
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
   }
 
@@ -117,9 +127,9 @@ export async function POST(req: NextRequest) {
   });
 
   /* 6. Spotify'a şarkı ekle */
-  if (sarkiOnerisi && davetiye.spotifyAktif && davetiyeOwner?.spotifyRefreshToken) {
+  if (sarkiOnerisi && davetiye.spotifyAktif && davetiye.user.spotifyRefreshToken) {
     try {
-      const accessToken = await tokenYenile(davetiyeOwner.spotifyRefreshToken!);
+      const accessToken = await tokenYenile(davetiye.user.spotifyRefreshToken);
 
       // Playlist yoksa otomatik oluştur
       let playlistId = davetiye.spotifyPlaylistId;
