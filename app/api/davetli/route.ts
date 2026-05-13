@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 
 /* ── Yardımcı: davetiyenin mevcut kullanıcıya ait olup olmadığını doğrula */
 async function sahiplikDogrula(davetiyeId: string, userId: string) {
@@ -84,5 +85,14 @@ export async function DELETE(req: NextRequest) {
   }
 
   await prisma.davetli.delete({ where: { id } });
+  await imhaKaydiOlustur({
+    kaynak: "tekil-davetli-silme",
+    islemTuru: "kullanici-paneli-silme",
+    veriKategorisi: "Davetli listesi kaydı",
+    adet: 1,
+    yontem: "veritabanı kayıt silme",
+    gerekce: "Davetiye sahibinin panel üzerinden silme talebi",
+  });
+
   return NextResponse.json({ basarili: true });
 }

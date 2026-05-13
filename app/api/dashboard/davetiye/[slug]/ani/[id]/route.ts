@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { planOzellikVar } from "@/lib/planlar";
+import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -53,5 +54,14 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   if (!ani) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
   await prisma.aniDefteri.delete({ where: { id } });
+  await imhaKaydiOlustur({
+    kaynak: "tekil-yazili-ani-silme",
+    islemTuru: "kullanici-paneli-silme",
+    veriKategorisi: "Yazılı anı kaydı",
+    adet: 1,
+    yontem: "veritabanı kayıt silme",
+    gerekce: "Davetiye sahibinin panel üzerinden silme talebi",
+  });
+
   return NextResponse.json({ tamam: true });
 }

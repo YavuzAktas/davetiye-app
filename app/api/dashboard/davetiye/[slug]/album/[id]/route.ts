@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { planOzellikVar } from "@/lib/planlar";
 import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
+import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -57,5 +58,14 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   await blobSilVeyaKuyrugaAl(foto.dosyaUrl, "album-foto-silme");
 
   await prisma.albumFoto.delete({ where: { id } });
+  await imhaKaydiOlustur({
+    kaynak: "tekil-album-foto-silme",
+    islemTuru: "kullanici-paneli-silme",
+    veriKategorisi: "Albüm fotoğraf kaydı",
+    adet: 1,
+    yontem: "Vercel Blob silme/kuyruğa alma ve veritabanı kayıt silme",
+    gerekce: "Davetiye sahibinin panel üzerinden silme talebi",
+  });
+
   return NextResponse.json({ tamam: true });
 }
