@@ -30,7 +30,7 @@ export default function NavLinks() {
           </Link>
         ))}
 
-        {session && <BildirimButonu />}
+        {session && <BildirimButonu mediaQuery="(min-width: 768px)" />}
 
         {session ? (
           <div className="relative ml-1">
@@ -95,7 +95,7 @@ export default function NavLinks() {
           className="text-xs bg-linear-to-r from-purple-600 to-pink-600 text-white px-3.5 py-1.5 rounded-lg font-medium">
           {session ? "+ Yeni" : "Başla"}
         </Link>
-        {session && <BildirimButonu />}
+        {session && <BildirimButonu mediaQuery="(max-width: 767px)" />}
         <button onClick={() => setMobMenuAcik(!mobMenuAcik)} aria-label="Menü"
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
           {mobMenuAcik ? (

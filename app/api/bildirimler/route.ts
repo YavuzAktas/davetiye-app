@@ -4,9 +4,18 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 /* GET — okunmamış sayısı + son 20 bildirim */
-export async function GET() {
+export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+
+  const sadeceSayac = new URL(req.url).searchParams.get("mod") === "sayac";
+
+  if (sadeceSayac) {
+    const okunmamis = await prisma.bildirim.count({
+      where: { userId: session.user.id, okundu: false },
+    });
+    return NextResponse.json({ okunmamis });
+  }
 
   const [okunmamis, bildirimler] = await Promise.all([
     prisma.bildirim.count({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
 type Bildirim = {
@@ -19,34 +19,62 @@ const TIP_ICON: Record<string, string> = {
   ani:   "💌",
 };
 
-export default function BildirimButonu() {
+export default function BildirimButonu({ mediaQuery }: { mediaQuery?: string }) {
   const [okunmamis, setOkunmamis] = useState(0);
   const [bildirimler, setBildirimler] = useState<Bildirim[]>([]);
   const [acik, setAcik] = useState(false);
+  const [aktifGorunum, setAktifGorunum] = useState(!mediaQuery);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  async function veriCek() {
+  useEffect(() => {
+    if (!mediaQuery) return;
+    const sorgu = window.matchMedia(mediaQuery);
+    const guncelle = () => setAktifGorunum(sorgu.matches);
+    guncelle();
+    sorgu.addEventListener("change", guncelle);
+    return () => sorgu.removeEventListener("change", guncelle);
+  }, [mediaQuery]);
+
+  const sayacCek = useCallback(async () => {
     try {
-      const res = await fetch("/api/bildirimler", { cache: "no-store" });
+      const res = await fetch("/api/bildirimler?mod=sayac", { cache: "no-store" });
       if (!res.ok) return;
       const json = await res.json();
       setOkunmamis(json.okunmamis);
-      setBildirimler(json.bildirimler);
     } catch { /* sessizce geç */ }
-  }
-
-  /* İlk yükleme + 30 saniyede bir polling */
-  useEffect(() => {
-    veriCek();
-    const t = setInterval(veriCek, 30_000);
-    return () => clearInterval(t);
   }, []);
+
+  const listeCek = useCallback(async () => {
+    try {
+      const res = await fetch("/api/bildirimler", { cache: "no-store" });
+      if (!res.ok) return 0;
+      const json = await res.json();
+      setOkunmamis(json.okunmamis);
+      setBildirimler(json.bildirimler);
+      return Number(json.okunmamis) || 0;
+    } catch {
+      return 0;
+    }
+  }, []);
+
+  /* Görünür butonda ilk yükleme + 60 saniyede bir hafif sayaç polling */
+  useEffect(() => {
+    if (!aktifGorunum) return;
+    sayacCek();
+    const t = setInterval(() => {
+      if (document.visibilityState === "visible") sayacCek();
+    }, 60_000);
+    return () => clearInterval(t);
+  }, [aktifGorunum, sayacCek]);
 
   /* Panel açılınca okundu işaretle */
   async function toggle() {
     const yeniAcik = !acik;
     setAcik(yeniAcik);
-    if (yeniAcik && okunmamis > 0) {
+    if (!yeniAcik) return;
+
+    const guncelOkunmamis = await listeCek();
+    if (guncelOkunmamis > 0) {
       setOkunmamis(0);
       setBildirimler(prev => prev.map(b => ({ ...b, okundu: true })));
       await fetch("/api/bildirimler", { method: "PATCH" });
