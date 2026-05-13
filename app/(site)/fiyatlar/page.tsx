@@ -318,9 +318,9 @@ export default function FiyatlarSayfasi() {
           </div>
 
           <div className="px-6 py-5 space-y-4">
-            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-gray-100 p-1">
+            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-gray-100 bg-gray-50 p-1">
               {[
-                { id: "bireysel", label: "Bireysel", desc: "Minimum bilgi" },
+                { id: "bireysel", label: "Bireysel", desc: "Kişisel kullanım" },
                 { id: "kurumsal", label: "Kurumsal Fatura", desc: "Vergi bilgileri" },
               ].map(secenek => {
                 const aktif = faturaBilgileri.faturaTipi === secenek.id;
@@ -331,7 +331,7 @@ export default function FiyatlarSayfasi() {
                     onClick={() => faturaAlaniGuncelle("faturaTipi", secenek.id)}
                     className={`rounded-xl px-3 py-2.5 text-left transition-all ${
                       aktif
-                        ? "bg-white text-purple-700 shadow-sm"
+                        ? "bg-white text-purple-700 shadow-sm ring-1 ring-purple-100"
                         : "text-gray-500 hover:text-gray-800"
                     }`}
                   >
@@ -342,14 +342,26 @@ export default function FiyatlarSayfasi() {
               })}
             </div>
 
-            <div className={`rounded-2xl border px-4 py-3 text-xs leading-relaxed ${
-              faturaBilgileri.faturaTipi === "kurumsal"
-                ? "border-purple-100 bg-purple-50 text-purple-800"
-                : "border-emerald-100 bg-emerald-50 text-emerald-800"
-            }`}>
-              {faturaBilgileri.faturaTipi === "kurumsal"
-                ? "Kurumsal fatura talebi için vergi numarası ve fatura adresi alınır."
-                : "Bireysel kullanımda TCKN ve açık adres istemiyoruz; ödeme güvenliği için ad, telefon ve şehir yeterlidir."}
+            <div className="relative overflow-hidden rounded-2xl border border-purple-100 bg-linear-to-br from-purple-50 via-white to-pink-50 px-4 py-3">
+              <div className="absolute -right-8 -top-10 h-24 w-24 rounded-full bg-purple-200/30 blur-2xl" />
+              <div className="relative flex gap-3">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-purple-600 shadow-sm ring-1 ring-purple-100">
+                  <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3.2 4.5 5.4v4.2c0 3.1 2.1 5.9 5.5 7.2 3.4-1.3 5.5-4.1 5.5-7.2V5.4L10 3.2Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+                    <path d="m7.5 10 1.6 1.6 3.4-3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-900">
+                    {faturaBilgileri.faturaTipi === "kurumsal" ? "Kurumsal fatura bilgileri" : "Ödeme doğrulama bilgileri"}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-600">
+                    {faturaBilgileri.faturaTipi === "kurumsal"
+                      ? "Vergi no ve fatura adresi, kurumsal fatura talebinin hazırlanması ve ödeme kaydının doğrulanması için alınır."
+                      : "Ad, telefon ve şehir bilgileri ödeme güvenliği, yasal işlem kaydı ve destek/iade taleplerinin doğrulanması için alınır."}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <label className="block">
