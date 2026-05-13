@@ -1,11 +1,10 @@
-export const dynamic = "force-dynamic";
-
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
 import EtkilesimButonu from "@/components/EtkilesimButonu";
+import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKaydedici";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { planOzellikVar } from "@/lib/planlar";
 
@@ -15,7 +14,10 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const davetiye = await prisma.davetiye.findUnique({ where: { slug } });
+  const davetiye = await prisma.davetiye.findUnique({
+    where: { slug },
+    select: { baslik: true },
+  });
   if (!davetiye) return { title: "Davetiye Bulunamadı" };
   return { title: davetiye.baslik };
 }
@@ -25,15 +27,42 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    include: { user: true },
+    select: {
+      id: true,
+      slug: true,
+      baslik: true,
+      etkinlikTur: true,
+      tarih: true,
+      mekan: true,
+      mesaj: true,
+      sablon: true,
+      ozelRenk: true,
+      font: true,
+      muzik: true,
+      goruntulenme: true,
+      kisi1: true,
+      kisi2: true,
+      spotifyAktif: true,
+      polaroid1: true,
+      polaroid2: true,
+      polaroid3: true,
+      sesliAniAktif: true,
+      canliDuvarAktif: true,
+      dressKod: true,
+      dressKodRenkler: true,
+      albumAktif: true,
+      aktif: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          plan: true,
+        },
+      },
+    },
   });
 
   if (!davetiye || !davetiye.aktif) notFound();
-
-  await prisma.davetiye.update({
-    where: { slug },
-    data: { goruntulenme: { increment: 1 } },
-  });
 
   const sablonTipi = getSablonTipi(davetiye.sablon);
 
@@ -45,10 +74,10 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
-  const spotifyAktif    = (davetiye as any).spotifyAktif ?? false;
-  const albumAktif      = ((davetiye as any).albumAktif ?? true) && planOzellikVar(davetiye.user?.plan ?? "free", "album");
-  const sesliAniAktif   = (davetiye as any).sesliAniAktif  ?? false;
-  const canliDuvarAktif = (davetiye as any).canliDuvarAktif ?? false;
+  const spotifyAktif    = davetiye.spotifyAktif ?? false;
+  const albumAktif      = (davetiye.albumAktif ?? true) && planOzellikVar(davetiye.user?.plan ?? "free", "album");
+  const sesliAniAktif   = davetiye.sesliAniAktif ?? false;
+  const canliDuvarAktif = davetiye.canliDuvarAktif ?? false;
 
   const veri: DavetiyeVeri = {
     id: davetiye.id,
@@ -59,25 +88,25 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     mekan: davetiye.mekan,
     mesaj: davetiye.mesaj,
     sablon: davetiye.sablon,
-    ozelRenk: (davetiye as any).ozelRenk ?? null,
-    font: (davetiye as any).font ?? null,
+    ozelRenk: davetiye.ozelRenk ?? null,
+    font: davetiye.font ?? null,
     muzik: davetiye.muzik,
     goruntulenme: davetiye.goruntulenme,
     user: {
       name: davetiye.user?.name ?? null,
       email: davetiye.user?.email ?? null,
     },
-    kisi1: (davetiye as any).kisi1 ?? null,
-    kisi2: (davetiye as any).kisi2 ?? null,
+    kisi1: davetiye.kisi1 ?? null,
+    kisi2: davetiye.kisi2 ?? null,
     spotifyAktif,
     albumAktif,
-    polaroid1: (davetiye as any).polaroid1 ?? null,
-    polaroid2: (davetiye as any).polaroid2 ?? null,
-    polaroid3: (davetiye as any).polaroid3 ?? null,
+    polaroid1: davetiye.polaroid1 ?? null,
+    polaroid2: davetiye.polaroid2 ?? null,
+    polaroid3: davetiye.polaroid3 ?? null,
     sesliAniAktif,
     canliDuvarAktif,
-    dressKod: (davetiye as any).dressKod ?? null,
-    dressKodRenkler: (davetiye as any).dressKodRenkler ?? null,
+    dressKod: davetiye.dressKod ?? null,
+    dressKodRenkler: davetiye.dressKodRenkler ?? null,
   };
 
   const rsvpBileseni = (
@@ -101,6 +130,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
 
   return (
     <>
+      <DavetiyeGoruntulenmeKaydedici slug={davetiye.slug} />
       {sablon}
       <EtkilesimButonu
         slug={davetiye.slug}
