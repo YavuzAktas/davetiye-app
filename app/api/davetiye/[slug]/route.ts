@@ -15,6 +15,12 @@ export async function GET(
 
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, userId: session.user.id },
+    select: {
+      id: true,
+      baslik: true,
+      slug: true,
+      sablon: true,
+    },
   });
 
   if (!davetiye) {

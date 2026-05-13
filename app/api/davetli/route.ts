@@ -24,12 +24,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ hata: "davetiyeId gerekli." }, { status: 400 });
   }
 
-  if (!await sahiplikDogrula(davetiyeId, session.user.id)) {
-    return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
-  }
-
   const davetliler = await prisma.davetli.findMany({
-    where: { davetiyeId },
+    where: { davetiyeId, davetiye: { userId: session.user.id } },
+    select: {
+      id: true,
+      ad: true,
+      telefon: true,
+      email: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 

@@ -47,19 +47,17 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect("/giris");
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { id: true, plan: true },
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { slug, user: { email: session.user.email } },
+    select: {
+      id: true,
+      baslik: true,
+      user: { select: { plan: true } },
+    },
   });
-  if (!user) redirect("/giris");
+  if (!davetiye) notFound();
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    select: { id: true, userId: true, baslik: true },
-  });
-  if (!davetiye || davetiye.userId !== user.id) notFound();
-
-  if (!planOzellikVar(user.plan, "oturmaPlan")) {
+  if (!planOzellikVar(davetiye.user.plan, "oturmaPlan")) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Hero slug={slug} baslik={davetiye.baslik} alt="Premium özelliği" />
@@ -74,13 +72,19 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
     );
   }
 
-  const [masalar, atanmamis, toplamKatilan] = await Promise.all([
+  const [masalar, atanmamis] = await Promise.all([
     prisma.masa.findMany({
       where: { davetiyeId: davetiye.id },
       orderBy: { sira: "asc" },
-      include: {
+      select: {
+        id: true,
+        isim: true,
+        kapasite: true,
         atamalar: {
-          include: { rsvp: { select: { id: true, ad: true, kisiSayisi: true, diyet: true } } },
+          select: {
+            id: true,
+            rsvp: { select: { id: true, ad: true, kisiSayisi: true, diyet: true } },
+          },
         },
       },
     }),
@@ -89,8 +93,8 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
       select: { id: true, ad: true, kisiSayisi: true, diyet: true },
       orderBy: { createdAt: "asc" },
     }),
-    prisma.rSVP.count({ where: { davetiyeId: davetiye.id, katilim: true } }),
   ]);
+  const toplamKatilan = atanmamis.length + masalar.reduce((adet, masa) => adet + masa.atamalar.length, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
