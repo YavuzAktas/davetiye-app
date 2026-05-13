@@ -5,12 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { tokenYenile, playlistOlustur, playlistCokluEkle } from "@/lib/spotify";
 import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeCacheTag } from "@/lib/cache-tags";
 
 type Params = { params: Promise<{ slug: string }> };
-
-function davetiyeCacheTag(slug: string) {
-  return `davetiye:${slug}`;
-}
 
 /* POST — Spotify playlist oluştur + davetiyeye bağla */
 export async function POST(_req: Request, { params }: Params) {

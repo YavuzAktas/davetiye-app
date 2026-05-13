@@ -8,16 +8,13 @@ import EtkilesimButonu from "@/components/EtkilesimButonu";
 import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKaydedici";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeCacheTag } from "@/lib/cache-tags";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export const revalidate = 300;
-
-function davetiyeCacheTag(slug: string) {
-  return `davetiye:${slug}`;
-}
 
 function publicDavetiyeGetir(slug: string) {
   return unstable_cache(

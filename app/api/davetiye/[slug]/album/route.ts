@@ -1,9 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { planOzellikVar } from "@/lib/planlar";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
+import { davetiyeAlbumCacheTag } from "@/lib/cache-tags";
+
+const PUBLIC_LISTE_CACHE_SN = 60;
+
+function onayliFotolariGetir(slug: string) {
+  return unstable_cache(
+    async () => {
+      const davetiye = await prisma.davetiye.findUnique({
+        where: { slug },
+        select: { id: true },
+      });
+      if (!davetiye) return null;
+
+      return prisma.albumFoto.findMany({
+        where: { davetiyeId: davetiye.id, onaylandi: true },
+        orderBy: { createdAt: "desc" },
+        select: { id: true, yukleyenAd: true, dosyaUrl: true, createdAt: true },
+      });
+    },
+    ["public-album-fotolari", slug],
+    { revalidate: PUBLIC_LISTE_CACHE_SN, tags: [davetiyeAlbumCacheTag(slug)] },
+  )();
+}
 
 /* ── GET: onaylanmış fotoğrafları listele ── */
 export async function GET(
@@ -12,17 +36,8 @@ export async function GET(
 ): Promise<NextResponse> {
   const { slug } = await params;
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    select: { id: true },
-  });
-  if (!davetiye) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
-
-  const fotolar = await prisma.albumFoto.findMany({
-    where: { davetiyeId: davetiye.id, onaylandi: true },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, yukleyenAd: true, dosyaUrl: true, createdAt: true },
-  });
+  const fotolar = await onayliFotolariGetir(slug);
+  if (!fotolar) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
   return NextResponse.json(fotolar);
 }

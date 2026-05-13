@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { planOzellikVar } from "@/lib/planlar";
 import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
+import { davetiyeSesliAniCacheTag } from "@/lib/cache-tags";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -37,6 +39,7 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
   });
 
   if (sonuc.count === 0) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
+  revalidateTag(davetiyeSesliAniCacheTag(slug));
   return NextResponse.json({ tamam: true });
 }
 
@@ -56,6 +59,7 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   await blobSilVeyaKuyrugaAl(ani.dosyaUrl, "sesli-ani-silme");
 
   await prisma.sesliAni.delete({ where: { id } });
+  revalidateTag(davetiyeSesliAniCacheTag(slug));
   await imhaKaydiOlustur({
     kaynak: "tekil-sesli-ani-silme",
     islemTuru: "kullanici-paneli-silme",

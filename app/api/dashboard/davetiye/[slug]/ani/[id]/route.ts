@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { planOzellikVar } from "@/lib/planlar";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
+import { davetiyeAniCacheTag } from "@/lib/cache-tags";
 
 type Params = { params: Promise<{ slug: string; id: string }> };
 
@@ -36,6 +38,7 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
   });
 
   if (ani.count === 0) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
+  revalidateTag(davetiyeAniCacheTag(slug));
   return NextResponse.json({ tamam: true });
 }
 
@@ -54,6 +57,7 @@ export async function DELETE(_req: NextRequest, { params }: Params): Promise<Nex
   if (!ani) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
   await prisma.aniDefteri.delete({ where: { id } });
+  revalidateTag(davetiyeAniCacheTag(slug));
   await imhaKaydiOlustur({
     kaynak: "tekil-yazili-ani-silme",
     islemTuru: "kullanici-paneli-silme",

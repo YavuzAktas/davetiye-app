@@ -1,9 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { planOzellikVar } from "@/lib/planlar";
 import { dogrulaSesDosya } from "@/lib/dosya-dogrulama";
+import { davetiyeSesliAniCacheTag } from "@/lib/cache-tags";
+
+const PUBLIC_LISTE_CACHE_SN = 60;
+
+function onayliSesliAnilariGetir(slug: string) {
+  return unstable_cache(
+    async () => {
+      const davetiye = await prisma.davetiye.findUnique({
+        where: { slug },
+        select: { id: true, sesliAniAktif: true },
+      });
+      if (!davetiye) return null;
+
+      return prisma.sesliAni.findMany({
+        where: { davetiyeId: davetiye.id, onaylandi: true },
+        orderBy: { createdAt: "desc" },
+        select: { id: true, adSoyad: true, dosyaUrl: true, sure: true, createdAt: true },
+      });
+    },
+    ["public-sesli-anilar", slug],
+    { revalidate: PUBLIC_LISTE_CACHE_SN, tags: [davetiyeSesliAniCacheTag(slug)] },
+  )();
+}
 
 /* ── GET: onaylanmış sesli anıları listele ── */
 export async function GET(
@@ -12,17 +36,8 @@ export async function GET(
 ): Promise<NextResponse> {
   const { slug } = await params;
 
-  const davetiye = await prisma.davetiye.findUnique({
-    where: { slug },
-    select: { id: true, sesliAniAktif: true },
-  });
-  if (!davetiye) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
-
-  const anilar = await prisma.sesliAni.findMany({
-    where: { davetiyeId: davetiye.id, onaylandi: true },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, adSoyad: true, dosyaUrl: true, sure: true, createdAt: true },
-  });
+  const anilar = await onayliSesliAnilariGetir(slug);
+  if (!anilar) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
 
   return NextResponse.json(anilar);
 }
