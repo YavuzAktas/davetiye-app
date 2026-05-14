@@ -47,7 +47,7 @@ export default function GizlilikSayfasi() {
                 <li>Şablon tercihleri, renk ve font seçimleri</li>
                 <li>Müzik tercihleri, Spotify bağlantısı, playlist bilgisi ve şarkı önerileri</li>
                 <li>Davetiye görüntülenme sayısı</li>
-                <li>Masa planı, misafir listesi ve davetli notları</li>
+                <li>Masa planı ve misafir listesi</li>
               </ul>
               <p><strong>RSVP (katılım bildirimi) formlarından:</strong></p>
               <ul>

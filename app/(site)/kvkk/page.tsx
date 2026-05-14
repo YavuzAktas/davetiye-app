@@ -55,7 +55,7 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Entegrasyon</strong></td><td>Spotify kullanıcı/playlist bilgisi, şarkı önerileri ve bağlantı tokenları</td><td>Spotify bağlantısı ve RSVP formu</td></tr>
                   <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
                   <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
-                  <tr><td><strong>Misafir listesi</strong></td><td>Davet sahibi tarafından girilen ad, telefon, e-posta ve notlar</td><td>Davet sahibi girişi</td></tr>
+                  <tr><td><strong>Misafir listesi</strong></td><td>Davet sahibi tarafından girilen ad, telefon ve e-posta</td><td>Davet sahibi girişi</td></tr>
                   <tr><td><strong>Bilgilendirme kayıtları</strong></td><td>KVKK aydınlatma/kullanım şartları kayıt tarihi</td><td>Üyelik ve onay ekranları</td></tr>
                 </tbody>
               </table>

@@ -322,7 +322,6 @@ model Davetli {
   ad         String
   telefon    String?
   email      String?
-  notlar     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   davetiyeId String
