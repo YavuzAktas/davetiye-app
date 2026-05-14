@@ -30,6 +30,7 @@ const PLATFORM_LINKS = [
   { href: "/dijital-davetiye", label: "Dijital Davetiye" },
   { href: "/online-davetiye",  label: "Online Davetiye"  },
   { href: "/whatsapp-davetiye", label: "WhatsApp Davetiye" },
+  { href: "/ucretsiz-davetiye", label: "Ücretsiz Davetiye" },
   { href: "/dugun-davetiyesi", label: "Düğün Davetiyesi" },
   { href: "/nisan-davetiyesi", label: "Nişan Davetiyesi" },
   { href: "/sablonlar",  label: "Şablonlar"  },
