@@ -4,6 +4,10 @@ import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 export const metadata = {
   title: "Lüks Doğum Günü Davetiyesi — Örnek",
   description: "Derin mor & şampanya altın temalı pasta mühürlü lüks doğum günü davetiyesi önizlemesi.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const ORNEK: DavetiyeVeri = {

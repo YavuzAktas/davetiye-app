@@ -4,6 +4,10 @@ import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 export const metadata = {
   title: "Lüks Düğün Davetiyesi — Örnek",
   description: "Lacivert & şampanya altın temalı düğün yüzüğü mühürlü dijital düğün davetiyesi önizlemesi.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const ORNEK: DavetiyeVeri = {

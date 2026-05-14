@@ -4,6 +4,10 @@ import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 export const metadata = {
   title: "Lüks Nişan Davetiyesi — Örnek",
   description: "Bordo & altın temalı gül mühürlü dijital nişan davetiyesi önizlemesi.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const ORNEK: DavetiyeVeri = {
