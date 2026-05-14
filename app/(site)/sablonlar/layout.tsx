@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
-const SITE_URL = "https://davetiye-app.vercel.app";
+const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Davetiye Şablonları",

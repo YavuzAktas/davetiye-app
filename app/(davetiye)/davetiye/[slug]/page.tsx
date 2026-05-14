@@ -61,8 +61,17 @@ function publicDavetiyeGetir(slug: string) {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const davetiye = await publicDavetiyeGetir(slug);
-  if (!davetiye) return { title: "Davetiye Bulunamadı" };
-  return { title: davetiye.baslik };
+  if (!davetiye) {
+    return {
+      title: "Davetiye Bulunamadı",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  return {
+    title: davetiye.baslik,
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function DavetiyeSayfasi({ params }: Props) {

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 import { getAllSlugs, getPostBySlug, formatDate } from "@/lib/blog";
+import { getSiteUrl } from "@/lib/site-url";
 
 /* ── Statik parametre üretimi (build time) ── */
 export async function generateStaticParams() {
@@ -42,6 +43,7 @@ export default async function BlogPostPage(
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
+  const siteUrl = getSiteUrl();
 
   /* JSON-LD: Article schema */
   const articleSchema = {
@@ -55,7 +57,7 @@ export default async function BlogPostPage(
     publisher: {
       "@type": "Organization",
       name: "Bekleriz",
-      url: "https://davetiye-app.vercel.app",
+      url: siteUrl,
     },
     keywords: post.tags.join(", "),
   };

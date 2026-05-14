@@ -95,4 +95,4 @@ Hazır kalıpları tamamen kopyalamak yerine sonuna kendi eklemeleri yapın:
 
 ---
 
-Davetiyenizi hazırlarken yukarıdaki sözlerden ilham alın ve kendi tarzınıza göre uyarlayın. Dijital davetiyenizi [birkaç dakikada oluşturmak](https://davetiye-app.vercel.app/sablonlar) için şablonlarımıza göz atabilirsiniz.
+Davetiyenizi hazırlarken yukarıdaki sözlerden ilham alın ve kendi tarzınıza göre uyarlayın. Dijital davetiyenizi [birkaç dakikada oluşturmak](/sablonlar) için şablonlarımıza göz atabilirsiniz.

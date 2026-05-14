@@ -3,6 +3,7 @@ import { Geist, Dancing_Script, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import CerezBanner from "@/components/CerezBanner";
+import { getSiteUrl } from "@/lib/site-url";
 
 const geist = Geist({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({
@@ -16,7 +17,7 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_URL ?? "https://bekleriz.com";
+const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   title: {
