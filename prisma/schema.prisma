@@ -120,7 +120,10 @@ model Davetiye {
 
   @@index([userId])
   @@index([userId, aktif])
+  @@index([userId, createdAt])
   @@index([aktif])
+  @@index([tarih])
+  @@index([createdAt])
 }
 
 model SesliAni {
@@ -182,6 +185,7 @@ model RSVP {
 
   @@index([davetiyeId])
   @@index([davetiyeId, createdAt])
+  @@index([davetiyeId, katilim, createdAt])
   @@index([davetiyeId, ad, createdAt])
 }
 
@@ -196,6 +200,7 @@ model Masa {
   atamalar   MasaAtama[]
 
   @@index([davetiyeId])
+  @@index([davetiyeId, sira])
 }
 
 model MasaAtama {
@@ -205,6 +210,8 @@ model MasaAtama {
   createdAt DateTime @default(now())
   masa      Masa     @relation(fields: [masaId], references: [id], onDelete: Cascade)
   rsvp      RSVP     @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
+
+  @@index([masaId])
 }
 
 model OdemeToken {
@@ -275,6 +282,7 @@ model MedyaSilmeKuyrugu {
   updatedAt      DateTime  @updatedAt
 
   @@index([sonrakiDeneme])
+  @@index([sonrakiDeneme, createdAt])
   @@index([createdAt])
 }
 
@@ -321,6 +329,7 @@ model Davetli {
   davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId])
+  @@index([davetiyeId, createdAt])
 }
 
 model Bildirim {
