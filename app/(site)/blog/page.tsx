@@ -6,6 +6,13 @@ const CAT: Record<string, { bg: string; color: string }> = {
   "İpucu":  { bg: "rgba(236,72,153,0.12)", color: "#db2777" },
   "İlham":  { bg: "rgba(245,158,11,0.12)", color: "#d97706" },
 };
+const KONU_LINKLERI = [
+  { href: "/blog/online-davetiye-nasil-hazirlanir", label: "Online davetiye hazırlama" },
+  { href: "/blog/whatsapp-davetiye-nasil-hazirlanir", label: "WhatsApp davetiye gönderimi" },
+  { href: "/blog/dijital-davetiye-fiyatlari", label: "Dijital davetiye fiyatları" },
+  { href: "/blog/dugun-davetiye-sozleri", label: "Düğün davetiye sözleri" },
+  { href: "/sablonlar", label: "Davetiye şablonları" },
+];
 
 export default function BlogPage() {
   const posts    = getAllPosts();
@@ -66,15 +73,39 @@ export default function BlogPage() {
               fontFamily:"var(--font-dancing),cursive",
               fontSize:"clamp(40px,6vw,64px)", color:"#fff", lineHeight:1.1, marginBottom:16,
             }}>
-              Davetiye Dünyası
+              Online Davetiye Rehberi
             </h1>
             <p style={{ fontSize:16, color:"rgba(255,255,255,0.5)", lineHeight:1.7, maxWidth:520, margin:"0 auto" }}>
-              Dijital davetiye rehberleri, düğün ipuçları ve ilham verici içerikler — tümü burada.
+              Dijital davetiye hazırlama, WhatsApp ile davetiye gönderme, fiyat karşılaştırmaları ve davetiye sözleri için pratik rehberler.
             </p>
           </div>
         </section>
 
         <div style={{ maxWidth:900, margin:"0 auto", padding:"60px 24px" }}>
+          <section style={{ marginBottom:48 }}>
+            <p style={{
+              fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase",
+              color:"rgba(124,58,237,0.7)", fontWeight:700, marginBottom:16,
+            }}>
+              ✦ Popüler Konular
+            </p>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:10 }}>
+              {KONU_LINKLERI.map(link => (
+                <Link key={link.href} href={link.href} style={{
+                  border:"1px solid #ede9fe",
+                  background:"#faf5ff",
+                  color:"#6d28d9",
+                  fontSize:13,
+                  fontWeight:700,
+                  padding:"10px 14px",
+                  borderRadius:999,
+                  textDecoration:"none",
+                }}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </section>
 
           {/* ── Öne Çıkan Yazı ── */}
           {featured && (
