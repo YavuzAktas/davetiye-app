@@ -411,24 +411,24 @@ export default function Anasayfa() {
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2.5 border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-medium px-4 py-2 rounded-full mb-10 backdrop-blur-sm">
                 <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                Türkiye&apos;nin dijital davetiye platformu
+                Online davetiye ve RSVP takip platformu
               </div>
 
               <h1 className="text-white mb-8">
                 <span className="block text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight">
-                  Güzel anlar için
+                  Online davetiye
                 </span>
                 <span
                   className="block text-5xl sm:text-6xl md:text-7xl leading-[1.2] bg-gradient-to-r from-purple-400 via-pink-400 to-rose-300 bg-clip-text text-transparent animate-gradient"
                   style={{ fontFamily: "var(--font-dancing), cursive" }}
                 >
-                  güzel davetiyeler
+                  oluştur
                 </span>
               </h1>
 
               <p className="text-gray-400 text-lg leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
-                Düğün, nişan, doğum günü için dakikalar içinde özel davetiye oluştur.
-                WhatsApp ile tek tıkla paylaş, RSVP&apos;leri takip et.
+                Düğün, nişan, doğum günü ve özel etkinlikler için dakikalar içinde dijital davetiye hazırla.
+                WhatsApp ile paylaş, RSVP yanıtlarını ve misafir listesini tek panelden takip et.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-12">
@@ -437,7 +437,7 @@ export default function Anasayfa() {
                   className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl text-base font-semibold shadow-2xl shadow-purple-900/50 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all text-center"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Ücretsiz Başla
+                    Online Davetiye Oluştur
                     <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -446,7 +446,7 @@ export default function Anasayfa() {
                   href="/sablonlar"
                   className="border border-white/15 text-white/80 px-8 py-4 rounded-2xl text-base font-medium hover:bg-white/8 hover:border-white/25 transition-all text-center backdrop-blur-sm"
                 >
-                  Şablonlara Bak
+                  Davetiye Şablonları
                 </Link>
               </div>
 
@@ -459,7 +459,7 @@ export default function Anasayfa() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-500">
-                  <span className="text-white font-semibold">500+</span> kişi kullanıyor
+                  <span className="text-white font-semibold">500+</span> online davetiye oluşturuldu
                 </p>
               </div>
             </div>

@@ -21,11 +21,11 @@ const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   title: {
-    default: "Bekleriz — Online Davetiye Platformu",
+    default: "Online Davetiye Oluştur | Bekleriz",
     template: "%s | Bekleriz",
   },
   description:
-    "Düğün, nişan, doğum günü ve daha fazlası için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş, RSVP takip et.",
+    "Düğün, nişan, doğum günü ve özel etkinlikler için online davetiye oluştur. Dijital davetiyeni WhatsApp ile paylaş, RSVP yanıtlarını takip et.",
   keywords: [
     "online davetiye", "dijital davetiye", "düğün davetiyesi",
     "nişan davetiyesi", "doğum günü davetiyesi", "davetiye oluştur",
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Bekleriz — Online Davetiye Platformu",
-    description: "Düğün, nişan, doğum günü için dakikalar içinde özel online davetiye oluştur. WhatsApp ile tek tıkla paylaş.",
+    title: "Online Davetiye Oluştur | Bekleriz",
+    description: "Düğün, nişan, doğum günü için dijital davetiye oluştur. WhatsApp ile paylaş, RSVP yanıtlarını takip et.",
     url: SITE_URL,
     siteName: "Bekleriz",
     locale: "tr_TR",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bekleriz — Online Davetiye Platformu",
-    description: "Düğün, nişan, doğum günü için özel online davetiye oluştur.",
+    title: "Online Davetiye Oluştur | Bekleriz",
+    description: "Düğün, nişan, doğum günü için dijital davetiye oluştur.",
   },
   icons: { icon: "/favicon.ico" },
   robots: { index: true, follow: true },
@@ -68,6 +68,23 @@ export default function RootLayout({
       availableLanguage: "Turkish",
     },
   };
+  const webApplicationSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Bekleriz",
+    url: SITE_URL,
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web",
+    inLanguage: "tr-TR",
+    description: "Düğün, nişan, doğum günü ve özel etkinlikler için online davetiye oluşturma platformu.",
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "TRY",
+      lowPrice: "0",
+      highPrice: "599",
+      offerCount: "3",
+    },
+  };
 
   return (
     <html lang="tr">
@@ -75,6 +92,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webApplicationSchema) }}
         />
         <Providers>
           {children}
