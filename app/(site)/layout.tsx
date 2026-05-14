@@ -28,6 +28,7 @@ function Header() {
 /* ── Footer ─────────────────────────────── */
 const PLATFORM_LINKS = [
   { href: "/dijital-davetiye", label: "Dijital Davetiye" },
+  { href: "/online-davetiye",  label: "Online Davetiye"  },
   { href: "/sablonlar",  label: "Şablonlar"  },
   { href: "/fiyatlar",   label: "Fiyatlar"   },
   { href: "/dashboard",  label: "Dashboard"  },
