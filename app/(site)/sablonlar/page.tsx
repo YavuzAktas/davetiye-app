@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +19,32 @@ const PREMIUM = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
 const KAT_EMOJI: Record<string, string> = {
   dugun:"💍", nisan:"💌", dogumgunu:"🎂", sunnet:"⭐", kina:"🕯️", kurumsal:"💼", diger:"🎉",
 };
+const SEO_LINKLER = [
+  { href: "/dijital-davetiye", label: "Dijital davetiye" },
+  { href: "/online-davetiye", label: "Online davetiye" },
+  { href: "/whatsapp-davetiye", label: "WhatsApp davetiye" },
+  { href: "/dugun-davetiyesi", label: "Düğün davetiyesi" },
+  { href: "/nisan-davetiyesi", label: "Nişan davetiyesi" },
+  { href: "/ucretsiz-davetiye", label: "Ücretsiz davetiye" },
+];
+const SABLON_SECIM_IPUCLARI = [
+  {
+    baslik: "Etkinliğe göre başla",
+    aciklama: "Düğün, nişan, kına, doğum günü veya kurumsal etkinlik için hazır koleksiyonlardan ilerle.",
+  },
+  {
+    baslik: "Paylaşım kanalını düşün",
+    aciklama: "WhatsApp ile davetiye göndereceksen okunaklı başlık, net tarih ve hızlı açılan sayfa tercih et.",
+  },
+  {
+    baslik: "Özellik ihtiyacını seç",
+    aciklama: "Konum, katılım bildirimi, geri sayım, müzik ve fotoğraf alanlarını davet akışına göre değerlendir.",
+  },
+  {
+    baslik: "Son düzenlemeyi unutma",
+    aciklama: "Yayınlamadan önce isim, tarih, mekan, saat ve iletişim bilgilerini misafir gözüyle kontrol et.",
+  },
+];
 
 /* ══════════════════════════════════════════════
    TELEFON MOCKUP
@@ -1002,6 +1029,49 @@ export default function SablonlarSayfasi() {
           </>
         )}
       </div>
+
+      <section className="border-t border-white/8 px-4 py-16" style={{ background: "#080712" }}>
+        <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.22em]" style={{ color: "#a78bfa" }}>
+              Şablon seçimi
+            </p>
+            <h2 className="text-2xl font-semibold leading-tight text-white sm:text-3xl">
+              Online davetiye şablonunu etkinliğine göre seç
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7" style={{ color: "rgba(255,255,255,0.62)" }}>
+              Bekleriz&apos;de düğün davetiyesi, nişan davetiyesi, doğum günü davetiyesi ve özel etkinlikler için
+              dijital davetiye şablonları bulunur. Şablonu seçtikten sonra bilgilerini düzenleyebilir, davetiye
+              linkini WhatsApp veya sosyal medya üzerinden paylaşabilirsin.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {SEO_LINKLER.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/72 transition hover:border-purple-300/50 hover:bg-purple-400/10 hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {SABLON_SECIM_IPUCLARI.map((ipucu) => (
+              <div
+                key={ipucu.baslik}
+                className="rounded-lg border border-white/10 bg-white/[0.03] p-4"
+              >
+                <h3 className="text-sm font-semibold text-white">{ipucu.baslik}</h3>
+                <p className="mt-2 text-xs leading-6" style={{ color: "rgba(255,255,255,0.58)" }}>
+                  {ipucu.aciklama}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
