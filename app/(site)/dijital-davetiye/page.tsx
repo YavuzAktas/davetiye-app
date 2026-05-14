@@ -25,6 +25,7 @@ export const metadata: Metadata = {
       "Dakikalar içinde dijital davetiye hazırla, WhatsApp ile paylaş ve RSVP yanıtlarını tek panelden takip et.",
     url: `${SITE_URL}/dijital-davetiye`,
     type: "website",
+    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
   },
 };
 

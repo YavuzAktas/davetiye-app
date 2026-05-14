@@ -24,6 +24,7 @@ export const metadata: Metadata = {
       "Temel şablonlarla ücretsiz online davetiye oluşturun, WhatsApp ile paylaşın ve RSVP yanıtlarını takip edin.",
     url: `${SITE_URL}/ucretsiz-davetiye`,
     type: "website",
+    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
   },
 };
 

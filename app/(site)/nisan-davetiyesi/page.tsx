@@ -24,6 +24,7 @@ export const metadata: Metadata = {
       "Nişan ve söz töreni için dijital davetiye hazırlayın, tek linkle paylaşın ve RSVP yanıtlarını takip edin.",
     url: `${SITE_URL}/nisan-davetiyesi`,
     type: "website",
+    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
   },
 };
 
