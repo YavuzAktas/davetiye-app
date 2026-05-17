@@ -9,6 +9,7 @@ import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKayd
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { davetiyeCacheTag } from "@/lib/cache-tags";
+import BeklerizWatermark from "@/components/BeklerizWatermark";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -145,6 +146,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     <>
       <DavetiyeGoruntulenmeKaydedici slug={davetiye.slug} />
       {sablon}
+      <BeklerizWatermark />
       <EtkilesimButonu
         slug={davetiye.slug}
         renk={temaRenk}

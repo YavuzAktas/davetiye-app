@@ -1,5 +1,6 @@
 import NisanLuksSablon from "@/components/sablonlar/NisanLuksSablon";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
+import BeklerizWatermark from "@/components/BeklerizWatermark";
 
 export const metadata = {
   title: "Lüks Nişan Davetiyesi — Örnek",
@@ -37,5 +38,8 @@ const ORNEK: DavetiyeVeri = {
 };
 
 export default function OrnekNisanSayfasi() {
-  return <NisanLuksSablon davetiye={ORNEK} rsvpBileseni={null} />;
+  return <>
+    <NisanLuksSablon davetiye={ORNEK} rsvpBileseni={null} />
+    <BeklerizWatermark />
+  </>;
 }

@@ -1,5 +1,6 @@
 import DugunLuksSablon from "@/components/sablonlar/DugunLuksSablon";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
+import BeklerizWatermark from "@/components/BeklerizWatermark";
 
 export const metadata = {
   title: "Lüks Düğün Davetiyesi — Örnek",
@@ -37,5 +38,8 @@ const ORNEK: DavetiyeVeri = {
 };
 
 export default function OrnekDugunSayfasi() {
-  return <DugunLuksSablon davetiye={ORNEK} rsvpBileseni={null} />;
+  return <>
+    <DugunLuksSablon davetiye={ORNEK} rsvpBileseni={null} />
+    <BeklerizWatermark />
+  </>;
 }
