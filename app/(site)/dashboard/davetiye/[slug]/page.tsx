@@ -8,6 +8,8 @@ import CopyButton from "@/components/CopyButton";
 import RsvpListesi from "@/components/RsvpListesi";
 import YeniDavetiyeToast from "@/components/YeniDavetiyeToast";
 import { SABLONLAR } from "@/lib/sablonlar";
+import DavetiyeOdemePanel from "@/components/DavetiyeOdemePanel";
+import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -40,6 +42,7 @@ export default async function DavetiyeDetay({ params }: Props) {
     where: { slug, user: { email: session.user.email } },
     select: {
       slug: true,
+      id: true,
       baslik: true,
       etkinlikTur: true,
       tarih: true,
@@ -47,6 +50,11 @@ export default async function DavetiyeDetay({ params }: Props) {
       sablon: true,
       muzik: true,
       aktif: true,
+      odemeDurumu: true,
+      fiyatSnapshot: true,
+      albumAktif: true,
+      sesliAniAktif: true,
+      canliDuvarAktif: true,
       goruntulenme: true,
       createdAt: true,
       rsvplar: {
@@ -80,6 +88,15 @@ export default async function DavetiyeDetay({ params }: Props) {
     : 0;
 
   const davetiyeUrl = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}`;
+  const odemeBekliyor = davetiye.odemeDurumu === "odeme_bekliyor";
+  const fiyatSnapshot = davetiye.fiyatSnapshot as DavetiyeFiyatSonucu | null;
+  const fiyat = fiyatSnapshot ?? davetiyeFiyatiHesapla({
+    sablon: davetiye.sablon,
+    muzik: davetiye.muzik,
+    albumAktif: davetiye.albumAktif,
+    sesliAniAktif: davetiye.sesliAniAktif,
+    canliDuvarAktif: davetiye.canliDuvarAktif,
+  });
 
   const tarihStr = davetiye.tarih
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
@@ -147,7 +164,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                     : "bg-white/10 text-white/40"
                 }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${davetiye.aktif ? "bg-emerald-400" : "bg-white/30"}`} />
-                  {davetiye.aktif ? "Yayında" : "Pasif"}
+                  {odemeBekliyor ? "Ödeme Bekliyor" : davetiye.aktif ? "Yayında" : "Pasif"}
                 </span>
               </div>
 
@@ -176,21 +193,23 @@ export default async function DavetiyeDetay({ params }: Props) {
             </div>
 
             {/* CTA */}
-            <Link
-              href={davetiyeUrl}
-              target="_blank"
-              className="shrink-0 flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
-              style={{
-                background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
-                color: "#fff",
-                boxShadow: `0 4px 20px rgba(${rgb}, 0.4)`,
-              }}
-            >
-              Davetiyeyi Gör
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </Link>
+            {!odemeBekliyor && (
+              <Link
+                href={davetiyeUrl}
+                target="_blank"
+                className="shrink-0 flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
+                style={{
+                  background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
+                  color: "#fff",
+                  boxShadow: `0 4px 20px rgba(${rgb}, 0.4)`,
+                }}
+              >
+                Davetiyeyi Gör
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -199,6 +218,9 @@ export default async function DavetiyeDetay({ params }: Props) {
 
       {/* ══ CONTENT ══ */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        {odemeBekliyor && (
+          <DavetiyeOdemePanel davetiyeId={davetiye.id} baslik={davetiye.baslik} fiyat={fiyat} />
+        )}
 
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -374,7 +396,12 @@ export default async function DavetiyeDetay({ params }: Props) {
                 <Link
                   href={davetiyeUrl}
                   target="_blank"
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  aria-disabled={odemeBekliyor}
+                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
+                    odemeBekliyor
+                      ? "pointer-events-none border-gray-100 bg-gray-50 opacity-50"
+                      : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
+                  }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
