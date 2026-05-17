@@ -9,24 +9,25 @@ datasource db {
 }
 
 model User {
-  id                  String       @id @default(cuid())
-  name                String?
-  email               String       @unique
-  emailVerified       DateTime?
-  image               String?
-  plan                String       @default("free")
-  password            String?
-  kvkkOnay            Boolean      @default(false)
-  kvkkOnayTarih       DateTime?
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  accounts            Account[]
-  davetiyeler         Davetiye[]
-  odemeTokenlar       OdemeToken[]
-  odemeKayitlari      OdemeKaydi[]
-  sessions            Session[]
-  bildirimleri        Bildirim[]
-  geciciYuklemeler    GeciciYukleme[]
+  id               String          @id @default(cuid())
+  name             String?
+  email            String          @unique
+  emailVerified    DateTime?
+  image            String?
+  plan             String          @default("free")
+  password         String?
+  kvkkOnay         Boolean         @default(false)
+  kvkkOnayTarih    DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  accounts         Account[]
+  davetiyeler      Davetiye[]
+  odemeTokenlar    OdemeToken[]
+  odemeKayitlari   OdemeKaydi[]
+  siparisler       Siparis[]
+  sessions         Session[]
+  bildirimleri     Bildirim[]
+  geciciYuklemeler GeciciYukleme[]
 }
 
 model Account {
@@ -80,42 +81,48 @@ model RateLimitKaydi {
 }
 
 model Davetiye {
-  id                String       @id @default(cuid())
-  slug              String       @unique
-  baslik            String
-  etkinlikTur       String
-  tarih             DateTime?
-  mekan             String?
-  mesaj             String?
-  sablon            String       @default("klasik")
-  muzik             String?
-  aktif             Boolean      @default(true)
-  goruntulenme      Int          @default(0)
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  userId            String
-  font              String       @default("font-sans")
-  ozelRenk          String?
-  kisi1             String?
-  kisi2             String?
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  davetliler        Davetli[]
-  rsvplar           RSVP[]
-  albumFotolar      AlbumFoto[]
-  aniDefterleri     AniDefteri[]
-  masalar           Masa[]
-  polaroid1         String?
-  polaroid2         String?
-  polaroid3         String?
-  sesliAniAktif     Boolean      @default(false)
-  canliDuvarAktif   Boolean      @default(false)
-  sesliAnilar       SesliAni[]
-  dressKod          String?
-  dressKodRenkler   String?
-  albumAktif        Boolean      @default(true)
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  baslik          String
+  etkinlikTur     String
+  tarih           DateTime?
+  mekan           String?
+  mesaj           String?
+  sablon          String       @default("klasik")
+  muzik           String?
+  aktif           Boolean      @default(true)
+  goruntulenme    Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  userId          String
+  font            String       @default("font-sans")
+  ozelRenk        String?
+  kisi1           String?
+  kisi2           String?
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  davetliler      Davetli[]
+  rsvplar         RSVP[]
+  albumFotolar    AlbumFoto[]
+  aniDefterleri   AniDefteri[]
+  masalar         Masa[]
+  polaroid1       String?
+  polaroid2       String?
+  polaroid3       String?
+  sesliAniAktif   Boolean      @default(false)
+  canliDuvarAktif Boolean      @default(false)
+  sesliAnilar     SesliAni[]
+  dressKod        String?
+  dressKodRenkler String?
+  albumAktif      Boolean      @default(true)
+  odemeDurumu     String       @default("ucretsiz")
+  fiyatSnapshot   Json?
+  siparisler      Siparis[]
+  odemeTokenlar   OdemeToken[]
+  odemeKayitlari  OdemeKaydi[]
 
   @@index([userId, aktif])
   @@index([userId, createdAt])
+  @@index([userId, odemeDurumu])
   @@index([tarih])
   @@index([createdAt])
 }
@@ -161,20 +168,20 @@ model AniDefteri {
 }
 
 model RSVP {
-  id             String     @id @default(cuid())
-  ad             String
-  email          String?
-  telefon        String?
-  katilim        Boolean
-  kisiSayisi     Int        @default(1)
-  mesaj          String?
-  diyet          String?
-  sarkiOnerisi   String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  davetiyeId     String
-  davetiye       Davetiye   @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  masaAtamasi    MasaAtama?
+  id           String     @id @default(cuid())
+  ad           String
+  email        String?
+  telefon      String?
+  katilim      Boolean
+  kisiSayisi   Int        @default(1)
+  mesaj        String?
+  diyet        String?
+  sarkiOnerisi String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  davetiyeId   String
+  davetiye     Davetiye   @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  masaAtamasi  MasaAtama?
 
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, katilim, createdAt])
@@ -206,45 +213,88 @@ model MasaAtama {
 }
 
 model OdemeToken {
-  id                 String   @id @default(cuid())
-  token              String   @unique
+  id                 String    @id @default(cuid())
+  token              String    @unique
   userId             String
   planId             String
-  kullanildi         Boolean  @default(false)
+  urunTipi           String    @default("plan")
+  davetiyeId         String?
+  siparisId          String?
+  toplamTutar        Int?
+  fiyatKirilimi      Json?
+  kullanildi         Boolean   @default(false)
   expiresAt          DateTime
-  createdAt          DateTime @default(now())
+  createdAt          DateTime  @default(now())
   aliciAdSoyad       String?
   aliciTelefon       String?
   aliciKimlikVergiNo String?
   aliciSehir         String?
   aliciAdres         String?
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  davetiye           Davetiye? @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
+  siparis            Siparis?  @relation(fields: [siparisId], references: [id], onDelete: SetNull)
 
   @@index([userId])
+  @@index([davetiyeId])
+  @@index([siparisId])
   @@index([expiresAt])
 }
 
 model OdemeKaydi {
-  id                 String   @id @default(cuid())
+  id                 String    @id @default(cuid())
   userId             String?
   userEmail          String?
   planId             String
-  token              String?  @unique
+  urunTipi           String    @default("plan")
+  davetiyeId         String?
+  siparisId          String?
+  fiyatKirilimi      Json?
+  token              String?   @unique
   paymentId          String?
   conversationId     String?
   price              String?
   paidPrice          String?
-  currency           String   @default("TRY")
+  currency           String    @default("TRY")
   paymentStatus      String?
   aliciAdSoyad       String?
   aliciTelefon       String?
   aliciKimlikVergiNo String?
   aliciSehir         String?
   aliciAdres         String?
-  createdAt          DateTime @default(now())
-  user               User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt          DateTime  @default(now())
+  user               User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  davetiye           Davetiye? @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
+  siparis            Siparis?  @relation(fields: [siparisId], references: [id], onDelete: SetNull)
 
   @@index([userId])
+  @@index([davetiyeId])
+  @@index([siparisId])
+  @@index([createdAt])
+}
+
+model Siparis {
+  id             String       @id @default(cuid())
+  userId         String
+  davetiyeId     String?
+  durum          String       @default("odeme_bekliyor")
+  urunTipi       String       @default("davetiye")
+  paraBirimi     String       @default("TRY")
+  araToplam      Int
+  toplamTutar    Int
+  fiyatKirilimi  Json
+  odemeToken     String?      @unique
+  paymentId      String?
+  conversationId String?
+  paidAt         DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  davetiye       Davetiye?    @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
+  odemeTokenlar  OdemeToken[]
+  odemeKayitlari OdemeKaydi[]
+
+  @@index([userId, durum])
+  @@index([davetiyeId])
   @@index([createdAt])
 }
 
@@ -263,14 +313,14 @@ model GeciciYukleme {
 }
 
 model MedyaSilmeKuyrugu {
-  id             String    @id @default(cuid())
-  dosyaUrl       String    @unique
-  kaynak         String
-  denemeSayisi   Int       @default(0)
-  sonHata        String?
-  sonrakiDeneme  DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  dosyaUrl      String    @unique
+  kaynak        String
+  denemeSayisi  Int       @default(0)
+  sonHata       String?
+  sonrakiDeneme DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([sonrakiDeneme, createdAt])
   @@index([createdAt])
@@ -292,14 +342,14 @@ model ImhaKaydi {
 }
 
 model YasalOnayKaydi {
-  id            String    @id @default(cuid())
-  userId        String?
-  emailHash     String?
-  onayTipi      String
-  metinSurumu   String
-  kaynak        String
+  id             String    @id @default(cuid())
+  userId         String?
+  emailHash      String?
+  onayTipi       String
+  metinSurumu    String
+  kaynak         String
   hesapSilindiAt DateTime?
-  createdAt     DateTime  @default(now())
+  createdAt      DateTime  @default(now())
 
   @@index([userId])
   @@index([emailHash])
