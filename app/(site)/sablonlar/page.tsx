@@ -477,7 +477,6 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   }, [sablon.id]);
 
   const [aktifId, setAktifId] = useState(bolumler[0]?.id ?? "");
-  const [indikator, setIndikator] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const aktif = bolumler.find(b => b.id === aktifId) ?? bolumler[0];
 
@@ -487,12 +486,11 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
     scrollRef.current?.scrollTo({ top: idx * 500, behavior: "smooth" });
   };
 
-  /* Scroll: aktif bölüm güncelle + göstergeyi gizle */
+  /* Scroll: aktif bölümü güncelle */
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     const handler = () => {
-      if (el.scrollTop > 30) setIndikator(false);
       const b = bolumler[Math.min(Math.round(el.scrollTop / 500), bolumler.length - 1)];
       if (b) setAktifId(b.id);
     };
@@ -580,8 +578,8 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 
         {/* Sol: Bölüm tab'ları + Telefon */}
         <div className="shrink-0 flex flex-col gap-3">
-          {/* Yatay kaydırılabilir pill tab'lar — mobil dostu */}
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {/* Yatay kaydırılabilir pill tab'lar — sabit yükseklik, taşma gizli */}
+          <div className="flex gap-2 overflow-x-auto overflow-y-hidden scrollbar-hide" style={{ height: 34 }}>
             {bolumler.map(b => (
               <button
                 key={b.id}
@@ -608,41 +606,34 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
               </div>
             </TelefonMockup>
 
-            {/* Kaydır göstergesi — telefon ekranının altına overlay */}
-            <AnimatePresence>
-              {indikator && (
+            {/* Kaydır göstergesi — telefon ekranının altına sabit overlay */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                bottom: 14,
+                left: 10,
+                right: 10,
+                height: 110,
+                borderRadius: "0 0 24px 24px",
+                zIndex: 20,
+                background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%)",
+              }}
+            >
+              <div className="flex flex-col items-center justify-end h-full pb-4 gap-1.5">
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                  className="absolute pointer-events-none"
-                  style={{
-                    bottom: 14,   /* telefon çerçeve alt padding */
-                    left: 10,     /* telefon çerçeve sol padding */
-                    right: 10,
-                    height: 110,
-                    borderRadius: "0 0 24px 24px",
-                    zIndex: 20,
-                    background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%)",
-                  }}
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <div className="flex flex-col items-center justify-end h-full pb-4 gap-1.5">
-                    <motion.div
-                      animate={{ y: [0, 6, 0] }}
-                      transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 5v14M5 12l7 7 7-7" />
-                      </svg>
-                    </motion.div>
-                    <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 9, letterSpacing: "0.18em", fontWeight: 700 }}>
-                      KAYDIR
-                    </p>
-                  </div>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                  </svg>
                 </motion.div>
-              )}
-            </AnimatePresence>
+                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 9, letterSpacing: "0.18em", fontWeight: 700 }}>
+                  KAYDIR
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
