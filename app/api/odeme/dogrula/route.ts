@@ -34,6 +34,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     select: {
       userId: true,
       planId: true,
+      urunTipi: true,
+      davetiyeId: true,
+      siparisId: true,
+      fiyatKirilimi: true,
       kullanildi: true,
       expiresAt: true,
       aliciAdSoyad: true,
@@ -42,6 +46,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       aliciSehir: true,
       aliciAdres: true,
       user: { select: { email: true } },
+      davetiye: { select: { slug: true } },
     },
   });
 
@@ -59,16 +64,50 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
-  await prisma.user.update({
-    where: { id: odemeToken.userId },
-    data: { plan: odemeToken.planId },
-  });
+  if (odemeToken.urunTipi === "davetiye") {
+    await prisma.$transaction([
+      ...(odemeToken.siparisId
+        ? [
+          prisma.siparis.update({
+            where: { id: odemeToken.siparisId },
+            data: {
+              durum: "odendi",
+              paymentId: result.paymentId ? String(result.paymentId) : null,
+              conversationId: result.conversationId ? String(result.conversationId) : null,
+              paidAt: new Date(),
+            },
+          }),
+        ]
+        : []),
+      ...(odemeToken.davetiyeId
+        ? [
+          prisma.davetiye.update({
+            where: { id: odemeToken.davetiyeId },
+            data: {
+              odemeDurumu: "odendi",
+              aktif: true,
+              fiyatSnapshot: odemeToken.fiyatKirilimi as any,
+            },
+          }),
+        ]
+        : []),
+    ]);
+  } else {
+    await prisma.user.update({
+      where: { id: odemeToken.userId },
+      data: { plan: odemeToken.planId },
+    });
+  }
 
   await prisma.odemeKaydi.create({
     data: {
       userId: odemeToken.userId,
       userEmail: odemeToken.user.email,
       planId: odemeToken.planId,
+      urunTipi: odemeToken.urunTipi,
+      davetiyeId: odemeToken.davetiyeId,
+      siparisId: odemeToken.siparisId,
+      fiyatKirilimi: odemeToken.fiyatKirilimi as any,
       token,
       paymentId: result.paymentId ? String(result.paymentId) : null,
       conversationId: result.conversationId ? String(result.conversationId) : null,
@@ -87,7 +126,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   return new NextResponse(null, {
     status: 302,
     headers: {
-      Location: `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?plan=${odemeToken.planId}`,
+      Location: odemeToken.urunTipi === "davetiye" && odemeToken.davetiyeId
+        ? `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?urun=davetiye&slug=${odemeToken.davetiye?.slug ?? ""}`
+        : `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?plan=${odemeToken.planId}`,
     },
   });
 }

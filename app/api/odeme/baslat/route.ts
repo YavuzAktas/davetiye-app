@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
+import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 
 type FaturaBilgileri = {
   faturaTipi: "bireysel" | "kurumsal";
@@ -68,6 +69,10 @@ function adSoyadBol(adSoyad: string): { ad: string; soyad: string } {
   };
 }
 
+function tutarIyzicoMetni(tutar: number): string {
+  return tutar.toFixed(2);
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // 1. IP tabanlı limit: 5 deneme / 15 dk
   const clientIp = ipAlNextRequest(req);
@@ -101,12 +106,38 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const body = await req.json();
-  const { planId } = body;
+  const { planId, davetiyeId } = body;
 
   const PLAN_FIYATLARI: Record<string, number> = { standart: 299, premium: 599 };
-  const fiyat = PLAN_FIYATLARI[planId];
-  if (!fiyat) {
-    return NextResponse.json({ hata: "Geçersiz plan." }, { status: 400 });
+  const planFiyati = typeof planId === "string" ? PLAN_FIYATLARI[planId] : undefined;
+
+  const davetiye = typeof davetiyeId === "string" && davetiyeId
+    ? await prisma.davetiye.findFirst({
+      where: { id: davetiyeId, userId: user.id },
+      select: {
+        id: true,
+        slug: true,
+        baslik: true,
+        sablon: true,
+        muzik: true,
+        albumAktif: true,
+        sesliAniAktif: true,
+        canliDuvarAktif: true,
+        odemeDurumu: true,
+      },
+    })
+    : null;
+
+  if (davetiyeId && !davetiye) {
+    return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
+  }
+
+  if (davetiye?.odemeDurumu === "odendi") {
+    return NextResponse.json({ hata: "Bu davetiye için ödeme zaten tamamlanmış." }, { status: 409 });
+  }
+
+  if (!davetiye && !planFiyati) {
+    return NextResponse.json({ hata: "Geçersiz ödeme isteği." }, { status: 400 });
   }
 
   const { bilgiler: faturaBilgileri, hata } = faturaBilgileriniOku(body);
@@ -120,14 +151,66 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const iyzicoAdres = kurumsalFatura
     ? faturaBilgileri.adres
     : `${faturaBilgileri.sehir} - Bireysel dijital hizmet alımı`;
+  const fiyat = davetiye
+    ? davetiyeFiyatiHesapla(davetiye)
+    : null;
+  const toplamTutar = fiyat?.toplamTutar ?? planFiyati!;
+  const urunTipi = davetiye ? "davetiye" : "plan";
+  const odemePlanId = davetiye ? "davetiye" : planId;
+  const siparis = davetiye && fiyat
+    ? await prisma.siparis.create({
+      data: {
+        userId: user.id,
+        davetiyeId: davetiye.id,
+        araToplam: fiyat.araToplam,
+        toplamTutar: fiyat.toplamTutar,
+        paraBirimi: fiyat.paraBirimi,
+        fiyatKirilimi: fiyat as any,
+      },
+    })
+    : null;
+
+  if (davetiye && fiyat) {
+    await prisma.davetiye.update({
+      where: { id: davetiye.id },
+      data: {
+        odemeDurumu: "odeme_bekliyor",
+        fiyatSnapshot: fiyat as any,
+      },
+    });
+  }
+
+  const conversationId = davetiye
+    ? `${user.id}-${davetiye.id}-${siparis!.id}`
+    : `${user.id}-${planId}-${Date.now()}`;
+  const basketId = davetiye
+    ? siparis!.id
+    : `${user.id}-${planId}`;
+  const basketItems = davetiye && fiyat
+    ? fiyat.kalemler.map(kalem => ({
+      id: kalem.kod,
+      name: kalem.ad,
+      category1: "Dijital Davetiye",
+      itemType: "VIRTUAL",
+      price: tutarIyzicoMetni(kalem.tutar),
+    }))
+    : [
+      {
+        id: planId,
+        name: `Bekleriz ${planId} Planı`,
+        category1: "Dijital Ürün",
+        itemType: "VIRTUAL",
+        price: tutarIyzicoMetni(toplamTutar),
+      },
+    ];
 
   const request = {
     locale: "tr",
-    conversationId: `${user.id}-${planId}-${Date.now()}`,
-    price: String(fiyat),
-    paidPrice: String(fiyat),
+    conversationId,
+    price: tutarIyzicoMetni(toplamTutar),
+    paidPrice: tutarIyzicoMetni(toplamTutar),
     currency: "TRY",
-    basketId: `${user.id}-${planId}`,
+    basketId,
     paymentGroup: "PRODUCT",
     callbackUrl: `${process.env.NEXT_PUBLIC_URL}/api/odeme/dogrula`,
     enabledInstallments: [1, 2, 3, 6, 9],
@@ -155,15 +238,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       country: "Turkey",
       address: iyzicoAdres,
     },
-    basketItems: [
-      {
-        id: planId,
-        name: `Bekleriz ${planId} Planı`,
-        category1: "Dijital Ürün",
-        itemType: "VIRTUAL",
-        price: String(fiyat),
-      },
-    ],
+    basketItems,
   };
 
   const result = await new Promise<any>((resolve, reject) => {
@@ -174,14 +249,35 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   if (result.status !== "success") {
+    if (siparis) {
+      await prisma.siparis.update({
+        where: { id: siparis.id },
+        data: { durum: "baslatilamadi" },
+      });
+    }
     return NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 });
+  }
+
+  if (siparis) {
+    await prisma.siparis.update({
+      where: { id: siparis.id },
+      data: {
+        odemeToken: result.token,
+        conversationId,
+      },
+    });
   }
 
   await prisma.odemeToken.create({
     data: {
       token:     result.token,
       userId:    user.id,
-      planId,
+      planId:    odemePlanId,
+      urunTipi,
+      davetiyeId: davetiye?.id ?? null,
+      siparisId: siparis?.id ?? null,
+      toplamTutar,
+      fiyatKirilimi: fiyat as any,
       expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat
       aliciAdSoyad: faturaBilgileri.adSoyad,
       aliciTelefon: faturaBilgileri.telefon,

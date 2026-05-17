@@ -85,8 +85,20 @@ function CheckRing() {
 function BasariliIcerigi() {
   const { update } = useSession();
   const searchParams = useSearchParams();
+  const urun = searchParams.get("urun");
+  const davetiyeSlug = searchParams.get("slug");
+  const davetiyeOdendi = urun === "davetiye";
   const planId = searchParams.get("plan") ?? "standart";
   const plan   = PLAN[planId] ?? PLAN.standart;
+  const baslik = davetiyeOdendi ? "Davetiyeniz yayına hazır." : `${plan.isim} Plan`;
+  const aciklama = davetiyeOdendi ? "Dijital davetiye ödemeniz onaylandı." : "Planınız aktif edildi.";
+  const ozellikBasligi = davetiyeOdendi ? "Aktif Edilenler" : "Kilidini Açtıklarınız";
+  const ozellikler = davetiyeOdendi
+    ? ["Davetiye yayına alındı", "Seçili özellikler aktif edildi", "Paylaşım ve yönetim paneli hazır"]
+    : plan.ozellikler;
+  const tutarMetni = davetiyeOdendi ? "Ödendi" : plan.fiyat;
+  const ctaHref = davetiyeOdendi && davetiyeSlug ? `/dashboard/davetiye/${davetiyeSlug}` : "/dashboard";
+  const ctaMetni = davetiyeOdendi ? "Davetiyeye Git →" : "Dashboard'a Geç →";
 
   const [visible, setVisible] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
@@ -246,9 +258,10 @@ function BasariliIcerigi() {
                   WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
                   fontWeight:700,
                 }}>
-                  {plan.isim} Plan
+                  {baslik}
                 </span>
-                {"'ınız aktif edildi."}
+                {" "}
+                {aciklama}
               </p>
             </div>
 
@@ -263,10 +276,10 @@ function BasariliIcerigi() {
                 fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase",
                 color:"rgba(196,132,252,0.7)", marginBottom:16, fontWeight:600,
               }}>
-                Kilidini Açtıklarınız
+                {ozellikBasligi}
               </p>
               <ul style={{ listStyle:"none", margin:0, padding:0, display:"flex", flexDirection:"column", gap:12 }}>
-                {plan.ozellikler.map((o, i) => (
+                {ozellikler.map((o, i) => (
                   <li key={o} style={{
                     display:"flex", alignItems:"center", gap:12,
                     animation:`float-up 0.5s ${1.2 + i * 0.1}s both`,
@@ -295,7 +308,7 @@ function BasariliIcerigi() {
             }}>
               <div>
                 <p style={{ fontSize:11, color:"rgba(255,255,255,0.35)", marginBottom:4 }}>Sipariş tutarı</p>
-                <p style={{ fontSize:20, fontWeight:700, color:"#fff" }}>{plan.fiyat}</p>
+                <p style={{ fontSize:20, fontWeight:700, color:"#fff" }}>{tutarMetni}</p>
               </div>
               <div style={{ textAlign:"right" }}>
                 <p style={{ fontSize:11, color:"rgba(255,255,255,0.35)", marginBottom:4 }}>Durum</p>
@@ -315,7 +328,7 @@ function BasariliIcerigi() {
             </div>
 
             {/* CTA */}
-            <Link href="/dashboard" style={{
+            <Link href={ctaHref} style={{
               display:"block", textAlign:"center",
               padding:"16px 24px", borderRadius:18,
               background:"linear-gradient(135deg,#7C3AED 0%,#9333EA 50%,#DB2777 100%)",
@@ -328,7 +341,7 @@ function BasariliIcerigi() {
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "0.88"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
             >
-              Dashboard&apos;a Geç →
+              {ctaMetni}
             </Link>
 
             <p style={{
