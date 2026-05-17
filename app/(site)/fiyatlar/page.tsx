@@ -120,6 +120,8 @@ export default function FiyatlarSayfasi() {
   const [sssRef, sssVisible] = useInView();
   const [odeModal, setOdeModal] = useState<string | null>(null);
   const [odemeOnaylari, setOdemeOnaylari] = useState<Record<string, boolean>>({});
+  const [odemeOnayHatalari, setOdemeOnayHatalari] = useState<Record<string, string>>({});
+  const odemeOnayRefleri = useRef<Record<string, HTMLLabelElement | null>>({});
   const [faturaModalPlan, setFaturaModalPlan] = useState<{ planId: string; fiyat: number } | null>(null);
   const [faturaBilgileri, setFaturaBilgileri] = useState<FaturaBilgileri>(BOS_FATURA_BILGILERI);
   const [faturaHatalari, setFaturaHatalari] = useState<FaturaHatalari>({});
@@ -158,10 +160,17 @@ export default function FiyatlarSayfasi() {
     if (!session) { router.push("/giris"); return; }
     if (planId === "free" || kullaniciPlan === planId) return;
     if (!odemeOnaylari[planId]) {
-      alert("Ön bilgilendirme ve cayma hakkı istisnası onayını işaretlemeniz gerekiyor.");
+      setOdemeOnayHatalari(prev => ({
+        ...prev,
+        [planId]: "Ödemeye geçmeden önce yasal bilgilendirme ve cayma hakkı istisnası onayını işaretleyin.",
+      }));
+      requestAnimationFrame(() => {
+        odemeOnayRefleri.current[planId]?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
       return;
     }
 
+    setOdemeOnayHatalari(prev => ({ ...prev, [planId]: "" }));
     setFaturaHatalari({});
     setFaturaModalPlan({ planId, fiyat });
   };
@@ -249,10 +258,18 @@ export default function FiyatlarSayfasi() {
 
   const odemeOnayi = (planId: string, koyu = false) => {
     const secili = !!odemeOnaylari[planId];
+    const hata = odemeOnayHatalari[planId];
 
     return (
+      <div className="mb-3">
       <label
-        className={`group mb-3 flex cursor-pointer items-start gap-3 rounded-2xl border p-3 transition-all ${
+        ref={el => { odemeOnayRefleri.current[planId] = el; }}
+        className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-3 transition-all ${
+          hata
+            ? koyu
+              ? "border-red-300/70 bg-red-500/10 shadow-lg shadow-red-950/20"
+              : "border-red-300 bg-red-50 shadow-sm shadow-red-100"
+            :
           koyu
             ? secili
               ? "border-purple-400/60 bg-purple-500/15 shadow-lg shadow-purple-950/30"
@@ -265,7 +282,12 @@ export default function FiyatlarSayfasi() {
         <input
           type="checkbox"
           checked={!!odemeOnaylari[planId]}
-          onChange={e => setOdemeOnaylari(prev => ({ ...prev, [planId]: e.target.checked }))}
+          onChange={e => {
+            setOdemeOnaylari(prev => ({ ...prev, [planId]: e.target.checked }));
+            if (e.target.checked) {
+              setOdemeOnayHatalari(prev => ({ ...prev, [planId]: "" }));
+            }
+          }}
           className="sr-only"
         />
         <span
@@ -273,6 +295,10 @@ export default function FiyatlarSayfasi() {
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border transition-all ${
             secili
               ? "border-transparent bg-linear-to-br from-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/25"
+              : hata
+              ? koyu
+                ? "border-red-300/70 bg-red-400/15 text-transparent"
+                : "border-red-300 bg-white text-transparent"
               : koyu
               ? "border-white/20 bg-white/5 text-transparent group-hover:border-purple-300/50"
               : "border-gray-300 bg-white text-transparent group-hover:border-purple-300"
@@ -297,6 +323,16 @@ export default function FiyatlarSayfasi() {
           {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
         </span>
       </label>
+      {hata && (
+        <p className={`mt-2 rounded-xl border px-3 py-2 text-[11px] font-medium leading-relaxed ${
+          koyu
+            ? "border-red-300/25 bg-red-500/10 text-red-100"
+            : "border-red-100 bg-red-50 text-red-600"
+        }`}>
+          {hata}
+        </p>
+      )}
+      </div>
     );
   };
 
