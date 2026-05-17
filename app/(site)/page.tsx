@@ -362,19 +362,6 @@ const MARQUEE = [
   "💌 Dijital davetiye",
 ];
 
-const HERO_GUVEN_MADDELERI = [
-  "Önizle, sonra öde",
-  "Tek seferlik ödeme",
-  "Kart bilgileri saklanmaz",
-];
-
-const HIZLI_BASLANGIC_LINKLERI = [
-  { href: "/dugun-davetiyesi", label: "Düğün" },
-  { href: "/nisan-davetiyesi", label: "Nişan" },
-  { href: "/sablonlar?tur=dogum-gunu", label: "Doğum günü" },
-  { href: "/online-davetiye", label: "Online davetiye" },
-];
-
 const STARS = [
   { top: "18%", left: "8%" },
   { top: "35%", right: "12%" },
@@ -429,28 +416,28 @@ export default function Anasayfa() {
 
               <h1 className="text-white mb-8">
                 <span className="block text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight">
-                  Davetiyeni hazırla,
+                  Online davetiye
                 </span>
                 <span
                   className="block text-5xl sm:text-6xl md:text-7xl leading-[1.2] bg-gradient-to-r from-purple-400 via-pink-400 to-rose-300 bg-clip-text text-transparent animate-gradient"
                   style={{ fontFamily: "var(--font-dancing), cursive" }}
                 >
-                  link olarak paylaş
+                  oluştur
                 </span>
               </h1>
 
               <p className="text-gray-400 text-lg leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
-                Düğün, nişan, doğum günü ve özel etkinlikler için dakikalar içinde şık dijital davetiye oluştur.
-                Önizlemeni gör, seçtiğin özellikleri net fiyatla onayla, WhatsApp ile misafirlerine gönder.
+                Düğün, nişan, doğum günü ve özel etkinlikler için dakikalar içinde dijital davetiye hazırla.
+                WhatsApp ile paylaş, RSVP yanıtlarını ve misafir listesini tek panelden takip et.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-5">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-12">
                 <Link
                   href="/sablonlar"
                   className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl text-base font-semibold shadow-2xl shadow-purple-900/50 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all text-center"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Şablon Seç ve Başla
+                    Online Davetiye Oluştur
                     <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -459,31 +446,8 @@ export default function Anasayfa() {
                   href="/sablonlar"
                   className="border border-white/15 text-white/80 px-8 py-4 rounded-2xl text-base font-medium hover:bg-white/8 hover:border-white/25 transition-all text-center backdrop-blur-sm"
                 >
-                  Örnekleri Gör
+                  Davetiye Şablonları
                 </Link>
-              </div>
-
-              <div className="mb-8 flex flex-wrap justify-center gap-2 lg:justify-start">
-                {HERO_GUVEN_MADDELERI.map(madde => (
-                  <span
-                    key={madde}
-                    className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold text-white/65 backdrop-blur-sm"
-                  >
-                    ✓ {madde}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mb-10 flex flex-wrap justify-center gap-2 lg:justify-start">
-                {HIZLI_BASLANGIC_LINKLERI.map(link => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="rounded-full border border-purple-300/15 bg-purple-300/[0.07] px-3.5 py-2 text-xs font-bold text-purple-100/75 transition hover:border-purple-300/35 hover:bg-purple-300/[0.12] hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
               </div>
 
               <div className="flex items-center gap-4 justify-center lg:justify-start">
@@ -495,7 +459,7 @@ export default function Anasayfa() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-500">
-                  <span className="text-white font-semibold">3 dakikada</span> taslak oluştur, ödeme sonrası yayına al
+                  <span className="text-white font-semibold">500+</span> online davetiye oluşturuldu
                 </p>
               </div>
             </div>
@@ -530,12 +494,6 @@ export default function Anasayfa() {
                   <div className="grid grid-cols-2 gap-2">
                     <button className="bg-purple-600 text-white text-xs py-2.5 rounded-xl font-medium">✓ Katılıyorum</button>
                     <button className="bg-white/8 text-gray-400 text-xs py-2.5 rounded-xl">✗ Katılamam</button>
-                  </div>
-                  <div className="mt-4 rounded-2xl border border-emerald-400/15 bg-emerald-400/[0.06] px-3.5 py-3">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300/70">Güvenli ödeme</p>
-                    <p className="mt-1 text-[11px] leading-relaxed text-emerald-50/55">
-                      Kart bilgileri iyzico altyapısında işlenir, Bekleriz tarafından saklanmaz.
-                    </p>
                   </div>
                 </div>
               </div>
