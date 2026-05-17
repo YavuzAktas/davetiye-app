@@ -117,7 +117,7 @@ export default async function Dashboard() {
               {
                 etiket: "Toplam Davetiye",
                 deger: user.davetiyeler.length,
-                alt: `${aktifDavetiyeSayisi} aktif`,
+                alt: `${user.davetiyeler.filter(d => d.aktif).length} aktif`,
                 icon: "📨",
                 gradient: "from-purple-500/20 to-purple-600/10",
                 border: "border-purple-500/20",
