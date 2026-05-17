@@ -10,7 +10,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // kvkkOnay kontrolü middleware'de değil, dashboard layout'ta DB'den yapılıyor
+  if (!token.kvkkOnay) {
+    const kvkkUrl = new URL("/kvkk-onay", req.url);
+    kvkkUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    return NextResponse.redirect(kvkkUrl);
+  }
+
   return NextResponse.next();
 }
 
