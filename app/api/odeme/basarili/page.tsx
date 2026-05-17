@@ -1,13 +1,10 @@
 "use client";
 
 import { Suspense, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 function BasariliIcerigi() {
-  const searchParams = useSearchParams();
-  const plan = searchParams.get("plan");
   const { update } = useSession();
 
   // Ödeme DB'de güncellendi; JWT'yi şimdi yenile
@@ -23,8 +20,7 @@ function BasariliIcerigi() {
           Ödeme Başarılı!
         </h1>
         <p className="text-gray-500 mb-8">
-          {plan === "standart" ? "Standart" : "Premium"} plana geçiş yaptınız.
-          Tüm özelliklere erişebilirsiniz.
+          Ödemeniz onaylandı. Davetiyenizi ve aktif özelliklerinizi panelden yönetebilirsiniz.
         </p>
         <Link
           href="/dashboard"

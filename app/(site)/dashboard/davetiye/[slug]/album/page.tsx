@@ -63,7 +63,7 @@ export default async function AlbumModerasyon({ params }: Props) {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-white">Albüm & Anı Yönetimi</h1>
-                <p className="text-white/40 text-sm mt-1">{davetiyeTemel.baslik} · Premium özelliği</p>
+                <p className="text-white/40 text-sm mt-1">{davetiyeTemel.baslik} · Ek özellik</p>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default async function AlbumModerasyon({ params }: Props) {
     );
   }
 
-  // ── Premium kullanıcı: tam veri yükle ──
+  // ── Özellik aktif: tam veri yükle ──
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, userId: user.id },
     select: {

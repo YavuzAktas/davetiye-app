@@ -5,9 +5,9 @@ import { getSiteUrl } from "@/lib/site-url";
 const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Ücretsiz Davetiye Oluştur",
+  title: "Ücretsiz Davetiye Taslağı Oluştur",
   description:
-    "Ücretsiz online davetiye oluştur, link olarak paylaş ve RSVP takibi yap. Düğün, nişan, doğum günü ve özel etkinlikler için dijital davetiye şablonları.",
+    "Online davetiye taslağını ücretsiz hazırlayın, şablonları deneyin ve toplam fiyatı ödeme öncesinde görün. Yayına almak için tek seferlik ödeme gerekir.",
   keywords: [
     "ücretsiz davetiye",
     "ücretsiz davetiye oluştur",
@@ -19,9 +19,9 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/ucretsiz-davetiye" },
   openGraph: {
-    title: "Ücretsiz Davetiye Oluştur | Bekleriz",
+    title: "Ücretsiz Davetiye Taslağı Oluştur | Bekleriz",
     description:
-      "Temel şablonlarla ücretsiz online davetiye oluşturun, WhatsApp ile paylaşın ve RSVP yanıtlarını takip edin.",
+      "Davetiye taslağınızı ücretsiz hazırlayın; şablon, özellik ve toplam tutarı ödeme öncesinde net görün.",
     url: `${SITE_URL}/ucretsiz-davetiye`,
     type: "website",
     images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
@@ -29,53 +29,53 @@ export const metadata: Metadata = {
 };
 
 const ucretsizOzellikler = [
-  "1 aktif davetiye oluşturma",
-  "Temel davetiye şablonları",
-  "WhatsApp ile link paylaşımı",
-  "RSVP katılım yanıtı toplama",
-  "Mobil uyumlu davetiye sayfası",
-  "Davetiyeyi sonradan düzenleme",
+  "Şablonları ücretsiz inceleme",
+  "Davetiye taslağını ödeme öncesi hazırlama",
+  "Canlı mobil önizleme",
+  "Özellik seçtikçe anlık fiyat görme",
+  "Ödeme öncesi vazgeçme özgürlüğü",
+  "Yayın için tek seferlik ödeme",
 ];
 
 const neZamanYeterli = [
   {
-    baslik: "Küçük etkinlikler",
-    aciklama: "Doğum günü, küçük nişan, aile buluşması veya sınırlı davetli listesi olan organizasyonlar için idealdir.",
+    baslik: "Fikir aşamasında",
+    aciklama: "Şablonları, renkleri ve temel bilgileri deneyerek davetiyenin nasıl görüneceğini ödeme yapmadan kontrol edebilirsiniz.",
   },
   {
     baslik: "Dijital davetiyeyi denemek",
-    aciklama: "Basılı davetiye yerine online davetiye kullanmanın size uygun olup olmadığını ücretsiz planla görebilirsiniz.",
+    aciklama: "Basılı davetiye yerine online davetiye kullanmanın size uygun olup olmadığını taslak ve önizleme akışıyla görebilirsiniz.",
   },
   {
-    baslik: "Hızlı paylaşım ihtiyacı",
-    aciklama: "Tasarım sürecini uzatmadan temel bilgileri girip davetiye linkini hızlıca paylaşabilirsiniz.",
+    baslik: "Maliyeti netleştirmek",
+    aciklama: "Müzik, albüm, canlı duvar veya oturma planı gibi ek özellikleri açıp kapatarak toplam tutarı ödeme öncesinde hesaplayabilirsiniz.",
   },
 ];
 
 const farklar = [
-  ["Aktif davetiye", "1", "5", "Sınırsız"],
-  ["Davetli limiti", "50", "200", "Sınırsız"],
-  ["RSVP takibi", "Var", "Var", "Var"],
-  ["Lüks şablonlar", "Yok", "Var", "Var"],
-  ["Albüm ve anı", "Yok", "Yok", "Var"],
-  ["Oturma planı", "Yok", "Yok", "Var"],
+  ["Taslak hazırlama", "Ücretsiz", "Ödeme gerekmez"],
+  ["Canlı önizleme", "Ücretsiz", "Ödeme gerekmez"],
+  ["Yayınlama", "Ücretli", "Temel davetiye bedeli"],
+  ["Lüks şablon", "İsteğe bağlı", "Ek özellik bedeli"],
+  ["Müzik / Albüm / Anı", "İsteğe bağlı", "Ek özellik bedeli"],
+  ["Oturma planı", "İsteğe bağlı", "Ek özellik bedeli"],
 ];
 
 const faq = [
   {
-    soru: "Gerçekten ücretsiz davetiye oluşturabilir miyim?",
+    soru: "Gerçekten ücretsiz davetiye hazırlayabilir miyim?",
     cevap:
-      "Evet. Ücretsiz planla temel şablonları kullanarak 1 aktif davetiye oluşturabilir ve link olarak paylaşabilirsiniz.",
+      "Evet. Şablon seçip davetiye taslağını hazırlayabilir, canlı önizleme ve fiyat özetini ödeme öncesinde görebilirsiniz. Davetiyeyi yayına almak için ödeme gerekir.",
   },
   {
-    soru: "Ücretsiz davetiye WhatsApp ile gönderilebilir mi?",
+    soru: "Taslak davetiye WhatsApp ile gönderilebilir mi?",
     cevap:
-      "Evet. Oluşturduğunuz davetiyeyi WhatsApp üzerinden kişi veya gruplara link olarak gönderebilirsiniz.",
+      "Hayır. Paylaşım linki ödeme tamamlandıktan ve davetiye yayına alındıktan sonra kullanılabilir.",
   },
   {
-    soru: "Ücretsiz planda RSVP var mı?",
+    soru: "RSVP ne zaman aktif olur?",
     cevap:
-      "Evet. Misafirler davetiye üzerinden katılım durumunu bildirebilir, siz de panelden yanıtları takip edebilirsiniz.",
+      "RSVP alanı temel dijital davetiye içinde yer alır ve ödeme sonrası yayınlanan davetiyede aktif olur.",
   },
   {
     soru: "Ne zaman ek özellik seçmeliyim?",
@@ -135,21 +135,21 @@ export default function UcretsizDavetiyePage() {
 
           <div className="relative z-10 mx-auto max-w-5xl text-center">
             <p className="mb-5 text-xs font-bold uppercase tracking-[0.28em] text-purple-200">
-              Ücretsiz online davetiye
+              Ücretsiz taslak ve önizleme
             </p>
             <h1 className="mx-auto max-w-4xl text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl">
-              Ücretsiz davetiye oluştur, link olarak hemen paylaş
+              Davetiyeni ücretsiz hazırla, yayına almadan önce fiyatı gör
             </h1>
             <p className="mx-auto mt-7 max-w-2xl text-base leading-8 text-white/60 sm:text-lg">
-              Düğün, nişan, doğum günü ve özel etkinlikler için temel şablonlarla online davetiye hazırlayın.
-              WhatsApp ile paylaşın, RSVP yanıtlarını panelden takip edin.
+              Düğün, nişan, doğum günü ve özel etkinlikler için şablon seçin, bilgileri girin,
+              özellikleri deneyin. Davetiyeyi yayına almak ve paylaşmak için ödeme adımında toplam tutarı onaylarsınız.
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href="/sablonlar"
                 className="rounded-2xl bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition hover:-translate-y-0.5"
               >
-                Ücretsiz Davetiye Oluştur
+                Ücretsiz Taslak Oluştur
               </Link>
               <Link
                 href="/fiyatlar"
@@ -164,14 +164,13 @@ export default function UcretsizDavetiyePage() {
         <section className="px-4 py-20">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-500">Ücretsiz plan</p>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-500">Ücretsiz hazırlık</p>
               <h2 className="mt-3 text-3xl font-bold leading-tight text-gray-950 sm:text-4xl">
-                Başlamak için gereken temel davetiye özellikleri
+                Ödeme öncesinde rahatça deneyebileceğiniz alanlar
               </h2>
               <p className="mt-5 text-sm leading-7 text-gray-500">
-                Ücretsiz davetiye arayan kullanıcılar için en önemli nokta, hızlıca paylaşılabilir ve
-                mobilde düzgün açılan bir davetiye oluşturmaktır. Bekleriz ücretsiz planı bu başlangıç
-                ihtiyacını karşılamak için tasarlandı.
+                Bekleriz'de davetiye hazırlama akışı ödeme öncesinde başlar. Böylece şablonu,
+                davetiye metnini, özellikleri ve toplam tutarı görmeden ödeme yapmak zorunda kalmazsınız.
               </p>
             </div>
 
@@ -191,7 +190,7 @@ export default function UcretsizDavetiyePage() {
             <div className="text-center">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-500">Ne zaman yeterli?</p>
               <h2 className="mt-3 text-3xl font-bold text-gray-950 sm:text-4xl">
-                Ücretsiz davetiye hangi durumlarda iyi bir seçim?
+                Ücretsiz hazırlık hangi durumlarda işinize yarar?
               </h2>
             </div>
 
@@ -210,13 +209,13 @@ export default function UcretsizDavetiyePage() {
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-500">Plan farkları</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-500">Ücretlendirme mantığı</p>
                 <h2 className="mt-3 text-3xl font-bold leading-tight text-gray-950 sm:text-4xl">
-                  Ücretsiz başla, ihtiyaç artarsa yükselt
+                  Plan yok; davetiye ve ek özellik bazlı ödeme var
                 </h2>
                 <p className="mt-5 text-sm leading-7 text-gray-500">
-                  Ücretsiz plan küçük etkinlikler ve deneme için uygundur. Daha fazla davetli, lüks şablon,
-                  albüm, anı defteri veya oturma planı gerektiğinde Standart ya da Premium plana geçebilirsiniz.
+                  Taslak hazırlama ve fiyatı görme ücretsizdir. Davetiyeyi yayına almak istediğinizde
+                  temel davetiye bedeli ve seçtiğiniz ek özellikler için tek seferlik ödeme alınır.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link
@@ -235,18 +234,16 @@ export default function UcretsizDavetiyePage() {
               </div>
 
               <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-                <div className="grid grid-cols-4 bg-gray-950 px-4 py-4 text-xs font-bold uppercase tracking-[0.12em] text-white/50">
+                <div className="grid grid-cols-3 bg-gray-950 px-4 py-4 text-xs font-bold uppercase tracking-[0.12em] text-white/50">
                   <span>Özellik</span>
-                  <span>Ücretsiz</span>
-                  <span>Standart</span>
-                  <span>Premium</span>
+                  <span>Durum</span>
+                  <span>Bedel</span>
                 </div>
-                {farklar.map(([ozellik, free, standart, premium]) => (
-                  <div key={ozellik} className="grid grid-cols-4 gap-3 border-t border-gray-100 px-4 py-4 text-sm">
+                {farklar.map(([ozellik, durum, bedel]) => (
+                  <div key={ozellik} className="grid grid-cols-3 gap-3 border-t border-gray-100 px-4 py-4 text-sm">
                     <span className="font-semibold text-gray-900">{ozellik}</span>
-                    <span className="text-gray-600">{free}</span>
-                    <span className="text-purple-600">{standart}</span>
-                    <span className="text-emerald-600">{premium}</span>
+                    <span className="text-purple-600">{durum}</span>
+                    <span className="text-emerald-600">{bedel}</span>
                   </div>
                 ))}
               </div>
@@ -259,7 +256,7 @@ export default function UcretsizDavetiyePage() {
             <div className="text-center">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-300">SSS</p>
               <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-                Ücretsiz davetiye hakkında sorular
+                Ücretsiz hazırlık hakkında sorular
               </h2>
             </div>
 
@@ -277,7 +274,7 @@ export default function UcretsizDavetiyePage() {
                 href="/sablonlar"
                 className="inline-flex rounded-2xl bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition hover:-translate-y-0.5"
               >
-                Ücretsiz davetiye oluşturmaya başla
+                Ücretsiz taslak oluşturmaya başla
               </Link>
             </div>
           </div>

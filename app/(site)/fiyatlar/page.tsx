@@ -30,9 +30,9 @@ const PAKETLER = [
     dahilDegil: ["Sesli anı", "Canlı duvar", "Oturma planı"],
   },
   {
-    id: "premium",
+    id: "tam-paket",
     icon: "💒",
-    ad: "Premium",
+    ad: "Tam Paket",
     slogan: "Düğün & nişan için tam paket",
     renk: "#DB2777",
     populer: false,

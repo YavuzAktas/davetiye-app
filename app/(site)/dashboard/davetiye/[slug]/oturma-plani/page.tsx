@@ -60,7 +60,7 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
   if (!davetiyeOzelligiAktif(davetiye, "oturmaPlan")) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Hero slug={slug} baslik={davetiye.baslik} alt="Premium özelliği" />
+        <Hero slug={slug} baslik={davetiye.baslik} alt="Ek özellik" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <div className="bg-white border border-gray-100 rounded-3xl px-6 py-16 text-center max-w-lg mx-auto">
             <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5">🪑</div>

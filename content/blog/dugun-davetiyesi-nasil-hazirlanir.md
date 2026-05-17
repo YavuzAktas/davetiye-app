@@ -115,9 +115,9 @@ Davetiyeyi paylaşmadan önce kısa bir kontrol turu yapın:
 - Davetiye metni telefonda rahat okunuyor mu?
 - Katılım bildirimi çalışıyor mu?
 - Paylaşım linki doğru davetiyeye gidiyor mu?
-- Fiyat/plan veya özellik sınırları ihtiyacınıza uygun mu?
+- Fiyat ve ek özellikler ihtiyacınıza uygun mu?
 
-Plan karşılaştırması gerekiyorsa [fiyatlar](/fiyatlar) sayfasını inceleyebilirsiniz.
+Davetiye ve ek özellik tutarlarını görmek için [fiyatlar](/fiyatlar) sayfasını inceleyebilirsiniz.
 
 ## Sonuç
 

@@ -109,7 +109,7 @@ Bu kontrolü mümkünse etkinliği bilen başka biriyle birlikte yapın.
 
 Online davetiye seçerken sadece fiyata değil, toplam faydaya bakmak gerekir. Basılı davetiyede baskı, kargo ve yeniden düzeltme maliyeti oluşabilir. Dijital davetiyede ise paylaşım link üzerinden yapılır ve güncelleme daha kolaydır.
 
-Plan karşılaştırması için [fiyatlar](/fiyatlar) sayfasına, genel maliyet mantığı için [dijital davetiye fiyatları rehberine](/blog/dijital-davetiye-fiyatlari) bakabilirsiniz.
+Davetiye ve ek özellik fiyatları için [fiyatlar](/fiyatlar) sayfasına, genel maliyet mantığı için [dijital davetiye fiyatları rehberine](/blog/dijital-davetiye-fiyatlari) bakabilirsiniz.
 
 ## Sonuç
 
