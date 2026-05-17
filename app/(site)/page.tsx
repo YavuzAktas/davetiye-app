@@ -967,6 +967,199 @@ export default function Anasayfa() {
       </section>
 
       {/* ══════════════════════════════════════════
+          WHATSAPP ÖNİZLEME
+      ══════════════════════════════════════════ */}
+      <section className="py-28 px-4 bg-[#f0fdf4]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Sol: Metin */}
+            <Section>
+              <div>
+                <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full mb-8">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#15803d">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.554 4.107 1.523 5.827L.057 23.057a.562.562 0 00.7.686l5.367-1.408A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.803 9.803 0 01-5.006-1.368l-.357-.211-3.705.972.987-3.607-.233-.371A9.818 9.818 0 012.182 12C2.182 6.577 6.577 2.182 12 2.182S21.818 6.577 21.818 12 17.423 21.818 12 21.818z"/>
+                  </svg>
+                  WhatsApp&apos;ta nasıl görünür?
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                  Misafirlerine
+                  <span className="block" style={{ background: "linear-gradient(90deg,#16a34a,#15803d)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    böyle görünür
+                  </span>
+                </h2>
+                <p className="text-gray-500 text-lg leading-relaxed mb-10">
+                  Davetiye linkini gönderince WhatsApp otomatik olarak şık bir önizleme kartı oluşturur.
+                  Misafirin tek tıkla açar, RSVP&apos;sini saniyeler içinde gönderir.
+                </p>
+                <div className="space-y-4 mb-10">
+                  {[
+                    { icon: "🔗", text: "Link önizlemesi otomatik oluşur — hiçbir ayar gerekmez" },
+                    { icon: "👁️", text: "Davetiye kapağı, isimler ve tarih önizlemede görünür" },
+                    { icon: "⚡", text: "Misafir tek tıkla açar, RSVP yanıtı anında sana gelir" },
+                    { icon: "📋", text: "Tüm yanıtlar panelinde otomatik listelenir" },
+                  ].map(b => (
+                    <div key={b.text} className="flex items-center gap-3.5">
+                      <div className="w-9 h-9 bg-white border border-emerald-100 rounded-xl flex items-center justify-center text-base shrink-0 shadow-sm">
+                        {b.icon}
+                      </div>
+                      <p className="text-gray-600 text-sm leading-relaxed">{b.text}</p>
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  href="/sablonlar"
+                  className="inline-flex items-center gap-2 bg-emerald-600 text-white px-7 py-3.5 rounded-2xl text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200 hover:-translate-y-0.5 hover:shadow-emerald-300 transition-all"
+                >
+                  Davetiyeni Oluştur →
+                </Link>
+              </div>
+            </Section>
+
+            {/* Sağ: WhatsApp telefon mockup */}
+            <Section>
+              <div className="flex justify-center lg:justify-end">
+                <div className="relative">
+                  {/* Glow */}
+                  <div className="absolute -inset-10 bg-emerald-300/20 blur-3xl rounded-full pointer-events-none" />
+
+                  {/* Telefon çerçevesi */}
+                  <div
+                    className="relative bg-gray-900 rounded-[40px] border-[5px] border-gray-800 shadow-2xl overflow-hidden"
+                    style={{ width: 272, height: 520 }}
+                  >
+                    {/* Notch */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-900 rounded-b-2xl z-20" />
+
+                    {/* WhatsApp UI */}
+                    <div className="absolute inset-0 flex flex-col" style={{ background: "#e5ddd5" }}>
+
+                      {/* WhatsApp Header */}
+                      <div className="flex items-center gap-3 px-4 pt-7 pb-3 shrink-0" style={{ background: "#128c7e" }}>
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                          style={{ background: "rgba(255,255,255,0.2)" }}
+                        >F</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white text-sm font-semibold leading-tight">Fatma Abla</p>
+                          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.65)" }}>çevrimiçi</p>
+                        </div>
+                        <div className="flex gap-4 shrink-0">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 7.56a16 16 0 006.29 6.29l1.42-1.42a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 13.92z" />
+                          </svg>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round">
+                            <circle cx="12" cy="5" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="12" cy="19" r="1" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Chat area */}
+                      <div className="flex-1 px-3 py-4 space-y-3 overflow-hidden">
+
+                        {/* Gelen mesaj */}
+                        <div className="flex justify-start">
+                          <div className="max-w-[78%] bg-white rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm">
+                            <p className="text-gray-800" style={{ fontSize: 11 }}>Düğün tarihin belli mi? Geleceğim tabii 🥰</p>
+                            <p className="text-right mt-0.5" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>14:32</p>
+                          </div>
+                        </div>
+
+                        {/* Giden metin */}
+                        <div className="flex justify-end">
+                          <div className="max-w-[78%] rounded-2xl rounded-tr-sm px-3 py-2 shadow-sm" style={{ background: "#d9fdd3" }}>
+                            <p className="text-gray-800" style={{ fontSize: 11 }}>Tabii! Davetiyeyi gönderiyorum şimdi 💌</p>
+                            <p className="text-right mt-0.5" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>14:33 ✓✓</p>
+                          </div>
+                        </div>
+
+                        {/* Link önizleme kartı */}
+                        <div className="flex justify-end">
+                          <div
+                            className="max-w-[85%] rounded-2xl rounded-tr-sm overflow-hidden shadow-md"
+                            style={{ background: "#d9fdd3" }}
+                          >
+                            {/* Önizleme görseli */}
+                            <div
+                              className="relative overflow-hidden flex flex-col items-center justify-center text-center px-3"
+                              style={{ height: 84, background: "linear-gradient(180deg,#1E3A6E 0%,#0D1F3C 100%)" }}
+                            >
+                              <div
+                                className="absolute inset-0 opacity-[0.05]"
+                                style={{ backgroundImage: "radial-gradient(circle,#D4AA70 1px,transparent 1px)", backgroundSize: "10px 10px" }}
+                              />
+                              <p style={{ color: "#D4AA70", fontSize: 7, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 3, position: "relative" }}>
+                                DÜĞÜN DAVETİYESİ
+                              </p>
+                              <p style={{ color: "white", fontSize: 16, fontFamily: "var(--font-dancing),cursive", position: "relative" }}>
+                                Ayşe &amp; Mehmet
+                              </p>
+                              <p style={{ color: "#D4AA70", fontSize: 7, opacity: 0.7, marginTop: 2, letterSpacing: "0.15em", position: "relative" }}>
+                                12 EYLÜL 2026
+                              </p>
+                            </div>
+                            {/* Önizleme metin */}
+                            <div className="px-3 pt-2 pb-0.5">
+                              <p className="text-gray-800 font-semibold leading-tight" style={{ fontSize: 11 }}>Düğün Davetiyesi 💍</p>
+                              <p className="text-gray-500" style={{ fontSize: 9 }}>Ayşe &amp; Mehmet · 12 Eylül 2026</p>
+                              <p className="text-gray-400" style={{ fontSize: 8 }}>bekleriz.com</p>
+                            </div>
+                            <div className="px-3 pb-2">
+                              <p className="text-right" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>14:33 ✓✓</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Gelen tepki */}
+                        <div className="flex justify-start">
+                          <div className="max-w-[78%] bg-white rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm">
+                            <p className="text-gray-800" style={{ fontSize: 11 }}>Vay be çok güzel! 😍 Hemen bakıyorum</p>
+                            <p className="text-right mt-0.5" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>14:34</p>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Input bar */}
+                      <div className="flex items-center gap-2 px-3 py-2 shrink-0" style={{ background: "#f0f0f0" }}>
+                        <div className="flex-1 bg-white rounded-full px-4 py-2">
+                          <p className="text-gray-400" style={{ fontSize: 10 }}>Bir mesaj yaz...</p>
+                        </div>
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                          style={{ background: "#128c7e" }}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                          </svg>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* Floating RSVP badge */}
+                  <div className="absolute -right-8 top-28 bg-white rounded-2xl px-4 py-3 shadow-xl border border-gray-100">
+                    <p className="text-xs font-bold text-gray-800">RSVP Geldi! 🎉</p>
+                    <p className="text-[10px] text-emerald-600 font-semibold">Fatma Abla katılıyor</p>
+                  </div>
+
+                  {/* Floating view count */}
+                  <div className="absolute -left-8 bottom-28 bg-white rounded-2xl px-4 py-3 shadow-xl border border-gray-100">
+                    <p className="text-[10px] text-gray-400 mb-0.5">Görüntülenme</p>
+                    <p className="text-base font-bold text-gray-900">127 kişi</p>
+                  </div>
+
+                </div>
+              </div>
+            </Section>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           STATS
       ══════════════════════════════════════════ */}
       <section className="py-28 px-4 bg-[#080112] relative overflow-hidden">
