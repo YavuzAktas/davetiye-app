@@ -579,8 +579,8 @@ export default function Anasayfa() {
                   <h3 className="text-white text-xl font-bold mb-2">Dakikalar içinde hazır</h3>
                   <p className="text-purple-200/40 text-sm leading-relaxed max-w-xs">Şablon seç, bilgilerini gir, davetiyeni paylaş. Bu kadar.</p>
                 </div>
-                {/* Step trail */}
-                <div className="absolute bottom-8 right-8 flex items-center gap-3">
+                {/* Step trail — desktop only */}
+                <div className="hidden md:flex absolute bottom-8 right-8 items-center gap-3">
                   {["Şablon", "Düzenle", "Paylaş"].map((s, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <span className={`text-[10px] font-semibold tracking-wide ${i === 2 ? "text-purple-300/80" : "text-purple-400/40"}`}>{s}</span>
@@ -588,8 +588,8 @@ export default function Anasayfa() {
                     </div>
                   ))}
                 </div>
-                {/* Decorative lines */}
-                <div className="absolute left-8 bottom-8 space-y-1.5 opacity-20 group-hover:opacity-40 transition-opacity">
+                {/* Decorative lines — desktop only */}
+                <div className="hidden md:block absolute left-8 bottom-8 space-y-1.5 opacity-20 group-hover:opacity-40 transition-opacity">
                   <div className="w-20 h-1 bg-purple-400 rounded-full" />
                   <div className="w-12 h-1 bg-purple-600 rounded-full" />
                   <div className="w-16 h-1 bg-purple-800 rounded-full" />
@@ -784,8 +784,8 @@ export default function Anasayfa() {
             <Section className="md:col-span-2">
               <div className="h-full bg-[#0a0c18] border border-indigo-500/[0.14] rounded-3xl p-8 relative overflow-hidden group hover:border-indigo-500/24 transition-all duration-500 cursor-default min-h-[210px]">
                 <div className="absolute -top-20 -right-28 w-96 h-96 rounded-full bg-indigo-500 opacity-[0.04] blur-3xl group-hover:opacity-[0.09] transition-opacity duration-700" />
-                <div className="relative z-10 flex items-start gap-8 h-full">
-                  <div className="flex-shrink-0 w-52">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
+                  <div className="flex-shrink-0 md:w-52">
                     <div className="w-10 h-10 bg-indigo-500/10 border border-indigo-500/18 rounded-xl flex items-center justify-center mb-4">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" />
@@ -799,7 +799,8 @@ export default function Anasayfa() {
                       <span className="text-[10px] text-gray-600">Canlı güncellenir</span>
                     </div>
                   </div>
-                  <div className="flex-1 flex gap-2 self-stretch py-1">
+                  {/* Fotoğraf mozaiği */}
+                  <div className="flex-1 flex gap-2 h-36 md:h-auto md:self-stretch md:py-1">
                     <div className="flex flex-col gap-2 flex-1">
                       <div className="flex-[2] rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-50 group-hover:opacity-85 transition-all duration-700" />
                       <div className="flex-[1] rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-75" />
