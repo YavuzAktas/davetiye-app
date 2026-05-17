@@ -3,6 +3,7 @@ import Image from "next/image";
 import NavLinks from "@/components/NavLinks";
 import LansmanBandi from "@/components/LansmanBandi";
 import AktiviteBildirimi from "@/components/AktiviteBildirimi";
+import CikisNiyeti from "@/components/CikisNiyeti";
 
 /* ── Header ─────────────────────────────── */
 function Header() {
@@ -181,6 +182,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <main>{children}</main>
       <Footer />
       <AktiviteBildirimi />
+      <CikisNiyeti />
     </>
   );
 }
