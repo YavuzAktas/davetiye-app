@@ -5,8 +5,9 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
+import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu, DAVETIYE_FIYAT_KALEMLERI } from "@/lib/davetiye-fiyatlandirma";
 import OdemeCheckoutForm from "@/components/OdemeCheckoutForm";
+import OdemeUpsell, { type UpsellOzellik } from "@/components/OdemeUpsell";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -74,6 +75,16 @@ export default async function OdemeCheckoutPage({ params }: Props) {
     canliDuvarAktif: davetiye.canliDuvarAktif,
     oturmaPlanAktif: davetiye.oturmaPlanAktif,
   });
+
+  const TUM_UPSELL: UpsellOzellik[] = [
+    { kod: "album-ani",    icon: "📸", ad: "Albüm & Anı",          desc: "Misafirler fotoğraf yükler, sen onaylarsın", tutar: DAVETIYE_FIYAT_KALEMLERI.album.tutar },
+    { kod: "sesli-ani",    icon: "🎙️", ad: "Sesli Anı Defteri",    desc: "Misafirler sesli mesaj bırakır",            tutar: DAVETIYE_FIYAT_KALEMLERI.sesliAni.tutar },
+    { kod: "canli-duvar",  icon: "🖼️", ad: "Canlı Fotoğraf Duvarı", desc: "Gerçek zamanlı fotoğraf akışı",           tutar: DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar },
+    { kod: "oturma-plani", icon: "🪑", ad: "Oturma Planı",          desc: "Masa ve koltuk düzeni, davetli atama",     tutar: DAVETIYE_FIYAT_KALEMLERI.oturmaPlan.tutar },
+  ];
+
+  const seciliKodlar = new Set(fiyat.kalemler.map(k => k.kod));
+  const upsellOzellikler = TUM_UPSELL.filter(o => !seciliKodlar.has(o.kod));
 
   const tarihStr = davetiye.tarih
     ? new Date(davetiye.tarih).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })
@@ -250,6 +261,9 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                   </div>
                 ))}
               </div>
+
+              {/* Upsell */}
+              <OdemeUpsell davetiyeId={davetiye.id} ozellikler={upsellOzellikler} />
 
               {/* Total */}
               <div style={{
