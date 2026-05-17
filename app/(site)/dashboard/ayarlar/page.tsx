@@ -162,6 +162,33 @@ export default async function AyarlarSayfasi() {
           {/* SAĞ — Aksiyonlar (1/3) */}
           <div className="space-y-4">
             <AyarlarClient />
+
+            {/* Hızlı Erişim */}
+            <div className="bg-white border border-gray-100 rounded-3xl p-5">
+              <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase mb-3">Hızlı Erişim</p>
+              <div className="space-y-1.5">
+                {[
+                  { href: "/dashboard", label: "Dashboard", icon: "📊", desc: "Genel bakış" },
+                  { href: "/dashboard/odeme-gecmisi", label: "Ödeme Geçmişi", icon: "🧾", desc: "Sipariş ve fatura" },
+                  { href: "/sablonlar", label: "Yeni Davetiye", icon: "🎨", desc: "Şablondan başla" },
+                ].map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-gray-50 transition-colors group"
+                  >
+                    <div className="w-8 h-8 bg-gray-100 group-hover:bg-purple-100 rounded-xl flex items-center justify-center text-sm transition-colors shrink-0">
+                      {link.icon}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-gray-700 group-hover:text-purple-700 transition-colors">{link.label}</p>
+                      <p className="text-xs text-gray-400">{link.desc}</p>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
