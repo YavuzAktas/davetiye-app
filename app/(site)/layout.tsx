@@ -35,7 +35,7 @@ const PLATFORM_LINKS = [
   { href: "/nisan-davetiyesi", label: "Nişan Davetiyesi" },
   { href: "/sablonlar",  label: "Şablonlar"  },
   { href: "/fiyatlar",   label: "Fiyatlar"   },
-  { href: "/dashboard",  label: "Dashboard"  },
+  { href: "/dashboard",  label: "Davetiyelerim"  },
   { href: "/giris",      label: "Giriş Yap"  },
 ];
 

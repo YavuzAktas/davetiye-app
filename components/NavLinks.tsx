@@ -15,7 +15,7 @@ export default function NavLinks() {
     { href: "/sablonlar", isim: "Şablonlar" },
     { href: "/fiyatlar",  isim: "Fiyatlar"  },
     { href: "/blog",      isim: "Blog"       },
-    ...(session ? [{ href: "/dashboard", isim: "Dashboard" }] : []),
+    ...(session ? [{ href: "/dashboard", isim: "Davetiyelerim" }] : []),
   ];
 
   const linkCls = "text-sm text-gray-500 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all";
@@ -59,7 +59,7 @@ export default function NavLinks() {
                   <p className="text-xs text-gray-400 truncate">{session.user?.email}</p>
                 </div>
                 {[
-                  { href: "/dashboard", label: "Dashboard" },
+                  { href: "/dashboard", label: "Davetiyelerim" },
                   { href: "/sablonlar", label: "Yeni Davetiye" },
                   { href: "/fiyatlar", label: "Fiyatlar" },
                   { href: "/dashboard/ayarlar", label: "Ayarlar" },
