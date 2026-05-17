@@ -319,7 +319,7 @@ function OlusturIcerigi() {
         setHata(data.hata || "Bir hata oluştu.");
         return;
       }
-      router.push(`/dashboard/davetiye/${data.slug}?yeni=1&odeme=bekliyor`);
+      router.push(`/odeme/${data.slug}`);
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }
   };
