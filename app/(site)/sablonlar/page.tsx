@@ -576,8 +576,8 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
       {/* ─── Gövde ─── */}
       <div className="flex flex-col lg:flex-row gap-6 p-5 sm:p-8">
 
-        {/* Sol: Bölüm tab'ları + Telefon — 260px sabit genişlik, sola dayalı */}
-        <div className="shrink-0 flex flex-col gap-3" style={{ width: 260 }}>
+        {/* Sol: Bölüm tab'ları + Telefon — 260px sabit genişlik, mobilde ortalı */}
+        <div className="shrink-0 flex flex-col gap-3 mx-auto lg:mx-0" style={{ width: 260 }}>
           {/* Pill tab'lar — tam okunabilir, yatay kaydırılabilir */}
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide" style={{ height: 34 }}>
             {bolumler.map(b => (
