@@ -5,11 +5,11 @@ import dynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { PREMIUM_SABLON_IDS, planOzellikVar } from "@/lib/planlar";
 import Link from "next/link";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
+import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
 
 const FONTLAR = [
   { id: "font-sans",  isim: "Modern",   ornek: "Aa" },
@@ -143,11 +143,6 @@ function OlusturIcerigi() {
   const isLuks         = isNisanLuks || isDugunLuks || sablonId === "dogumgunu-luks";
   const nisanVeyaDugun = sablon.kategori === "nisan" || sablon.kategori === "dugun";
 
-  const isPremiumSablon = PREMIUM_SABLON_IDS.has(sablonId);
-  const kullaniciBilinen = session !== undefined;
-  const userPlan  = (session?.user as any)?.plan ?? "free";
-  const premiumEngel = isPremiumSablon && userPlan === "free";
-
   const [form, setForm] = useState({
     baslik: "", etkinlikTur: sablon.kategori,
     tarih: "", saat: "", mekan: "", mesaj: "",
@@ -228,10 +223,13 @@ function OlusturIcerigi() {
     }
   }
 
-  const muzikAktif      = planOzellikVar(userPlan, "muzik");
-  const aniAktif        = planOzellikVar(userPlan, "album");
-  const sesliAniAktif   = planOzellikVar(userPlan, "sesliAni");
-  const canliDuvarAktif = planOzellikVar(userPlan, "canliDuvar");
+  const fiyat = davetiyeFiyatiHesapla({
+    sablon: sablonId,
+    muzik: muzikAcik ? form.muzik : null,
+    albumAktif: aniAcik,
+    sesliAniAktif: sesliAniAcik,
+    canliDuvarAktif: canliDuvarAcik,
+  });
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
     alanRefleri.current[alan] = el;
@@ -268,6 +266,11 @@ function OlusturIcerigi() {
   };
 
   const handleSubmit = async () => {
+    if (!session) {
+      router.push("/giris");
+      return;
+    }
+
     const yeniHatalar: Partial<Record<ZorunluAlan, string>> = {};
 
     if (nisanVeyaDugun) {
@@ -311,10 +314,9 @@ function OlusturIcerigi() {
       const data = await res.json();
       if (!res.ok) {
         setHata(data.hata || "Bir hata oluştu.");
-        if (data.upsell) setTimeout(() => router.push("/fiyatlar"), 2000);
         return;
       }
-      router.push(`/dashboard/davetiye/${data.slug}?yeni=1`);
+      router.push(`/dashboard/davetiye/${data.slug}?yeni=1&odeme=bekliyor`);
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }
   };
@@ -384,7 +386,7 @@ function OlusturIcerigi() {
             {yukleniyor ? (
               <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor</>
             ) : (
-              <>Davetiye Oluştur →</>
+              <>Ödeme Adımına Geç →</>
             )}
           </button>
         </div>
@@ -405,30 +407,7 @@ function OlusturIcerigi() {
           {/* ── Sol — Form ── */}
           <div className="lg:col-span-3 space-y-5">
 
-            {/* Premium engel */}
-            {premiumEngel && kullaniciBilinen && (
-              <div className="bg-white rounded-2xl border border-amber-200 shadow-sm p-6 text-center">
-                <div className="text-4xl mb-3">👑</div>
-                <h2 className="text-lg font-bold text-gray-900 mb-2">Lüks Şablon</h2>
-                <p className="text-gray-500 text-sm mb-1">
-                  <span className="font-semibold text-gray-700">{sablon.isim}</span> yalnızca ücretli planlarda kullanılabilir.
-                </p>
-                <p className="text-gray-400 text-xs mb-5">Ücretsiz planda temel şablonlardan davetiye oluşturabilirsiniz.</p>
-                <div className="flex flex-col gap-2.5">
-                  <button onClick={() => router.push("/fiyatlar")}
-                    className="bg-amber-500 text-white px-6 py-3.5 rounded-xl font-semibold hover:bg-amber-600 transition-colors text-sm">
-                    Planları Gör →
-                  </button>
-                  <button onClick={() => router.push("/sablonlar")}
-                    className="bg-gray-100 text-gray-700 px-6 py-3.5 rounded-xl font-semibold hover:bg-gray-200 transition-colors text-sm">
-                    Temel Şablonlara Dön
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {!premiumEngel && (
-              <>
+            <>
                 {/* ── 1. Temel Bilgiler ── */}
                 <div>
                   <SectionHeader step={1} baslik="Temel Bilgiler" aciklama="Davetiyenizde görünecek zorunlu bilgiler" />
@@ -687,9 +666,7 @@ function OlusturIcerigi() {
                       icon="🎵" baslik="Arka Plan Müziği"
                       aciklama="Seçtiğiniz şarkı için davetiyede bir çalma butonu gösterilir"
                       misafirGorur="Misafir davetiyeye dokunduğunda müzik başlar; istediği zaman durdurabilir"
-                      planEtiketi={!muzikAktif ? "Standart+" : undefined}
-                      locked={!muzikAktif}
-                      lockedMsg="Standart Plan →"
+                      planEtiketi="Ek ücret"
                       acik={muzikAcik} onToggle={() => setMuzikAcik(!muzikAcik)}
                     >
                       <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
@@ -700,9 +677,7 @@ function OlusturIcerigi() {
                       icon="📖" baslik="Fotoğraf & Anı Albümü"
                       aciklama="Misafirler etkinlik boyunca fotoğraf yükleyebilir ve anı yazabilir"
                       misafirGorur="Davetiyede bir albüm butonu belirir; yükledikleri fotoğraflar dashboard'da sana gelir"
-                      planEtiketi={!aniAktif ? "Premium" : undefined}
-                      locked={!aniAktif}
-                      lockedMsg="Premium →"
+                      planEtiketi="Ek ücret"
                       acik={aniAcik} onToggle={() => setAniAcik(!aniAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -717,9 +692,7 @@ function OlusturIcerigi() {
                         icon="🎙️" baslik="Sesli Anı"
                         aciklama="Misafirler tarayıcıdan 30 saniyeye kadar sesli mesaj kaydedebilir"
                         misafirGorur="Davetiyede bir mikrofon butonu belirir; kayıtlar onayınızla yayınlanır"
-                        planEtiketi={!sesliAniAktif ? "Premium" : undefined}
-                        locked={!sesliAniAktif}
-                        lockedMsg="Premium →"
+                        planEtiketi="Ek ücret"
                         acik={sesliAniAcik} onToggle={() => setSesliAniAcik(!sesliAniAcik)}
                       >
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -735,9 +708,7 @@ function OlusturIcerigi() {
                         icon="📸" baslik="Canlı Fotoğraf Duvarı"
                         aciklama="Misafirlerin yüklediği fotoğraflar onayınızdan sonra duvarda yayınlanır"
                         misafirGorur="Salonunuzdaki ekrana davetiye.link/duvar açılırsa onaylanan fotoğraflar canlı akar"
-                        planEtiketi={!canliDuvarAktif ? "Premium" : undefined}
-                        locked={!canliDuvarAktif}
-                        lockedMsg="Premium →"
+                        planEtiketi="Ek ücret"
                         acik={canliDuvarAcik} onToggle={() => setCanliDuvarAcik(!canliDuvarAcik)}
                       >
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -748,6 +719,8 @@ function OlusturIcerigi() {
                     )}
                   </div>
                 </div>
+
+                <FiyatOzeti fiyat={fiyat} />
 
                 {/* Hata + Oluştur */}
                 {hata && (
@@ -761,13 +734,12 @@ function OlusturIcerigi() {
                   {yukleniyor ? (
                     <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor...</>
                   ) : (
-                    "Davetiyemi Oluştur →"
+                    "Taslağı Oluştur ve Ödeme Adımına Geç →"
                   )}
                 </button>
 
                 <div className="h-2" />
               </>
-            )}
           </div>
 
           {/* ── Sağ — Canlı Önizleme ── */}
@@ -790,6 +762,9 @@ function OlusturIcerigi() {
                   {onizlemeIcerigi}
                 </div>
               </TelefonMockup>
+              <div className="mt-5">
+                <FiyatOzeti fiyat={fiyat} kompakt />
+              </div>
               <div className="mt-3 flex flex-col items-center gap-1">
                 <p className="text-[10px] text-gray-300">Değişiklikler anında yansır</p>
               </div>
@@ -902,6 +877,40 @@ function MobilOnizlemeModal({ children, onKapat }: { children: React.ReactNode; 
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FiyatOzeti({ fiyat, kompakt = false }: { fiyat: DavetiyeFiyatSonucu; kompakt?: boolean }) {
+  return (
+    <div className={`rounded-2xl border border-purple-100 bg-white shadow-sm shadow-purple-50 ${kompakt ? "p-4" : "p-5"}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Fiyat Özeti</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Seçtiğiniz davetiye ve özelliklere göre hesaplanır.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">Toplam</p>
+          <p className="text-2xl font-black text-gray-950">{tutarMetni(fiyat.toplamTutar)}</p>
+        </div>
+      </div>
+
+      <div className={`mt-4 ${kompakt ? "space-y-2" : "space-y-2.5"}`}>
+        {fiyat.kalemler.map(kalem => (
+          <div key={kalem.kod} className="flex items-center justify-between gap-3 rounded-xl bg-gray-50 px-3 py-2">
+            <span className="text-xs font-medium text-gray-600">{kalem.ad}</span>
+            <span className="text-xs font-bold text-gray-900">{tutarMetni(kalem.tutar)}</span>
+          </div>
+        ))}
+      </div>
+
+      {!kompakt && (
+        <p className="mt-3 text-xs leading-relaxed text-gray-400">
+          Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır.
+        </p>
+      )}
     </div>
   );
 }

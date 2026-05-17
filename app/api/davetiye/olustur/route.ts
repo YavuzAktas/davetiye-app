@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { authOptions } from "@/lib/auth";
-import { PLAN_CONFIG, LUKS_SABLON_IDS, planOzellikVar, PlanTipi } from "@/lib/planlar";
+import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -20,58 +20,22 @@ export async function POST(req: NextRequest) {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, plan: true },
+    select: { id: true },
   });
 
   if (!user) {
     return NextResponse.json({ hata: "Kullanıcı bulunamadı." }, { status: 404 });
   }
 
-  if (LUKS_SABLON_IDS.has(sablon) && !planOzellikVar(user.plan, "luksablonlar")) {
-    return NextResponse.json(
-      { hata: "Bu lüks şablon Standart ve Premium planlara özel.", upsell: true },
-      { status: 403 }
-    );
-  }
-
-  if (muzik && !planOzellikVar(user.plan, "muzik")) {
-    return NextResponse.json(
-      { hata: "Müzik özellikleri Standart ve Premium planlara özel.", upsell: true },
-      { status: 403 }
-    );
-  }
-
-  if (sesliAniAktif && !planOzellikVar(user.plan, "sesliAni")) {
-    return NextResponse.json(
-      { hata: "Sesli Anı Defteri Premium plana özel.", upsell: true },
-      { status: 403 }
-    );
-  }
-
-  if (canliDuvarAktif && !planOzellikVar(user.plan, "canliDuvar")) {
-    return NextResponse.json(
-      { hata: "Canlı Fotoğraf Duvarı Premium plana özel.", upsell: true },
-      { status: 403 }
-    );
-  }
-
-  const planLimiti = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
-  const mevcutDavetiyeSayisi = await prisma.davetiye.count({
-    where: { userId: user.id, aktif: true },
-  });
-
-  if (mevcutDavetiyeSayisi >= planLimiti.maxDavetiye) {
-    return NextResponse.json(
-      {
-        hata: `Planınızda en fazla ${planLimiti.maxDavetiye} davetiye oluşturabilirsiniz. Planınızı yükseltin.`,
-        upsell: true,
-      },
-      { status: 403 }
-    );
-  }
-
   const slug = nanoid(10);
   const tarihSaat = saat ? new Date(`${tarih}T${saat}:00`) : new Date(tarih);
+  const fiyat = davetiyeFiyatiHesapla({
+    sablon,
+    muzik: muzik || null,
+    albumAktif: !!albumAktif,
+    sesliAniAktif: !!sesliAniAktif,
+    canliDuvarAktif: !!canliDuvarAktif,
+  });
 
   const davetiye = await prisma.davetiye.create({
     data: {
@@ -82,6 +46,7 @@ export async function POST(req: NextRequest) {
       mekan,
       mesaj,
       sablon,
+      aktif:           false,
       font:            font  || "font-sans",
       ozelRenk:        renk  || null,
       muzik:           muzik || null,
@@ -96,6 +61,8 @@ export async function POST(req: NextRequest) {
       dressKod:        dressKod || null,
       dressKodRenkler: dressKodRenkler || null,
       albumAktif:      !!albumAktif,
+      odemeDurumu:     "odeme_bekliyor",
+      fiyatSnapshot:   fiyat as any,
     },
   });
 
@@ -114,5 +81,5 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ slug: davetiye.slug });
+  return NextResponse.json({ id: davetiye.id, slug: davetiye.slug, fiyat });
 }
