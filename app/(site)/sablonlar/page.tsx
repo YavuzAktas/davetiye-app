@@ -578,22 +578,22 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 
         {/* Sol: Bölüm tab'ları + Telefon — 260px sabit genişlik, sola dayalı */}
         <div className="shrink-0 flex flex-col gap-3" style={{ width: 260 }}>
-          {/* Pill tab'lar — telefon genişliğini eşit kaplayacak şekilde yayılır */}
-          <div className="flex gap-1" style={{ height: 34 }}>
+          {/* Pill tab'lar — tam okunabilir, yatay kaydırılabilir */}
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide" style={{ height: 34 }}>
             {bolumler.map(b => (
               <button
                 key={b.id}
                 onClick={() => handleTab(b.id)}
-                className="flex-1 flex items-center justify-center gap-1 rounded-full font-semibold transition-all duration-200 min-w-0"
+                className="flex items-center gap-1.5 px-3 rounded-full font-semibold whitespace-nowrap shrink-0 transition-all duration-200"
                 style={{
-                  fontSize: 9,
+                  fontSize: 10,
+                  height: 30,
                   background: aktifId === b.id ? `rgba(${glowRgb},0.16)` : "rgba(255,255,255,0.05)",
                   color: aktifId === b.id ? accent : "rgba(255,255,255,0.4)",
                   border: aktifId === b.id ? `1px solid rgba(${glowRgb},0.38)` : "1px solid rgba(255,255,255,0.07)",
                 }}
               >
-                <span style={{ fontSize: 11, lineHeight: 1 }}>{b.icon}</span>
-                <span className="truncate">{b.label}</span>
+                {b.icon} {b.label}
               </button>
             ))}
           </div>
