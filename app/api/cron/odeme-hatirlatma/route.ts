@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { odemeHatirlatmaGonder } from "@/lib/email";
+import { cronSecretEksik, cronYetkiliMi } from "@/lib/cron-auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function GET(req: Request) {
-  const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (cronSecretEksik()) {
+    return NextResponse.json(
+      { error: "Ödeme hatırlatma görevi yapılandırılmamış." },
+      { status: 503 },
+    );
+  }
+
+  if (!cronYetkiliMi(req.headers.get("authorization"))) {
     return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
   }
 
