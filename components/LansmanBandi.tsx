@@ -78,71 +78,80 @@ export default function LansmanBandi() {
         @keyframes lb-glow  { 0%,100%{box-shadow:0 0 6px rgba(251,191,36,0.25)} 50%{box-shadow:0 0 16px rgba(251,191,36,0.6)} }
         .lb-digit { animation: lb-glow 1.8s ease-in-out infinite; }
         .lb-dot   { animation: lb-pulse 1s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .lb-motion-safe, .lb-digit, .lb-dot { animation: none !important; }
+        }
       `}</style>
 
       {/* ════════════════════════════════════
-          MOBİL banner (< sm) — 2 satır, kompakt
+          MOBİL banner (< sm) — net mesaj, rahat dokunma alanları
       ════════════════════════════════════ */}
-      <Link
-        href="/sablonlar"
-        className="relative block overflow-hidden sm:hidden"
+      <div
+        className="relative overflow-hidden sm:hidden"
         style={gradientStyle}
       >
         <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-        <div className="relative px-4 py-2 pr-9">
-          {/* Satır 1: metin */}
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="text-xs">🔥</span>
-            <span className="text-xs font-black text-white">Lansman fiyatı bitiyor!</span>
-            <span className="lb-dot inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 ml-1" />
-            <span className="text-[10px] text-white/55 font-medium">{kisiSayisi} kişi inceliyor</span>
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/15 pointer-events-none" />
+
+        <div className="relative px-3 py-2.5 pr-12">
+          <div className="flex min-w-0 items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="flex min-w-0 items-center gap-1.5">
+                <span className="text-sm leading-none">🔥</span>
+                <span className="truncate text-[13px] font-black leading-tight text-white">
+                  Lansman fiyatı bitiyor
+                </span>
+              </div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="lb-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[11px] font-medium text-white/60">
+                  {kisiSayisi} kişi inceliyor
+                </span>
+              </div>
+            </div>
+
+            <Link
+              href="/sablonlar"
+              className="shrink-0 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-[11px] font-black text-white shadow-sm backdrop-blur transition active:scale-95"
+            >
+              Oluştur
+            </Link>
           </div>
-          {/* Satır 2: sayaç + cta */}
-          <div className="flex items-center gap-2">
-            {/* Sayaç - inline amber */}
-            <div className="flex items-center gap-0.5">
-              {BIRIMLER.map((b, i) => (
-                <span key={b.l} className="flex items-center gap-0.5">
-                  {i > 0 && <span className="text-amber-400/60 font-black text-xs">:</span>}
-                  <span
-                    className="font-black tabular-nums text-sm"
-                    style={{ color: "#fbbf24" }}
-                  >
+
+          <div className="mt-2 flex items-center gap-1.5">
+            {BIRIMLER.map((b, i) => (
+              <div key={b.l} className="flex items-center gap-1.5">
+                {i > 0 && <span className="text-xs font-black text-amber-300/45">:</span>}
+                <span className="inline-flex min-w-10 items-center justify-center rounded-lg border border-amber-300/25 bg-black/25 px-2 py-1">
+                  <span className="text-[13px] font-black leading-none tabular-nums text-amber-300">
                     {b.v}
                   </span>
                 </span>
-              ))}
-            </div>
-            <span className="text-[10px] text-white/40">kaldı</span>
-            {/* Küçük CTA */}
-            <span
-              className="ml-auto text-[10px] font-black text-white px-2.5 py-1 rounded-md"
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                border: "1px solid rgba(255,255,255,0.3)",
-              }}
-            >
-              Oluştur →
-            </span>
+                <span className="text-[9px] font-bold leading-none tracking-[0.12em] text-amber-200/55">
+                  {b.l}
+                </span>
+              </div>
+            ))}
+            <span className="ml-1 text-[10px] font-semibold text-white/45">kaldı</span>
           </div>
         </div>
-        {/* X */}
+
         <button
           onClick={kapat}
           aria-label="Kapat"
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-white"
+          className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-white/45 transition hover:bg-white/10 hover:text-white"
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-      </Link>
+      </div>
 
       {/* ════════════════════════════════════
           DESKTOP banner (sm+) — tek satır, tam
       ════════════════════════════════════ */}
       <div
-        className="relative overflow-hidden hidden sm:block"
+        className="lb-motion-safe relative overflow-hidden hidden sm:block"
         style={gradientStyle}
       >
         <div className="absolute inset-0 bg-black/38 pointer-events-none" />
