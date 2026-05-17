@@ -137,6 +137,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Bu davetiye için ödeme zaten tamamlanmış." }, { status: 409 });
   }
 
+  if (davetiye) {
+    await prisma.siparis.updateMany({
+      where: { davetiyeId: davetiye.id, durum: "odeme_bekliyor" },
+      data: { durum: "iptal" },
+    });
+  }
+
   if (!davetiye && !planFiyati) {
     return NextResponse.json({ hata: "Geçersiz ödeme isteği." }, { status: 400 });
   }
