@@ -64,40 +64,33 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
-  if (odemeToken.urunTipi === "davetiye") {
-    await prisma.$transaction([
-      ...(odemeToken.siparisId
-        ? [
-          prisma.siparis.update({
-            where: { id: odemeToken.siparisId },
-            data: {
-              durum: "odendi",
-              paymentId: result.paymentId ? String(result.paymentId) : null,
-              conversationId: result.conversationId ? String(result.conversationId) : null,
-              paidAt: new Date(),
-            },
-          }),
-        ]
-        : []),
-      ...(odemeToken.davetiyeId
-        ? [
-          prisma.davetiye.update({
-            where: { id: odemeToken.davetiyeId },
-            data: {
-              odemeDurumu: "odendi",
-              aktif: true,
-              fiyatSnapshot: odemeToken.fiyatKirilimi as any,
-            },
-          }),
-        ]
-        : []),
-    ]);
-  } else {
-    await prisma.user.update({
-      where: { id: odemeToken.userId },
-      data: { plan: odemeToken.planId },
-    });
-  }
+  await prisma.$transaction([
+    ...(odemeToken.siparisId
+      ? [
+        prisma.siparis.update({
+          where: { id: odemeToken.siparisId },
+          data: {
+            durum: "odendi",
+            paymentId: result.paymentId ? String(result.paymentId) : null,
+            conversationId: result.conversationId ? String(result.conversationId) : null,
+            paidAt: new Date(),
+          },
+        }),
+      ]
+      : []),
+    ...(odemeToken.davetiyeId
+      ? [
+        prisma.davetiye.update({
+          where: { id: odemeToken.davetiyeId },
+          data: {
+            odemeDurumu: "odendi",
+            aktif: true,
+            fiyatSnapshot: odemeToken.fiyatKirilimi as any,
+          },
+        }),
+      ]
+      : []),
+  ]);
 
   await prisma.odemeKaydi.create({
     data: {
