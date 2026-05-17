@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -26,6 +26,8 @@ const DugunLuksSablon = dynamic(() => import("@/components/sablonlar/DugunLuksSa
 const DogumGunuLuksSablon = dynamic(() => import("@/components/sablonlar/DogumGunuLuksSablon"));
 
 type DressRenkler = [string,string,string,string,string];
+type ZorunluAlan = "kisi1" | "kisi2" | "baslik" | "tarih" | "mekan";
+
 const DRESS_KOD_PRESETLER: { isim: string; renkler: DressRenkler }[] = [
   { isim: "Şık & Zarif",     renkler: ["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"] },
   { isim: "Resmi & Klasik",  renkler: ["#1B3A5C","#8B5E3C","#C4A05A","#2E2E2E","#F5EDD8"] },
@@ -37,6 +39,7 @@ const DRESS_KOD_PRESETLER: { isim: string; renkler: DressRenkler }[] = [
 
 const INPUT      = "w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 transition-colors";
 const DATE_INPUT = "w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors";
+const INPUT_HATA = "border-red-300 bg-red-50/50 focus:ring-red-100 focus:border-red-400";
 
 /* ── iOS toggle ── */
 function Toggle({ acik, onChange, disabled }: { acik: boolean; onChange: () => void; disabled?: boolean }) {
@@ -153,7 +156,10 @@ function OlusturIcerigi() {
   });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata]             = useState("");
+  const [alanHatalari, setAlanHatalari] = useState<Partial<Record<ZorunluAlan, string>>>({});
   const [tutorialAcik, setTutorialAcik] = useState(false);
+  const [mobilOnizlemeAcik, setMobilOnizlemeAcik] = useState(false);
+  const alanRefleri = useRef<Partial<Record<ZorunluAlan, HTMLInputElement | null>>>({});
 
   useEffect(() => {
     if (!localStorage.getItem("olustur-tutorial-goruldu")) setTutorialAcik(true);
@@ -163,6 +169,11 @@ function OlusturIcerigi() {
     localStorage.setItem("olustur-tutorial-goruldu", "1");
     setTutorialAcik(false);
   }
+
+  useEffect(() => {
+    document.body.style.overflow = mobilOnizlemeAcik ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobilOnizlemeAcik]);
 
   const [notAcik,        setNotAcik]        = useState(false);
   const [muzikAcik,      setMuzikAcik]      = useState(false);
@@ -222,10 +233,59 @@ function OlusturIcerigi() {
   const sesliAniAktif   = planOzellikVar(userPlan, "sesliAni");
   const canliDuvarAktif = planOzellikVar(userPlan, "canliDuvar");
 
+  const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
+    alanRefleri.current[alan] = el;
+  };
+
+  const zorunluAlanClass = (alan: ZorunluAlan, temelClass = INPUT) =>
+    `${temelClass} ${alanHatalari[alan] ? INPUT_HATA : ""}`;
+
+  const alanHatasi = (alan: ZorunluAlan) =>
+    alanHatalari[alan] ? (
+      <p className="mt-1.5 text-xs font-medium text-red-500">{alanHatalari[alan]}</p>
+    ) : null;
+
+  const formAlaniGuncelle = (alan: keyof typeof form, deger: string) => {
+    setForm(prev => ({ ...prev, [alan]: deger }));
+    if (["kisi1", "kisi2", "baslik", "tarih", "mekan"].includes(alan)) {
+      setAlanHatalari(prev => ({ ...prev, [alan]: undefined }));
+      setHata("");
+    }
+  };
+
+  const ilkHataliAlanaGit = (hatalar: Partial<Record<ZorunluAlan, string>>) => {
+    const siraliAlanlar: ZorunluAlan[] = nisanVeyaDugun
+      ? ["kisi1", "kisi2", "tarih", "mekan"]
+      : ["baslik", "tarih", "mekan"];
+    const ilkAlan = siraliAlanlar.find(alan => hatalar[alan]);
+    if (!ilkAlan) return;
+
+    requestAnimationFrame(() => {
+      const hedef = alanRefleri.current[ilkAlan];
+      hedef?.scrollIntoView({ behavior: "smooth", block: "center" });
+      hedef?.focus({ preventScroll: true });
+    });
+  };
+
   const handleSubmit = async () => {
-    if (!form.tarih || !form.mekan)               { setHata("Lütfen tarih ve mekan alanlarını doldurun."); return; }
-    if (nisanVeyaDugun && (!form.kisi1 || !form.kisi2)) { setHata("Lütfen iki kişinin adını girin."); return; }
-    if (!nisanVeyaDugun && !form.baslik)           { setHata("Lütfen davetiye başlığını girin."); return; }
+    const yeniHatalar: Partial<Record<ZorunluAlan, string>> = {};
+
+    if (nisanVeyaDugun) {
+      if (!form.kisi1.trim()) yeniHatalar.kisi1 = "1. kişinin adını girin.";
+      if (!form.kisi2.trim()) yeniHatalar.kisi2 = "2. kişinin adını girin.";
+    } else if (!form.baslik.trim()) {
+      yeniHatalar.baslik = "Davetiye başlığını girin.";
+    }
+    if (!form.tarih) yeniHatalar.tarih = "Etkinlik tarihini seçin.";
+    if (!form.mekan.trim()) yeniHatalar.mekan = "Mekan adı veya adres girin.";
+
+    if (Object.keys(yeniHatalar).length > 0) {
+      setAlanHatalari(yeniHatalar);
+      setHata("Lütfen işaretli zorunlu alanları tamamlayın.");
+      ilkHataliAlanaGit(yeniHatalar);
+      return;
+    }
+
     setYukleniyor(true); setHata("");
     const gonderilecekBaslik = nisanVeyaDugun ? `${form.kisi1} & ${form.kisi2}` : form.baslik;
     try {
@@ -286,10 +346,24 @@ function OlusturIcerigi() {
     dressKodRenkler: dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
   };
 
+  const onizlemeIcerigi = (
+    <>
+      {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+      {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+      {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
+      {sablonTipi === "klasik"         && <KlasikSablon        davetiye={previewVeri} rsvpBileseni={null} />}
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
 
       {tutorialAcik && <TutorialModal onKapat={tutorialKapat} />}
+      {mobilOnizlemeAcik && (
+        <MobilOnizlemeModal onKapat={() => setMobilOnizlemeAcik(false)}>
+          {onizlemeIcerigi}
+        </MobilOnizlemeModal>
+      )}
 
       {/* ── Üst Bar ── */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
@@ -316,7 +390,16 @@ function OlusturIcerigi() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
+      <button
+        type="button"
+        onClick={() => setMobilOnizlemeAcik(true)}
+        className="lg:hidden fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full bg-gray-950 px-5 py-3 text-sm font-bold text-white shadow-2xl shadow-gray-900/25 active:scale-95"
+      >
+        <span className="h-2 w-2 rounded-full bg-emerald-400" />
+        Önizle
+      </button>
+
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 pt-5 pb-24 sm:pt-8 lg:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
 
           {/* ── Sol — Form ── */}
@@ -358,12 +441,22 @@ function OlusturIcerigi() {
                         </label>
                         <div className="grid grid-cols-2 gap-2.5">
                           <input type="text" placeholder="1. kişi (örn. Ayşe)"
-                            value={form.kisi1} onChange={e => setForm({ ...form, kisi1: e.target.value })}
-                            className={INPUT} />
+                            ref={alanRefi("kisi1")}
+                            value={form.kisi1} onChange={e => formAlaniGuncelle("kisi1", e.target.value)}
+                            aria-invalid={!!alanHatalari.kisi1}
+                            className={zorunluAlanClass("kisi1")} />
                           <input type="text" placeholder="2. kişi (örn. Mehmet)"
-                            value={form.kisi2} onChange={e => setForm({ ...form, kisi2: e.target.value })}
-                            className={INPUT} />
+                            ref={alanRefi("kisi2")}
+                            value={form.kisi2} onChange={e => formAlaniGuncelle("kisi2", e.target.value)}
+                            aria-invalid={!!alanHatalari.kisi2}
+                            className={zorunluAlanClass("kisi2")} />
                         </div>
+                        {(alanHatalari.kisi1 || alanHatalari.kisi2) && (
+                          <div className="grid grid-cols-2 gap-2.5">
+                            {alanHatasi("kisi1") ?? <span />}
+                            {alanHatasi("kisi2") ?? <span />}
+                          </div>
+                        )}
                         <p className="text-xs text-gray-400 mt-1">Davetiyede büyük harfle "Ayşe &amp; Mehmet" şeklinde görünür.</p>
                       </div>
                     ) : (
@@ -372,8 +465,11 @@ function OlusturIcerigi() {
                           Başlık <span className="text-red-400 font-normal text-xs">zorunlu</span>
                         </label>
                         <input type="text" placeholder="Örn: Can'ın 30. Doğum Günü"
-                          value={form.baslik} onChange={e => setForm({ ...form, baslik: e.target.value })}
-                          className={INPUT} />
+                          ref={alanRefi("baslik")}
+                          value={form.baslik} onChange={e => formAlaniGuncelle("baslik", e.target.value)}
+                          aria-invalid={!!alanHatalari.baslik}
+                          className={zorunluAlanClass("baslik")} />
+                        {alanHatasi("baslik")}
                       </div>
                     )}
 
@@ -383,8 +479,11 @@ function OlusturIcerigi() {
                           Tarih <span className="text-red-400 font-normal text-xs">zorunlu</span>
                         </label>
                         <input type="date" value={form.tarih}
-                          onChange={e => setForm({ ...form, tarih: e.target.value })}
-                          className={DATE_INPUT} />
+                          ref={alanRefi("tarih")}
+                          onChange={e => formAlaniGuncelle("tarih", e.target.value)}
+                          aria-invalid={!!alanHatalari.tarih}
+                          className={zorunluAlanClass("tarih", DATE_INPUT)} />
+                        {alanHatasi("tarih")}
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1.5">Saat</label>
@@ -399,8 +498,11 @@ function OlusturIcerigi() {
                         Mekan <span className="text-red-400 font-normal text-xs">zorunlu</span>
                       </label>
                       <input type="text" placeholder="Mekan adı veya adres"
-                        value={form.mekan} onChange={e => setForm({ ...form, mekan: e.target.value })}
-                        className={INPUT} />
+                        ref={alanRefi("mekan")}
+                        value={form.mekan} onChange={e => formAlaniGuncelle("mekan", e.target.value)}
+                        aria-invalid={!!alanHatalari.mekan}
+                        className={zorunluAlanClass("mekan")} />
+                      {alanHatasi("mekan")}
                       {form.mekan && (
                         <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(form.mekan)}`}
                           target="_blank" rel="noopener noreferrer"
@@ -685,10 +787,7 @@ function OlusturIcerigi() {
                   overflowX: "hidden",
                   scrollbarWidth: "none",
                 } as React.CSSProperties} className="[&::-webkit-scrollbar]:hidden">
-                  {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                  {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                  {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
-                  {sablonTipi === "klasik"         && <KlasikSablon        davetiye={previewVeri} rsvpBileseni={null} />}
+                  {onizlemeIcerigi}
                 </div>
               </TelefonMockup>
               <div className="mt-3 flex flex-col items-center gap-1">
@@ -761,6 +860,47 @@ function TutorialModal({ onKapat }: { onKapat: () => void }) {
         <p className="text-center text-[10px] text-gray-400 mt-2.5">
           Bu rehber bir daha gösterilmeyecek
         </p>
+      </div>
+    </div>
+  );
+}
+
+function MobilOnizlemeModal({ children, onKapat }: { children: React.ReactNode; onKapat: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 lg:hidden">
+      <div className="absolute inset-0 bg-gray-950/80 backdrop-blur-sm" onClick={onKapat} />
+      <div className="absolute inset-x-0 bottom-0 max-h-[94dvh] rounded-t-[2rem] bg-gray-950 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">Canlı Önizleme</p>
+            <p className="mt-0.5 text-xs text-white/45">Davetiyen misafir ekranında böyle görünür</p>
+          </div>
+          <button
+            type="button"
+            onClick={onKapat}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 active:scale-95"
+            aria-label="Önizlemeyi kapat"
+          >
+            x
+          </button>
+        </div>
+        <div className="max-h-[calc(94dvh-73px)] overflow-y-auto px-4 py-5">
+          <TelefonMockup>
+            <div style={{
+              zoom: SCALE,
+              width: NAT_W,
+              height: `${Math.ceil(420 / SCALE)}px`,
+              overflowY: "auto",
+              overflowX: "hidden",
+              scrollbarWidth: "none",
+            } as React.CSSProperties} className="[&::-webkit-scrollbar]:hidden">
+              {children}
+            </div>
+          </TelefonMockup>
+          <p className="mt-4 text-center text-[11px] text-white/35">
+            Alanları düzenledikçe bu önizleme anında güncellenir.
+          </p>
+        </div>
       </div>
     </div>
   );
