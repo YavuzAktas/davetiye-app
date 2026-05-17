@@ -3,7 +3,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Timer, Music, ClipboardCheck } from "lucide-react";
@@ -463,9 +462,6 @@ const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklam
 ══════════════════════════════════════════════ */
 function PremiumKart({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const userPlan = (session?.user as any)?.plan ?? "free";
-  const kilitli = userPlan === "free";
   const demoUrl = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
 
@@ -698,27 +694,15 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-2.5 mt-auto pt-1">
-            {kilitli ? (
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => router.push("/fiyatlar")}
-                className="flex-1 py-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2"
-                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
-              >
-                <span>⭐</span> Fiyatları Gör — lüks şablon +₺100
-              </motion.button>
-            ) : (
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
-                className="flex-1 py-4 rounded-2xl text-sm font-bold"
-                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
-              >
-                Bu Şablonla Başla →
-              </motion.button>
-            )}
+            <motion.button
+              whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
+              className="flex-1 py-4 rounded-2xl text-sm font-bold"
+              style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
+            >
+              Bu Şablonla Başla →
+            </motion.button>
             {demoUrl && (
               <motion.a
                 whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.09)" } as any}
