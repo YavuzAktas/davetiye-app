@@ -88,6 +88,25 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }),
   ]);
 
+  // Referral ödülü: bu kullanıcı birisinin referralıyla geldiyse ve
+  // daha önce ödüllendirilmediyse referrer'a 50₺ kredi ekle.
+  const referral = await prisma.referral.findUnique({
+    where: { referredId: odemeToken.userId },
+    select: { id: true, odendi: true, referrerId: true, tutar: true },
+  });
+  if (referral && !referral.odendi) {
+    await prisma.$transaction([
+      prisma.referral.update({
+        where: { id: referral.id },
+        data: { odendi: true },
+      }),
+      prisma.user.update({
+        where: { id: referral.referrerId },
+        data: { referralKredi: { increment: referral.tutar } },
+      }),
+    ]);
+  }
+
   await prisma.odemeKaydi.create({
     data: {
       userId: odemeToken.userId,

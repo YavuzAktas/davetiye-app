@@ -40,6 +40,16 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
   const [onay, setOnay] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [odeModal, setOdeModal] = useState<string | null>(null);
+  const [kredi, setKredi] = useState(0);
+  const [krediUygula, setKrediUygula] = useState(false);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    fetch("/api/referral/kredi")
+      .then(r => r.json())
+      .then(d => { if (d.kredi > 0) { setKredi(d.kredi); setKrediUygula(true); } })
+      .catch(() => {});
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (!session?.user?.name || fatura.adSoyad) return;
@@ -94,7 +104,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
       const res = await fetch("/api/odeme/baslat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ davetiyeId, faturaBilgileri: fatura }),
+        body: JSON.stringify({ davetiyeId, faturaBilgileri: fatura, krediUygula: krediUygula && kredi > 0 }),
       });
       const data = await res.json();
       if (data.checkoutFormContent) {
@@ -270,6 +280,44 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
             </>
           )}
         </div>
+
+        {/* Referral kredi banner */}
+        {kredi > 0 && (
+          <div
+            style={{
+              marginTop: 20,
+              borderRadius: 14,
+              padding: "14px 16px",
+              background: krediUygula ? "rgba(139,92,246,0.12)" : "rgba(255,255,255,0.04)",
+              border: `1px solid ${krediUygula ? "rgba(139,92,246,0.4)" : "rgba(255,255,255,0.08)"}`,
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+              cursor: "pointer", transition: "all 0.2s",
+            }}
+            onClick={() => setKrediUygula(p => !p)}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                background: "linear-gradient(135deg,#7c3aed,#db2777)",
+                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
+              }}>🎁</div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", margin: 0 }}>{kredi}₺ Bekleriz krediniz var</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: 0, marginTop: 2 }}>
+                  {krediUygula ? "Ödemeye uygulandı ✓" : "Uygulamak için tıklayın"}
+                </p>
+              </div>
+            </div>
+            <div style={{
+              width: 20, height: 20, borderRadius: 6, border: `2px solid ${krediUygula ? "#a855f7" : "rgba(255,255,255,0.2)"}`,
+              background: krediUygula ? "#7c3aed" : "transparent",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0, transition: "all 0.2s",
+            }}>
+              {krediUygula && <span style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>✓</span>}
+            </div>
+          </div>
+        )}
 
         {/* Legal checkbox */}
         <label style={{

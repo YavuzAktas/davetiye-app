@@ -106,7 +106,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const body = await req.json();
-  const { davetiyeId } = body;
+  const { davetiyeId, krediUygula } = body;
 
   if (typeof davetiyeId !== "string" || !davetiyeId) {
     return NextResponse.json(
@@ -156,7 +156,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? faturaBilgileri.adres
     : `${faturaBilgileri.sehir} - Bireysel dijital hizmet alımı`;
   const fiyat = davetiyeFiyatiHesapla(davetiye);
-  const toplamTutar = fiyat.toplamTutar;
+  const referralIndirimi = (krediUygula === true && (user.referralKredi ?? 0) > 0)
+    ? Math.min(user.referralKredi ?? 0, fiyat.toplamTutar)
+    : 0;
+  const toplamTutar = fiyat.toplamTutar - referralIndirimi;
   const siparis = await prisma.siparis.create({
     data: {
       userId: user.id,
@@ -255,6 +258,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       davetiyeId: davetiye.id,
       siparisId: siparis.id,
       toplamTutar,
+      referralIndirimi,
       fiyatKirilimi: fiyat as any,
       expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat
       aliciAdSoyad: faturaBilgileri.adSoyad,
@@ -264,6 +268,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       aliciAdres: kurumsalFatura ? faturaBilgileri.adres : null,
     },
   });
+
+  if (referralIndirimi > 0) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { referralKredi: { decrement: referralIndirimi } },
+    });
+  }
 
   return NextResponse.json({
     checkoutFormContent: result.checkoutFormContent,

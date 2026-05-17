@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import AyarlarClient from "@/components/AyarlarClient";
+import ReferralWidget from "@/components/ReferralWidget";
 
 export default async function AyarlarSayfasi() {
   const session = await getServerSession(authOptions);
@@ -17,6 +18,9 @@ export default async function AyarlarSayfasi() {
       email: true,
       image: true,
       createdAt: true,
+      referralKod: true,
+      referralKredi: true,
+      referrallar: { select: { id: true, odendi: true } },
     },
   });
 
@@ -161,6 +165,12 @@ export default async function AyarlarSayfasi() {
 
           {/* SAĞ — Aksiyonlar (1/3) */}
           <div className="space-y-4">
+            <ReferralWidget
+              referralKod={user.referralKod ?? ""}
+              referralKredi={user.referralKredi ?? 0}
+              toplamReferral={user.referrallar?.length ?? 0}
+              odenenReferral={user.referrallar?.filter(r => r.odendi).length ?? 0}
+            />
             <AyarlarClient />
 
             {/* Hızlı Erişim */}

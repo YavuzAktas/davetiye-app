@@ -27,6 +27,10 @@ model User {
   sessions         Session[]
   bildirimleri     Bildirim[]
   geciciYuklemeler GeciciYukleme[]
+  referralKod      String    @unique @default(dbgenerated("gen_random_uuid()"))
+  referralKredi    Int       @default(0)
+  referrallar      Referral[] @relation("ReferralVeren")
+  referralAlinan   Referral?  @relation("ReferralAlan")
 }
 
 model Account {
@@ -232,6 +236,7 @@ model OdemeToken {
   aliciKimlikVergiNo String?
   aliciSehir         String?
   aliciAdres         String?
+  referralIndirimi   Int       @default(0)
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   davetiye           Davetiye? @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
   siparis            Siparis?  @relation(fields: [siparisId], references: [id], onDelete: SetNull)
@@ -370,6 +375,19 @@ model Davetli {
   davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId, createdAt])
+}
+
+model Referral {
+  id         String   @id @default(cuid())
+  referrerId String
+  referredId String   @unique
+  odendi     Boolean  @default(false)
+  tutar      Int      @default(50)
+  createdAt  DateTime @default(now())
+  referrer   User     @relation("ReferralVeren", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred   User     @relation("ReferralAlan",  fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@index([referrerId])
 }
 
 model Bildirim {
