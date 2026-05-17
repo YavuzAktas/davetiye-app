@@ -45,7 +45,7 @@ export default function GizlilikSayfasi() {
               <ul>
                 <li>Oluşturulan davetiyeler ve içerikleri</li>
                 <li>Şablon tercihleri, renk ve font seçimleri</li>
-                <li>Müzik tercihleri, Spotify bağlantısı, playlist bilgisi ve şarkı önerileri</li>
+                <li>Müzik tercihleri ve isteğe bağlı şarkı önerileri</li>
                 <li>Davetiye görüntülenme sayısı</li>
                 <li>Masa planı ve misafir listesi</li>
               </ul>
@@ -79,7 +79,7 @@ export default function GizlilikSayfasi() {
               <li><strong>Hizmet sunumu:</strong> Davetiye oluşturma, düzenleme ve paylaşım özelliklerini çalıştırmak</li>
               <li><strong>RSVP iletimi:</strong> Misafirlerin katılım bildirimlerini davet sahibine iletmek</li>
               <li><strong>Albüm ve anı yönetimi:</strong> Fotoğraf, yazılı anı ve sesli anıları davet sahibi onayı sonrası davetiye sayfasında göstermek</li>
-              <li><strong>Entegrasyon:</strong> Spotify bağlantısı ile şarkı önerilerini etkinlik çalma listesine eklemek</li>
+              <li><strong>Şarkı önerileri:</strong> RSVP üzerinden iletilen müzik dileklerini davet sahibine göstermek</li>
               <li><strong>Kimlik doğrulama:</strong> Hesabınıza güvenli erişim sağlamak</li>
               <li><strong>Ödeme:</strong> Plan yükseltme işlemlerini gerçekleştirmek</li>
               <li><strong>Güvenlik:</strong> Yetkisiz erişim ve sahteciliği engellemek</li>
@@ -117,9 +117,6 @@ export default function GizlilikSayfasi() {
                 <li>
                   <strong>Vercel Inc.</strong> — Uygulama ve yüklenen medya dosyalarının barındırılması.
                   Dosyalar sağlayıcının altyapısında yurt dışında işlenebilir.
-                </li>
-                <li>
-                  <strong>Spotify AB</strong> — İsteğe bağlı müzik entegrasyonu ve playlist yönetimi.
                 </li>
               </ul>
               <p>

@@ -639,25 +639,23 @@ export default function Anasayfa() {
               </div>
             </Section>
 
-            {/* Spotify — Etkinlik Çalma Listesi */}
+            {/* Şarkı dilekleri */}
             <Section className="md:col-span-2">
-              <div className="h-full bg-[#0a0f0a] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-[#1DB954]/15">
-                <div className="absolute -bottom-14 -left-14 w-60 h-60 rounded-full bg-[#1DB954] opacity-[0.08] blur-3xl group-hover:opacity-[0.15] transition-opacity" />
-                <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-[0.08] transition-opacity">
-                  <svg viewBox="0 0 24 24" className="w-28 h-28 fill-[#1DB954]"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-                </div>
+              <div className="h-full bg-gradient-to-br from-rose-950 via-slate-950 to-indigo-950 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-rose-200/10">
+                <div className="absolute -bottom-14 -left-14 w-60 h-60 rounded-full bg-rose-400 opacity-[0.08] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
+                <div className="absolute top-5 right-6 text-7xl opacity-5 group-hover:opacity-10 transition-opacity select-none">♪</div>
                 <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-11 h-11 bg-[#1DB954]/15 border border-[#1DB954]/25 rounded-2xl flex items-center justify-center">
-                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#1DB954]"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                      <div className="w-11 h-11 bg-rose-200/10 border border-rose-200/15 rounded-2xl flex items-center justify-center">
+                        <span className="text-rose-100 text-lg" aria-hidden="true">♪</span>
                       </div>
                       <div>
-                        <h3 className="text-white text-xl font-bold leading-tight">Etkinlik Çalma Listesi</h3>
-                        <p className="text-[#1DB954] text-[11px] font-medium tracking-wide">Spotify entegrasyonu</p>
+                        <h3 className="text-white text-xl font-bold leading-tight">Şarkı dilekleri</h3>
+                        <p className="text-rose-100/80 text-[11px] font-medium tracking-wide">RSVP ile müzik önerisi</p>
                       </div>
                     </div>
-                    <p className="text-gray-400 text-sm leading-relaxed">Misafirler RSVP yaparken şarkı önerir — playlist&apos;ine otomatik eklenir.</p>
+                    <p className="text-gray-300/80 text-sm leading-relaxed">Misafirler RSVP yaparken diledikleri şarkıyı yazar; öneriler davetiye sahibinin panelinde toplanır.</p>
                   </div>
                   <div className="flex-shrink-0 space-y-2 w-full md:w-48">
                     {[
@@ -671,7 +669,7 @@ export default function Anasayfa() {
                           <p className="text-[11px] text-white font-medium leading-tight truncate">{s.isim}</p>
                           <p className="text-[10px] text-gray-500 truncate">{s.sanatci}</p>
                         </div>
-                        <div className="ml-auto flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
+                        <div className="ml-auto flex-shrink-0 w-1.5 h-1.5 rounded-full bg-rose-200" />
                       </div>
                     ))}
                   </div>

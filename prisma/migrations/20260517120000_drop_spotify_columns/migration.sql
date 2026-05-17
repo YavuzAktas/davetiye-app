@@ -1,0 +1,7 @@
+ALTER TABLE "User" DROP COLUMN IF EXISTS "spotifyId";
+ALTER TABLE "User" DROP COLUMN IF EXISTS "spotifyRefreshToken";
+
+ALTER TABLE "Davetiye" DROP COLUMN IF EXISTS "spotifyAktif";
+ALTER TABLE "Davetiye" DROP COLUMN IF EXISTS "spotifyPlaylistId";
+
+ALTER TABLE "RSVP" DROP COLUMN IF EXISTS "spotifyTrackId";

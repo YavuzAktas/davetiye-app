@@ -21,7 +21,7 @@ const ORNEK: DavetiyeVeri = {
   sablon: "nisan-luks",
   ozelRenk: null,
   font: null,
-  muzik: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+  muzik: "/muzik/love.mp3",
   goruntulenme: 0,
   user: { name: "Aylin Yılmaz", email: null },
   kisi1: "Aylin",

@@ -2,7 +2,7 @@ export interface Muzik {
   id: string;
   isim: string;
   kategori: "romantik" | "klasik" | "neseli" | "sakin";
-  dosya: string; // /muzikler/xxx.mp3
+  dosya: string; // /muzik/xxx.mp3
   sure: string;  // "2:34"
 }
 
@@ -13,70 +13,68 @@ export const MUZIK_KATEGORILER: Record<Muzik["kategori"], string> = {
   sakin: "Sakin",
 };
 
-// Tüm parçalar SoundHelix'ten alınmıştır.
-// Lisans: soundhelix.com — "completely free to use in any context, commercial or not"
 export const MUZIKLER: Muzik[] = [
   {
     id: "romantik-1",
-    isim: "Romantik Melodi",
+    isim: "Love",
     kategori: "romantik",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-    sure: "4:10",
+    dosya: "/muzik/love.mp3",
+    sure: "3:08",
   },
   {
     id: "romantik-2",
-    isim: "Yumuşak Piyano",
+    isim: "Love Piano",
     kategori: "romantik",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    sure: "3:45",
+    dosya: "/muzik/love-piano.mp3",
+    sure: "2:00",
   },
   {
     id: "romantik-3",
-    isim: "Aşk Teması",
+    isim: "Teaser",
     kategori: "romantik",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
-    sure: "5:02",
+    dosya: "/muzik/teaser.mp3",
+    sure: "1:07",
   },
   {
     id: "klasik-1",
-    isim: "Klasik Oda Müziği",
+    isim: "The Best Jazz Club In New Orleans",
     kategori: "klasik",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-    sure: "4:28",
+    dosya: "/muzik/the-best-jazz-club-in-new-orleans.mp3",
+    sure: "2:00",
   },
   {
     id: "klasik-2",
-    isim: "Yaylılar",
+    isim: "Cooking For Christmas",
     kategori: "klasik",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
-    sure: "3:58",
+    dosya: "/muzik/cooking-for-christmas.mp3",
+    sure: "2:19",
   },
   {
     id: "neseli-1",
-    isim: "Neşeli Ritim",
+    isim: "Energetic",
     kategori: "neseli",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    sure: "3:22",
+    dosya: "/muzik/energetic.mp3",
+    sure: "2:17",
   },
   {
     id: "neseli-2",
-    isim: "Kutlama",
+    isim: "Ukulele Smiles",
     kategori: "neseli",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-    sure: "2:55",
+    dosya: "/muzik/ukulele-smiles.mp3",
+    sure: "2:22",
   },
   {
     id: "sakin-1",
-    isim: "Huzur",
+    isim: "Nature",
     kategori: "sakin",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3",
-    sure: "4:40",
+    dosya: "/muzik/nature.mp3",
+    sure: "2:18",
   },
   {
     id: "sakin-2",
-    isim: "Sessiz Akşam",
+    isim: "Water",
     kategori: "sakin",
-    dosya: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
-    sure: "5:15",
+    dosya: "/muzik/water.mp3",
+    sure: "1:09",
   },
 ];
