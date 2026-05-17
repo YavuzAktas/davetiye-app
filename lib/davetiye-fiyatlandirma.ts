@@ -23,12 +23,12 @@ export type DavetiyeFiyatSonucu = {
 };
 
 export const DAVETIYE_FIYAT_KALEMLERI = {
-  temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 199 },
+  temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 299 },
   luksSablon: { kod: "luks-sablon", ad: "Lüks şablon", tutar: 100 },
-  muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 49 },
-  album: { kod: "album-ani", ad: "Albüm ve anı alanı", tutar: 99 },
+  muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 69 },
+  album: { kod: "album-ani", ad: "Albüm ve anı alanı", tutar: 129 },
   sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 149 },
-  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 149 },
+  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 169 },
   oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
 } as const;
 
