@@ -54,17 +54,7 @@ function useAudio(src: string) {
 
     const tryPlay = () => audio.play().catch(() => {});
 
-    const p = audio.play();
-    if (p !== undefined) {
-      p.catch(() => {
-        // Autoplay engellendi — mühür tıklaması veya herhangi bir etkileşimde başlat
-        const resume = () => { tryPlay(); };
-        document.addEventListener("muzik-baslat", resume, { once: true });
-        document.addEventListener("click",        resume, { once: true });
-        document.addEventListener("touchstart",   resume, { once: true, passive: true });
-      });
-    }
-
+    // Sadece mühür tıklamasında başla — asla otomatik çalma
     const handleBaslat = () => { if (audio.paused) tryPlay(); };
     document.addEventListener("muzik-baslat", handleBaslat);
 

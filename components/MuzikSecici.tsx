@@ -316,6 +316,14 @@ export default function MuzikSecici({ secili, onChange }: Props) {
   const [calanId, setCalanId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Bileşen unmount olduğunda (sayfa geçişi) önizleme sesini durdur
+  React.useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
+  }, []);
+
   const liste =
     kategori === "tumu"
       ? MUZIK_KUTUPHANESI
