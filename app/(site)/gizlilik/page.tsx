@@ -81,7 +81,7 @@ export default function GizlilikSayfasi() {
               <li><strong>Albüm ve anı yönetimi:</strong> Fotoğraf, yazılı anı ve sesli anıları davet sahibi onayı sonrası davetiye sayfasında göstermek</li>
               <li><strong>Şarkı önerileri:</strong> RSVP üzerinden iletilen müzik dileklerini davet sahibine göstermek</li>
               <li><strong>Kimlik doğrulama:</strong> Hesabınıza güvenli erişim sağlamak</li>
-              <li><strong>Ödeme:</strong> Plan yükseltme işlemlerini gerçekleştirmek</li>
+              <li><strong>Ödeme:</strong> Davetiye ve ek özellik ödemelerini gerçekleştirmek</li>
               <li><strong>Güvenlik:</strong> Yetkisiz erişim ve sahteciliği engellemek</li>
               <li><strong>İyileştirme:</strong> Anonim kullanım istatistikleri ile platformu geliştirmek</li>
             </ul>

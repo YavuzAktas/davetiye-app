@@ -61,7 +61,7 @@ export default function NavLinks() {
                 {[
                   { href: "/dashboard", label: "Dashboard" },
                   { href: "/sablonlar", label: "Yeni Davetiye" },
-                  { href: "/fiyatlar", label: "Planım" },
+                  { href: "/fiyatlar", label: "Fiyatlar" },
                   { href: "/dashboard/ayarlar", label: "Ayarlar" },
                 ].map(({ href, label }) => (
                   <Link key={href} href={href} onClick={() => setProfilAcik(false)}

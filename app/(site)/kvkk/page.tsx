@@ -51,7 +51,7 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Görsel</strong></td><td>Profil fotoğrafı</td><td>Google (isteğe bağlı)</td></tr>
                   <tr><td><strong>Hizmet kullanım</strong></td><td>Oluşturulan davetiyeler, etkinlik tarihi/mekanı, şablon, renk, font, müzik ve masa planı tercihleri</td><td>Platform kullanımı</td></tr>
                   <tr><td><strong>İçerik ve medya</strong></td><td>Davetiye metinleri, anı defteri mesajları, yüklenen fotoğraflar, polaroid görselleri ve sesli anı kayıtları</td><td>Kullanıcı veya davetli yüklemeleri</td></tr>
-                  <tr><td><strong>Ödeme</strong></td><td>Plan bilgisi, ödeme doğrulama tokenı, işlem durumu, ödeme tutarı ve ödeme sağlayıcısına aktarılan alıcı/fatura bilgileri (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
+                  <tr><td><strong>Ödeme</strong></td><td>Davetiye ve ek özellik bilgisi, ödeme doğrulama tokenı, işlem durumu, ödeme tutarı ve ödeme sağlayıcısına aktarılan alıcı/fatura bilgileri (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
                   <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
                   <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
                   <tr><td><strong>Misafir listesi</strong></td><td>Davet sahibi tarafından girilen ad, telefon ve e-posta</td><td>Davet sahibi girişi</td></tr>
@@ -70,7 +70,7 @@ export default function KvkkSayfasi() {
               <li>RSVP (katılım bildirimi) toplanması ve davet sahibine iletilmesi</li>
               <li>Misafir fotoğrafları, yazılı ve sesli anıların davet sahibi onayı sonrası yayınlanması</li>
               <li>RSVP üzerinden iletilen şarkı önerilerinin davet sahibine gösterilmesi</li>
-              <li>Ödeme işlemlerinin gerçekleştirilmesi ve planın güncellenmesi</li>
+              <li>Ödeme işlemlerinin gerçekleştirilmesi ve satın alınan davetiye özelliklerinin aktif edilmesi</li>
               <li>Teknik destek ve müşteri hizmetleri sunulması</li>
               <li>Platform güvenliğinin ve bütünlüğünün sağlanması</li>
               <li>Yasal yükümlülüklerin yerine getirilmesi</li>

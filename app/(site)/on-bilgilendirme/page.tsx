@@ -3,7 +3,7 @@ import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Ön Bilgilendirme Formu",
-  description: "Bekleriz ücretli plan satın alımları için ön bilgilendirme formu.",
+  description: "Bekleriz dijital davetiye satın alımları için ön bilgilendirme formu.",
 };
 
 export default function OnBilgilendirmeSayfasi() {
@@ -11,7 +11,7 @@ export default function OnBilgilendirmeSayfasi() {
     <YasalSayfa
       etiket="Satış"
       baslik="Ön Bilgilendirme Formu"
-      sonGuncelleme="12 Mayıs 2026"
+      sonGuncelleme="17 Mayıs 2026"
       bolumler={[
         {
           baslik: "Satıcı / Sağlayıcı Bilgileri",
@@ -33,12 +33,12 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <>
               <p>
-                Bekleriz, dijital davetiye oluşturma, paylaşma, RSVP toplama ve seçilen plana
-                göre ek özellikler sunan çevrimiçi bir hizmettir.
+                Bekleriz, dijital davetiye oluşturma, paylaşma, RSVP toplama ve seçilen
+                davetiyeye göre ek özellikler sunan çevrimiçi bir hizmettir.
               </p>
               <ul>
-                <li><strong>Standart Plan:</strong> 5 aktif davetiye, 200 davetli, tüm şablonlar, RSVP, WhatsApp paylaşımı, QR kod ve müzik ekleme.</li>
-                <li><strong>Premium Plan:</strong> Sınırsız davetiye, sınırsız davetli, oturma planı, Albüm & Anı, görüntülenme takibi ve öncelikli destek.</li>
+                <li><strong>Temel dijital davetiye:</strong> Mobil uyumlu davetiye, paylaşım linki, RSVP ve yönetim paneli.</li>
+                <li><strong>Ek özellikler:</strong> Lüks şablon, müzik, Albüm & Anı, sesli anı, canlı fotoğraf duvarı ve oturma planı gibi isteğe bağlı özellikler.</li>
               </ul>
             </>
           ),
@@ -48,8 +48,9 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Standart Plan</th><td>₺299, KDV dahil, tek seferlik ödeme</td></tr>
-                <tr><th>Premium Plan</th><td>₺599, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Temel dijital davetiye</th><td>₺199, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Ek özellikler</th><td>Seçilen özelliklere göre ödeme ekranı öncesinde ayrıca gösterilir.</td></tr>
+                <tr><th>Toplam fiyat</th><td>Davetiye oluşturma ekranında ve ödeme öncesinde seçilen özelliklere göre hesaplanır.</td></tr>
                 <tr><th>Ek masraf</th><td>Platform tarafından ayrıca kargo, teslimat veya kurulum bedeli alınmaz.</td></tr>
                 <tr><th>Ödeme altyapısı</th><td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri Bekleriz tarafından saklanmaz.</td></tr>
                 <tr><th>Ödeme için aktarılan alıcı bilgileri</th><td>{ODEME_ALICI_VERILERI.join(", ")}.</td></tr>
@@ -61,8 +62,8 @@ export default function OnBilgilendirmeSayfasi() {
           baslik: "Teslimat ve İfa",
           icerik: (
             <p>
-              Ücretli plan özellikleri ödeme işleminin başarıyla tamamlanmasından sonra hesabınıza
-              dijital olarak tanımlanır. Fiziksel teslimat yapılmaz.
+              Satın alınan davetiye ve seçilen ek özellikler ödeme işleminin başarıyla
+              tamamlanmasından sonra dijital olarak aktif edilir. Fiziksel teslimat yapılmaz.
             </p>
           ),
         },

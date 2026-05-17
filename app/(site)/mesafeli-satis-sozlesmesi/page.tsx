@@ -3,7 +3,7 @@ import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Mesafeli Satış Sözleşmesi",
-  description: "Bekleriz ücretli plan satın alımları için mesafeli satış sözleşmesi.",
+  description: "Bekleriz dijital davetiye satın alımları için mesafeli satış sözleşmesi.",
 };
 
 export default function MesafeliSatisSozlesmesiSayfasi() {
@@ -11,7 +11,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
     <YasalSayfa
       etiket="Satış"
       baslik="Mesafeli Satış Sözleşmesi"
-      sonGuncelleme="12 Mayıs 2026"
+      sonGuncelleme="17 Mayıs 2026"
       bolumler={[
         {
           baslik: "Taraflar",
@@ -19,7 +19,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
             <>
               <p>
                 İşbu sözleşme, aşağıda bilgileri yer alan satıcı/sağlayıcı ile Bekleriz üzerinden
-                ücretli plan satın alan kullanıcı arasında elektronik ortamda kurulmaktadır.
+                dijital davetiye veya ek özellik satın alan kullanıcı arasında elektronik ortamda kurulmaktadır.
               </p>
               <table>
                 <tbody>
@@ -37,22 +37,22 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
           baslik: "Sözleşmenin Konusu",
           icerik: (
             <p>
-              Sözleşmenin konusu, kullanıcının seçtiği ücretli Bekleriz planının dijital olarak
-              hesabına tanımlanması ve ilgili plan kapsamındaki çevrimiçi davetiye özelliklerinin
-              kullandırılmasıdır.
+              Sözleşmenin konusu, kullanıcının Bekleriz üzerinde oluşturduğu dijital davetiye
+              ve seçtiği ek özelliklerin ödeme sonrası dijital olarak aktif edilmesidir.
             </p>
           ),
         },
         {
-          baslik: "Planlar ve Bedel",
+          baslik: "Hizmet ve Bedel",
           icerik: (
             <table>
               <tbody>
-                <tr><th>Standart Plan</th><td>₺299, KDV dahil, tek seferlik ödeme</td></tr>
-                <tr><th>Premium Plan</th><td>₺599, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Temel dijital davetiye</th><td>₺199, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Ek özellikler</th><td>Seçilen özelliklere göre ödeme öncesinde ayrıca gösterilir.</td></tr>
+                <tr><th>Toplam bedel</th><td>Davetiye oluşturma ve ödeme ekranında seçilen özelliklere göre hesaplanır.</td></tr>
                 <tr><th>Ödeme yöntemi</th><td>iyzico ödeme altyapısı üzerinden kredi/banka kartı ve desteklenen diğer ödeme yöntemleri.</td></tr>
                 <tr><th>Ödeme için aktarılan alıcı bilgileri</th><td>{ODEME_ALICI_VERILERI.join(", ")}.</td></tr>
-                <tr><th>Teslimat</th><td>Fiziksel teslimat yoktur; plan özellikleri ödeme sonrası dijital olarak hesaba tanımlanır.</td></tr>
+                <tr><th>Teslimat</th><td>Fiziksel teslimat yoktur; davetiye ve seçilen özellikler ödeme sonrası dijital olarak aktif edilir.</td></tr>
               </tbody>
             </table>
           ),
@@ -68,8 +68,8 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
                 cayma hakkı istisnası uygulanabilir.
               </p>
               <p>
-                Kullanıcı, ödeme öncesinde ilgili onay kutusunu işaretleyerek plan özelliklerinin
-                ödeme sonrası hemen tanımlanmasını talep eder ve cayma hakkı istisnası hakkında
+                Kullanıcı, ödeme öncesinde ilgili onay kutusunu işaretleyerek dijital davetiye
+                hizmetinin ödeme sonrası hemen başlatılmasını talep eder ve cayma hakkı istisnası hakkında
                 bilgilendirildiğini kabul eder. Hizmetin hiç kullanılmadığı durumlarda iade talepleri
                 destek kanalı üzerinden ayrıca değerlendirilir.
               </p>

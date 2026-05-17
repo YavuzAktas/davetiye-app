@@ -22,5 +22,5 @@ export const ODEME_ALICI_VERILERI = [
   "şehir",
   "telefon numarası",
   "kimlik/vergi numarası",
-  "seçilen plan ve ödeme tutarı",
+  "seçilen davetiye/ek özellikler ve ödeme tutarı",
 ];

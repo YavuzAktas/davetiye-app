@@ -5,16 +5,16 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-/* ─── Plan verileri ─────────────────────────────────────── */
+/* ─── Eski plan ödemeleri için geriye dönük gösterim ───── */
 const PLAN: Record<string, { isim: string; fiyat: string; ozellikler: string[] }> = {
   standart: {
     isim: "Standart",
-    fiyat: "₺299",
+    fiyat: "Ödendi",
     ozellikler: ["5 aktif davetiye", "200 davetli limiti", "Tüm premium şablonlar", "QR kod oluşturma"],
   },
   premium: {
     isim: "Premium",
-    fiyat: "₺599",
+    fiyat: "Ödendi",
     ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Müzik & animasyon ekleme", "Öncelikli destek"],
   },
 };

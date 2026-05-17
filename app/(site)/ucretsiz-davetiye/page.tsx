@@ -78,9 +78,9 @@ const faq = [
       "Evet. Misafirler davetiye üzerinden katılım durumunu bildirebilir, siz de panelden yanıtları takip edebilirsiniz.",
   },
   {
-    soru: "Ne zaman ücretli plana geçmeliyim?",
+    soru: "Ne zaman ek özellik seçmeliyim?",
     cevap:
-      "Daha fazla aktif davetiye, daha yüksek davetli limiti, lüks şablonlar veya albüm/anı gibi gelişmiş özellikler gerekiyorsa ücretli plana geçebilirsiniz.",
+      "Lüks şablon, albüm/anı, müzik, canlı fotoğraf duvarı veya oturma planı gerekiyorsa davetiye oluştururken bu özellikleri ekleyebilirsiniz.",
   },
 ];
 
@@ -155,7 +155,7 @@ export default function UcretsizDavetiyePage() {
                 href="/fiyatlar"
                 className="rounded-2xl border border-white/15 px-8 py-4 text-sm font-semibold text-white/80 transition hover:bg-white/8"
               >
-                Planları Karşılaştır
+                Fiyatları İncele
               </Link>
             </div>
           </div>

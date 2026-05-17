@@ -86,15 +86,15 @@ export default function KullanimSartlariSayfasi() {
           ),
         },
         {
-          baslik: "Planlar, Ücretlendirme ve Ödeme",
+          baslik: "Ücretlendirme ve Ödeme",
           icerik: (
             <>
-              <p>Platformumuz ücretsiz ve ücretli plan seçenekleri sunmaktadır.</p>
+              <p>Platformumuzda ücretlendirme davetiye bazlıdır; abonelik veya otomatik yenileme yoktur.</p>
               <ul>
-                <li>Ücretli planlar <strong>iyzico</strong> güvenceli ödeme altyapısı üzerinden işlenir.</li>
-                <li>Ücretli planlar tek seferlik ödeme ile sunulur; abonelik veya otomatik yenileme yoktur.</li>
-                <li>Plan ücretleri ve kapsamları <a href="/fiyatlar">fiyatlar sayfasında</a> belirtilmiştir.</li>
-                <li>Ödeme başarısız olursa plan yükseltme işlemi tamamlanmaz ve mevcut planınız korunur.</li>
+                <li>Davetiye ve ek özellik ödemeleri <strong>iyzico</strong> güvenceli ödeme altyapısı üzerinden işlenir.</li>
+                <li>Her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır.</li>
+                <li>Temel ücret ve ek özellik bedelleri <a href="/fiyatlar">fiyatlar sayfasında</a> belirtilmiştir.</li>
+                <li>Ödeme başarısız olursa davetiye taslak olarak kalır ve yayına alınmaz.</li>
                 <li>Fiyatlar KDV dahildir. KDV oranı yasal mevzuata göre değişebilir.</li>
               </ul>
             </>
@@ -116,8 +116,8 @@ export default function KullanimSartlariSayfasi() {
                   cayma hakkı istisnası uygulanabilir.
                 </li>
                 <li>
-                  Ödeme öncesindeki onay kutusunu işaretleyerek ücretli plan özelliklerinin ödeme
-                  sonrası hemen tanımlanmasını talep ettiğinizi ve cayma hakkı istisnası hakkında
+                  Ödeme öncesindeki onay kutusunu işaretleyerek dijital davetiye hizmetinin ödeme
+                  sonrası hemen başlatılmasını talep ettiğinizi ve cayma hakkı istisnası hakkında
                   bilgilendirildiğinizi kabul edersiniz.
                 </li>
                 <li>

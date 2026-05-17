@@ -1038,16 +1038,16 @@ export default function Anasayfa() {
           <Section>
             <div className="text-center mb-14">
               <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Fiyatlar</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-3">Ücretsiz başla</h2>
-              <p className="text-gray-400 text-lg">İhtiyacına göre yükselt. Kredi kartı gerekmez.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-3">Davetiye bazlı fiyat</h2>
+              <p className="text-gray-400 text-lg">Plan yok, abonelik yok. Sadece seçtiğin özellikler için öde.</p>
             </div>
           </Section>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
             {[
-              { plan: "Ücretsiz", fiyat: "₺0", alt: "süresiz", ozellikler: ["1 davetiye", "Temel şablonlar", "RSVP takibi"], populer: false },
-              { plan: "Standart", fiyat: "₺299", alt: "tek seferlik", ozellikler: ["5 davetiye", "Tüm şablonlar", "WhatsApp paylaşım", "QR kod"], populer: true },
-              { plan: "Premium", fiyat: "₺599", alt: "tek seferlik", ozellikler: ["Sınırsız davetiye", "Oturma planı", "Albüm & Anı", "Öncelikli destek"], populer: false },
+              { plan: "Temel", fiyat: "₺199", alt: "davetiye başına", ozellikler: ["Dijital davetiye", "Paylaşım linki", "RSVP takibi"], populer: false },
+              { plan: "Popüler ekler", fiyat: "+₺149", alt: "özelliğe göre", ozellikler: ["Müzik", "Albüm & Anı", "Canlı duvar"], populer: true },
+              { plan: "Organizasyon", fiyat: "+₺199", alt: "isteğe bağlı", ozellikler: ["Oturma planı", "Lüks şablon", "Sesli anı"], populer: false },
             ].map((item, i) => (
               <Section key={i}>
                 <div className={`relative rounded-3xl p-7 h-full flex flex-col transition-all duration-300 ${item.populer ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-2xl shadow-purple-200 scale-105" : "bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1"}`}>

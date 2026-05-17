@@ -4,17 +4,17 @@ import { getSiteUrl } from "@/lib/site-url";
 const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Fiyatlar ve Planlar",
+  title: "Dijital Davetiye Fiyatları",
   description:
-    "Bekleriz ücretsiz, Standart (₺299) ve Premium (₺599) planlarını karşılaştır. Tek seferlik ödeme, abonelik yok. Dijital davetiye oluşturmak için en uygun fiyat.",
+    "Bekleriz davetiye bazlı fiyatlandırma: temel dijital davetiye ve seçtiğiniz ek özellikler için tek seferlik ödeme. Plan, abonelik ve otomatik yenileme yok.",
   keywords: [
-    "online davetiye fiyat", "dijital davetiye plan", "davetiye ücretsiz",
+    "online davetiye fiyat", "dijital davetiye fiyat", "davetiye ücreti",
     "düğün davetiyesi fiyat", "nişan davetiyesi online ücret",
   ],
   alternates: { canonical: "/fiyatlar" },
   openGraph: {
-    title: "Fiyatlar ve Planlar | Bekleriz",
-    description: "Ücretsiz başla, ihtiyacına göre yükselt. Tek seferlik ödeme, abonelik yok.",
+    title: "Dijital Davetiye Fiyatları | Bekleriz",
+    description: "Davetiye bazlı ödeme: seçtiğiniz özelliklere göre toplam tutarı canlı görün.",
     url: `${SITE_URL}/fiyatlar`,
     images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
@@ -26,10 +26,10 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Ücretsiz plan ne kadar süre kullanılabilir?",
+      name: "Bekleriz abonelik mi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ücretsiz plan süresiz kullanılabilir. Daha fazla özellik için istediğiniz zaman yükseltebilirsiniz.",
+        text: "Hayır. Bekleriz'de abonelik veya otomatik yenileme yoktur; her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır.",
       },
     },
     {
@@ -45,7 +45,7 @@ const faqSchema = {
       name: "İptal edebilir miyim?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tek seferlik ödeme olduğu için abonelik veya otomatik yenileme yoktur. Dijital hizmet ödeme sonrası hemen başlatılır; ödeme öncesinde cayma hakkı istisnası ayrıca onaylanır.",
+        text: "Dijital hizmet ödeme sonrası başlatılır; ödeme öncesinde cayma hakkı istisnası ayrıca onaylanır. Hizmetin hiç kullanılmadığı durumlarda destek üzerinden iade değerlendirmesi isteyebilirsiniz.",
       },
     },
     {

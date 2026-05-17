@@ -74,7 +74,7 @@ const faq = [
   {
     soru: "Dijital davetiye ücretsiz oluşturulabilir mi?",
     cevap:
-      "Bekleriz'de ücretsiz planla temel bir davetiye oluşturabilir, daha gelişmiş özellikler için ihtiyacınıza göre plan yükseltebilirsiniz.",
+      "Bekleriz'de davetiyenizi hazırlarken toplam fiyatı canlı görür, yalnızca seçtiğiniz davetiye ve ek özellikler için tek seferlik ödeme yaparsınız.",
   },
 ];
 
@@ -153,7 +153,7 @@ export default function DijitalDavetiyePage() {
                 href="/fiyatlar"
                 className="rounded-2xl border border-white/15 px-8 py-4 text-sm font-semibold text-white/80 transition hover:bg-white/8"
               >
-                Planları İncele
+                Fiyatları İncele
               </Link>
             </div>
           </div>

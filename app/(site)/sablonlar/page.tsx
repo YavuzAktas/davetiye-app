@@ -567,7 +567,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         <div className="text-right shrink-0">
           <p className="text-2xl font-bold tabular-nums"
             style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            ₺599
+            +₺100
           </p>
           <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>TEK SEFERLİK</p>
         </div>
@@ -706,7 +706,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
                 className="flex-1 py-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2"
                 style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
               >
-                <span>⭐</span> Premium&apos;a Geç — ₺599
+                <span>⭐</span> Fiyatları Gör — lüks şablon +₺100
               </motion.button>
             ) : (
               <motion.button

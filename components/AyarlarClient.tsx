@@ -51,7 +51,7 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
   return (
     <div className="space-y-4">
 
-      {/* ── Bölüm 1: Plan yükseltme CTA ── */}
+      {/* ── Bölüm 1: Fiyatlandırma CTA ── */}
       {plan === "free" && (
         <div className="relative bg-[#0f0118] rounded-3xl overflow-hidden p-6">
           <div className="absolute -top-8 -right-8 w-32 h-32 bg-purple-600 opacity-20 blur-3xl rounded-full" />
@@ -60,14 +60,14 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
             backgroundSize: "16px 16px",
           }} />
           <div className="relative">
-            <p className="text-purple-300 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Planını Yükselt</p>
-            <h3 className="text-white text-lg font-bold mb-1">Daha fazlasını keşfet</h3>
-            <p className="text-white/40 text-sm mb-4">Standart ile 5, Premium ile sınırsız davetiye oluştur.</p>
+            <p className="text-purple-300 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Davetiye fiyatları</p>
+            <h3 className="text-white text-lg font-bold mb-1">İhtiyacın kadar özellik ekle</h3>
+            <p className="text-white/40 text-sm mb-4">Her davetiye için seçtiğin özelliklere göre tek seferlik ödeme yap.</p>
             <Link
               href="/fiyatlar"
               className="inline-flex items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all"
             >
-              Planları Gör →
+              Fiyatları Gör →
             </Link>
           </div>
         </div>
@@ -80,14 +80,14 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
             backgroundSize: "16px 16px",
           }} />
           <div className="relative">
-            <p className="text-white/60 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Premium&apos;a Geç</p>
-            <h3 className="text-white text-lg font-bold mb-1">👑 Sınırsız her şey</h3>
-            <p className="text-white/70 text-sm mb-4">Müzik, görüntülenme takibi, sınırsız davetiye ve öncelikli destek.</p>
+            <p className="text-white/60 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Ek özellikler</p>
+            <h3 className="text-white text-lg font-bold mb-1">Yeni davetiyede seçerek ilerle</h3>
+            <p className="text-white/70 text-sm mb-4">Müzik, albüm, canlı duvar veya oturma planını davetiye bazlı ekleyebilirsin.</p>
             <Link
               href="/fiyatlar"
               className="inline-flex items-center gap-2 bg-white text-amber-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-amber-50 transition-all"
             >
-              Premium&apos;a Yükselt →
+              Fiyatları Gör →
             </Link>
           </div>
         </div>
