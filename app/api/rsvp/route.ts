@@ -3,7 +3,6 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 import { bildirimOlustur } from "@/lib/bildirim";
-import { tokenYenile, sarkilaraAra, playlistEEkle, playlistOlustur } from "@/lib/spotify";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
@@ -17,7 +16,6 @@ const rsvpSemasi = z.object({
   mesaj:        z.string().max(500).optional(),
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
-  spotifyTrackId: z.string().max(50).optional(),
 });
 
 /* ── DB tabanlı per-davetiye limitler ───────────────────── */
@@ -45,7 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, spotifyTrackId } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi } = sonuc.data;
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
@@ -56,13 +54,10 @@ export async function POST(req: NextRequest) {
       baslik: true,
       slug: true,
       aktif: true,
-      spotifyAktif: true,
-      spotifyPlaylistId: true,
       user: {
         select: {
           name: true,
           email: true,
-          spotifyRefreshToken: true,
         },
       },
     },
@@ -114,60 +109,18 @@ export async function POST(req: NextRequest) {
   const rsvp = await prisma.rSVP.create({
     data: {
       davetiyeId,
-      ad:            ad.trim(),
-      email:         email?.trim()         || null,
-      telefon:       telefon?.trim()       || null,
+      ad:           ad.trim(),
+      email:        email?.trim()        || null,
+      telefon:      telefon?.trim()      || null,
       katilim,
       kisiSayisi,
-      mesaj:         mesaj?.trim()         || null,
-      diyet:         diyet?.trim()         || null,
-      sarkiOnerisi:  sarkiOnerisi?.trim()  || null,
-      spotifyTrackId: spotifyTrackId       || null,
+      mesaj:        mesaj?.trim()        || null,
+      diyet:        diyet?.trim()        || null,
+      sarkiOnerisi: sarkiOnerisi?.trim() || null,
     },
   });
 
-  /* 6. Spotify'a şarkı ekle */
-  if (sarkiOnerisi && davetiye.spotifyAktif && davetiye.user.spotifyRefreshToken) {
-    try {
-      const accessToken = await tokenYenile(davetiye.user.spotifyRefreshToken);
-
-      // Playlist yoksa otomatik oluştur
-      let playlistId = davetiye.spotifyPlaylistId;
-      if (!playlistId) {
-        const meRes  = await fetch("https://api.spotify.com/v1/me", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const me = await meRes.json();
-        const playlist = await playlistOlustur(me.id, `🎵 ${davetiye.baslik}`, accessToken);
-        playlistId = playlist.id;
-        await prisma.davetiye.update({
-          where: { id: davetiye.id },
-          data: { spotifyPlaylistId: playlist.id },
-        });
-      }
-
-      let trackUri  = spotifyTrackId ? `spotify:track:${spotifyTrackId}` : null;
-      let bulunanId = spotifyTrackId ?? null;
-      if (!trackUri) {
-        const sonuclar = await sarkilaraAra(sarkiOnerisi, accessToken);
-        trackUri  = sonuclar[0]?.uri ?? null;
-        bulunanId = sonuclar[0]?.id  ?? null;
-      }
-      if (trackUri) {
-        await playlistEEkle(playlistId!, trackUri, accessToken);
-        if (bulunanId) {
-          await prisma.rSVP.update({
-            where: { id: rsvp.id },
-            data: { spotifyTrackId: bulunanId },
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Spotify şarkı ekleme hatası:", err);
-    }
-  }
-
-  /* 7. In-app bildirim */
+  /* 6. In-app bildirim */
   bildirimOlustur({
     userId: davetiye.userId,
     tip: "rsvp",

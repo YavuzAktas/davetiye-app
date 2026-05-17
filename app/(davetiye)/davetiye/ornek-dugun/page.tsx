@@ -26,7 +26,6 @@ const ORNEK: DavetiyeVeri = {
   user: { name: "Selin Yıldız", email: null },
   kisi1: "Selin",
   kisi2: "Mert",
-  spotifyAktif: false,
   albumAktif: true,
   polaroid1: null,
   polaroid2: null,

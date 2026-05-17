@@ -1,7 +1,7 @@
 "use client";
 
 import { SablonProps } from "@/lib/sablon-tipleri";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import MuzikCalar from "@/components/MuzikCalar";
 
 /* ─── Renkler ─── */
@@ -389,7 +389,7 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
 
             <div style={{ height:1, background:`linear-gradient(to right,transparent,${GOLD}60,transparent)`, marginBottom:30 }}/>
 
-            <RsvpFormKrem davetiyeId={davetiye.id} spotifyAktif={davetiye.spotifyAktif}/>
+            <RsvpFormKrem davetiyeId={davetiye.id}/>
           </div>
         </div>
       </section>
@@ -588,33 +588,13 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
 /* ─────────────────────────────────────────
    RSVP FORMU — krem kart içi
 ───────────────────────────────────────── */
-type SarkiSonuc = { id:string; uri:string; isim:string; sanatci:string; kapak:string|null };
-
-function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; spotifyAktif?: boolean }) {
+function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
-  const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"" });
+  const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"", sarkiDilegi:"" });
   const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
   const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
-  const [sarkiSorgu, setSarkiSorgu] = useState("");
-  const [sarkiSonuclar, setSarkiSonuclar] = useState<SarkiSonuc[]>([]);
-  const [seciliSarki, setSeciliSarki] = useState<SarkiSonuc|null>(null);
-  const [sarkiAraniyor, setSarkiAraniyor] = useState(false);
-  const araTimerRef = useRef<ReturnType<typeof setTimeout>|null>(null);
-
-  useEffect(() => {
-    if (!spotifyAktif || sarkiSorgu.length < 2) { setSarkiSonuclar([]); return; }
-    if (araTimerRef.current) clearTimeout(araTimerRef.current);
-    araTimerRef.current = setTimeout(async () => {
-      setSarkiAraniyor(true);
-      try {
-        const res = await fetch(`/api/sarki/ara?q=${encodeURIComponent(sarkiSorgu)}`);
-        if (res.ok) setSarkiSonuclar(await res.json());
-      } finally { setSarkiAraniyor(false); }
-    }, 400);
-    return () => { if (araTimerRef.current) clearTimeout(araTimerRef.current); };
-  }, [sarkiSorgu, spotifyAktif]);
 
   const fieldStyle: React.CSSProperties = {
     width:"100%", background:"transparent",
@@ -645,8 +625,7 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
           katilim: form.katilim === "evet",
           kisiSayisi: Number(form.kisiSayisi),
           diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
-          sarkiOnerisi: seciliSarki ? `${seciliSarki.isim} - ${seciliSarki.sanatci}` : sarkiSorgu.trim() || undefined,
-          spotifyTrackId: seciliSarki?.id,
+          sarkiOnerisi: form.sarkiDilegi.trim() || undefined,
         }),
       });
       if (!res.ok) { const d = await res.json().catch(()=>({})); setHata(d.hata || "Bir hata oluştu."); return; }
@@ -720,41 +699,12 @@ function RsvpFormKrem({ davetiyeId, spotifyAktif=false }: { davetiyeId: string; 
         </div>
       )}
 
-      {spotifyAktif && (
-        <div style={{ marginTop:20 }}>
-          <label style={labelStyle}>🎵 Dans etmek istediğin şarkı?</label>
-          {seciliSarki ? (
-            <div style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 0", borderBottom:`1px solid ${GOLD}50` }}>
-              {seciliSarki.kapak && <img src={seciliSarki.kapak} alt="" style={{ width:36, height:36, borderRadius:4, objectFit:"cover" }}/>}
-              <div style={{ flex:1, minWidth:0 }}>
-                <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13, color:CREAM, margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{seciliSarki.isim}</p>
-                <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${GOLD}99`, margin:0 }}>{seciliSarki.sanatci}</p>
-              </div>
-              <button type="button" onClick={() => { setSeciliSarki(null); setSarkiSorgu(""); }} style={{ background:"none", border:"none", cursor:"pointer", color:`${GOLD}99`, fontSize:18, padding:0 }}>×</button>
-            </div>
-          ) : (
-            <div style={{ position:"relative" }}>
-              <input type="text" value={sarkiSorgu} onChange={e => { setSarkiSorgu(e.target.value); setSeciliSarki(null); }}
-                placeholder="Şarkı veya sanatçı adı..." maxLength={200} style={fieldStyle}/>
-              {sarkiAraniyor && <span style={{ position:"absolute", right:0, top:"50%", transform:"translateY(-50%)", fontSize:11, color:`${GOLD}99` }}>...</span>}
-              {sarkiSonuclar.length > 0 && (
-                <div style={{ position:"absolute", zIndex:30, left:0, right:0, top:"100%", background:BG_MED, border:`1px solid ${GOLD}40`, borderRadius:8, boxShadow:"0 8px 24px rgba(0,0,0,0.4)", overflow:"hidden" }}>
-                  {sarkiSonuclar.map(s => (
-                    <button key={s.id} type="button" onClick={() => { setSeciliSarki(s); setSarkiSorgu(""); setSarkiSonuclar([]); }}
-                      style={{ display:"flex", alignItems:"center", gap:10, width:"100%", padding:"10px 12px", background:"none", border:"none", borderBottom:`1px solid ${GOLD}20`, cursor:"pointer", textAlign:"left" }}>
-                      {s.kapak && <img src={s.kapak} alt="" style={{ width:32, height:32, borderRadius:4, objectFit:"cover", flexShrink:0 }}/>}
-                      <div style={{ flex:1, minWidth:0 }}>
-                        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:13, color:CREAM, margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{s.isim}</p>
-                        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, color:`${GOLD}99`, margin:0 }}>{s.sanatci}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      <div style={{ marginTop:20 }}>
+        <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A5A28" }}>(isteğe bağlı)</span></label>
+        <input type="text" value={form.sarkiDilegi}
+          onChange={e => setForm({...form, sarkiDilegi:e.target.value})}
+          placeholder="Dans pistimizdeki favori şarkınız?" maxLength={200} style={fieldStyle}/>
+      </div>
 
       {hata && (
         <p style={{ color:"#C0392B", fontSize:12,

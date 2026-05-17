@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
-import SpotifyPlaylistKarti from "@/components/SpotifyPlaylistKarti";
 import RsvpListesi from "@/components/RsvpListesi";
 import YeniDavetiyeToast from "@/components/YeniDavetiyeToast";
 import { SABLONLAR } from "@/lib/sablonlar";
@@ -50,9 +49,6 @@ export default async function DavetiyeDetay({ params }: Props) {
       aktif: true,
       goruntulenme: true,
       createdAt: true,
-      spotifyAktif: true,
-      spotifyPlaylistId: true,
-      user: { select: { spotifyRefreshToken: true } },
       rsvplar: {
         orderBy: { createdAt: "desc" },
         select: {
@@ -432,15 +428,6 @@ export default async function DavetiyeDetay({ params }: Props) {
                 </Link>
               </div>
             </div>
-
-            {/* Spotify Playlist */}
-            <SpotifyPlaylistKarti
-              slug={davetiye.slug}
-              spotifyAktif={davetiye.spotifyAktif}
-              playlistId={davetiye.spotifyPlaylistId}
-              spotifyBagli={!!davetiye.user.spotifyRefreshToken}
-              renk={renk}
-            />
 
             {/* RSVP Summary donut-style */}
             {davetiye.rsvplar.length > 0 && (

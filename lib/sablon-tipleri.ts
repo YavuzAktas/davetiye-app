@@ -17,7 +17,6 @@ export interface DavetiyeVeri {
   };
   kisi1: string | null;
   kisi2: string | null;
-  spotifyAktif: boolean;
   albumAktif: boolean;
   polaroid1: string | null;
   polaroid2: string | null;

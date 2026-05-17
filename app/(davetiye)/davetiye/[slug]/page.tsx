@@ -34,7 +34,6 @@ function publicDavetiyeGetir(slug: string) {
         muzik: true,
         kisi1: true,
         kisi2: true,
-        spotifyAktif: true,
         polaroid1: true,
         polaroid2: true,
         polaroid3: true,
@@ -91,7 +90,6 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
-  const spotifyAktif    = davetiye.spotifyAktif ?? false;
   const albumAktif      = (davetiye.albumAktif ?? true) && planOzellikVar(davetiye.user?.plan ?? "free", "album");
   const sesliAniAktif   = davetiye.sesliAniAktif ?? false;
   const canliDuvarAktif = davetiye.canliDuvarAktif ?? false;
@@ -115,7 +113,6 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     },
     kisi1: davetiye.kisi1 ?? null,
     kisi2: davetiye.kisi2 ?? null,
-    spotifyAktif,
     albumAktif,
     polaroid1: davetiye.polaroid1 ?? null,
     polaroid2: davetiye.polaroid2 ?? null,
@@ -130,7 +127,6 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     <RsvpForm
       davetiyeId={davetiye.id}
       renk={temaRenk}
-      spotifyAktif={spotifyAktif}
     />
   );
 

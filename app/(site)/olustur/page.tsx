@@ -9,7 +9,7 @@ import { PREMIUM_SABLON_IDS, planOzellikVar } from "@/lib/planlar";
 import Link from "next/link";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
-import SpotifyMuzikSecici from "@/components/SpotifyMuzikSecici";
+import MuzikSecici from "@/components/MuzikSecici";
 
 const FONTLAR = [
   { id: "font-sans",  isim: "Modern",   ornek: "Aa" },
@@ -166,7 +166,6 @@ function OlusturIcerigi() {
 
   const [notAcik,        setNotAcik]        = useState(false);
   const [muzikAcik,      setMuzikAcik]      = useState(false);
-  const [spotifyAcik,    setSpotifyAcik]    = useState(false);
   const [aniAcik,        setAniAcik]        = useState(false);
   const [sesliAniAcik,   setSesliAniAcik]   = useState(false);
   const [canliDuvarAcik, setCanliDuvarAcik] = useState(false);
@@ -223,23 +222,6 @@ function OlusturIcerigi() {
   const sesliAniAktif   = planOzellikVar(userPlan, "sesliAni");
   const canliDuvarAktif = planOzellikVar(userPlan, "canliDuvar");
 
-  type SpPlaylist = { id: string; isim: string; kapak: string | null; sarki: number };
-  const [spPlaylists,  setSpPlaylists]  = useState<SpPlaylist[] | null>(null);
-  const [spBagli,      setSpBagli]      = useState<boolean | null>(null);
-  const [spYukleniyor, setSpYukleniyor] = useState(false);
-  const [spMod,        setSpMod]        = useState<"yeni" | "mevcut">("yeni");
-  const [spSeciliId,   setSpSeciliId]   = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!spotifyAcik || !muzikAktif || spPlaylists !== null) return;
-    setSpYukleniyor(true);
-    fetch("/api/dashboard/spotify/playlists")
-      .then(r => r.json())
-      .then(d => { setSpBagli(d.bagli ?? false); setSpPlaylists(d.playlists ?? []); })
-      .catch(() => setSpBagli(false))
-      .finally(() => setSpYukleniyor(false));
-  }, [spotifyAcik, muzikAktif, spPlaylists]);
-
   const handleSubmit = async () => {
     if (!form.tarih || !form.mekan)               { setHata("Lütfen tarih ve mekan alanlarını doldurun."); return; }
     if (nisanVeyaDugun && (!form.kisi1 || !form.kisi2)) { setHata("Lütfen iki kişinin adını girin."); return; }
@@ -256,8 +238,6 @@ function OlusturIcerigi() {
           sablon:            sablonId,
           mesaj:             notAcik ? form.mesaj : null,
           muzik:             muzikAcik ? form.muzik : null,
-          spotifyAktif:      spotifyAcik,
-          spotifyPlaylistId: spotifyAcik && spMod === "mevcut" ? spSeciliId : null,
           polaroid1:         polaroidler[0],
           polaroid2:         polaroidler[1],
           polaroid3:         polaroidler[2],
@@ -296,7 +276,6 @@ function OlusturIcerigi() {
     user:           { name: null, email: null },
     kisi1:          form.kisi1 || null,
     kisi2:          form.kisi2 || null,
-    spotifyAktif:   spotifyAcik,
     albumAktif:     polaroidAcik,
     polaroid1:      polaroidAcik ? polaroidler[0] : null,
     polaroid2:      polaroidAcik ? polaroidler[1] : null,
@@ -611,76 +590,7 @@ function OlusturIcerigi() {
                       lockedMsg="Standart Plan →"
                       acik={muzikAcik} onToggle={() => setMuzikAcik(!muzikAcik)}
                     >
-                      <SpotifyMuzikSecici secili={form.muzik} onChange={deger => setForm({ ...form, muzik: deger })} />
-                    </OzellikKarti>
-
-                    {/* 🎧 Spotify Şarkı İsteği */}
-                    <OzellikKarti
-                      icon="🎧" baslik="Spotify Şarkı İsteği"
-                      aciklama="RSVP formunda misafirler çalma listesine şarkı önerebilir"
-                      misafirGorur="RSVP formunda 'Dans etmek istediğin şarkı?' sorusu görünür"
-                      planEtiketi={!muzikAktif ? "Standart+" : undefined}
-                      locked={!muzikAktif}
-                      lockedMsg="Standart Plan →"
-                      acik={spotifyAcik} onToggle={() => setSpotifyAcik(!spotifyAcik)}
-                    >
-                      {spYukleniyor ? (
-                        <div className="flex items-center gap-2 py-2 text-sm text-gray-400">
-                          <span className="w-4 h-4 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin" />
-                          Spotify kontrol ediliyor...
-                        </div>
-                      ) : spBagli === false ? (
-                        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start">
-                          <span className="text-xl shrink-0">⚠️</span>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-700 mb-1">Spotify hesabı bağlı değil</p>
-                            <a href="/dashboard/ayarlar" target="_blank"
-                              className="text-xs font-semibold text-[#1DB954] hover:underline">
-                              Ayarlardan Spotify&apos;ı bağla →
-                            </a>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <div className="flex rounded-xl overflow-hidden border border-gray-200 text-xs font-semibold">
-                            {(["yeni", "mevcut"] as const).map(mod => (
-                              <button key={mod} type="button"
-                                onClick={() => { setSpMod(mod); if (mod === "yeni") setSpSeciliId(null); }}
-                                className={`flex-1 py-2 transition-colors ${spMod === mod ? "bg-[#1DB954] text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}>
-                                {mod === "yeni" ? "✨ Yeni Playlist Oluştur" : "📋 Mevcut Playlist'ten Seç"}
-                              </button>
-                            ))}
-                          </div>
-                          {spMod === "yeni" ? (
-                            <div className="bg-green-50 border border-green-100 rounded-xl px-4 py-3 flex gap-2 items-center">
-                              <span className="text-[#1DB954]">✓</span>
-                              <p className="text-xs text-gray-600">Davetiye oluşturulunca Spotify&apos;da otomatik playlist açılır.</p>
-                            </div>
-                          ) : (
-                            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                              {(spPlaylists ?? []).length === 0 ? (
-                                <p className="text-xs text-gray-400 text-center py-3">Henüz playlist yok.</p>
-                              ) : (spPlaylists ?? []).map(pl => (
-                                <button key={pl.id} type="button"
-                                  onClick={() => setSpSeciliId(pl.id)}
-                                  className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all ${
-                                    spSeciliId === pl.id ? "border-[#1DB954] bg-green-50" : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                                  }`}>
-                                  {pl.kapak
-                                    ? <img src={pl.kapak} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
-                                    : <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">🎵</div>
-                                  }
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-gray-800 truncate">{pl.isim}</p>
-                                    <p className="text-xs text-gray-400">{pl.sarki} şarkı</p>
-                                  </div>
-                                  {spSeciliId === pl.id && <span className="text-[#1DB954] shrink-0 font-bold">✓</span>}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                      <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
                     </OzellikKarti>
 
                     {/* 📖 Fotoğraf & Anı Albümü */}

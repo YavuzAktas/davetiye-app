@@ -21,8 +21,6 @@ export async function GET(): Promise<NextResponse> {
       kvkkOnayTarih: true,
       createdAt: true,
       updatedAt: true,
-      spotifyId: true,
-      spotifyRefreshToken: true,
       odemeKayitlari: {
         select: {
           planId: true,
@@ -49,8 +47,6 @@ export async function GET(): Promise<NextResponse> {
           ozelRenk: true,
           kisi1: true,
           kisi2: true,
-          spotifyPlaylistId: true,
-          spotifyAktif: true,
           polaroid1: true,
           polaroid2: true,
           polaroid3: true,
@@ -71,7 +67,6 @@ export async function GET(): Promise<NextResponse> {
               mesaj: true,
               diyet: true,
               sarkiOnerisi: true,
-              spotifyTrackId: true,
               createdAt: true,
               updatedAt: true,
               masaAtamasi: {
@@ -163,8 +158,6 @@ export async function GET(): Promise<NextResponse> {
       kvkkOnayTarih: user.kvkkOnayTarih,
       kayitTarihi:  user.createdAt,
       guncellemeTarihi: user.updatedAt,
-      spotifyHesapId: user.spotifyId,
-      spotifyBaglantisiVar: Boolean(user.spotifyRefreshToken),
     },
     odemeKayitlari: user.odemeKayitlari.map(o => ({
       plan: o.planId,
@@ -189,8 +182,6 @@ export async function GET(): Promise<NextResponse> {
       ozelRenk:      d.ozelRenk,
       kisi1:         d.kisi1,
       kisi2:         d.kisi2,
-      spotifyPlaylistId: d.spotifyPlaylistId,
-      spotifyAktif:  d.spotifyAktif,
       polaroidler:   [d.polaroid1, d.polaroid2, d.polaroid3].filter(Boolean),
       sesliAniAktif: d.sesliAniAktif,
       canliDuvarAktif: d.canliDuvarAktif,
@@ -208,7 +199,6 @@ export async function GET(): Promise<NextResponse> {
         mesaj:      r.mesaj,
         diyet:      r.diyet,
         sarkiOnerisi: r.sarkiOnerisi,
-        spotifyTrackId: r.spotifyTrackId,
         masa:       r.masaAtamasi?.masa
           ? {
               isim: r.masaAtamasi.masa.isim,

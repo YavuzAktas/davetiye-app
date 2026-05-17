@@ -27,8 +27,6 @@ model User {
   sessions            Session[]
   bildirimleri        Bildirim[]
   geciciYuklemeler    GeciciYukleme[]
-  spotifyRefreshToken String?
-  spotifyId           String?
 }
 
 model Account {
@@ -106,8 +104,6 @@ model Davetiye {
   albumFotolar      AlbumFoto[]
   aniDefterleri     AniDefteri[]
   masalar           Masa[]
-  spotifyPlaylistId String?
-  spotifyAktif      Boolean      @default(false)
   polaroid1         String?
   polaroid2         String?
   polaroid3         String?
@@ -174,7 +170,6 @@ model RSVP {
   mesaj          String?
   diyet          String?
   sarkiOnerisi   String?
-  spotifyTrackId String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   davetiyeId     String
