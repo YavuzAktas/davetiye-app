@@ -331,7 +331,7 @@ function OlusturIcerigi() {
     sablon:         sablonId,
     ozelRenk:       form.renk || null,
     font:           form.font || null,
-    muzik:          null,
+    muzik:          muzikAcik ? (form.muzik || null) : null,
     goruntulenme:   0,
     user:           { name: null, email: null },
     kisi1:          form.kisi1 || null,
@@ -685,8 +685,8 @@ function OlusturIcerigi() {
                     {/* 🎵 Arka Plan Müziği */}
                     <OzellikKarti
                       icon="🎵" baslik="Arka Plan Müziği"
-                      aciklama="Davetiye açıldığında seçtiğiniz şarkı otomatik çalmaya başlar"
-                      misafirGorur="Misafir davetiyeyi açtığı anda müzik başlar (durdurabiliyor)"
+                      aciklama="Seçtiğiniz şarkı için davetiyede bir çalma butonu gösterilir"
+                      misafirGorur="Misafir davetiyeye dokunduğunda müzik başlar; istediği zaman durdurabilir"
                       planEtiketi={!muzikAktif ? "Standart+" : undefined}
                       locked={!muzikAktif}
                       lockedMsg="Standart Plan →"
