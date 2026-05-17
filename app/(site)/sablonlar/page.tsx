@@ -433,39 +433,39 @@ const DOGUMGUNU_BOLUMLER = [
 type Bolum = { id:string; icon:string; label:string; etiket:string; baslik:string; aciklama:string; node:React.ReactNode };
 
 /* ══════════════════════════════════════════════
-   PREMIUM OZELLIKLER
+   PREMIUM OZELLIKLER — icon + başlık + açıklama
 ══════════════════════════════════════════════ */
-const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string }[]> = {
+const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklama: string }[]> = {
   "nisan-luks": [
-    { icon: "💌", baslik: "Zarif Kapak" },
-    { icon: "💛", baslik: "Altın Detaylar" },
-    { icon: "⏱️", baslik: "Canlı Geri Sayım" },
-    { icon: "📍", baslik: "Harita" },
-    { icon: "🌹", baslik: "Fotoğraf Galerisi" },
-    { icon: "✅", baslik: "RSVP Formu" },
+    { icon: "🌹", baslik: "Gül Mühürlü Kapak",   aciklama: "Dokunulunca açılan zarif kapak animasyonu" },
+    { icon: "💛", baslik: "Altın & Bordo Tema",   aciklama: "El işi özel renk paleti ve tipografi" },
+    { icon: "⏱️", baslik: "Canlı Geri Sayım",     aciklama: "Nişana kalan süreyi saniye saniye gösterir" },
+    { icon: "📍", baslik: "Harita Entegrasyonu",  aciklama: "Google Maps bağlantılı mekan kartı" },
+    { icon: "📷", baslik: "Polaroid Galeri",      aciklama: "Fotoğraflar vintage polaroid tarzında" },
+    { icon: "✅", baslik: "RSVP + Şarkı Dileği", aciklama: "Kişi sayısı, katılım ve müzik isteği" },
   ],
   "dugun-luks": [
-    { icon: "💍", baslik: "Mühürlü Kapak" },
-    { icon: "✨", baslik: "Elmas Çerçeve" },
-    { icon: "⏱️", baslik: "Canlı Geri Sayım" },
-    { icon: "📍", baslik: "Harita" },
+    { icon: "💍", baslik: "Yüzük Mühürlü Kapak", aciklama: "Yüzük ikonlu özel açılış animasyonu" },
+    { icon: "✨", baslik: "Lacivert & Altın Tema", aciklama: "Elmas köşeli çerçeve, ince altın detaylar" },
+    { icon: "⏱️", baslik: "Canlı Geri Sayım",     aciklama: "Düğüne kalan süreyi saniye saniye gösterir" },
+    { icon: "📍", baslik: "Harita Entegrasyonu",  aciklama: "Google Maps bağlantılı mekan kartı" },
   ],
   "dogumgunu-luks": [
-    { icon: "🎂", baslik: "Pasta Mühürü" },
-    { icon: "⭐", baslik: "Yıldız Çerçeve" },
-    { icon: "⏱️", baslik: "Canlı Geri Sayım" },
-    { icon: "📍", baslik: "Harita" },
+    { icon: "🎂", baslik: "Pasta Mühürlü Kapak", aciklama: "Pasta ikonlu dokunmatik açılış animasyonu" },
+    { icon: "⭐", baslik: "Mor & Altın Tema",     aciklama: "Yıldız köşeli çerçeve, doğum günü atmosferi" },
+    { icon: "⏱️", baslik: "Canlı Geri Sayım",     aciklama: "Partiye kalan süreyi saniye saniye gösterir" },
+    { icon: "📍", baslik: "Harita Entegrasyonu",  aciklama: "Google Maps bağlantılı mekan kartı" },
   ],
 };
 
 /* ══════════════════════════════════════════════
-   PREMIUM KART — Showcase
+   PREMIUM KART — Showcase (yeniden tasarım)
 ══════════════════════════════════════════════ */
 function PremiumKart({ sablon }: { sablon: Sablon }) {
   const router = useRouter();
   const { data: session } = useSession();
   const userPlan = (session?.user as any)?.plan ?? "free";
-  const kilitli = userPlan === "free"; // standart ve premium lüks şablonlara erişebilir
+  const kilitli = userPlan === "free";
   const demoUrl = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
 
@@ -502,7 +502,6 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   const darkBg  = sablon.id === "nisan-luks" ? "#120308" : sablon.id === "dugun-luks" ? "#050d1a" : "#080315";
   const accent  = sablon.id === "nisan-luks" ? "#C4A05A" : sablon.id === "dugun-luks" ? "#D4AA70" : "#D4A84B";
   const glowRgb = sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
-
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
 
@@ -510,8 +509,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{
-        opacity: 1,
-        y: 0,
+        opacity: 1, y: 0,
         boxShadow: [
           `0 0 0 1px rgba(${glowRgb},0.12), 0 24px 80px rgba(0,0,0,0.6)`,
           `0 0 0 1.5px rgba(${glowRgb},0.55), 0 24px 80px rgba(0,0,0,0.6), 0 0 48px rgba(${glowRgb},0.16)`,
@@ -519,61 +517,74 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         ],
       }}
       transition={{
-        opacity: { duration: 0.4 },
-        y: { duration: 0.4 },
+        opacity: { duration: 0.4 }, y: { duration: 0.4 },
         boxShadow: { duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
       }}
       style={{ background: darkBg, borderRadius: 28, overflow: "hidden" }}
     >
-      {/* ─── Üst Şerit ─── */}
-      <div className="flex items-center justify-between px-7 py-4"
+      {/* ─── Altın üst şerit ─── */}
+      <div style={{ height: 2, background: goldGradient }} />
+
+      {/* ─── Header ─── */}
+      <div className="flex items-start justify-between gap-4 px-5 sm:px-8 pt-6 pb-5"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-        <div className="flex items-center gap-3">
-          <motion.span
-            animate={{ opacity: [0.65, 1, 0.65] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full"
-            style={{
-              background: `rgba(${glowRgb},0.12)`,
-              color: accent,
-              border: `1px solid rgba(${glowRgb},0.28)`,
-              letterSpacing: "0.15em",
-            }}
-          >
-            ✦ PREMIUM
-          </motion.span>
-          <span className="text-[11px] px-2.5 py-0.5 rounded-full"
-            style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.3)" }}>
-            {KAT_EMOJI[sablon.kategori]} {sablon.kategori.charAt(0).toUpperCase() + sablon.kategori.slice(1)}
-          </span>
-        </div>
-        {/* Kompakt bölüm navigasyonu */}
-        <div className="flex items-center gap-2">
-          {bolumler.map(b => (
-            <motion.button
-              key={b.id}
-              onClick={() => handleTab(b.id)}
-              whileHover={{ scale: 1.12 }}
-              whileTap={{ scale: 0.9 }}
-              title={b.label}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
-              style={{
-                background: aktifId === b.id ? `rgba(${glowRgb},0.18)` : "rgba(255,255,255,0.05)",
-                border: aktifId === b.id ? `1px solid rgba(${glowRgb},0.42)` : "1px solid rgba(255,255,255,0.07)",
-                transition: "background 0.2s, border 0.2s",
-              }}
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <motion.span
+              animate={{ opacity: [0.65, 1, 0.65] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full"
+              style={{ background: `rgba(${glowRgb},0.12)`, color: accent, border: `1px solid rgba(${glowRgb},0.28)`, letterSpacing: "0.15em" }}
             >
-              {b.icon}
-            </motion.button>
-          ))}
+              ✦ PREMIUM
+            </motion.span>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-full"
+              style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.3)" }}>
+              {KAT_EMOJI[sablon.kategori]} {sablon.kategori.charAt(0).toUpperCase() + sablon.kategori.slice(1)}
+            </span>
+          </div>
+          <h2 className="font-bold text-white leading-tight"
+            style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(1.7rem,3.5vw,2.4rem)", letterSpacing: "-0.01em" }}>
+            {sablon.isim}
+          </h2>
+          {sablon.aciklama && (
+            <p className="mt-1 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.32)" }}>{sablon.aciklama}</p>
+          )}
+        </div>
+        {/* Fiyat — sağ üst */}
+        <div className="text-right shrink-0">
+          <p className="text-2xl font-bold tabular-nums"
+            style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            ₺599
+          </p>
+          <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>TEK SEFERLİK</p>
         </div>
       </div>
 
       {/* ─── Gövde ─── */}
-      <div className="flex flex-col lg:flex-row gap-8 p-7">
+      <div className="flex flex-col lg:flex-row gap-6 p-5 sm:p-8">
 
-        {/* Sol: Telefon */}
-        <div className="shrink-0 flex flex-col items-center gap-3">
+        {/* Sol: Bölüm tab'ları + Telefon */}
+        <div className="shrink-0 flex flex-col gap-3">
+          {/* Yatay kaydırılabilir pill tab'lar — mobil dostu */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {bolumler.map(b => (
+              <button
+                key={b.id}
+                onClick={() => handleTab(b.id)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold whitespace-nowrap shrink-0 transition-all duration-200"
+                style={{
+                  background: aktifId === b.id ? `rgba(${glowRgb},0.16)` : "rgba(255,255,255,0.05)",
+                  color: aktifId === b.id ? accent : "rgba(255,255,255,0.4)",
+                  border: aktifId === b.id ? `1px solid rgba(${glowRgb},0.38)` : "1px solid rgba(255,255,255,0.07)",
+                }}
+              >
+                {b.icon} {b.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Telefon */}
           <TelefonMockup>
             <div ref={scrollRef} className="phone-scroll" style={{ height: "100%", overflowY: "auto" }}>
               {bolumler.map(b => (
@@ -581,35 +592,15 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
               ))}
             </div>
           </TelefonMockup>
-          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.18)", letterSpacing: "0.1em" }}>
+          <p className="text-[10px] text-center" style={{ color: "rgba(255,255,255,0.15)", letterSpacing: "0.1em" }}>
             ↕ telefonu kaydır
           </p>
         </div>
 
-        {/* Sağ: İçerik */}
-        <div className="flex-1 flex flex-col gap-5 min-w-0">
+        {/* Sağ: İçerik paneli */}
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
 
-          {/* Büyük Serif Başlık */}
-          <div>
-            <h2
-              className="font-bold leading-tight"
-              style={{
-                fontFamily: "var(--font-cormorant), 'Georgia', serif",
-                fontSize: "clamp(1.85rem, 3.5vw, 2.55rem)",
-                color: "#fff",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {sablon.isim}
-            </h2>
-            {sablon.aciklama && (
-              <p className="mt-1.5 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.36)" }}>
-                {sablon.aciklama}
-              </p>
-            )}
-          </div>
-
-          {/* Aktif Bölüm Detayı */}
+          {/* Aktif bölüm detay kartı */}
           {aktif && (
             <AnimatePresence mode="wait">
               <motion.div
@@ -619,101 +610,84 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.2 }}
                 className="rounded-2xl p-4"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+                style={{ background: `rgba(${glowRgb},0.05)`, border: `1px solid rgba(${glowRgb},0.13)` }}
               >
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full mb-2"
-                  style={{ background: `rgba(${glowRgb},0.15)`, color: accent }}>
+                  style={{ background: `rgba(${glowRgb},0.14)`, color: accent }}>
                   {aktif.icon} {aktif.etiket}
                 </span>
                 <h3 className="text-sm font-bold text-white mb-1">{aktif.baslik}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>{aktif.aciklama}</p>
+                <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>{aktif.aciklama}</p>
               </motion.div>
             </AnimatePresence>
           )}
 
-          {/* Özellik Mini-Kartları — Glassmorphism Grid */}
+          {/* Premium neler dahil — satır listesi */}
           {ozellikler.length > 0 && (
             <div>
-              <p className="text-[10px] font-semibold tracking-[0.2em] uppercase mb-3"
-                style={{ color: "rgba(255,255,255,0.2)" }}>
-                Neler Dahil
+              <p className="text-[10px] font-bold tracking-[0.22em] uppercase mb-3"
+                style={{ color: "rgba(255,255,255,0.18)" }}>
+                Premium&apos;da Neler Var
               </p>
-              <motion.div
-                className="grid gap-2"
-                style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: {},
-                  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.2 } },
-                }}
-              >
-                {ozellikler.map((oz) => (
+              <div className="space-y-2">
+                {ozellikler.map((oz, i) => (
                   <motion.div
                     key={oz.baslik}
-                    variants={{
-                      hidden: { opacity: 0, y: 10, scale: 0.94 },
-                      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.28 } },
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-center cursor-default"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.07)",
-                      backdropFilter: "blur(12px)",
-                      transition: "background 0.2s",
-                    }}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.25 }}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.055)" }}
                   >
-                    <span className="text-xl">{oz.icon}</span>
-                    <span className="text-[10px] font-medium leading-tight"
-                      style={{ color: "rgba(255,255,255,0.5)" }}>
-                      {oz.baslik}
-                    </span>
+                    <span className="text-base shrink-0 leading-none">{oz.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-white leading-tight">{oz.baslik}</p>
+                      <p className="text-[10px] leading-snug mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.3)" }}>{oz.aciklama}</p>
+                    </div>
+                    {/* Onay işareti */}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.65 }}>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
                   </motion.div>
                 ))}
-              </motion.div>
+              </div>
             </div>
           )}
 
-          {/* CTA Butonları */}
-          <div className="flex gap-3 mt-auto pt-1">
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-2.5 mt-auto pt-1">
             {kilitli ? (
               <motion.button
                 whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => router.push("/fiyatlar")}
-                className="flex-1 py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2"
-                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow, letterSpacing: "0.01em" }}
+                className="flex-1 py-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2"
+                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
               >
-                <span>⭐</span> Planını Yükselt
+                <span>⭐</span> Premium&apos;a Geç — ₺599
               </motion.button>
             ) : (
               <motion.button
                 whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
-                className="flex-1 py-3.5 rounded-2xl text-sm font-bold"
-                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow, letterSpacing: "0.01em" }}
+                className="flex-1 py-4 rounded-2xl text-sm font-bold"
+                style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
               >
-                Hemen Başla →
+                Bu Şablonla Başla →
               </motion.button>
             )}
             {demoUrl && (
               <motion.a
-                whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.1)" } as any}
+                whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.09)" } as any}
                 whileTap={{ scale: 0.97 }}
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-3.5 rounded-2xl text-sm font-semibold text-center"
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  color: "rgba(255,255,255,0.65)",
-                  border: "1px solid rgba(255,255,255,0.13)",
-                  letterSpacing: "0.01em",
-                }}
+                className="flex-1 py-4 rounded-2xl text-sm font-semibold text-center flex items-center justify-center gap-1.5"
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
-                Canlı Önizleme ↗
+                Canlı Önizle ↗
               </motion.a>
             )}
           </div>
@@ -1061,7 +1035,7 @@ export default function SablonlarSayfasi() {
             {SABLON_SECIM_IPUCLARI.map((ipucu) => (
               <div
                 key={ipucu.baslik}
-                className="rounded-lg border border-white/10 bg-white/[0.03] p-4"
+                className="rounded-lg border border-white/10 bg-white/3 p-4"
               >
                 <h3 className="text-sm font-semibold text-white">{ipucu.baslik}</h3>
                 <p className="mt-2 text-xs leading-6" style={{ color: "rgba(255,255,255,0.58)" }}>
