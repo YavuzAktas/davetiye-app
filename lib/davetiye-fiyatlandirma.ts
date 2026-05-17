@@ -56,6 +56,21 @@ export function davetiyeFiyatiHesapla(girdi: DavetiyeFiyatGirdisi): DavetiyeFiya
   };
 }
 
+/** Görsel "önceki fiyat" — ödeme hesaplamasında kullanılmaz */
+export const ASIL_FIYAT_KODU: Record<string, number> = {
+  "temel-davetiye": 399,
+  "luks-sablon":    149,
+  "muzik":          99,
+  "album-ani":      179,
+  "sesli-ani":      199,
+  "canli-duvar":    229,
+  "oturma-plani":   269,
+};
+
+export function indirimOrani(asil: number, simdiki: number): number {
+  return Math.round((1 - simdiki / asil) * 100);
+}
+
 export function tutarMetni(tutar: number): string {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",

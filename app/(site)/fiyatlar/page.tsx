@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
+import { DAVETIYE_FIYAT_KALEMLERI, ASIL_FIYAT_KODU, indirimOrani, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 import FiyatHesaplama from "@/components/FiyatHesaplama";
 import { SABLONLAR } from "@/lib/sablonlar";
 
@@ -84,6 +84,10 @@ const SORU_CEVAP = [
 
 function toplam(kalemler: readonly { tutar: number }[]) {
   return kalemler.reduce((a, k) => a + k.tutar, 0);
+}
+
+function asılToplam(kalemler: readonly { kod: string; tutar: number }[]) {
+  return kalemler.reduce((a, k) => a + (ASIL_FIYAT_KODU[k.kod] ?? k.tutar), 0);
 }
 
 function tekilParametre(deger: string | string[] | undefined) {
@@ -199,7 +203,9 @@ export default async function FiyatlarSayfasi({
           {/* 3-column package grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
             {PAKETLER.map(paket => {
-              const tutar = toplam(paket.kalemler);
+              const tutar    = toplam(paket.kalemler);
+              const asil     = asılToplam(paket.kalemler);
+              const indirim  = indirimOrani(asil, tutar);
               const kisiBasi = Math.ceil(tutar / 100);
 
               return (
@@ -248,6 +254,15 @@ export default async function FiyatlarSayfasi({
 
                     {/* Price */}
                     <div className="mb-6">
+                      {/* Üstü çizili asıl fiyat + indirim rozeti */}
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-sm tabular-nums text-white/30 line-through">{tutarMetni(asil)}</span>
+                        <span className="text-[10px] font-black tracking-wide px-2 py-0.5 rounded-full"
+                          style={{ background: "rgba(34,197,94,0.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,0.25)" }}>
+                          %{indirim} İNDİRİM
+                        </span>
+                      </div>
+                      {/* Güncel fiyat */}
                       <div className="flex items-baseline gap-1.5 mb-1">
                         <span className={`text-4xl font-black tabular-nums leading-none ${paket.populer ? "text-white" : "text-white/90"}`}>
                           {tutarMetni(tutar)}

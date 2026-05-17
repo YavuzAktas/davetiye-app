@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
+import { DAVETIYE_FIYAT_KALEMLERI, ASIL_FIYAT_KODU, indirimOrani, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 const OZELLIKLER = [
   {
@@ -74,11 +74,14 @@ export default function FiyatHesaplama({
     });
   };
 
-  const secilenler = OZELLIKLER.filter(o => secili.has(o.kod));
-  const ekToplam   = secilenler.reduce((a, o) => a + o.tutar, 0);
-  const toplam     = TEMEL.tutar + ekToplam;
-  const kisiBasi   = Math.ceil(toplam / 100);
-  const tasarruf   = BASKILI_MIN - toplam;
+  const secilenler  = OZELLIKLER.filter(o => secili.has(o.kod));
+  const ekToplam    = secilenler.reduce((a, o) => a + o.tutar, 0);
+  const toplam      = TEMEL.tutar + ekToplam;
+  const kisiBasi    = Math.ceil(toplam / 100);
+  const tasarruf    = BASKILI_MIN - toplam;
+  const asılEkToplam = secilenler.reduce((a, o) => a + (ASIL_FIYAT_KODU[o.kod] ?? o.tutar), 0);
+  const asılToplam  = (ASIL_FIYAT_KODU[TEMEL.kod] ?? TEMEL.tutar) + asılEkToplam;
+  const toplamIndirim = indirimOrani(asılToplam, toplam);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr,300px] gap-4 items-start">
@@ -96,13 +99,18 @@ export default function FiyatHesaplama({
             </p>
 
             {/* Büyük toplam */}
-            <div className="flex items-end justify-between mb-1">
-              <div>
-                <span className="text-4xl font-black text-white tabular-nums leading-none">
-                  {tutarMetni(toplam)}
+            <div className="mb-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm tabular-nums text-white/30 line-through">{tutarMetni(asılToplam)}</span>
+                <span className="text-[10px] font-black tracking-wide px-2 py-0.5 rounded-full"
+                  style={{ background: "rgba(34,197,94,0.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,0.25)" }}>
+                  %{toplamIndirim} İNDİRİM
                 </span>
-                <p className="text-xs text-white/30 mt-1.5">tek seferlik · sınırsız misafir</p>
               </div>
+              <span className="text-4xl font-black text-white tabular-nums leading-none">
+                {tutarMetni(toplam)}
+              </span>
+              <p className="text-xs text-white/30 mt-1.5">tek seferlik · sınırsız misafir</p>
             </div>
 
             {/* Kişi başı + tasarruf */}
@@ -175,7 +183,12 @@ export default function FiyatHesaplama({
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 ml-3">
-            <span className="text-sm font-bold text-purple-300">{tutarMetni(TEMEL.tutar)}</span>
+            <div className="text-right">
+              <p className="text-[11px] tabular-nums text-white/25 line-through leading-none mb-0.5">
+                {tutarMetni(ASIL_FIYAT_KODU[TEMEL.kod] ?? TEMEL.tutar)}
+              </p>
+              <span className="text-sm font-bold text-purple-300">{tutarMetni(TEMEL.tutar)}</span>
+            </div>
             <div className="w-6 h-6 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0">
               <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -228,11 +241,16 @@ export default function FiyatHesaplama({
 
               {/* Fiyat + toggle */}
               <div className="flex items-center gap-3 shrink-0 ml-3">
-                <span className={`text-sm font-bold tabular-nums transition-colors duration-200 ${
-                  aktif ? "text-purple-300" : "text-white/20"
-                }`}>
-                  +{tutarMetni(ozellik.tutar)}
-                </span>
+                <div className="text-right">
+                  <p className="text-[11px] tabular-nums text-white/20 line-through leading-none mb-0.5">
+                    {tutarMetni(ASIL_FIYAT_KODU[ozellik.kod] ?? ozellik.tutar)}
+                  </p>
+                  <span className={`text-sm font-bold tabular-nums transition-colors duration-200 ${
+                    aktif ? "text-purple-300" : "text-white/25"
+                  }`}>
+                    +{tutarMetni(ozellik.tutar)}
+                  </span>
+                </div>
 
                 {/* Toggle */}
                 <div className={`relative w-10 h-6 rounded-full transition-all duration-300 shrink-0 ${
