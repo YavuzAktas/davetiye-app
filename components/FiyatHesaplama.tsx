@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { DAVETIYE_FIYAT_KALEMLERI, ASIL_FIYAT_KODU, indirimOrani, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 const OZELLIKLER = [
@@ -161,6 +162,20 @@ export default function FiyatHesaplama({
             <p className="text-center text-[11px] text-white/20 mt-3">
               Ödeme sonrası davetiye hemen yayına alınır
             </p>
+
+            {/* Güvenli ödeme logoları */}
+            <div className="mt-4 pt-4 border-t border-white/8 flex flex-col items-center gap-1.5">
+              <p className="text-[9px] font-semibold tracking-[0.18em] uppercase text-white/18">Güvenli ödeme altyapısı</p>
+              <div className="relative h-5 w-56 opacity-50">
+                <Image
+                  src="/logo_band_white@3x.png"
+                  alt="iyzico, Mastercard, Visa, AmEx, Troy"
+                  fill
+                  sizes="224px"
+                  className="object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
