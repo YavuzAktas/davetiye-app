@@ -545,71 +545,92 @@ export default function Anasayfa() {
       {/* ══════════════════════════════════════════
           BENTO FEATURES
       ══════════════════════════════════════════ */}
-      <section className="py-28 px-4" style={{ background: "linear-gradient(180deg, #faf8ff 0%, #fff 100%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <section className="py-28 px-4 bg-[#080112] relative overflow-hidden">
+        {/* Ambient center glow */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full opacity-[0.07] blur-[140px]" style={{ background: "radial-gradient(ellipse, #7c3aed 0%, #be185d 60%, transparent 100%)" }} />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <Section>
             <div className="text-center mb-16">
-              <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Özellikler</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 leading-tight">
+              <span className="text-purple-400/70 text-[11px] font-bold tracking-[0.32em] uppercase">Özellikler</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mt-4 leading-tight">
                 Her şey hazır,
-              </h2>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-300 mt-1">
-                sen sadece başla
+                <span className="block" style={{ background: "linear-gradient(90deg, #a78bfa, #f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  sen sadece başla
+                </span>
               </h2>
             </div>
           </Section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-auto md:auto-rows-[190px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-auto md:auto-rows-[210px]">
 
-            {/* Büyük — Hızlı Oluştur */}
+            {/* 1 · Hızlı Oluştur — col-span-2 */}
             <Section className="md:col-span-2">
-              <div className="h-full bg-[#0f0118] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px]">
-                <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full bg-purple-600 opacity-20 blur-3xl group-hover:opacity-35 transition-opacity" />
-                <div className="absolute top-6 right-6 text-6xl opacity-10 group-hover:opacity-20 transition-opacity select-none">⚡</div>
+              <div className="h-full bg-[#0f0820] border border-purple-500/[0.14] rounded-3xl p-8 relative overflow-hidden group hover:border-purple-500/30 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-purple-600 opacity-[0.1] blur-3xl group-hover:opacity-[0.2] transition-opacity duration-700" />
                 <div className="relative z-10">
-                  <div className="w-11 h-11 bg-purple-500/20 border border-purple-500/30 rounded-2xl flex items-center justify-center text-xl mb-5">⚡</div>
-                  <h3 className="text-white text-2xl font-bold mb-2">Dakikalar içinde hazır</h3>
-                  <p className="text-purple-300/70 text-sm">Şablon seç, bilgilerini gir, davetiyeni paylaş. Bu kadar.</p>
+                  <div className="w-10 h-10 bg-purple-500/12 border border-purple-400/20 rounded-xl flex items-center justify-center mb-5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white text-xl font-bold mb-2">Dakikalar içinde hazır</h3>
+                  <p className="text-purple-200/40 text-sm leading-relaxed max-w-xs">Şablon seç, bilgilerini gir, davetiyeni paylaş. Bu kadar.</p>
                 </div>
-                {/* Mini mockup lines */}
-                <div className="absolute bottom-6 right-6 space-y-1.5">
-                  <div className="w-24 h-1.5 bg-white/10 rounded" />
-                  <div className="w-16 h-1.5 bg-purple-500/30 rounded" />
-                  <div className="w-20 h-1.5 bg-white/5 rounded" />
+                {/* Step trail */}
+                <div className="absolute bottom-8 right-8 flex items-center gap-3">
+                  {["Şablon", "Düzenle", "Paylaş"].map((s, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <span className={`text-[10px] font-semibold tracking-wide ${i === 2 ? "text-purple-300/80" : "text-purple-400/40"}`}>{s}</span>
+                      {i < 2 && <div className="w-5 h-px bg-purple-500/20" />}
+                    </div>
+                  ))}
+                </div>
+                {/* Decorative lines */}
+                <div className="absolute left-8 bottom-8 space-y-1.5 opacity-20 group-hover:opacity-40 transition-opacity">
+                  <div className="w-20 h-1 bg-purple-400 rounded-full" />
+                  <div className="w-12 h-1 bg-purple-600 rounded-full" />
+                  <div className="w-16 h-1 bg-purple-800 rounded-full" />
                 </div>
               </div>
             </Section>
 
-            {/* Tall — RSVP (spans 2 rows) */}
+            {/* 2 · RSVP Takibi — row-span-2 */}
             <Section className="md:row-span-2">
-              <div className="h-full bg-white border border-gray-100 rounded-3xl p-8 shadow-sm relative overflow-hidden group hover:shadow-2xl hover:shadow-purple-100/50 hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[400px]">
-                <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
+              <div className="h-full bg-[#0a1a10] border border-emerald-500/[0.14] rounded-3xl p-7 relative overflow-hidden group hover:border-emerald-500/30 transition-all duration-500 cursor-default min-h-[440px]">
+                <div className="absolute -bottom-10 -left-10 w-44 h-44 rounded-full bg-emerald-500 opacity-[0.06] blur-3xl group-hover:opacity-[0.13] transition-opacity duration-700" />
                 <div className="relative z-10">
-                  <div className="w-11 h-11 bg-emerald-100 rounded-2xl flex items-center justify-center text-xl mb-5">✅</div>
-                  <h3 className="text-gray-900 text-xl font-bold mb-2">RSVP Takibi</h3>
-                  <p className="text-gray-400 text-sm mb-8">Kim geliyor, kim gelemiyor? Anlık katılım listesi.</p>
-                  <div className="space-y-3">
+                  <div className="w-10 h-10 bg-emerald-500/10 border border-emerald-400/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white text-lg font-bold mb-1">RSVP Takibi</h3>
+                  <p className="text-gray-600 text-xs mb-6">Kim geliyor, kim gelemiyor?</p>
+                  <div className="space-y-2.5">
                     {[
                       { isim: "Ayşe K.", durum: true },
                       { isim: "Mehmet T.", durum: true },
                       { isim: "Fatma Y.", durum: false },
                       { isim: "Can A.", durum: true },
                     ].map((r, i) => (
-                      <div key={i} className="flex items-center gap-3 group/row">
-                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${r.durum ? "bg-emerald-400" : "bg-red-400"}`} />
-                        <span className="flex-1 text-xs text-gray-600">{r.isim}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.durum ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"}`}>
-                          {r.durum ? "Katılıyor" : "Katılamıyor"}
+                      <div key={i} className="flex items-center gap-2.5 bg-white/[0.025] border border-white/[0.04] rounded-xl px-3 py-2.5">
+                        <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${r.durum ? "bg-emerald-400" : "bg-rose-400"}`} />
+                        <span className="flex-1 text-[11px] text-gray-400">{r.isim}</span>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold tracking-wide ${r.durum ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"}`}>
+                          {r.durum ? "GELİYOR" : "GELEMİYOR"}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <div className="flex justify-between text-xs mb-2">
-                      <span className="text-gray-400">Katılım oranı</span>
-                      <span className="font-bold text-emerald-600">%75</span>
+                  <div className="mt-5 pt-5 border-t border-white/[0.05]">
+                    <div className="flex justify-between text-[10px] mb-2.5">
+                      <span className="text-gray-600">Katılım oranı</span>
+                      <span className="font-bold text-emerald-400">%75</span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
                       <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full" style={{ width: "75%" }} />
                     </div>
                   </div>
@@ -617,59 +638,85 @@ export default function Anasayfa() {
               </div>
             </Section>
 
-            {/* WhatsApp */}
+            {/* 3 · WhatsApp */}
             <Section>
-              <div className="h-full bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl p-7 relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 cursor-default min-h-[190px]">
-                <div className="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full group-hover:opacity-10 transition-opacity" />
-                <div className="absolute bottom-4 right-4 text-5xl opacity-10 select-none">📱</div>
-                <div className="text-4xl mb-4">📱</div>
-                <h3 className="text-white text-xl font-bold">WhatsApp ile paylaş</h3>
-                <p className="text-green-100/80 text-sm mt-1.5">Tek tıkla tüm listene gönder</p>
-              </div>
-            </Section>
-
-            {/* Harita */}
-            <Section>
-              <div className="h-full bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-7 relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 cursor-default min-h-[190px]">
-                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full group-hover:opacity-10 transition-opacity" />
-                <div className="absolute bottom-4 right-4 text-5xl opacity-10 select-none">🗺️</div>
-                <div className="text-4xl mb-4">📍</div>
-                <h3 className="text-white text-xl font-bold">Konum entegrasyonu</h3>
-                <p className="text-blue-100/80 text-sm mt-1.5">Google Maps otomatik bağlanır</p>
-              </div>
-            </Section>
-
-            {/* Şarkı dilekleri */}
-            <Section className="md:col-span-2">
-              <div className="h-full bg-gradient-to-br from-rose-950 via-slate-950 to-indigo-950 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.015] transition-all duration-300 cursor-default min-h-[190px] border border-rose-200/10">
-                <div className="absolute -bottom-14 -left-14 w-60 h-60 rounded-full bg-rose-400 opacity-[0.08] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
-                <div className="absolute top-5 right-6 text-7xl opacity-5 group-hover:opacity-10 transition-opacity select-none">♪</div>
-                <div className="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-11 h-11 bg-rose-200/10 border border-rose-200/15 rounded-2xl flex items-center justify-center">
-                        <span className="text-rose-100 text-lg" aria-hidden="true">♪</span>
-                      </div>
-                      <div>
-                        <h3 className="text-white text-xl font-bold leading-tight">Şarkı dilekleri</h3>
-                        <p className="text-rose-100/80 text-[11px] font-medium tracking-wide">RSVP ile müzik önerisi</p>
-                      </div>
-                    </div>
-                    <p className="text-gray-300/80 text-sm leading-relaxed">Misafirler RSVP yaparken diledikleri şarkıyı yazar; öneriler davetiye sahibinin panelinde toplanır.</p>
+              <div className="h-full bg-[#091510] border border-emerald-600/[0.14] rounded-3xl p-7 relative overflow-hidden group hover:border-emerald-500/30 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-emerald-500 opacity-[0.06] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 bg-emerald-500/10 border border-emerald-500/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="#4ade80">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.554 4.107 1.523 5.827L.057 23.057a.562.562 0 00.7.686l5.367-1.408A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.803 9.803 0 01-5.006-1.368l-.357-.211-3.705.972.987-3.607-.233-.371A9.818 9.818 0 012.182 12C2.182 6.577 6.577 2.182 12 2.182S21.818 6.577 21.818 12 17.423 21.818 12 21.818z" />
+                    </svg>
                   </div>
-                  <div className="flex-shrink-0 space-y-2 w-full md:w-48">
+                  <h3 className="text-white text-lg font-bold">WhatsApp'tan paylaş</h3>
+                  <p className="text-emerald-400/45 text-xs mt-1.5">Tek tıkla tüm listene gönder</p>
+                </div>
+                <div className="absolute bottom-6 left-7 right-7">
+                  <div className="bg-emerald-500/[0.08] border border-emerald-500/[0.14] rounded-xl px-3 py-2 flex items-center gap-2.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                    <span className="text-emerald-300/60 text-[10px] font-medium">Davetiye linki hazır</span>
+                    <div className="ml-auto">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Section>
+
+            {/* 4 · Konum */}
+            <Section>
+              <div className="h-full bg-[#0a0f1e] border border-blue-500/[0.14] rounded-3xl p-7 relative overflow-hidden group hover:border-blue-500/28 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-blue-500 opacity-[0.06] blur-3xl group-hover:opacity-[0.14] transition-opacity" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 bg-blue-500/10 border border-blue-500/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white text-lg font-bold">Konum entegrasyonu</h3>
+                  <p className="text-blue-300/45 text-xs mt-1.5">Google Maps otomatik bağlanır</p>
+                </div>
+                {/* Mini map dots */}
+                <div className="absolute bottom-7 right-7 grid grid-cols-5 gap-[3px] opacity-15 group-hover:opacity-35 transition-opacity duration-500">
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <div key={i} className={`w-2.5 h-2.5 rounded-[3px] ${i === 7 ? "bg-blue-400" : i === 6 || i === 8 || i === 12 ? "bg-blue-700" : "bg-blue-950"}`} />
+                  ))}
+                </div>
+              </div>
+            </Section>
+
+            {/* 5 · Şarkı Dilekleri — col-span-2 */}
+            <Section className="md:col-span-2">
+              <div className="h-full bg-[#120a1c] border border-rose-500/[0.14] rounded-3xl p-8 relative overflow-hidden group hover:border-rose-500/28 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-rose-600 opacity-[0.07] blur-3xl group-hover:opacity-[0.14] transition-opacity duration-700" />
+                <div className="absolute top-0 right-0 w-2/5 h-full flex items-center justify-end pr-8 opacity-[0.03] select-none group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                  <span className="text-[90px] text-rose-100 leading-none">♪</span>
+                </div>
+                <div className="relative z-10 flex items-start gap-6">
+                  <div className="flex-1">
+                    <div className="w-10 h-10 bg-rose-500/10 border border-rose-500/18 rounded-xl flex items-center justify-center mb-4">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb7185" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+                      </svg>
+                    </div>
+                    <h3 className="text-white text-xl font-bold mb-2">Şarkı dilekleri</h3>
+                    <p className="text-gray-600 text-xs leading-relaxed max-w-[200px]">Misafirler RSVP'den şarkı diler, hepsi panelinizde toplanır.</p>
+                  </div>
+                  <div className="flex-shrink-0 space-y-2 w-44 mt-1">
                     {[
-                      { isim: "Hepsi Geçer", sanatci: "Sezen Aksu", renk: "from-purple-600 to-pink-500" },
-                      { isim: "Yüksek Kalite", sanatci: "Teoman", renk: "from-blue-600 to-cyan-500" },
-                      { isim: "Seni Beklerken", sanatci: "Athena", renk: "from-orange-500 to-amber-400" },
+                      { isim: "Hepsi Geçer", sanatci: "Sezen Aksu" },
+                      { isim: "Yüksek Kalite", sanatci: "Teoman" },
+                      { isim: "Seni Beklerken", sanatci: "Athena" },
                     ].map((s, i) => (
-                      <div key={i} className="flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.06] rounded-xl px-3 py-2 transition-colors">
-                        <div className={`w-7 h-7 rounded-md bg-gradient-to-br ${s.renk} flex-shrink-0`} />
+                      <div key={i} className="flex items-center gap-2.5 bg-white/[0.025] border border-white/[0.04] hover:border-rose-400/18 rounded-xl px-3 py-2 transition-colors">
+                        <div className={`w-5 h-5 rounded-md flex-shrink-0 ${i === 0 ? "bg-gradient-to-br from-purple-500 to-pink-600" : i === 1 ? "bg-gradient-to-br from-blue-500 to-cyan-500" : "bg-gradient-to-br from-orange-400 to-amber-500"}`} />
                         <div className="min-w-0">
-                          <p className="text-[11px] text-white font-medium leading-tight truncate">{s.isim}</p>
-                          <p className="text-[10px] text-gray-500 truncate">{s.sanatci}</p>
+                          <p className="text-[10px] text-white font-medium leading-tight truncate">{s.isim}</p>
+                          <p className="text-[9px] text-gray-600 truncate">{s.sanatci}</p>
                         </div>
-                        <div className="ml-auto flex-shrink-0 w-1.5 h-1.5 rounded-full bg-rose-200" />
                       </div>
                     ))}
                   </div>
@@ -677,81 +724,98 @@ export default function Anasayfa() {
               </div>
             </Section>
 
-            {/* Anlık bildirim */}
+            {/* 6 · Anlık Bildirim */}
             <Section>
-              <div className="h-full bg-gradient-to-br from-violet-600 to-purple-700 rounded-3xl p-7 relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 cursor-default min-h-[190px]">
-                <div className="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full group-hover:opacity-10 transition-opacity" />
-                <div className="absolute bottom-4 right-4 text-5xl opacity-10 select-none">🔔</div>
-                <div className="text-4xl mb-4">🔔</div>
-                <h3 className="text-white text-xl font-bold">Anlık bildirim</h3>
-                <p className="text-purple-200/80 text-sm mt-1.5">Katılım cevabı gelince haberdar ol</p>
+              <div className="h-full bg-[#100b1e] border border-violet-500/[0.14] rounded-3xl p-7 relative overflow-hidden group hover:border-violet-500/30 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-violet-600 opacity-[0.07] blur-3xl group-hover:opacity-[0.16] transition-opacity" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 bg-violet-500/10 border border-violet-500/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white text-lg font-bold">Anlık bildirim</h3>
+                  <p className="text-violet-300/45 text-xs mt-1.5">Katılım cevabı gelince haberdar ol</p>
+                </div>
+                <div className="absolute bottom-6 left-7 right-7">
+                  <div className="bg-violet-500/[0.07] border border-violet-500/[0.13] rounded-xl px-3 py-2 flex items-center gap-2.5">
+                    <div className="w-4 h-4 bg-violet-500/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                    </div>
+                    <span className="text-[9px] text-violet-300/55 leading-tight">Yeni RSVP: <span className="text-violet-200/80">Ayşe Kaya geliyorum</span></span>
+                  </div>
+                </div>
               </div>
             </Section>
 
-            {/* Dijital Anı Defteri — tam genişlik */}
+            {/* 7 · Dijital Anı Defteri — full width */}
             <Section className="md:col-span-3">
-              <div className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default flex flex-col md:flex-row items-start md:items-center gap-8 min-h-[190px]">
-                <div className="absolute inset-0 opacity-[0.06]" style={{
-                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,0.4) 28px, rgba(255,255,255,0.4) 29px)",
+              <div className="h-full bg-[#110d06] border border-amber-500/[0.14] rounded-3xl p-8 relative overflow-hidden group hover:border-amber-500/24 transition-all duration-500 cursor-default flex flex-col md:flex-row md:items-center gap-8 min-h-[210px]">
+                <div className="absolute inset-0 opacity-[0.018] pointer-events-none" style={{
+                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 32px, rgba(251,191,36,1) 32px, rgba(251,191,36,1) 33px)",
                 }} />
-                <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-rose-600/20 to-transparent" />
-                <div className="relative z-10 flex-1">
-                  <div className="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center text-xl mb-5">📖</div>
+                <div className="absolute right-0 top-0 bottom-0 w-48 bg-gradient-to-l from-amber-600/[0.06] to-transparent" />
+                <div className="relative z-10 flex-shrink-0 md:w-64">
+                  <div className="w-10 h-10 bg-amber-500/10 border border-amber-400/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+                      <path d="M8 10h8M8 14h5" />
+                    </svg>
+                  </div>
                   <h3 className="text-white text-2xl font-bold">Dijital Anı Defteri</h3>
-                  <p className="text-amber-100/80 text-sm mt-2">Misafirler davetiyende mesaj bırakır — etkinlikten kalıcı bir hatıra</p>
+                  <p className="text-amber-200/35 text-sm mt-2 leading-relaxed">Misafirler mesaj bırakır — etkinlikten kalıcı bir hatıra</p>
                 </div>
-                <div className="relative z-10 flex flex-col gap-2.5 w-full md:w-72">
+                <div className="relative z-10 flex-1 grid grid-cols-1 md:grid-cols-3 gap-2.5">
                   {[
-                    { mesaj: "Harika bir etkinlikti, çok mutlu olduk 🎉", isim: "Ayşe & Mehmet" },
+                    { mesaj: "Harika bir etkinlikti, çok mutlu olduk!", isim: "Ayşe & Mehmet" },
                     { mesaj: "Ömür boyu mutluluklar diliyoruz!", isim: "Fatma H." },
-                    { mesaj: "Unutulmaz bir geceydi, teşekkürler 💐", isim: "Can A." },
+                    { mesaj: "Unutulmaz bir geceydi, teşekkürler.", isim: "Can A." },
                   ].map((a, i) => (
-                    <div key={i} className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-2.5">
-                      <p className="text-white text-[11px] leading-relaxed">&ldquo;{a.mesaj}&rdquo;</p>
-                      <p className="text-amber-200/70 text-[10px] mt-1 font-medium">— {a.isim}</p>
+                    <div key={i} className="bg-amber-500/[0.05] border border-amber-400/[0.08] hover:border-amber-400/[0.15] rounded-2xl px-4 py-3 transition-colors">
+                      <p className="text-gray-300/80 text-[11px] leading-relaxed">&ldquo;{a.mesaj}&rdquo;</p>
+                      <p className="text-amber-400/45 text-[9px] mt-2 font-semibold tracking-wide">— {a.isim}</p>
                     </div>
                   ))}
                 </div>
               </div>
             </Section>
 
-            {/* Canlı Etkinlik Albümü */}
-            <Section className="md:col-span-3">
-              <div className="h-full bg-[#0c0c14] rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default min-h-[190px] border border-white/[0.06]">
-                <div className="absolute -top-16 -right-24 w-80 h-80 rounded-full bg-indigo-500 opacity-[0.06] blur-3xl group-hover:opacity-[0.12] transition-opacity" />
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-10">
-                  <div className="flex-shrink-0 md:w-64">
-                    <div className="w-11 h-11 bg-indigo-500/15 border border-indigo-500/25 rounded-2xl flex items-center justify-center text-xl mb-4">📸</div>
-                    <h3 className="text-white text-2xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-5">Misafirler anları fotoğraf olarak paylaşır — hepsi tek albümde toplanır</p>
+            {/* 8 · Canlı Etkinlik Albümü — col-span-2 */}
+            <Section className="md:col-span-2">
+              <div className="h-full bg-[#0a0c18] border border-indigo-500/[0.14] rounded-3xl p-8 relative overflow-hidden group hover:border-indigo-500/24 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute -top-20 -right-28 w-96 h-96 rounded-full bg-indigo-500 opacity-[0.04] blur-3xl group-hover:opacity-[0.09] transition-opacity duration-700" />
+                <div className="relative z-10 flex items-start gap-8 h-full">
+                  <div className="flex-shrink-0 w-52">
+                    <div className="w-10 h-10 bg-indigo-500/10 border border-indigo-500/18 rounded-xl flex items-center justify-center mb-4">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
+                    </div>
+                    <h3 className="text-white text-xl font-bold mb-2">Canlı Etkinlik Albümü</h3>
+                    <p className="text-gray-600 text-xs leading-relaxed mb-4">Misafirler anları paylaşır — hepsi tek albümde</p>
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[11px] text-gray-500">Etkinlik sırasında canlı güncellenir</span>
+                      <span className="text-[10px] text-gray-600">Canlı güncellenir</span>
                     </div>
                   </div>
-                  {/* Masonry photo wall — tam genişlik */}
-                  <div className="flex-1 flex gap-2.5 h-44">
-                    <div className="flex flex-col gap-2.5 flex-1">
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-70 group-hover:opacity-95 transition-all duration-500" />
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-75" />
+                  <div className="flex-1 flex gap-2 self-stretch py-1">
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="flex-[2] rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 opacity-50 group-hover:opacity-85 transition-all duration-700" />
+                      <div className="flex-[1] rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-75" />
                     </div>
-                    <div className="flex flex-col gap-2.5 flex-1 pt-6">
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-100" />
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-150" />
+                    <div className="flex flex-col gap-2 flex-1 pt-5">
+                      <div className="flex-[1] rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-100" />
+                      <div className="flex-[2] rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-150" />
                     </div>
-                    <div className="flex flex-col gap-2.5 flex-1">
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-200" />
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[250ms]" />
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="flex-[1] rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-200" />
+                      <div className="flex-[2] rounded-xl bg-gradient-to-br from-fuchsia-400 to-pink-600 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-[250ms]" />
                     </div>
-                    <div className="flex flex-col gap-2.5 flex-1 pt-3">
-                      <div className="flex-[2] rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-700 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-300" />
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-lime-400 to-green-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[350ms]" />
-                    </div>
-                    <div className="flex flex-col gap-2.5 flex-1">
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[400ms]" />
-                      <div className="flex-[1] rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-600 opacity-70 group-hover:opacity-95 transition-all duration-500 delay-[450ms]" />
-                      <div className="flex-[1] rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-all duration-500 delay-500">
-                        <span className="text-white/40 text-[11px] font-bold group-hover:text-white/60">+24</span>
+                    <div className="flex flex-col gap-2 flex-1 pt-3">
+                      <div className="flex-[2] rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 opacity-50 group-hover:opacity-85 transition-all duration-700 delay-300" />
+                      <div className="flex-[1] rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:border-white/[0.14] transition-all duration-700 delay-[350ms]">
+                        <span className="text-white/30 text-[10px] font-bold group-hover:text-white/55 transition-colors">+24</span>
                       </div>
                     </div>
                   </div>
@@ -759,24 +823,28 @@ export default function Anasayfa() {
               </div>
             </Section>
 
-            {/* Geri sayım — tam genişlik */}
-            <Section className="md:col-span-3">
-              <div className="h-full bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.008] transition-all duration-300 cursor-default flex flex-col md:flex-row items-start md:items-center gap-8">
-                <div className="absolute inset-0 opacity-[0.07]" style={{
-                  backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-                  backgroundSize: "18px 18px",
+            {/* 9 · Geri Sayım */}
+            <Section>
+              <div className="h-full bg-[#0e0920] border border-purple-500/[0.18] rounded-3xl p-7 relative overflow-hidden group hover:border-purple-500/36 transition-all duration-500 cursor-default min-h-[210px]">
+                <div className="absolute inset-0 opacity-[0.035] pointer-events-none" style={{
+                  backgroundImage: "radial-gradient(circle, #a855f7 1px, transparent 1px)",
+                  backgroundSize: "16px 16px",
                 }} />
-                <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-pink-500/20 to-transparent" />
-                <div className="relative z-10 flex-1">
-                  <div className="w-11 h-11 bg-white/10 rounded-2xl flex items-center justify-center text-xl mb-5">⏱️</div>
-                  <h3 className="text-white text-2xl font-bold">Canlı geri sayım sayacı</h3>
-                  <p className="text-purple-200/80 text-sm mt-2">Etkinliğe kaç gün kaldığını misafirlerin anlık görsün</p>
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-purple-500 opacity-[0.09] blur-3xl group-hover:opacity-[0.2] transition-opacity" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 bg-purple-500/10 border border-purple-500/18 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white text-lg font-bold mb-1">Geri sayım sayacı</h3>
+                  <p className="text-purple-300/40 text-xs mb-5">Etkinliğe kaç gün kaldığı anlık görünsün</p>
                 </div>
-                <div className="relative z-10 flex gap-3">
-                  {[{ n: "12", l: "GÜN" }, { n: "08", l: "SAAT" }, { n: "45", l: "DAKİKA" }, { n: "30", l: "SANİYE" }].map((t, i) => (
-                    <div key={i} className="text-center bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-3 min-w-[60px]">
-                      <p className="text-2xl md:text-3xl font-bold text-white tabular-nums">{t.n}</p>
-                      <p className="text-purple-200/70 text-[9px] tracking-widest mt-1">{t.l}</p>
+                <div className="absolute bottom-6 left-7 right-7 grid grid-cols-4 gap-1.5">
+                  {[{ n: "12", l: "GÜN" }, { n: "08", l: "SAAT" }, { n: "45", l: "DK" }, { n: "30", l: "SN" }].map((t, i) => (
+                    <div key={i} className="text-center bg-purple-500/[0.09] border border-purple-500/[0.14] rounded-xl py-2">
+                      <p className="text-xl font-bold text-white tabular-nums leading-none">{t.n}</p>
+                      <p className="text-[7px] text-purple-400/45 tracking-widest mt-1">{t.l}</p>
                     </div>
                   ))}
                 </div>
