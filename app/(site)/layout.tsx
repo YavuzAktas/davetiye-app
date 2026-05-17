@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import NavLinks from "@/components/NavLinks";
 import LansmanBandi from "@/components/LansmanBandi";
+import AktiviteBildirimi from "@/components/AktiviteBildirimi";
 
 /* ── Header ─────────────────────────────── */
 function Header() {
@@ -179,6 +180,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Header />
       <main>{children}</main>
       <Footer />
+      <AktiviteBildirimi />
     </>
   );
 }
