@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
 import Link from "next/link";
+import Image from "next/image";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
@@ -1076,6 +1077,20 @@ function FiyatOzeti({
           </Link>
         </div>
       )}
+
+      {/* Güvenli ödeme logoları */}
+      <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col items-center gap-1.5">
+        <p className="text-[9px] font-semibold tracking-[0.18em] uppercase text-gray-300">Güvenli ödeme altyapısı</p>
+        <div className="relative h-5 w-52" style={{ filter: "invert(1)", opacity: 0.28 }}>
+          <Image
+            src="/logo_band_white@3x.png"
+            alt="iyzico, Mastercard, Visa, AmEx, Troy"
+            fill
+            sizes="208px"
+            className="object-contain"
+          />
+        </div>
+      </div>
     </div>
   );
 }
