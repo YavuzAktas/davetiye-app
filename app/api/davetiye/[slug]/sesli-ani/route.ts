@@ -58,7 +58,6 @@ export async function POST(
       userId: true,
       baslik: true,
       sesliAniAktif: true,
-      user: { select: { plan: true } },
     },
   });
   if (!davetiye || !davetiye.aktif)

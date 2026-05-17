@@ -58,7 +58,6 @@ export async function POST(
       albumAktif: true,
       userId: true,
       baslik: true,
-      user: { select: { plan: true } },
     },
   });
   if (!davetiye || !davetiye.aktif)

@@ -48,7 +48,6 @@ function publicDavetiyeGetir(slug: string) {
           select: {
             name: true,
             email: true,
-            plan: true,
           },
         },
       },
