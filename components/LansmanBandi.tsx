@@ -84,29 +84,35 @@ export default function LansmanBandi() {
       `}</style>
 
       {/* ════════════════════════════════════
-          MOBİL banner (< sm) — tek satır, dengeli
+          MOBİL banner (< sm)
       ════════════════════════════════════ */}
       <div className="relative overflow-hidden sm:hidden" style={gradientStyle}>
         <div className="absolute inset-0 bg-black/38 pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-white/12 pointer-events-none" />
 
-        <div className="relative flex h-11 items-center gap-2 px-3">
-          {/* Sol: mesaj + timer */}
-          <div className="flex min-w-0 flex-1 items-center gap-1.5">
-            <span className="text-sm leading-none shrink-0">🔥</span>
-            <span className="text-[12px] font-bold text-white/90 shrink-0 whitespace-nowrap">
-              Bitiyor
-            </span>
-            <span className="text-white/30 shrink-0">·</span>
-            <span className="tabular-nums text-[13px] font-black text-amber-300 whitespace-nowrap">
-              {zaman.saat}:{zaman.dakika}:{zaman.saniye}
-            </span>
+        <div className="relative flex items-center gap-2 px-3 py-2 pr-2">
+          {/* Sol: 2 satır */}
+          <div className="flex-1 min-w-0">
+            {/* Üst satır: ne bitiyor */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm leading-none shrink-0">🔥</span>
+              <span className="text-[12px] font-bold text-white/90 whitespace-nowrap">
+                Lansman fiyatı bitiyor
+              </span>
+            </div>
+            {/* Alt satır: ne kadar kaldı */}
+            <div className="flex items-center gap-1 mt-0.5">
+              <span className="tabular-nums text-[12px] font-black text-amber-300">
+                {zaman.saat}:{zaman.dakika}:{zaman.saniye}
+              </span>
+              <span className="text-[10px] text-white/35 font-medium">kaldı</span>
+            </div>
           </div>
 
           {/* Sağ: CTA + kapat */}
           <Link
             href="/sablonlar"
-            className="shrink-0 rounded-full px-3.5 py-1.5 text-[11px] font-black text-white transition active:scale-95"
+            className="shrink-0 rounded-full px-3.5 py-2 text-[11px] font-black text-white transition active:scale-95"
             style={{
               background: "rgba(255,255,255,0.18)",
               border: "1px solid rgba(255,255,255,0.3)",
