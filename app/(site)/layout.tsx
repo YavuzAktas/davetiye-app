@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import NavLinks from "@/components/NavLinks";
+import LansmanBandi from "@/components/LansmanBandi";
 
 /* ── Header ─────────────────────────────── */
 function Header() {
@@ -174,6 +175,7 @@ function Footer() {
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <LansmanBandi />
       <Header />
       <main>{children}</main>
       <Footer />
