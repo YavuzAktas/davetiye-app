@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Fiyatlar ve Planlar | Bekleriz",
     description: "Ücretsiz başla, ihtiyacına göre yükselt. Tek seferlik ödeme, abonelik yok.",
     url: `${SITE_URL}/fiyatlar`,
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
+    images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
 };
 

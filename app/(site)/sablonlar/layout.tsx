@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Davetiye Şablonları | Online ve Dijital Tasarımlar",
     description: "Düğün, nişan, doğum günü ve özel etkinlikler için hazır dijital davetiye şablonları.",
     url: `${SITE_URL}/sablonlar`,
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
+    images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
 };
 

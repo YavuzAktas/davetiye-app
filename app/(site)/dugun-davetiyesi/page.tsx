@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       "Düğün ve nikah için dijital davetiye hazırlayın, tek linkle paylaşın ve katılım yanıtlarını takip edin.",
     url: `${SITE_URL}/dugun-davetiyesi`,
     type: "website",
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
+    images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
 };
 

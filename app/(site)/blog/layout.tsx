@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Davetiye Blogu | Online ve Dijital Davetiye Rehberleri",
     description: "Online davetiye hazırlama, WhatsApp davetiye gönderimi ve davetiye sözleri için pratik rehberler.",
     url: `${SITE_URL}/blog`,
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 }],
+    images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
 };
 

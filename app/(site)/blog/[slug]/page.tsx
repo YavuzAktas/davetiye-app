@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!post) return {};
   const siteUrl = getSiteUrl();
   const postUrl = `${siteUrl}/blog/${slug}`;
-  const imageUrl = `${siteUrl}/og-image.png`;
+  const imageUrl = `${siteUrl}/opengraph-image`;
   return {
     title: post.title,
     description: post.description,
@@ -49,7 +49,7 @@ export default async function BlogPostPage(
   if (!post) notFound();
   const siteUrl = getSiteUrl();
   const postUrl = `${siteUrl}/blog/${slug}`;
-  const imageUrl = `${siteUrl}/og-image.png`;
+  const imageUrl = `${siteUrl}/opengraph-image`;
 
   /* JSON-LD: Article schema */
   const articleSchema = {
