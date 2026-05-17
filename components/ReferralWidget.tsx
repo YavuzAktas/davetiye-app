@@ -27,18 +27,23 @@ export default function ReferralWidget({ referralKod, referralKredi, toplamRefer
       {/* Header */}
       <div className="px-5 pt-5 pb-4 border-b border-gray-50">
         <div className="flex items-center gap-2.5 mb-1">
-          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm">
+          <div className="w-7 h-7 rounded-xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm">
             🎁
           </div>
           <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase">Referral Programı</p>
         </div>
-        <p className="text-xs text-gray-400 mt-1">Arkadaşın ödeme yaparsa <span className="font-semibold text-purple-600">50₺</span> kazan</p>
+        <p className="text-xs text-gray-400 mt-1">
+          {referralKredi > 0
+            ? <><span className="font-semibold text-purple-600">{referralKredi}₺</span> krediniz bir sonraki ödemede kullanılabilir</>
+            : <>Arkadaşın ödeme yaparsa <span className="font-semibold text-purple-600">50₺</span> kazan</>
+          }
+        </p>
       </div>
 
       <div className="p-5 space-y-4">
         {/* Credit balance */}
         {referralKredi > 0 && (
-          <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 p-4 text-center">
+          <div className="rounded-2xl bg-linear-to-r from-purple-50 to-pink-50 border border-purple-100 p-4 text-center">
             <p className="text-3xl font-bold text-purple-700 tabular-nums">{referralKredi}₺</p>
             <p className="text-xs text-purple-400 mt-0.5">Kullanılabilir krediniz</p>
           </div>
