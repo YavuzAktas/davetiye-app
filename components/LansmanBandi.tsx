@@ -84,67 +84,49 @@ export default function LansmanBandi() {
       `}</style>
 
       {/* ════════════════════════════════════
-          MOBİL banner (< sm) — net mesaj, rahat dokunma alanları
+          MOBİL banner (< sm) — tek satır, dengeli
       ════════════════════════════════════ */}
-      <div
-        className="relative overflow-hidden sm:hidden"
-        style={gradientStyle}
-      >
-        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/15 pointer-events-none" />
+      <div className="relative overflow-hidden sm:hidden" style={gradientStyle}>
+        <div className="absolute inset-0 bg-black/38 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/12 pointer-events-none" />
 
-        <div className="relative px-3 py-2.5 pr-12">
-          <div className="flex min-w-0 items-center justify-between gap-2">
-            <div className="min-w-0">
-              <div className="flex min-w-0 items-center gap-1.5">
-                <span className="text-sm leading-none">🔥</span>
-                <span className="truncate text-[13px] font-black leading-tight text-white">
-                  Lansman fiyatı bitiyor
-                </span>
-              </div>
-              <div className="mt-1 flex items-center gap-1.5">
-                <span className="lb-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                <span className="text-[11px] font-medium text-white/60">
-                  {kisiSayisi} kişi inceliyor
-                </span>
-              </div>
-            </div>
-
-            <Link
-              href="/sablonlar"
-              className="shrink-0 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-[11px] font-black text-white shadow-sm backdrop-blur transition active:scale-95"
-            >
-              Oluştur
-            </Link>
+        <div className="relative flex h-11 items-center gap-2 px-3">
+          {/* Sol: mesaj + timer */}
+          <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            <span className="text-sm leading-none shrink-0">🔥</span>
+            <span className="text-[12px] font-bold text-white/90 shrink-0 whitespace-nowrap">
+              Bitiyor
+            </span>
+            <span className="text-white/30 shrink-0">·</span>
+            <span className="tabular-nums text-[13px] font-black text-amber-300 whitespace-nowrap">
+              {zaman.saat}:{zaman.dakika}:{zaman.saniye}
+            </span>
           </div>
 
-          <div className="mt-2 flex items-center gap-1.5">
-            {BIRIMLER.map((b, i) => (
-              <div key={b.l} className="flex items-center gap-1.5">
-                {i > 0 && <span className="text-xs font-black text-amber-300/45">:</span>}
-                <span className="inline-flex min-w-10 items-center justify-center rounded-lg border border-amber-300/25 bg-black/25 px-2 py-1">
-                  <span className="text-[13px] font-black leading-none tabular-nums text-amber-300">
-                    {b.v}
-                  </span>
-                </span>
-                <span className="text-[9px] font-bold leading-none tracking-[0.12em] text-amber-200/55">
-                  {b.l}
-                </span>
-              </div>
-            ))}
-            <span className="ml-1 text-[10px] font-semibold text-white/45">kaldı</span>
-          </div>
+          {/* Sağ: CTA + kapat */}
+          <Link
+            href="/sablonlar"
+            className="shrink-0 rounded-full px-3.5 py-1.5 text-[11px] font-black text-white transition active:scale-95"
+            style={{
+              background: "rgba(255,255,255,0.18)",
+              border: "1px solid rgba(255,255,255,0.3)",
+              backdropFilter: "blur(8px)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Oluştur →
+          </Link>
+
+          <button
+            onClick={kapat}
+            aria-label="Kapat"
+            className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-white/35 transition hover:bg-white/10 hover:text-white"
+          >
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-
-        <button
-          onClick={kapat}
-          aria-label="Kapat"
-          className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-white/45 transition hover:bg-white/10 hover:text-white"
-        >
-          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       </div>
 
       {/* ════════════════════════════════════
