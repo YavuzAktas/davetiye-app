@@ -560,7 +560,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
             {sablon.isim}
           </h2>
           {sablon.aciklama && (
-            <p className="mt-1 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.32)" }}>{sablon.aciklama}</p>
+            <p className="mt-1 text-sm line-clamp-1" style={{ color: "rgba(255,255,255,0.32)" }}>{sablon.aciklama}</p>
           )}
         </div>
         {/* Fiyat — sağ üst */}
