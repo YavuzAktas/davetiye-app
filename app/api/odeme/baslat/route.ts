@@ -123,6 +123,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         albumAktif: true,
         sesliAniAktif: true,
         canliDuvarAktif: true,
+        oturmaPlanAktif: true,
         odemeDurumu: true,
       },
     })

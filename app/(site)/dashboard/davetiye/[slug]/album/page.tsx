@@ -6,7 +6,7 @@ import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { ModerasyonIcerik } from "@/components/ModerasyonListe";
 import PlanKilidiKarti from "@/components/PlanKilidiKarti";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -31,7 +31,7 @@ export default async function AlbumModerasyon({ params }: Props) {
   // Minimal davetiye sorgusu — plan gate için yeterli
   const davetiyeTemel = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, userId: true, baslik: true, sablon: true },
+    select: { id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true, albumAktif: true, user: { select: { plan: true } } },
   });
   if (!davetiyeTemel || davetiyeTemel.userId !== user.id) notFound();
 
@@ -40,7 +40,7 @@ export default async function AlbumModerasyon({ params }: Props) {
   const rgb = hexToRgb(renk);
 
   // ── Plan gate — hero göster, içeriği kilitle ──
-  if (!planOzellikVar(user.plan, "album")) {
+  if (!davetiyeOzelligiAktif(davetiyeTemel, "album")) {
     return (
       <div className="min-h-screen bg-gray-50 overflow-x-hidden">
         <div className="relative bg-[#080112] overflow-hidden">

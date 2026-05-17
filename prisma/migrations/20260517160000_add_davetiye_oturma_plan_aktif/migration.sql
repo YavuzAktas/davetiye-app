@@ -1,0 +1,2 @@
+ALTER TABLE "Davetiye"
+ADD COLUMN "oturmaPlanAktif" BOOLEAN NOT NULL DEFAULT false;

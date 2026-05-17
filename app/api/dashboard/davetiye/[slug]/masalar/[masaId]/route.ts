@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 
 async function masaYetki(slug: string, masaId: string, email: string) {
   return prisma.masa.findFirst({
     where: { id: masaId, davetiye: { slug, user: { email } } },
-    select: { id: true },
+    select: { id: true, davetiye: { select: { odemeDurumu: true, oturmaPlanAktif: true, user: { select: { plan: true } } } } },
   });
 }
 
@@ -16,13 +16,10 @@ interface Params { params: Promise<{ slug: string; masaId: string }> }
 export async function PATCH(req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
-  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
-    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
-  }
 
   const { slug, masaId } = await params;
   const masa = await masaYetki(slug, masaId, session.user.email);
-  if (!masa) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
+  if (!masa || !davetiyeOzelligiAktif(masa.davetiye, "oturmaPlan")) return NextResponse.json({ hata: "Bu davetiyede oturma planı aktif değil." }, { status: 403 });
 
   const { isim, kapasite } = await req.json();
   const updated = await prisma.masa.update({
@@ -39,13 +36,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 export async function DELETE(_: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
-  if (!planOzellikVar(session.user.plan ?? "free", "oturmaPlan")) {
-    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
-  }
 
   const { slug, masaId } = await params;
   const masa = await masaYetki(slug, masaId, session.user.email);
-  if (!masa) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
+  if (!masa || !davetiyeOzelligiAktif(masa.davetiye, "oturmaPlan")) return NextResponse.json({ hata: "Bu davetiyede oturma planı aktif değil." }, { status: 403 });
 
   await prisma.masa.delete({ where: { id: masaId } });
   return NextResponse.json({ basarili: true });

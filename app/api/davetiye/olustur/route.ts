@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, polaroid1, polaroid2, polaroid3, sesliAniAktif, canliDuvarAktif, dressKod, dressKodRenkler, albumAktif } = body;
+  const { baslik, etkinlikTur, tarih, saat, mekan, mesaj, sablon, font, renk, kisi1, kisi2, muzik, polaroid1, polaroid2, polaroid3, sesliAniAktif, canliDuvarAktif, oturmaPlanAktif, dressKod, dressKodRenkler, albumAktif } = body;
 
   if (!baslik || !mekan || !tarih) {
     return NextResponse.json({ hata: "Zorunlu alanlar eksik." }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     albumAktif: !!albumAktif,
     sesliAniAktif: !!sesliAniAktif,
     canliDuvarAktif: !!canliDuvarAktif,
+    oturmaPlanAktif: !!oturmaPlanAktif,
   });
 
   const davetiye = await prisma.davetiye.create({
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
       polaroid3:       polaroid3 || null,
       sesliAniAktif:   !!sesliAniAktif,
       canliDuvarAktif: !!canliDuvarAktif,
+      oturmaPlanAktif: !!oturmaPlanAktif,
       dressKod:        dressKod || null,
       dressKodRenkler: dressKodRenkler || null,
       albumAktif:      !!albumAktif,

@@ -10,6 +10,7 @@ import YeniDavetiyeToast from "@/components/YeniDavetiyeToast";
 import { SABLONLAR } from "@/lib/sablonlar";
 import DavetiyeOdemePanel from "@/components/DavetiyeOdemePanel";
 import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -55,6 +56,7 @@ export default async function DavetiyeDetay({ params }: Props) {
       albumAktif: true,
       sesliAniAktif: true,
       canliDuvarAktif: true,
+      oturmaPlanAktif: true,
       goruntulenme: true,
       createdAt: true,
       rsvplar: {
@@ -96,7 +98,9 @@ export default async function DavetiyeDetay({ params }: Props) {
     albumAktif: davetiye.albumAktif,
     sesliAniAktif: davetiye.sesliAniAktif,
     canliDuvarAktif: davetiye.canliDuvarAktif,
+    oturmaPlanAktif: davetiye.oturmaPlanAktif,
   });
+  const oturmaPlanAktif = davetiyeOzelligiAktif(davetiye, "oturmaPlan");
 
   const tarihStr = davetiye.tarih
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
@@ -440,7 +444,12 @@ export default async function DavetiyeDetay({ params }: Props) {
 
                 <Link
                   href={`/dashboard/davetiye/${davetiye.slug}/oturma-plani`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-purple-100 hover:border-purple-200 hover:bg-purple-50/50 transition-all group"
+                  aria-disabled={!oturmaPlanAktif}
+                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
+                    oturmaPlanAktif
+                      ? "border-purple-100 hover:border-purple-200 hover:bg-purple-50/50"
+                      : "pointer-events-none border-gray-100 bg-gray-50 opacity-50"
+                  }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
@@ -448,7 +457,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
-                      <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">Yeni</span>
+                      <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">
+                        {oturmaPlanAktif ? "Aktif" : "Ek özellik"}
+                      </span>
                     </div>
                   </div>
                   <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>

@@ -3,7 +3,7 @@ import { revalidateTag } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { blobSilVeyaKuyrugaAl } from "@/lib/medya-silme";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 import { davetiyeSesliAniCacheTag } from "@/lib/cache-tags";
@@ -13,24 +13,21 @@ type Params = { params: Promise<{ slug: string; id: string }> };
 async function yetkiKontrol(slug: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return null;
-  if (!planOzellikVar(session.user.plan ?? "free", "sesliAni")) return null;
 
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, user: { email: session.user.email } },
-    select: { id: true },
+    select: { id: true, odemeDurumu: true, sesliAniAktif: true, user: { select: { plan: true } } },
   });
-  return davetiye;
+  return davetiye && davetiyeOzelligiAktif(davetiye, "sesliAni") ? davetiye : null;
 }
 
 export async function PATCH(req: NextRequest, { params }: Params): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
-  if (!planOzellikVar(session.user.plan ?? "free", "sesliAni"))
-    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
 
   const { slug, id } = await params;
   const davetiye = await yetkiKontrol(slug);
-  if (!davetiye) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+  if (!davetiye) return NextResponse.json({ hata: "Bu davetiyede sesli anı özelliği aktif değil." }, { status: 403 });
 
   const { onaylandi } = await req.json();
   const sonuc = await prisma.sesliAni.updateMany({
@@ -46,12 +43,10 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
 export async function DELETE(_req: NextRequest, { params }: Params): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
-  if (!planOzellikVar(session.user.plan ?? "free", "sesliAni"))
-    return NextResponse.json({ hata: "Bu özellik Premium plana özel.", upsell: true }, { status: 403 });
 
   const { slug, id } = await params;
   const davetiye = await yetkiKontrol(slug);
-  if (!davetiye) return NextResponse.json({ hata: "Yetkisiz." }, { status: 401 });
+  if (!davetiye) return NextResponse.json({ hata: "Bu davetiyede sesli anı özelliği aktif değil." }, { status: 403 });
 
   const ani = await prisma.sesliAni.findFirst({ where: { id, davetiyeId: davetiye.id } });
   if (!ani) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });

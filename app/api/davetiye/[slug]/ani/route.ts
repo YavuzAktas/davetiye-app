@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 import { davetiyeAniCacheTag } from "@/lib/cache-tags";
 
@@ -54,11 +54,11 @@ export async function POST(
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, aktif: true, userId: true, baslik: true, user: { select: { plan: true } } },
+    select: { id: true, aktif: true, odemeDurumu: true, albumAktif: true, userId: true, baslik: true, user: { select: { plan: true } } },
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
-  if (!planOzellikVar(davetiye.user.plan, "album"))
+  if (!davetiyeOzelligiAktif(davetiye, "album"))
     return NextResponse.json({ hata: "Bu davetiyede anı özelliği aktif değil." }, { status: 403 });
 
   const birSaatOnce = new Date(Date.now() - 3_600_000);

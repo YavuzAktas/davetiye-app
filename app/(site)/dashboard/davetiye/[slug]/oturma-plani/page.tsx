@@ -5,7 +5,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import OturmaPlanKarti from "@/components/OturmaPlanKarti";
 import PlanKilidiKarti from "@/components/PlanKilidiKarti";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 
 export const dynamic = "force-dynamic";
 
@@ -52,12 +52,14 @@ export default async function OturmaPlanSayfasi({ params }: Props) {
     select: {
       id: true,
       baslik: true,
+      odemeDurumu: true,
+      oturmaPlanAktif: true,
       user: { select: { plan: true } },
     },
   });
   if (!davetiye) notFound();
 
-  if (!planOzellikVar(davetiye.user.plan, "oturmaPlan")) {
+  if (!davetiyeOzelligiAktif(davetiye, "oturmaPlan")) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Hero slug={slug} baslik={davetiye.baslik} alt="Premium özelliği" />

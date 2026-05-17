@@ -3,7 +3,7 @@ import { unstable_cache } from "next/cache";
 import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { bildirimOlustur } from "@/lib/bildirim";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
 import { davetiyeAlbumCacheTag } from "@/lib/cache-tags";
 
@@ -54,6 +54,8 @@ export async function POST(
     select: {
       id: true,
       aktif: true,
+      odemeDurumu: true,
+      albumAktif: true,
       userId: true,
       baslik: true,
       user: { select: { plan: true } },
@@ -61,7 +63,7 @@ export async function POST(
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
-  if (!planOzellikVar(davetiye.user.plan, "album"))
+  if (!davetiyeOzelligiAktif(davetiye, "album"))
     return NextResponse.json({ hata: "Bu davetiyede albüm özelliği aktif değil." }, { status: 403 });
 
   /* Rate limit: son 1 saatte aynı davette 10 fotoğraf yeterli */

@@ -7,7 +7,7 @@ import RsvpForm from "@/components/RsvpForm";
 import EtkilesimButonu from "@/components/EtkilesimButonu";
 import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKaydedici";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
-import { planOzellikVar } from "@/lib/planlar";
+import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { davetiyeCacheTag } from "@/lib/cache-tags";
 
 interface Props {
@@ -43,6 +43,7 @@ function publicDavetiyeGetir(slug: string) {
         dressKodRenkler: true,
         albumAktif: true,
         aktif: true,
+        odemeDurumu: true,
         user: {
           select: {
             name: true,
@@ -90,9 +91,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
-  const albumAktif      = (davetiye.albumAktif ?? true) && planOzellikVar(davetiye.user?.plan ?? "free", "album");
-  const sesliAniAktif   = davetiye.sesliAniAktif ?? false;
-  const canliDuvarAktif = davetiye.canliDuvarAktif ?? false;
+  const albumAktif      = davetiyeOzelligiAktif(davetiye, "album");
+  const sesliAniAktif   = davetiyeOzelligiAktif(davetiye, "sesliAni");
+  const canliDuvarAktif = davetiyeOzelligiAktif(davetiye, "canliDuvar");
 
   const veri: DavetiyeVeri = {
     id: davetiye.id,

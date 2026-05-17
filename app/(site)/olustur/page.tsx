@@ -175,6 +175,7 @@ function OlusturIcerigi() {
   const [aniAcik,        setAniAcik]        = useState(false);
   const [sesliAniAcik,   setSesliAniAcik]   = useState(false);
   const [canliDuvarAcik, setCanliDuvarAcik] = useState(false);
+  const [oturmaPlanAcik, setOturmaPlanAcik] = useState(false);
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
@@ -229,6 +230,7 @@ function OlusturIcerigi() {
     albumAktif: aniAcik,
     sesliAniAktif: sesliAniAcik,
     canliDuvarAktif: canliDuvarAcik,
+    oturmaPlanAktif: oturmaPlanAcik,
   });
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
@@ -307,6 +309,7 @@ function OlusturIcerigi() {
           albumAktif:        aniAcik,
           sesliAniAktif:     sesliAniAcik,
           canliDuvarAktif:   canliDuvarAcik,
+          oturmaPlanAktif:   oturmaPlanAcik,
           dressKod:          dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
           dressKodRenkler:   dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
         }),
@@ -717,6 +720,20 @@ function OlusturIcerigi() {
                         </div>
                       </OzellikKarti>
                     )}
+
+                    {/* 🪑 Oturma Planı */}
+                    <OzellikKarti
+                      icon="🪑" baslik="Oturma Planı"
+                      aciklama="Katılacak misafirleri masalara atayabileceğiniz yönetim ekranı açılır"
+                      misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
+                      planEtiketi="Ek ücret"
+                      acik={oturmaPlanAcik} onToggle={() => setOturmaPlanAcik(!oturmaPlanAcik)}
+                    >
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">Oturma Planı aktif. Ödeme sonrası Dashboard → Oturma Planı bölümünden masa düzeninizi hazırlayabilirsiniz.</p>
+                      </div>
+                    </OzellikKarti>
                   </div>
                 </div>
 

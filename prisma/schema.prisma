@@ -110,6 +110,7 @@ model Davetiye {
   polaroid3       String?
   sesliAniAktif   Boolean      @default(false)
   canliDuvarAktif Boolean      @default(false)
+  oturmaPlanAktif Boolean      @default(false)
   sesliAnilar     SesliAni[]
   dressKod        String?
   dressKodRenkler String?
