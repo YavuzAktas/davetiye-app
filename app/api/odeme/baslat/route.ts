@@ -106,30 +106,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const body = await req.json();
-  const { planId, davetiyeId } = body;
+  const { davetiyeId } = body;
 
-  const PLAN_FIYATLARI: Record<string, number> = { standart: 299, premium: 599 };
-  const planFiyati = typeof planId === "string" ? PLAN_FIYATLARI[planId] : undefined;
+  if (typeof davetiyeId !== "string" || !davetiyeId) {
+    return NextResponse.json(
+      { hata: "Ödeme yalnızca oluşturulmuş bir davetiye için başlatılabilir." },
+      { status: 400 },
+    );
+  }
 
-  const davetiye = typeof davetiyeId === "string" && davetiyeId
-    ? await prisma.davetiye.findFirst({
-      where: { id: davetiyeId, userId: user.id },
-      select: {
-        id: true,
-        slug: true,
-        baslik: true,
-        sablon: true,
-        muzik: true,
-        albumAktif: true,
-        sesliAniAktif: true,
-        canliDuvarAktif: true,
-        oturmaPlanAktif: true,
-        odemeDurumu: true,
-      },
-    })
-    : null;
+  const davetiye = await prisma.davetiye.findFirst({
+    where: { id: davetiyeId, userId: user.id },
+    select: {
+      id: true,
+      slug: true,
+      baslik: true,
+      sablon: true,
+      muzik: true,
+      albumAktif: true,
+      sesliAniAktif: true,
+      canliDuvarAktif: true,
+      oturmaPlanAktif: true,
+      odemeDurumu: true,
+    },
+  });
 
-  if (davetiyeId && !davetiye) {
+  if (!davetiye) {
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
   }
 
@@ -137,16 +139,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Bu davetiye için ödeme zaten tamamlanmış." }, { status: 409 });
   }
 
-  if (davetiye) {
-    await prisma.siparis.updateMany({
-      where: { davetiyeId: davetiye.id, durum: "odeme_bekliyor" },
-      data: { durum: "iptal" },
-    });
-  }
-
-  if (!davetiye && !planFiyati) {
-    return NextResponse.json({ hata: "Geçersiz ödeme isteği." }, { status: 400 });
-  }
+  await prisma.siparis.updateMany({
+    where: { davetiyeId: davetiye.id, durum: "odeme_bekliyor" },
+    data: { durum: "iptal" },
+  });
 
   const { bilgiler: faturaBilgileri, hata } = faturaBilgileriniOku(body);
   if (!faturaBilgileri) {
@@ -159,58 +155,36 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const iyzicoAdres = kurumsalFatura
     ? faturaBilgileri.adres
     : `${faturaBilgileri.sehir} - Bireysel dijital hizmet alımı`;
-  const fiyat = davetiye
-    ? davetiyeFiyatiHesapla(davetiye)
-    : null;
-  const toplamTutar = fiyat?.toplamTutar ?? planFiyati!;
-  const urunTipi = davetiye ? "davetiye" : "plan";
-  const odemePlanId = davetiye ? "davetiye" : planId;
-  const siparis = davetiye && fiyat
-    ? await prisma.siparis.create({
-      data: {
-        userId: user.id,
-        davetiyeId: davetiye.id,
-        araToplam: fiyat.araToplam,
-        toplamTutar: fiyat.toplamTutar,
-        paraBirimi: fiyat.paraBirimi,
-        fiyatKirilimi: fiyat as any,
-      },
-    })
-    : null;
+  const fiyat = davetiyeFiyatiHesapla(davetiye);
+  const toplamTutar = fiyat.toplamTutar;
+  const siparis = await prisma.siparis.create({
+    data: {
+      userId: user.id,
+      davetiyeId: davetiye.id,
+      araToplam: fiyat.araToplam,
+      toplamTutar: fiyat.toplamTutar,
+      paraBirimi: fiyat.paraBirimi,
+      fiyatKirilimi: fiyat as any,
+    },
+  });
 
-  if (davetiye && fiyat) {
-    await prisma.davetiye.update({
-      where: { id: davetiye.id },
-      data: {
-        odemeDurumu: "odeme_bekliyor",
-        fiyatSnapshot: fiyat as any,
-      },
-    });
-  }
+  await prisma.davetiye.update({
+    where: { id: davetiye.id },
+    data: {
+      odemeDurumu: "odeme_bekliyor",
+      fiyatSnapshot: fiyat as any,
+    },
+  });
 
-  const conversationId = davetiye
-    ? `${user.id}-${davetiye.id}-${siparis!.id}`
-    : `${user.id}-${planId}-${Date.now()}`;
-  const basketId = davetiye
-    ? siparis!.id
-    : `${user.id}-${planId}`;
-  const basketItems = davetiye && fiyat
-    ? fiyat.kalemler.map(kalem => ({
-      id: kalem.kod,
-      name: kalem.ad,
-      category1: "Dijital Davetiye",
-      itemType: "VIRTUAL",
-      price: tutarIyzicoMetni(kalem.tutar),
-    }))
-    : [
-      {
-        id: planId,
-        name: `Bekleriz ${planId} Planı`,
-        category1: "Dijital Ürün",
-        itemType: "VIRTUAL",
-        price: tutarIyzicoMetni(toplamTutar),
-      },
-    ];
+  const conversationId = `${user.id}-${davetiye.id}-${siparis.id}`;
+  const basketId = siparis.id;
+  const basketItems = fiyat.kalemler.map(kalem => ({
+    id: kalem.kod,
+    name: kalem.ad,
+    category1: "Dijital Davetiye",
+    itemType: "VIRTUAL",
+    price: tutarIyzicoMetni(kalem.tutar),
+  }));
 
   const request = {
     locale: "tr",
@@ -257,33 +231,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   if (result.status !== "success") {
-    if (siparis) {
-      await prisma.siparis.update({
-        where: { id: siparis.id },
-        data: { durum: "baslatilamadi" },
-      });
-    }
+    await prisma.siparis.update({
+      where: { id: siparis.id },
+      data: { durum: "baslatilamadi" },
+    });
     return NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 });
   }
 
-  if (siparis) {
-    await prisma.siparis.update({
-      where: { id: siparis.id },
-      data: {
-        odemeToken: result.token,
-        conversationId,
-      },
-    });
-  }
+  await prisma.siparis.update({
+    where: { id: siparis.id },
+    data: {
+      odemeToken: result.token,
+      conversationId,
+    },
+  });
 
   await prisma.odemeToken.create({
     data: {
       token:     result.token,
       userId:    user.id,
-      planId:    odemePlanId,
-      urunTipi,
-      davetiyeId: davetiye?.id ?? null,
-      siparisId: siparis?.id ?? null,
+      planId:    "davetiye",
+      urunTipi:  "davetiye",
+      davetiyeId: davetiye.id,
+      siparisId: siparis.id,
       toplamTutar,
       fiyatKirilimi: fiyat as any,
       expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 saat

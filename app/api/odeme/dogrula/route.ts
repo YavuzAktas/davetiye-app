@@ -26,7 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
   }
 
-  // Atomik: token kullanılmamışsa işaretle ve planı güncelle.
+  // Atomik: token kullanılmamışsa işaretle ve davetiyeyi güncelle.
   // updateMany, "kullanildi:false" koşuluyla atomik çalışır;
   // eşzamanlı iki istek aynı token'ı ikinci kez aktive edemez.
   const odemeToken = await prisma.odemeToken.findUnique({
@@ -54,6 +54,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
+  if (odemeToken.urunTipi !== "davetiye" || !odemeToken.davetiyeId || !odemeToken.siparisId) {
+    return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+  }
+
   const guncellendi = await prisma.odemeToken.updateMany({
     where: { token, kullanildi: false },
     data: { kullanildi: true },
@@ -65,31 +69,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   await prisma.$transaction([
-    ...(odemeToken.siparisId
-      ? [
-        prisma.siparis.update({
-          where: { id: odemeToken.siparisId },
-          data: {
-            durum: "odendi",
-            paymentId: result.paymentId ? String(result.paymentId) : null,
-            conversationId: result.conversationId ? String(result.conversationId) : null,
-            paidAt: new Date(),
-          },
-        }),
-      ]
-      : []),
-    ...(odemeToken.davetiyeId
-      ? [
-        prisma.davetiye.update({
-          where: { id: odemeToken.davetiyeId },
-          data: {
-            odemeDurumu: "odendi",
-            aktif: true,
-            fiyatSnapshot: odemeToken.fiyatKirilimi as any,
-          },
-        }),
-      ]
-      : []),
+    prisma.siparis.update({
+      where: { id: odemeToken.siparisId },
+      data: {
+        durum: "odendi",
+        paymentId: result.paymentId ? String(result.paymentId) : null,
+        conversationId: result.conversationId ? String(result.conversationId) : null,
+        paidAt: new Date(),
+      },
+    }),
+    prisma.davetiye.update({
+      where: { id: odemeToken.davetiyeId },
+      data: {
+        odemeDurumu: "odendi",
+        aktif: true,
+        fiyatSnapshot: odemeToken.fiyatKirilimi as any,
+      },
+    }),
   ]);
 
   await prisma.odemeKaydi.create({
@@ -119,9 +115,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   return new NextResponse(null, {
     status: 302,
     headers: {
-      Location: odemeToken.urunTipi === "davetiye" && odemeToken.davetiyeId
-        ? `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?urun=davetiye&slug=${odemeToken.davetiye?.slug ?? ""}`
-        : `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?plan=${odemeToken.planId}`,
+      Location: `${process.env.NEXT_PUBLIC_URL}/odeme/basarili?urun=davetiye&slug=${odemeToken.davetiye?.slug ?? ""}`,
     },
   });
 }
