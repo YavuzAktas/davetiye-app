@@ -885,6 +885,29 @@ function GirisGerekliModal({ sablonId, onKapat }: { sablonId: string; onKapat: (
             Google ile Giriş Yap
           </button>
 
+          {/* Ayraç */}
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+            <span className="text-[11px] text-white/20 font-medium">veya</span>
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+          </div>
+
+          {/* E-posta ile giriş / kayıt */}
+          <a
+            href={`/giris?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-semibold mb-5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+            E-posta ile Giriş / Kayıt Ol
+          </a>
+
           <button onClick={onKapat} className="text-xs text-white/20 hover:text-white/40 transition-colors">
             Geri dön, düzenlemeye devam et
           </button>
