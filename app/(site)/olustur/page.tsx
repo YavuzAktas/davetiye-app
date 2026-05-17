@@ -7,6 +7,7 @@ import { useSession, signIn } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
 import Link from "next/link";
 import Image from "next/image";
+import PageLoader from "@/components/PageLoader";
 import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
@@ -1111,14 +1112,7 @@ function SectionHeader({ step, baslik, aciklama }: { step: number; baslik: strin
 
 export default function OlusturSayfasi() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex items-center gap-3 text-gray-400">
-          <span className="w-5 h-5 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin" />
-          Yükleniyor...
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<PageLoader />}>
       <OlusturIcerigi/>
     </Suspense>
   );

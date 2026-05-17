@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
+import PageLoader from "@/components/PageLoader";
 import Link from "next/link";
 
 /* ── Sol panel davetiye kartları ── */
@@ -330,7 +331,7 @@ function GirisIcerigi() {
 
 export default function GirisSayfasi() {
   return (
-    <Suspense>
+    <Suspense fallback={<PageLoader />}>
       <GirisIcerigi/>
     </Suspense>
   );

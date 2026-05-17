@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import PageLoader from "@/components/PageLoader";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -122,7 +123,7 @@ export default function YeniSifreSayfasi() {
           </Link>
         </div>
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-          <Suspense fallback={<div className="text-center text-gray-400 text-sm">Yükleniyor...</div>}>
+          <Suspense fallback={<PageLoader inline />}>
             <YeniSifreIcerigi />
           </Suspense>
         </div>

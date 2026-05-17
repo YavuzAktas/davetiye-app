@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Suspense } from "react";
+import PageLoader from "@/components/PageLoader";
 
 function KvkkOnayIcerigi() {
   const { update } = useSession();
@@ -141,7 +142,7 @@ export default function KvkkOnayPage() {
             <span className="text-xl font-bold text-gray-900">Bekleriz</span>
           </Link>
         </div>
-        <Suspense fallback={<div className="text-center text-gray-400 text-sm">Yükleniyor...</div>}>
+        <Suspense fallback={<PageLoader inline />}>
           <KvkkOnayIcerigi />
         </Suspense>
       </div>
