@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 import FiyatHesaplama from "@/components/FiyatHesaplama";
+import { SABLONLAR } from "@/lib/sablonlar";
 
 const K = DAVETIYE_FIYAT_KALEMLERI;
+const LUKS_SABLONLAR = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
 
 const PAKETLER = [
   {
@@ -84,6 +86,10 @@ function toplam(kalemler: readonly { tutar: number }[]) {
   return kalemler.reduce((a, k) => a + k.tutar, 0);
 }
 
+function tekilParametre(deger: string | string[] | undefined) {
+  return Array.isArray(deger) ? deger[0] : deger;
+}
+
 function SectionHead({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
     <div className="mb-8">
@@ -94,7 +100,18 @@ function SectionHead({ label, title, sub }: { label: string; title: string; sub?
   );
 }
 
-export default function FiyatlarSayfasi() {
+export default async function FiyatlarSayfasi({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sablon?: string | string[] }>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  const sablonId = tekilParametre(params.sablon);
+  const seciliSablon = sablonId ? SABLONLAR.find(s => s.id === sablonId) : undefined;
+  const baslaHref = seciliSablon ? `/olustur?sablon=${encodeURIComponent(seciliSablon.id)}` : "/sablonlar";
+  const baslaMetni = seciliSablon ? `${seciliSablon.isim} ile Devam Et` : "Şablon Seç ve Başla";
+  const luksSablonSecili = !!seciliSablon && LUKS_SABLONLAR.has(seciliSablon.id);
+
   return (
     <div className="min-h-screen bg-[#05000d]">
 
@@ -146,11 +163,11 @@ export default function FiyatlarSayfasi() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/sablonlar"
+              href={baslaHref}
               className="w-full sm:w-auto flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:opacity-90 hover:-translate-y-0.5 transition-all"
               style={{ boxShadow: "0 10px 30px rgba(124,58,237,0.45)" }}
             >
-              Şablon Seç ve Başla
+              {baslaMetni}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -271,7 +288,7 @@ export default function FiyatlarSayfasi() {
 
                     {/* CTA */}
                     <Link
-                      href="/sablonlar"
+                      href={baslaHref}
                       className={`flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-sm font-bold transition-all ${
                         paket.populer
                           ? "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 hover:-translate-y-0.5"
@@ -279,7 +296,7 @@ export default function FiyatlarSayfasi() {
                       }`}
                       style={paket.populer ? { boxShadow: "0 8px 24px rgba(124,58,237,0.4)" } : {}}
                     >
-                      Bu Paketle Başla
+                      {seciliSablon ? "Bu Şablonla Devam Et" : "Bu Paketle Başla"}
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -321,7 +338,11 @@ export default function FiyatlarSayfasi() {
             title="Kendi fiyatını hesapla"
             sub="İstediğin özellikleri aç, toplam tutar anında güncellenir."
           />
-          <FiyatHesaplama />
+          <FiyatHesaplama
+            baslaHref={baslaHref}
+            baslaMetni={seciliSablon ? `${seciliSablon.isim} ile Devam Et` : "Davetiye Oluştur"}
+            luksSablonSecili={luksSablonSecili}
+          />
         </div>
       </section>
 
@@ -421,11 +442,11 @@ export default function FiyatlarSayfasi() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
-                href="/sablonlar"
+                href={baslaHref}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:opacity-90 hover:-translate-y-0.5 transition-all"
                 style={{ boxShadow: "0 10px 30px rgba(124,58,237,0.45)" }}
               >
-                Şablonlara Göz At →
+                {seciliSablon ? `${seciliSablon.isim} ile Devam Et →` : "Şablonlara Göz At →"}
               </Link>
               <Link
                 href="/dashboard"

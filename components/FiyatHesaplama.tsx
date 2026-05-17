@@ -51,8 +51,20 @@ const VARSAYILAN_SECILI = new Set([
 const TEMEL = DAVETIYE_FIYAT_KALEMLERI.temel;
 const BASKILI_MIN = 2000;
 
-export default function FiyatHesaplama() {
-  const [secili, setSecili] = useState<Set<string>>(new Set(VARSAYILAN_SECILI));
+export default function FiyatHesaplama({
+  baslaHref = "/sablonlar",
+  baslaMetni = "Davetiye Oluştur",
+  luksSablonSecili = false,
+}: {
+  baslaHref?: string;
+  baslaMetni?: string;
+  luksSablonSecili?: boolean;
+}) {
+  const [secili, setSecili] = useState<Set<string>>(() => {
+    const varsayilan = new Set<string>(VARSAYILAN_SECILI);
+    if (luksSablonSecili) varsayilan.add(DAVETIYE_FIYAT_KALEMLERI.luksSablon.kod);
+    return varsayilan;
+  });
 
   const toggle = (kod: string) => {
     setSecili(prev => {
@@ -128,11 +140,11 @@ export default function FiyatHesaplama() {
 
             {/* CTA */}
             <Link
-              href="/sablonlar"
+              href={baslaHref}
               className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-linear-to-r from-purple-600 to-pink-600 text-white text-sm font-bold hover:opacity-90 active:scale-[0.98] transition-all"
               style={{ boxShadow: "0 8px 28px rgba(124,58,237,0.45)" }}
             >
-              Davetiye Oluştur
+              {baslaMetni}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

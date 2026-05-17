@@ -58,10 +58,12 @@ function OzellikKarti({
   locked, planEtiketi,
   acik, onToggle,
   children,
+  fiyatHref = "/fiyatlar",
 }: {
   icon: string; baslik: string; aciklama: string; misafirGorur?: string;
   locked?: boolean; lockedMsg?: string; planEtiketi?: string;
   acik: boolean; onToggle: () => void;
+  fiyatHref?: string;
   children?: React.ReactNode;
 }) {
   return (
@@ -90,7 +92,7 @@ function OzellikKarti({
         </div>
         <div className="shrink-0 mt-0.5">
           {locked ? (
-            <Link href="/fiyatlar" onClick={e => e.stopPropagation()}
+            <Link href={fiyatHref} onClick={e => e.stopPropagation()}
               className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg hover:bg-amber-100 transition-colors whitespace-nowrap">
               Yükselt →
             </Link>
@@ -137,6 +139,7 @@ function OlusturIcerigi() {
 
   const sablonId       = searchParams.get("sablon") || "klasik-dugun";
   const sablon         = SABLONLAR.find(s => s.id === sablonId) || SABLONLAR[0];
+  const fiyatHref      = `/fiyatlar?sablon=${encodeURIComponent(sablon.id)}`;
   const sablonTipi     = getSablonTipi(sablonId);
   const isNisanLuks    = sablonId === "nisan-luks";
   const isDugunLuks    = sablonId === "dugun-luks";
@@ -737,7 +740,7 @@ function OlusturIcerigi() {
                   </div>
                 </div>
 
-                <FiyatOzeti fiyat={fiyat} />
+                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} />
 
                 {/* Hata + Oluştur */}
                 {hata && (
@@ -780,7 +783,7 @@ function OlusturIcerigi() {
                 </div>
               </TelefonMockup>
               <div className="mt-5">
-                <FiyatOzeti fiyat={fiyat} kompakt />
+                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} kompakt />
               </div>
               <div className="mt-3 flex flex-col items-center gap-1">
                 <p className="text-[10px] text-gray-300">Değişiklikler anında yansır</p>
@@ -898,7 +901,15 @@ function MobilOnizlemeModal({ children, onKapat }: { children: React.ReactNode; 
   );
 }
 
-function FiyatOzeti({ fiyat, kompakt = false }: { fiyat: DavetiyeFiyatSonucu; kompakt?: boolean }) {
+function FiyatOzeti({
+  fiyat,
+  fiyatHref,
+  kompakt = false,
+}: {
+  fiyat: DavetiyeFiyatSonucu;
+  fiyatHref: string;
+  kompakt?: boolean;
+}) {
   return (
     <div className={`rounded-2xl border border-purple-100 bg-white shadow-sm shadow-purple-50 ${kompakt ? "p-4" : "p-5"}`}>
       <div className="flex items-start justify-between gap-4">
@@ -924,9 +935,14 @@ function FiyatOzeti({ fiyat, kompakt = false }: { fiyat: DavetiyeFiyatSonucu; ko
       </div>
 
       {!kompakt && (
-        <p className="mt-3 text-xs leading-relaxed text-gray-400">
-          Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır.
-        </p>
+        <div className="mt-3 flex flex-col gap-2">
+          <p className="text-xs leading-relaxed text-gray-400">
+            Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır.
+          </p>
+          <Link href={fiyatHref} className="text-xs font-bold text-purple-600 hover:text-purple-700">
+            Fiyatları detaylı gör →
+          </Link>
+        </div>
       )}
     </div>
   );

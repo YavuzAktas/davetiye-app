@@ -18,10 +18,10 @@ export const SABLON_REGISTRY: Record<string, string> = {
   "gul-dugun": "klasik",
 
   // Nişan şablonları
-  "modern-nisan": "nisan-luks",
-  "romantik-nisan": "nisan-luks",
-  "altin-nisan": "nisan-luks",
-  "mor-nisan": "nisan-luks",
+  "modern-nisan": "klasik",
+  "romantik-nisan": "klasik",
+  "altin-nisan": "klasik",
+  "mor-nisan": "klasik",
 
   // Doğum günü şablonları
   "eglenceli-dogumgunu": "klasik",
