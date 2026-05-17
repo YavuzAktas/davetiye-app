@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { planOzellikVar } from "@/lib/planlar";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 import QRCode from "qrcode";
 
@@ -22,10 +21,6 @@ export async function GET(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
-  if (!planOzellikVar(session.user.plan ?? "free", "qr")) {
-    return NextResponse.json({ hata: "QR kod Standart ve Premium planlara özel.", upsell: true }, { status: 403 });
-  }
-
   const ip = ipAlNextRequest(req);
   if (!(await ipIzinVer("qr", ip, 30, 60_000))) {
     return NextResponse.json({ hata: "Çok fazla istek." }, { status: 429 });

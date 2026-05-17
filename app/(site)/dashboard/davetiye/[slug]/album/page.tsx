@@ -5,7 +5,6 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { ModerasyonIcerik } from "@/components/ModerasyonListe";
-import PlanKilidiKarti from "@/components/PlanKilidiKarti";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 
 interface Props { params: Promise<{ slug: string }> }
@@ -24,14 +23,13 @@ export default async function AlbumModerasyon({ params }: Props) {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { id: true, plan: true },
+    select: { id: true },
   });
   if (!user) redirect("/giris");
 
-  // Minimal davetiye sorgusu — plan gate için yeterli
   const davetiyeTemel = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true, albumAktif: true, user: { select: { plan: true } } },
+    select: { id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true, albumAktif: true },
   });
   if (!davetiyeTemel || davetiyeTemel.userId !== user.id) notFound();
 
@@ -72,11 +70,11 @@ export default async function AlbumModerasyon({ params }: Props) {
           <div className="h-10 bg-linear-to-b from-transparent to-gray-50 pointer-events-none" />
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-          <PlanKilidiKarti
-            ozellik="Albüm & Anı Yönetimi"
-            aciklama="Misafirlerinizin yüklediği fotoğrafları ve yazdığı anıları onaylayın, davetiye sayfanızdaki albümü yönetin."
-            gerekenPlan="premium"
-          />
+          <div className="bg-white border border-gray-100 rounded-3xl px-6 py-16 text-center max-w-lg mx-auto">
+            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5">📸</div>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Albüm & Anı bu davetiyede aktif değil</h2>
+            <p className="text-gray-500 text-sm leading-relaxed">Bu özellik davetiye oluşturulurken seçilmemiş ya da henüz ödeme tamamlanmamış.</p>
+          </div>
         </div>
       </div>
     );

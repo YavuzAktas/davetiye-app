@@ -54,7 +54,7 @@ export async function POST(
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, aktif: true, odemeDurumu: true, albumAktif: true, userId: true, baslik: true, user: { select: { plan: true } } },
+    select: { id: true, aktif: true, odemeDurumu: true, albumAktif: true, userId: true, baslik: true },
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });

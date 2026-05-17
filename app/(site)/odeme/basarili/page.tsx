@@ -2,22 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-
-/* ─── Eski plan ödemeleri için geriye dönük gösterim ───── */
-const PLAN: Record<string, { isim: string; fiyat: string; ozellikler: string[] }> = {
-  standart: {
-    isim: "Standart",
-    fiyat: "Ödendi",
-    ozellikler: ["5 aktif davetiye", "200 davetli limiti", "Tüm premium şablonlar", "QR kod oluşturma"],
-  },
-  premium: {
-    isim: "Premium",
-    fiyat: "Ödendi",
-    ozellikler: ["Sınırsız davetiye", "Sınırsız davetli", "Müzik & animasyon ekleme", "Öncelikli destek"],
-  },
-};
 
 /* ─── Confetti parçacıkları ─────────────────────────────── */
 const COLORS = ["#a855f7","#ec4899","#f59e0b","#34d399","#60a5fa","#f97316","#e879f9","#fb923c"];
@@ -83,28 +68,19 @@ function CheckRing() {
 
 /* ─── Ana içerik ────────────────────────────────────────── */
 function BasariliIcerigi() {
-  const { update } = useSession();
   const searchParams = useSearchParams();
-  const urun = searchParams.get("urun");
   const davetiyeSlug = searchParams.get("slug");
-  const davetiyeOdendi = urun === "davetiye";
-  const planId = searchParams.get("plan") ?? "standart";
-  const plan   = PLAN[planId] ?? PLAN.standart;
-  const baslik = davetiyeOdendi ? "Davetiyeniz yayına hazır." : `${plan.isim} Plan`;
-  const aciklama = davetiyeOdendi ? "Dijital davetiye ödemeniz onaylandı." : "Planınız aktif edildi.";
-  const ozellikBasligi = davetiyeOdendi ? "Aktif Edilenler" : "Kilidini Açtıklarınız";
-  const ozellikler = davetiyeOdendi
-    ? ["Davetiye yayına alındı", "Seçili özellikler aktif edildi", "Paylaşım ve yönetim paneli hazır"]
-    : plan.ozellikler;
-  const tutarMetni = davetiyeOdendi ? "Ödendi" : plan.fiyat;
-  const ctaHref = davetiyeOdendi && davetiyeSlug ? `/dashboard/davetiye/${davetiyeSlug}` : "/dashboard";
-  const ctaMetni = davetiyeOdendi ? "Davetiyeye Git →" : "Dashboard'a Geç →";
+  const baslik = "Davetiyeniz yayına hazır.";
+  const aciklama = "Dijital davetiye ödemeniz onaylandı.";
+  const ozellikler = ["Davetiye yayına alındı", "Seçili özellikler aktif edildi", "Paylaşım ve yönetim paneli hazır"];
+  const tutarMetni = "Ödendi";
+  const ctaHref = davetiyeSlug ? `/dashboard/davetiye/${davetiyeSlug}` : "/dashboard";
+  const ctaMetni = davetiyeSlug ? "Davetiyeye Git →" : "Dashboard'a Geç →";
 
   const [visible, setVisible] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {
-    update(); // JWT'yi yenile — plan bilgisi oturuma yansısın
     const t = setTimeout(() => setVisible(true), 100);
     const t2 = setTimeout(() => setShowConfetti(false), 4000);
     return () => { clearTimeout(t); clearTimeout(t2); };
@@ -276,7 +252,7 @@ function BasariliIcerigi() {
                 fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase",
                 color:"rgba(196,132,252,0.7)", marginBottom:16, fontWeight:600,
               }}>
-                {ozellikBasligi}
+                Aktif Edilenler
               </p>
               <ul style={{ listStyle:"none", margin:0, padding:0, display:"flex", flexDirection:"column", gap:12 }}>
                 {ozellikler.map((o, i) => (

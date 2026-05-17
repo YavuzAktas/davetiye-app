@@ -2,14 +2,8 @@
 
 import { signOut } from "next-auth/react";
 import { useState } from "react";
-import Link from "next/link";
 
-interface Props {
-  plan: string;
-  planIsim: string;
-}
-
-export default function AyarlarClient({ plan, planIsim }: Props) {
+export default function AyarlarClient() {
   const [cikisOnay, setCikisOnay] = useState(false);
   const [silOnay, setSilOnay] = useState(false);
   const [silYazisi, setSilYazisi] = useState("");
@@ -51,49 +45,7 @@ export default function AyarlarClient({ plan, planIsim }: Props) {
   return (
     <div className="space-y-4">
 
-      {/* ── Bölüm 1: Fiyatlandırma CTA ── */}
-      {plan === "free" && (
-        <div className="relative bg-[#0f0118] rounded-3xl overflow-hidden p-6">
-          <div className="absolute -top-8 -right-8 w-32 h-32 bg-purple-600 opacity-20 blur-3xl rounded-full" />
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }} />
-          <div className="relative">
-            <p className="text-purple-300 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Davetiye fiyatları</p>
-            <h3 className="text-white text-lg font-bold mb-1">İhtiyacın kadar özellik ekle</h3>
-            <p className="text-white/40 text-sm mb-4">Her davetiye için seçtiğin özelliklere göre tek seferlik ödeme yap.</p>
-            <Link
-              href="/fiyatlar"
-              className="inline-flex items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all"
-            >
-              Fiyatları Gör →
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {plan === "standart" && (
-        <div className="relative bg-linear-to-br from-amber-500 to-orange-500 rounded-3xl overflow-hidden p-6">
-          <div className="absolute inset-0 opacity-[0.06]" style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }} />
-          <div className="relative">
-            <p className="text-white/60 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Ek özellikler</p>
-            <h3 className="text-white text-lg font-bold mb-1">Yeni davetiyede seçerek ilerle</h3>
-            <p className="text-white/70 text-sm mb-4">Müzik, albüm, canlı duvar veya oturma planını davetiye bazlı ekleyebilirsin.</p>
-            <Link
-              href="/fiyatlar"
-              className="inline-flex items-center gap-2 bg-white text-amber-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-amber-50 transition-all"
-            >
-              Fiyatları Gör →
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* ── Bölüm 2: Hesap işlemleri ── */}
+      {/* ── Hesap işlemleri ── */}
       <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
         <div className="px-5 pt-5 pb-3 border-b border-gray-50">
           <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase">Hesap</p>

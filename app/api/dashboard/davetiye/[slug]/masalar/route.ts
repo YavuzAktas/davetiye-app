@@ -7,7 +7,7 @@ import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 async function davetiyeYetki(slug: string, email: string) {
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, user: { email } },
-    select: { id: true, odemeDurumu: true, oturmaPlanAktif: true, user: { select: { plan: true } } },
+    select: { id: true, odemeDurumu: true, oturmaPlanAktif: true },
   });
   return davetiye && davetiyeOzelligiAktif(davetiye, "oturmaPlan") ? { davetiyeId: davetiye.id } : null;
 }

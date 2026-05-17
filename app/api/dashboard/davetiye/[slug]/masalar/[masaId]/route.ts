@@ -7,7 +7,7 @@ import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 async function masaYetki(slug: string, masaId: string, email: string) {
   return prisma.masa.findFirst({
     where: { id: masaId, davetiye: { slug, user: { email } } },
-    select: { id: true, davetiye: { select: { odemeDurumu: true, oturmaPlanAktif: true, user: { select: { plan: true } } } } },
+    select: { id: true, davetiye: { select: { odemeDurumu: true, oturmaPlanAktif: true } } },
   });
 }
 

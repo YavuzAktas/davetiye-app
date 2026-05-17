@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { SABLONLAR } from "@/lib/sablonlar";
-import { PLAN_CONFIG, PLAN_META, PlanTipi } from "@/lib/planlar";
-import { SessionSync } from "@/components/SessionSync";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -18,7 +16,6 @@ export default async function Dashboard() {
       id: true,
       name: true,
       image: true,
-      plan: true,
       davetiyeler: {
         orderBy: { createdAt: "desc" },
         select: {
@@ -57,13 +54,6 @@ export default async function Dashboard() {
     rsvpSayilari.set(grup.davetiyeId, sayilar);
   }
 
-  const planLimiti = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
-  const planMeta   = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
-  const aktifDavetiyeSayisi = user.davetiyeler.filter(d => d.aktif).length;
-  const kullanim = planLimiti.maxDavetiye === Infinity
-    ? 0
-    : Math.round((aktifDavetiyeSayisi / planLimiti.maxDavetiye) * 100);
-
   const toplamGoruntulenme = user.davetiyeler.reduce((acc, d) => acc + d.goruntulenme, 0);
   const toplamRsvp        = user.davetiyeler.reduce((acc, d) => acc + d._count.rsvplar, 0);
   const toplamKatilim     = [...rsvpSayilari.values()].reduce((acc, sayilar) => acc + sayilar.katiliyor, 0);
@@ -77,15 +67,8 @@ export default async function Dashboard() {
   const isim = user.name?.split(" ")[0] ?? "Kullanıcı";
   const avatar = user.image;
 
-  const planRenk = user.plan === "premium"
-    ? { from: "from-amber-500", to: "to-orange-500", light: "bg-amber-50", text: "text-amber-600", border: "border-amber-200" }
-    : user.plan === "standart"
-    ? { from: "from-purple-600", to: "to-pink-600", light: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" }
-    : { from: "from-gray-700", to: "to-gray-600", light: "bg-gray-50", text: "text-gray-600", border: "border-gray-200" };
-
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      <SessionSync dbPlan={user.plan} />
 
       {/* ══════════════════════════════════════════
           KOYU HERO HEADER
@@ -115,8 +98,6 @@ export default async function Dashboard() {
                 <p className="text-white/40 text-xs tracking-[0.15em] uppercase mb-0.5">Hoş geldin</p>
                 <h1 className="text-white text-xl sm:text-2xl font-bold leading-none">
                   {isim}
-                  {user.plan === "premium" && <span className="ml-2 text-base">👑</span>}
-                  {user.plan === "standart" && <span className="ml-2 text-base">⭐</span>}
                 </h1>
               </div>
             </div>
@@ -362,93 +343,23 @@ export default async function Dashboard() {
           {/* Sağ — Sidebar (1/3) */}
           <div className="space-y-4">
 
-            {/* Plan Kartı */}
-            <div className={`relative rounded-3xl overflow-hidden ${
-              user.plan !== "free"
-                ? `bg-linear-to-br ${planRenk.from} ${planRenk.to}`
-                : "bg-white border border-gray-100"
-            }`}>
-              {user.plan !== "free" && (
-                <>
-                  <div className="absolute inset-0 opacity-[0.06]" style={{
-                    backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-                    backgroundSize: "16px 16px",
-                  }} />
-                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full" />
-                </>
-              )}
-
-              <div className="relative p-5 sm:p-6">
-                {/* Plan başlık */}
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p className={`text-xs font-semibold tracking-[0.15em] uppercase mb-1 ${user.plan === "free" ? "text-gray-400" : "text-white/60"}`}>
-                      Planın
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">
-                        {user.plan === "premium" ? "👑" : user.plan === "standart" ? "⭐" : "🆓"}
-                      </span>
-                      <p className={`text-lg font-bold ${user.plan === "free" ? "text-gray-800" : "text-white"}`}>
-                        {planMeta.isim}
-                      </p>
-                    </div>
-                  </div>
-
-                  {user.plan === "free" && (
-                    <Link href="/fiyatlar"
-                      className="text-xs bg-linear-to-r from-purple-600 to-pink-600 text-white px-3.5 py-2 rounded-xl font-bold hover:opacity-90 transition-all shrink-0">
-                      Yükselt →
-                    </Link>
-                  )}
-                  {user.plan === "standart" && (
-                    <Link href="/fiyatlar"
-                      className="text-xs bg-white/20 text-white px-3.5 py-2 rounded-xl font-bold hover:bg-white/30 transition-all border border-white/20 shrink-0">
-                      Premium →
-                    </Link>
-                  )}
-                  {user.plan === "premium" && (
-                    <span className="text-xs bg-white/20 text-white px-3.5 py-2 rounded-xl font-bold border border-white/20">
-                      Aktif 🎉
-                    </span>
-                  )}
-                </div>
-
-                {/* Kullanım çubuğu */}
-                {planLimiti.maxDavetiye !== Infinity && (
-                  <div className="mb-4">
-                    <div className={`w-full h-2 rounded-full mb-1.5 ${user.plan === "free" ? "bg-gray-100" : "bg-white/20"}`}>
-                      <div
-                        className={`h-2 rounded-full transition-all ${
-                          kullanim >= 80 ? "bg-red-500" : user.plan === "free" ? "bg-purple-500" : "bg-white"
-                        }`}
-                        style={{ width: `${Math.min(kullanim, 100)}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between">
-                      <p className={`text-xs ${user.plan === "free" ? "text-gray-400" : "text-white/60"}`}>
-                        {aktifDavetiyeSayisi} / {planLimiti.maxDavetiye} davetiye
-                      </p>
-                      <p className={`text-xs font-semibold ${
-                        kullanim >= 80 ? "text-red-400" : user.plan === "free" ? "text-purple-500" : "text-white/80"
-                      }`}>
-                        %{kullanim}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Özellikler */}
-                <div className="space-y-2">
-                  {planMeta.ozellikler.map(o => (
-                    <div key={o} className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] shrink-0 ${
-                        user.plan === "free" ? "bg-purple-100 text-purple-600" : "bg-white/20 text-white"
-                      }`}>✓</div>
-                      <span className={`text-xs ${user.plan === "free" ? "text-gray-600" : "text-white/80"}`}>{o}</span>
-                    </div>
-                  ))}
-                </div>
+            {/* Hızlı Davetiye CTA */}
+            <div className="relative bg-[#0f0118] rounded-3xl overflow-hidden p-5 sm:p-6">
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-purple-600 opacity-20 blur-3xl rounded-full" />
+              <div className="absolute inset-0 opacity-[0.04]" style={{
+                backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+                backgroundSize: "16px 16px",
+              }} />
+              <div className="relative">
+                <p className="text-purple-300 text-xs font-semibold tracking-[0.15em] uppercase mb-1">Yeni davetiye</p>
+                <h3 className="text-white text-lg font-bold mb-1">Hemen oluştur</h3>
+                <p className="text-white/40 text-sm mb-4">30+ şablon arasından seç, dakikalar içinde hazır.</p>
+                <Link
+                  href="/sablonlar"
+                  className="inline-flex items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all"
+                >
+                  Şablonlara Göz At →
+                </Link>
               </div>
             </div>
 
@@ -510,7 +421,6 @@ export default async function Dashboard() {
               <div className="space-y-2">
                 {[
                   { href: "/sablonlar", label: "Şablonlara Göz At", icon: "🎨", desc: "Yeni davetiye oluştur" },
-                  { href: "/fiyatlar", label: "Fiyatlar", icon: "⭐", desc: "Davetiye fiyatlarını gör" },
                   { href: "/dashboard/ayarlar", label: "Ayarlar", icon: "⚙️", desc: "Hesap ve profil" },
                 ].map(link => (
                   <Link

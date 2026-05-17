@@ -42,7 +42,6 @@ export const authOptions: NextAuthOptions = {
           email:     user.email,
           name:      user.name,
           image:     user.image,
-          plan:      user.plan,
           kvkkOnay:  user.kvkkOnay,
         };
       },
@@ -62,17 +61,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id       = user.id;
-        token.plan     = (user as any).plan     ?? "free";
         token.kvkkOnay = (user as any).kvkkOnay ?? false;
       }
-      // update() tetiklendiğinde DB'den güncel değerleri oku (ör. ödeme veya kvkk onayı sonrası)
       if (trigger === "update" && token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { plan: true, kvkkOnay: true },
+          select: { kvkkOnay: true },
         });
         if (dbUser) {
-          token.plan     = dbUser.plan;
           token.kvkkOnay = dbUser.kvkkOnay ?? false;
         }
       }
@@ -81,7 +77,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id       = token.id       as string;
-        session.user.plan     = token.plan     as string;
         session.user.kvkkOnay = token.kvkkOnay as boolean;
       }
       return session;

@@ -3,9 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PLAN_CONFIG, PLAN_META, PlanTipi } from "@/lib/planlar";
 import AyarlarClient from "@/components/AyarlarClient";
-import { SessionSync } from "@/components/SessionSync";
 
 export default async function AyarlarSayfasi() {
   const session = await getServerSession(authOptions);
@@ -18,7 +16,6 @@ export default async function AyarlarSayfasi() {
       name: true,
       email: true,
       image: true,
-      plan: true,
       createdAt: true,
     },
   });
@@ -39,32 +36,17 @@ export default async function AyarlarSayfasi() {
     }),
   ]);
 
-  const planLimiti    = PLAN_CONFIG[user.plan as PlanTipi] ?? PLAN_CONFIG.free;
-  const planMeta      = PLAN_META[user.plan as PlanTipi]   ?? PLAN_META.free;
-  const aktifSayi     = davetiyeGruplari.find((grup) => grup.aktif)?._count._all ?? 0;
   const toplamDavetiye = davetiyeGruplari.reduce((a, grup) => a + grup._count._all, 0);
   const toplamGorunt  = davetiyeGruplari.reduce((a, grup) => a + (grup._sum.goruntulenme ?? 0), 0);
   const toplamRsvp    = rsvpGruplari.reduce((a, grup) => a + grup._count._all, 0);
   const toplamKatilim = rsvpGruplari.find((grup) => grup.katilim)?._count._all ?? 0;
-  const kullanim      = planLimiti.maxDavetiye === Infinity
-    ? 100
-    : Math.round((aktifSayi / planLimiti.maxDavetiye) * 100);
 
   const uyeOlduTarih = new Intl.DateTimeFormat("tr-TR", {
     day: "numeric", month: "long", year: "numeric",
   }).format(new Date(user.createdAt));
 
-  const planIsim = planMeta.isim;
-
-  const planConfig = {
-    free:     { emoji: "🆓", gradient: "from-gray-500 to-gray-600",     ring: "ring-gray-200",    label: "text-gray-600" },
-    standart: { emoji: "⭐", gradient: "from-purple-600 to-pink-600",   ring: "ring-purple-200",  label: "text-purple-600" },
-    premium:  { emoji: "👑", gradient: "from-amber-500 to-orange-500",  ring: "ring-amber-200",   label: "text-amber-600" },
-  }[user.plan as PlanTipi] ?? { emoji: "🆓", gradient: "from-gray-500 to-gray-600", ring: "ring-gray-200", label: "text-gray-600" };
-
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      <SessionSync dbPlan={user.plan} />
       {/* ══ KOYU HERO HEADER ══ */}
       <div className="relative bg-[#080112] overflow-hidden">
         <div className="absolute top-0 left-1/3 w-72 h-72 bg-purple-700 opacity-20 blur-[90px] rounded-full pointer-events-none" />
@@ -90,17 +72,13 @@ export default async function AyarlarSayfasi() {
                 <img
                   src={user.image}
                   alt={user.name ?? "Profil"}
-                  className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl object-cover ring-4 ${planConfig.ring} ring-offset-2 ring-offset-[#080112]`}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl object-cover ring-4 ring-purple-400/30 ring-offset-2 ring-offset-[#080112]"
                 />
               ) : (
-                <div className={`w-20 h-20 sm:w-24 sm:h-24 bg-linear-to-br ${planConfig.gradient} rounded-3xl flex items-center justify-center text-3xl text-white font-bold ring-4 ${planConfig.ring} ring-offset-2 ring-offset-[#080112]`}>
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-linear-to-br from-purple-600 to-pink-600 rounded-3xl flex items-center justify-center text-3xl text-white font-bold ring-4 ring-purple-400/30 ring-offset-2 ring-offset-[#080112]">
                   {(user.name ?? "U")[0]}
                 </div>
               )}
-              {/* Plan badge üzerinde */}
-              <div className={`absolute -bottom-2 -right-2 w-8 h-8 bg-linear-to-br ${planConfig.gradient} rounded-xl flex items-center justify-center text-sm shadow-lg`}>
-                {planConfig.emoji}
-              </div>
             </div>
 
             {/* İsim + meta */}
@@ -110,10 +88,6 @@ export default async function AyarlarSayfasi() {
               </h1>
               <p className="text-white/40 text-sm mb-3 truncate">{user.email}</p>
               <div className="flex flex-wrap items-center gap-3">
-                <div className={`inline-flex items-center gap-1.5 bg-linear-to-r ${planConfig.gradient} px-3 py-1.5 rounded-full`}>
-                  <span className="text-xs">{planConfig.emoji}</span>
-                  <span className="text-white text-xs font-bold">{planIsim} Plan</span>
-                </div>
                 <div className="flex items-center gap-1.5 bg-white/8 border border-white/10 px-3 py-1.5 rounded-full">
                   <div className="w-2 h-2 bg-blue-400 rounded-full" />
                   <span className="text-white/50 text-xs">Google ile bağlı</span>
@@ -163,113 +137,7 @@ export default async function AyarlarSayfasi() {
               </div>
             </div>
 
-            {/* 2. Plan & Kullanım */}
-            <div className={`relative rounded-3xl overflow-hidden ${
-              user.plan === "free"
-                ? "bg-white border border-gray-100"
-                : user.plan === "standart"
-                ? "bg-[#0f0118]"
-                : "bg-[#0f0118]"
-            }`}>
-              {user.plan !== "free" && (
-                <>
-                  <div className={`absolute -top-16 -right-16 w-48 h-48 rounded-full blur-3xl opacity-30 ${
-                    user.plan === "premium" ? "bg-amber-500" : "bg-purple-600"
-                  }`} />
-                  <div className="absolute inset-0 opacity-[0.04]" style={{
-                    backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-                    backgroundSize: "18px 18px",
-                  }} />
-                </>
-              )}
-
-              <div className="relative p-6">
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <p className={`text-xs font-semibold tracking-[0.15em] uppercase mb-2 ${user.plan === "free" ? "text-gray-400" : "text-white/40"}`}>
-                      Mevcut Plan
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">{planConfig.emoji}</span>
-                      <div>
-                        <h3 className={`text-xl font-bold ${user.plan === "free" ? "text-gray-900" : "text-white"}`}>
-                          {planIsim}
-                        </h3>
-                        <p className={`text-xs ${user.plan === "free" ? "text-gray-400" : "text-white/40"}`}>
-                          {user.plan === "premium" ? "Tüm özellikler açık" : user.plan === "standart" ? "Bireysel kullanım" : "Ücretsiz başlangıç"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <Link
-                    href="/fiyatlar"
-                    className={`text-sm px-4 py-2 rounded-xl font-bold transition-all shrink-0 ${
-                      user.plan === "free"
-                        ? "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:opacity-90"
-                        : user.plan === "standart"
-                        ? "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                        : "bg-white/10 text-white border border-white/20 cursor-default"
-                    }`}
-                  >
-                    {user.plan === "free" ? "Yükselt →" : user.plan === "standart" ? "Premium →" : "Aktif 🎉"}
-                  </Link>
-                </div>
-
-                {/* Kullanım çubuğu */}
-                {planLimiti.maxDavetiye !== Infinity && (
-                  <div className="mb-5">
-                    <div className="flex justify-between text-xs mb-2">
-                      <span className={user.plan === "free" ? "text-gray-500" : "text-white/50"}>
-                        Davetiye kullanımı
-                      </span>
-                      <span className={`font-bold ${
-                        kullanim >= 80
-                          ? "text-red-400"
-                          : user.plan === "free" ? "text-purple-600" : "text-white"
-                      }`}>
-                        {aktifSayi} / {planLimiti.maxDavetiye}
-                      </span>
-                    </div>
-                    <div className={`h-2.5 rounded-full overflow-hidden ${user.plan === "free" ? "bg-gray-100" : "bg-white/10"}`}>
-                      <div
-                        className={`h-full rounded-full transition-all duration-700 ${
-                          kullanim >= 80
-                            ? "bg-linear-to-r from-red-400 to-red-500"
-                            : user.plan === "free"
-                            ? "bg-linear-to-r from-purple-500 to-pink-500"
-                            : "bg-linear-to-r from-white/80 to-white/60"
-                        }`}
-                        style={{ width: `${Math.min(kullanim, 100)}%` }}
-                      />
-                    </div>
-                    {kullanim >= 80 && (
-                      <p className="text-xs text-red-400 mt-1.5">
-                        ⚠️ Limit dolmak üzere. <Link href="/fiyatlar" className="underline font-semibold">Planını yükselt</Link>
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Özellikler grid */}
-                <div className="grid grid-cols-2 gap-2">
-                  {planMeta.ozellikler.map(o => (
-                    <div
-                      key={o}
-                      className={`flex items-center gap-2 text-xs px-3 py-2 rounded-xl ${
-                        user.plan === "free"
-                          ? "bg-gray-50 text-gray-600"
-                          : "bg-white/8 text-white/70"
-                      }`}
-                    >
-                      <span className={`shrink-0 ${user.plan === "free" ? "text-purple-500" : "text-white/50"}`}>✓</span>
-                      {o}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 3. İstatistikler */}
+            {/* 2. İstatistikler */}
             <div className="bg-white border border-gray-100 rounded-3xl p-6">
               <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase mb-5">Hesap İstatistikleri</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -293,7 +161,7 @@ export default async function AyarlarSayfasi() {
 
           {/* SAĞ — Aksiyonlar (1/3) */}
           <div className="space-y-4">
-            <AyarlarClient plan={user.plan} planIsim={planIsim} />
+            <AyarlarClient />
           </div>
         </div>
       </div>
