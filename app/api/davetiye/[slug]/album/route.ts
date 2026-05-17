@@ -6,6 +6,7 @@ import { bildirimOlustur } from "@/lib/bildirim";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
 import { davetiyeAlbumCacheTag } from "@/lib/cache-tags";
+import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 const PUBLIC_LISTE_CACHE_SN = 60;
 
@@ -65,7 +66,15 @@ export async function POST(
   if (!davetiyeOzelligiAktif(davetiye, "album"))
     return NextResponse.json({ hata: "Bu davetiyede albüm özelliği aktif değil." }, { status: 403 });
 
-  /* Rate limit: son 1 saatte aynı davette 10 fotoğraf yeterli */
+  const ip = ipAlNextRequest(req);
+  if (
+    !(await ipIzinVer("album-yukleme-ip", ip, 12, 60 * 60_000)) ||
+    !(await ipIzinVer("album-yukleme-davetiye-ip", `${davetiye.id}:${ip}`, 4, 60 * 60_000))
+  ) {
+    return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
+  }
+
+  /* Rate limit: son 1 saatte aynı davette 10 fotoğraf */
   const birSaatOnce = new Date(Date.now() - 3_600_000);
   const sonSaatSayisi = await prisma.albumFoto.count({
     where: { davetiyeId: davetiye.id, createdAt: { gte: birSaatOnce } },

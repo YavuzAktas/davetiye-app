@@ -6,6 +6,7 @@ import { bildirimOlustur } from "@/lib/bildirim";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { dogrulaSesDosya } from "@/lib/dosya-dogrulama";
 import { davetiyeSesliAniCacheTag } from "@/lib/cache-tags";
+import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 
 const PUBLIC_LISTE_CACHE_SN = 60;
 
@@ -64,6 +65,14 @@ export async function POST(
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
   if (!davetiyeOzelligiAktif(davetiye, "sesliAni"))
     return NextResponse.json({ hata: "Bu davetiyede sesli anı özelliği aktif değil." }, { status: 403 });
+
+  const ip = ipAlNextRequest(req);
+  if (
+    !(await ipIzinVer("sesli-ani-yukleme-ip", ip, 8, 60 * 60_000)) ||
+    !(await ipIzinVer("sesli-ani-yukleme-davetiye-ip", `${davetiye.id}:${ip}`, 2, 60 * 60_000))
+  ) {
+    return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
+  }
 
   /* Rate limit: son 1 saatte aynı davette 5 sesli anı */
   const birSaatOnce = new Date(Date.now() - 3_600_000);
