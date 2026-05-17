@@ -132,6 +132,121 @@ export async function rsvpBildirimiGonder({
   }
 }
 
+export async function odemeHatirlatmaGonder({
+  email,
+  adSoyad,
+  davetiyeBaslik,
+  davetiyeSlug,
+  tip,
+}: {
+  email: string;
+  adSoyad: string;
+  davetiyeBaslik: string;
+  davetiyeSlug: string;
+  tip: "30dk" | "24saat";
+}) {
+  const odemeUrl = `${process.env.NEXT_PUBLIC_URL}/odeme/${encodeURIComponent(davetiyeSlug)}`;
+  const guvenliAd = escapeHtml(adSoyad);
+  const guvenliBaslik = escapeHtml(davetiyeBaslik);
+  const guvenliUrl = escapeHtml(odemeUrl);
+
+  const ilkMi = tip === "30dk";
+
+  const subject = sanitizeSubject(
+    ilkMi
+      ? `Davetiyeniz hazır — sadece ödeme kaldı 🎉`
+      : `⏰ Son hatırlatma: "${davetiyeBaslik}" sizi bekliyor`
+  );
+
+  const html = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#05000d;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="max-width:540px;margin:40px auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);background:#0c0120;">
+
+    <!-- Header gradient bar -->
+    <div style="height:4px;background:linear-gradient(90deg,#7C3AED,#DB2777);"></div>
+
+    <!-- Hero -->
+    <div style="padding:40px 36px 32px;text-align:center;background:linear-gradient(160deg,rgba(124,58,237,0.12) 0%,rgba(219,39,119,0.06) 100%);">
+      <div style="font-size:44px;margin-bottom:16px;">${ilkMi ? "🎉" : "⏰"}</div>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:800;margin:0 0 10px;letter-spacing:-0.3px;">
+        ${ilkMi ? "Davetiyeniz hazır!" : "Davetiyenizi kaybetmeyin"}
+      </h1>
+      <p style="color:rgba(255,255,255,0.45);font-size:14px;margin:0;line-height:1.6;">
+        ${ilkMi
+          ? "Ödemenizi tamamlayın, misafirlerinizle hemen paylaşın."
+          : "Davetiyeniz oluşturuldu ama henüz yayına alınmadı."}
+      </p>
+    </div>
+
+    <!-- Content -->
+    <div style="padding:28px 36px;">
+      <p style="color:rgba(255,255,255,0.7);font-size:15px;margin:0 0 20px;">
+        Merhaba <strong style="color:#fff;">${guvenliAd}</strong>,
+      </p>
+
+      <!-- Invitation card -->
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
+        <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 8px;">Davetiye</p>
+        <p style="color:#fff;font-size:17px;font-weight:700;margin:0 0 6px;">${guvenliBaslik}</p>
+        <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">
+          ✓ Davetiye hazır &nbsp;·&nbsp; ✓ Şablon seçildi &nbsp;·&nbsp; ⏳ Ödeme bekleniyor
+        </p>
+      </div>
+
+      <p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.7;margin:0 0 28px;">
+        ${ilkMi
+          ? "Ödemenizi tamamladığınız anda davetiyeniz yayına alınacak ve misafirlerinizle paylaşabileceksiniz."
+          : "Ödemenizi bugün tamamlayın — davetiyeniz hazır, misafirleriniz sizi bekliyor."}
+      </p>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-bottom:24px;">
+        <a href="${guvenliUrl}"
+           style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:15px;font-weight:700;letter-spacing:0.01em;"
+           onmouseover="this.style.opacity='0.9'"
+           onmouseout="this.style.opacity='1'">
+          Ödemeyi Tamamla →
+        </a>
+      </div>
+
+      ${ilkMi ? `
+      <!-- Trust signals -->
+      <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;">
+        ${["🔒 SSL Şifreli", "✅ iyzico", "💳 3D Secure"].map(t =>
+          `<span style="color:rgba(255,255,255,0.25);font-size:12px;">${escapeHtml(t)}</span>`
+        ).join("")}
+      </div>` : ""}
+    </div>
+
+    <!-- Footer -->
+    <div style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 36px;text-align:center;">
+      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;">
+        © 2025 Bekleriz &nbsp;·&nbsp;
+        <a href="mailto:destek@bekleriz.com" style="color:rgba(124,58,237,0.7);text-decoration:none;">destek@bekleriz.com</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: email,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error("Ödeme hatırlatma maili gönderilemedi:", error);
+    throw error;
+  }
+}
+
 export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
   const guvenliResetUrl = escapeHtml(resetUrl);
   const html = `

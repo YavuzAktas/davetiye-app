@@ -114,8 +114,10 @@ model Davetiye {
   dressKod        String?
   dressKodRenkler String?
   albumAktif      Boolean      @default(true)
-  odemeDurumu     String       @default("ucretsiz")
-  fiyatSnapshot   Json?
+  odemeDurumu          String       @default("ucretsiz")
+  fiyatSnapshot        Json?
+  hatirlatiMail30dk    Boolean      @default(false)
+  hatirlatiMail24saat  Boolean      @default(false)
   siparisler      Siparis[]
   odemeTokenlar   OdemeToken[]
   odemeKayitlari  OdemeKaydi[]
