@@ -59,7 +59,7 @@ export default async function AyarlarSayfasi() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-16">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-white/30 text-xs mb-8">
-            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</Link>
+            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Davetiyelerim</Link>
             <span>›</span>
             <span className="text-white/50">Ayarlar</span>
           </div>
@@ -168,7 +168,7 @@ export default async function AyarlarSayfasi() {
               <p className="text-xs font-semibold text-gray-400 tracking-[0.15em] uppercase mb-3">Hızlı Erişim</p>
               <div className="space-y-1.5">
                 {[
-                  { href: "/dashboard", label: "Dashboard", icon: "📊", desc: "Genel bakış" },
+                  { href: "/dashboard", label: "Davetiyelerim", icon: "📨", desc: "Tüm davetiyeler" },
                   { href: "/dashboard/odeme-gecmisi", label: "Ödeme Geçmişi", icon: "🧾", desc: "Sipariş ve fatura" },
                   { href: "/sablonlar", label: "Yeni Davetiye", icon: "🎨", desc: "Şablondan başla" },
                 ].map(link => (

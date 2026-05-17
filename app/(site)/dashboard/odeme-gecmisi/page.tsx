@@ -85,7 +85,7 @@ export default async function OdemeGecmisiSayfasi() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-20">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-xs text-white/30 mb-8">
-            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</Link>
+            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Davetiyelerim</Link>
             <span>/</span>
             <span className="text-white/60">Ödeme Geçmişi</span>
           </div>
@@ -93,7 +93,7 @@ export default async function OdemeGecmisiSayfasi() {
           {/* Title + desc */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/20 border border-white/10 flex items-center justify-center text-lg">
+              <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-purple-500/30 to-pink-500/20 border border-white/10 flex items-center justify-center text-lg">
                 🧾
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white">Ödeme Geçmişi</h1>
@@ -134,7 +134,7 @@ export default async function OdemeGecmisiSayfasi() {
                 subColor: "text-emerald-300",
               },
             ].map(stat => (
-              <div key={stat.label} className={`bg-gradient-to-br ${stat.gradient} border ${stat.border} backdrop-blur-sm rounded-2xl p-4 sm:p-5`}>
+              <div key={stat.label} className={`bg-linear-to-br ${stat.gradient} border ${stat.border} backdrop-blur-sm rounded-2xl p-4 sm:p-5`}>
                 <span className="text-xl sm:text-2xl mb-2 sm:mb-3 block">{stat.icon}</span>
                 <p className="text-xl sm:text-3xl font-bold text-white tabular-nums truncate">{stat.value}</p>
                 <p className="text-white/40 text-xs mt-1 hidden sm:block">{stat.label}</p>
@@ -144,7 +144,7 @@ export default async function OdemeGecmisiSayfasi() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-transparent to-gray-50 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-b from-transparent to-gray-50 pointer-events-none" />
       </div>
 
       {/* ══ CONTENT ══ */}
@@ -153,9 +153,9 @@ export default async function OdemeGecmisiSayfasi() {
         {kayitlar.length === 0 ? (
           /* ── Empty state ── */
           <div className="relative bg-white rounded-3xl border border-gray-100 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/60 to-pink-50/40 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-br from-purple-50/60 to-pink-50/40 pointer-events-none" />
             <div className="relative py-20 px-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6 shadow-xl shadow-purple-200/50">
+              <div className="w-20 h-20 bg-linear-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6 shadow-xl shadow-purple-200/50">
                 🧾
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Henüz ödeme yok</h3>
@@ -164,7 +164,7 @@ export default async function OdemeGecmisiSayfasi() {
               </p>
               <Link
                 href="/sablonlar"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-2xl text-sm font-semibold hover:opacity-90 hover:shadow-xl hover:shadow-purple-200 transition-all"
+                className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-2xl text-sm font-semibold hover:opacity-90 hover:shadow-xl hover:shadow-purple-200 transition-all"
               >
                 Davetiye Oluştur →
               </Link>
