@@ -14,6 +14,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
   const [katilim, setKatilim] = useState<boolean | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
+  const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
   const [form, setForm] = useState({
     ad: "",
     email: "",
@@ -130,20 +131,6 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              E-posta
-            </label>
-            <input
-              type="email"
-              placeholder="ornek@mail.com"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              maxLength={254}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
-            />
-          </div>
-
           {katilim && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -161,60 +148,92 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             </div>
           )}
 
-          {katilim && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Diyet tercihleri <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { key: "vegan", label: "🌱 Vegan" },
-                  { key: "vejetaryen", label: "🥗 Vejetaryen" },
-                  { key: "glutensiz", label: "🌾 Glutensiz" },
-                  { key: "laktozsuz", label: "🥛 Laktozsuz" },
-                ].map(opt => (
-                  <button
-                    key={opt.key}
-                    type="button"
-                    onClick={() => toggleDiyet(opt.key)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition-all"
-                    style={secilenDiyet.includes(opt.key)
-                      ? { borderColor: renk, color: renk, backgroundColor: renk + "12" }
-                      : { borderColor: "#e5e7eb", color: "#6b7280" }}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
+          <div className="rounded-xl border border-gray-100 bg-gray-50/70">
+            <button
+              type="button"
+              onClick={() => setEkBilgiAcik(!ekBilgiAcik)}
+              className="flex w-full items-center justify-between px-4 py-3 text-left"
+            >
+              <span>
+                <span className="block text-sm font-semibold text-gray-700">Ek bilgi ekle</span>
+                <span className="block text-xs text-gray-400">E-posta, not, diyet veya şarkı dileği</span>
+              </span>
+              <span className={`text-gray-400 transition-transform ${ekBilgiAcik ? "rotate-45" : ""}`}>+</span>
+            </button>
+
+            {ekBilgiAcik && (
+              <div className="space-y-4 border-t border-gray-100 px-4 pb-4 pt-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    E-posta <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="ornek@mail.com"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    maxLength={254}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+
+                {katilim && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Diyet tercihleri <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { key: "vegan", label: "🌱 Vegan" },
+                        { key: "vejetaryen", label: "🥗 Vejetaryen" },
+                        { key: "glutensiz", label: "🌾 Glutensiz" },
+                        { key: "laktozsuz", label: "🥛 Laktozsuz" },
+                      ].map(opt => (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => toggleDiyet(opt.key)}
+                          className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition-all"
+                          style={secilenDiyet.includes(opt.key)
+                            ? { borderColor: renk, color: renk, backgroundColor: renk + "12" }
+                            : { borderColor: "#e5e7eb", color: "#6b7280" }}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Not <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="Bir şey eklemek ister misiniz?"
+                    value={form.mesaj}
+                    onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
+                    maxLength={500}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    🎵 Şarkı dileğiniz <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Dans pistimizdeki favori şarkınız?"
+                    value={form.sarkiDilegi}
+                    onChange={(e) => setForm({ ...form, sarkiDilegi: e.target.value })}
+                    maxLength={200}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
+                  />
+                </div>
               </div>
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Not (isteğe bağlı)
-            </label>
-            <textarea
-              rows={2}
-              placeholder="Bir şey eklemek ister misiniz?"
-              value={form.mesaj}
-              onChange={(e) => setForm({ ...form, mesaj: e.target.value })}
-              maxLength={500}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              🎵 Şarkı dileğiniz <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Dans pistimizdeki favori şarkınız?"
-              value={form.sarkiDilegi}
-              onChange={(e) => setForm({ ...form, sarkiDilegi: e.target.value })}
-              maxLength={200}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
-            />
+            )}
           </div>
 
           {hata && (

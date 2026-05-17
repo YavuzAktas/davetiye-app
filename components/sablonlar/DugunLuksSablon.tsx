@@ -505,6 +505,7 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream }: { davetiyeId:string; bg:s
   const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
+  const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
 
   const fieldStyle: React.CSSProperties = {
     width:"100%", background:"transparent", border:"none",
@@ -565,29 +566,47 @@ function RsvpFormKrem({ davetiyeId, bg, gold, cream }: { davetiyeId:string; bg:s
         <option value="hayir">Katılamıyorum</option>
       </select>
 
-      {form.katilim === "evet" && (
-        <div style={{ marginTop:20 }}>
-          <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A6040" }}>(isteğe bağlı)</span></label>
-          <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
-            {[{ k:"vegan", l:"🌱 Vegan" },{ k:"vejetaryen", l:"🥗 Vejetaryen" },{ k:"glutensiz", l:"🌾 Glutensiz" },{ k:"laktozsuz", l:"🥛 Laktozsuz" }].map(opt => (
-              <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{
-                padding:"6px 12px", borderRadius:6, fontSize:11, cursor:"pointer",
-                fontFamily:"var(--font-cormorant),serif",
-                border:`1.5px solid ${secilenDiyet.includes(opt.k) ? gold : gold+"40"}`,
-                color: secilenDiyet.includes(opt.k) ? bg : "#7A6040",
-                background: secilenDiyet.includes(opt.k) ? gold+"22" : "transparent",
-                transition:"all 0.15s",
-              }}>{opt.l}</button>
-            ))}
-          </div>
-        </div>
-      )}
+      <div style={{ marginTop:22, border:`1px solid ${gold}24`, borderRadius:10, overflow:"hidden", background:"rgba(196,160,90,0.06)" }}>
+        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{
+          width:"100%", display:"flex", justifyContent:"space-between", alignItems:"center",
+          padding:"12px 14px", background:"transparent", border:"none", cursor:"pointer",
+          fontFamily:"var(--font-cormorant),serif", color:bg, textAlign:"left",
+        }}>
+          <span>
+            <span style={{ display:"block", fontSize:13, fontWeight:700 }}>Ek bilgi ekle</span>
+            <span style={{ display:"block", fontSize:11, color:"#7A6040", marginTop:2 }}>Diyet tercihi veya şarkı dileği</span>
+          </span>
+          <span style={{ fontSize:18, color:gold, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition:"transform 0.15s" }}>+</span>
+        </button>
 
-      <div style={{ marginTop:20 }}>
-        <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A6040" }}>(isteğe bağlı)</span></label>
-        <input type="text" value={form.sarkiDilegi}
-          onChange={e => setForm({...form, sarkiDilegi:e.target.value})}
-          placeholder="Dans pistimizdeki favori şarkınız?" maxLength={200} style={fieldStyle}/>
+        {ekBilgiAcik && (
+          <div style={{ padding:"0 14px 14px", borderTop:`1px solid ${gold}18` }}>
+            {form.katilim === "evet" && (
+              <div style={{ marginTop:14 }}>
+                <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A6040" }}>(isteğe bağlı)</span></label>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
+                  {[{ k:"vegan", l:"🌱 Vegan" },{ k:"vejetaryen", l:"🥗 Vejetaryen" },{ k:"glutensiz", l:"🌾 Glutensiz" },{ k:"laktozsuz", l:"🥛 Laktozsuz" }].map(opt => (
+                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{
+                      padding:"6px 12px", borderRadius:6, fontSize:11, cursor:"pointer",
+                      fontFamily:"var(--font-cormorant),serif",
+                      border:`1.5px solid ${secilenDiyet.includes(opt.k) ? gold : gold+"40"}`,
+                      color: secilenDiyet.includes(opt.k) ? bg : "#7A6040",
+                      background: secilenDiyet.includes(opt.k) ? gold+"22" : "transparent",
+                      transition:"all 0.15s",
+                    }}>{opt.l}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginTop:14 }}>
+              <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform:"none", letterSpacing:0, fontSize:10, color:"#7A6040" }}>(isteğe bağlı)</span></label>
+              <input type="text" value={form.sarkiDilegi}
+                onChange={e => setForm({...form, sarkiDilegi:e.target.value})}
+                placeholder="Dans pistimizdeki favori şarkınız?" maxLength={200} style={fieldStyle}/>
+            </div>
+          </div>
+        )}
       </div>
 
       {hata && <p style={{ color:"#C0392B", fontSize:12, fontFamily:"var(--font-cormorant),serif", marginTop:12 }}>{hata}</p>}
