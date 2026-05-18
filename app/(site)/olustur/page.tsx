@@ -26,6 +26,7 @@ const KlasikSablon = dynamic(() => import("@/components/sablonlar/KlasikSablon")
 const NisanLuksSablon = dynamic(() => import("@/components/sablonlar/NisanLuksSablon"));
 const DugunLuksSablon = dynamic(() => import("@/components/sablonlar/DugunLuksSablon"));
 const DogumGunuLuksSablon = dynamic(() => import("@/components/sablonlar/DogumGunuLuksSablon"));
+const VintageNisanSablon = dynamic(() => import("@/components/sablonlar/VintageNisanSablon"));
 
 type DressRenkler = [string,string,string,string,string];
 type ZorunluAlan = "kisi1" | "kisi2" | "baslik" | "tarih" | "mekan";
@@ -144,8 +145,9 @@ function OlusturIcerigi() {
   const fiyatHref      = `/fiyatlar?sablon=${encodeURIComponent(sablon.id)}`;
   const sablonTipi     = getSablonTipi(sablonId);
   const isNisanLuks    = sablonId === "nisan-luks";
+  const isVintageNisan = sablonId === "vintage-nisan";
   const isDugunLuks    = sablonId === "dugun-luks";
-  const isLuks         = isNisanLuks || isDugunLuks || sablonId === "dogumgunu-luks";
+  const isLuks         = isNisanLuks || isVintageNisan || isDugunLuks || sablonId === "dogumgunu-luks";
   const nisanVeyaDugun = sablon.kategori === "nisan" || sablon.kategori === "dugun";
 
   const [form, setForm] = useState({
@@ -208,8 +210,8 @@ function OlusturIcerigi() {
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
 
-  const hasPolaroid        = isNisanLuks;
-  const hasSesliOzellikler = isNisanLuks;
+  const hasPolaroid        = isNisanLuks || isVintageNisan;
+  const hasSesliOzellikler = isNisanLuks || isVintageNisan;
   const hasDressKod        = nisanVeyaDugun;
 
   const [polaroidler,        setPolaroidler]        = useState<[string|null,string|null,string|null]>([null,null,null]);
@@ -388,6 +390,7 @@ function OlusturIcerigi() {
 
   const onizlemeIcerigi = (
     <>
+      {sablonTipi === "vintage-nisan"  && <VintageNisanSablon  davetiye={previewVeri} rsvpBileseni={null} previewModu />}
       {sablonTipi === "nisan-luks"     && <NisanLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
       {sablonTipi === "dugun-luks"     && <DugunLuksSablon     davetiye={previewVeri} rsvpBileseni={null} previewModu />}
       {sablonTipi === "dogumgunu-luks" && <DogumGunuLuksSablon davetiye={previewVeri} rsvpBileseni={null} previewModu />}
