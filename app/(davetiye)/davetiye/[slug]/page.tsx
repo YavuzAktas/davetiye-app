@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { getSablonTipi } from "@/lib/sablon-registry";
-import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon } from "@/components/sablonlar";
+import { KlasikSablon, NisanLuksSablon, DugunLuksSablon, DogumGunuLuksSablon, VintageNisanSablon } from "@/components/sablonlar";
 import RsvpForm from "@/components/RsvpForm";
 import EtkilesimButonu from "@/components/EtkilesimButonu";
 import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKaydedici";
@@ -88,6 +88,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     "nisan-luks":     "#C4A05A",
     "dugun-luks":     "#D4AA70",
     "dogumgunu-luks": "#D4A84B",
+    "vintage-nisan":  "#6E1C2A",
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
@@ -132,7 +133,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   );
 
   let sablon: React.ReactNode;
-  if (sablonTipi === "nisan-luks") {
+  if (sablonTipi === "vintage-nisan") {
+    sablon = <VintageNisanSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
+  } else if (sablonTipi === "nisan-luks") {
     sablon = <NisanLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;
   } else if (sablonTipi === "dugun-luks") {
     sablon = <DugunLuksSablon davetiye={veri} rsvpBileseni={rsvpBileseni} />;

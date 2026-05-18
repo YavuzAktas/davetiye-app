@@ -9,6 +9,17 @@ export type Sablon = {
 };
 
 export const SABLONLAR: Sablon[] = [
+  // VİNTAGE NİŞAN
+  {
+    id: "vintage-nisan",
+    isim: "Vintage Nişan",
+    kategori: "nisan",
+    renk: "#6E1C2A",
+    arkaplan: "from-amber-50 to-stone-100",
+    yaziRengi: "#3D2219",
+    aciklama: "Krem & bordo, botanik çiçekli vintage romantik tasarım",
+  },
+
   // NİŞAN LÜKS
   {
     id: "nisan-luks",

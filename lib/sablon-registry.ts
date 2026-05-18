@@ -1,4 +1,7 @@
 export const SABLON_REGISTRY: Record<string, string> = {
+  // Vintage Nişan
+  "vintage-nisan": "vintage-nisan",
+
   // Lüks Nişan
   "nisan-luks": "nisan-luks",
 
