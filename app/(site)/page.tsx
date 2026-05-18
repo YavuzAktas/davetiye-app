@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import NasilCalisir from "@/components/NasilCalisir";
 
 /* ── Hooks ── */
 function useInView(threshold = 0.15) {
@@ -859,112 +860,7 @@ export default function Anasayfa() {
       {/* ══════════════════════════════════════════
           HOW IT WORKS
       ══════════════════════════════════════════ */}
-      <section className="py-28 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <Section>
-            <div className="text-center mb-16">
-              <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Nasıl Çalışır</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3">3 adımda davetiye hazır</h2>
-            </div>
-          </Section>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-            {/* Kart 1: Telefon mockup */}
-            <Section>
-              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <PhoneMockupKart />
-                <div className="bg-white px-6 py-5">
-                  <p className="font-bold text-gray-900 mb-1">1 – Şablon Seç</p>
-                  <p className="text-sm text-gray-400">Etkinliğine uygun tasarımı seç, dakikalar içinde başla.</p>
-                </div>
-              </div>
-            </Section>
-
-            {/* Kart 2: Editör mockup */}
-            <Section>
-              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="h-72 bg-gray-50 relative overflow-hidden">
-                  {/* Davetiye önizleme */}
-                  <div className="absolute inset-x-4 top-4 h-[108px] bg-linear-to-b from-[#3d1f08] to-[#7a4f1a] rounded-2xl shadow-md flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-yellow-200/50 text-[7px] tracking-widest uppercase mb-1">DÜĞÜN DAVETİYESİ</p>
-                      <p className="text-white text-lg" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe & Mehmet</p>
-                    </div>
-                  </div>
-                  {/* Düzenle rozeti */}
-                  <div className="absolute top-4 right-4 bg-gray-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-lg z-10">
-                    Düzenle
-                  </div>
-                  {/* Form paneli */}
-                  <div className="absolute inset-x-4 bottom-4 bg-white rounded-2xl border border-gray-200 shadow-lg p-3">
-                    <div className="flex items-center justify-between mb-2.5">
-                      <p className="text-xs font-bold text-gray-800">İsimler</p>
-                      <p className="text-[9px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Bileşen</p>
-                    </div>
-                    <div className="mb-2">
-                      <div className="flex items-center gap-1 mb-0.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        <p className="text-[10px] text-gray-500">İsim 1</p>
-                      </div>
-                      <div className="border border-blue-300 bg-blue-50/40 rounded-lg px-2.5 py-1.5">
-                        <p className="text-xs text-gray-800">Ayşe</p>
-                      </div>
-                      <p className="text-[9px] text-gray-300 mt-0.5 px-0.5">Gelinin veya damadın adını girin</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1 mb-0.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        <p className="text-[10px] text-gray-500">İsim 2</p>
-                      </div>
-                      <TypingField />
-                      <p className="text-[9px] text-gray-300 mt-0.5 px-0.5">Gelinin veya damadın adını girin</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white px-6 py-5">
-                  <p className="font-bold text-gray-900 mb-1">2 – Özelleştir & Yayınla</p>
-                  <p className="text-sm text-gray-400">Tarih, mekan, isim ve müziği düzenle, tek tıkla yayınla.</p>
-                </div>
-              </div>
-            </Section>
-
-            {/* Kart 3: Chat arayüzü */}
-            <Section>
-              <div className="rounded-3xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="h-72 bg-gray-50 flex flex-col justify-end gap-1.5 p-3 relative overflow-hidden">
-                  {/* Chat başlığı */}
-                  <div className="absolute top-0 inset-x-0 h-9 bg-white border-b border-gray-100 flex items-center justify-center shadow-sm">
-                    <p className="text-[10px] text-gray-500 font-medium">Düğün Davetiyesi 💌</p>
-                  </div>
-                  <ChatMsg text="Düğün tarihin belli mi? 👀" type="in" delay={300} />
-                  <ChatMsg text="Evet! Bir dakika, daveti göndereyim" type="out" delay={900} />
-                  <ChatCard delay={1500} />
-                  <ChatMsg text="Vay be, çok güzel! 😍 Kim yaptı?" type="in" delay={2300} />
-                  <ChatMsg text="Bekleriz'den aldım ❤️" type="out" delay={3000} />
-                </div>
-                <div className="bg-white px-6 py-5">
-                  <p className="font-bold text-gray-900 mb-1">3 – Her Yerde Paylaş</p>
-                  <p className="text-sm text-gray-400">WhatsApp, link veya QR koduyla misafirlerine gönder.</p>
-                </div>
-              </div>
-            </Section>
-
-          </div>
-
-          <Section>
-            <div className="text-center mt-12">
-              <Link
-                href="/sablonlar"
-                className="group inline-flex items-center gap-2.5 bg-gray-900 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-purple-700 transition-all duration-300 hover:shadow-xl hover:shadow-purple-200 hover:-translate-y-0.5"
-              >
-                Hemen Dene
-                <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-              </Link>
-            </div>
-          </Section>
-        </div>
-      </section>
+      <NasilCalisir />
 
       {/* ══════════════════════════════════════════
           WHATSAPP ÖNİZLEME
