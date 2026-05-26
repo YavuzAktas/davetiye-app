@@ -315,7 +315,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           Video elementine dokunmaz — aynı DOM node kalır, play() çalışır       */}
       {sealVar && (
         <div style={{
-          position: "fixed", inset: 0, zIndex: 50,
+          position: "fixed", inset: 0, zIndex: 45,
           background: NIGHT,
           opacity: sealFading ? 0 : 1,
           transition: "opacity 0.9s ease",
@@ -391,71 +391,71 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               transition: "background 1.2s ease",
             }} />
 
-            {/* Davetiye bilgileri — video üzerinde floating text */}
+            {/* Davetiye bilgileri — video üzerinde floating text, ortada */}
             {isimlerGorunur && (
               <div style={{
                 position: "absolute", inset: 0,
-                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
-                padding: "0 28px clamp(60px,12svh,110px)",
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                padding: "0 28px clamp(80px,16svh,140px)",
                 pointerEvents: "none", textAlign: "center",
               }}>
                 <p style={{
-                  fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.50em",
-                  color: "rgba(200,174,221,0.80)", textTransform: "uppercase",
-                  textShadow: "0 1px 8px rgba(0,0,0,0.9)",
-                  marginBottom: 14, animation: "fadeUp 0.7s ease 0.05s both",
+                  fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.50em",
+                  color: "rgba(200,174,221,0.90)", textTransform: "uppercase",
+                  textShadow: "0 1px 12px rgba(0,0,0,1), 0 0 24px rgba(0,0,0,0.9)",
+                  marginBottom: 10, animation: "fadeUp 0.7s ease 0.05s both",
                 }}>Nişan Davetiyesi</p>
 
                 <p style={{
                   fontFamily: "var(--font-playfair),serif",
-                  fontSize: "clamp(3rem,13vw,5.5rem)",
-                  color: "#FFFFFF", lineHeight: 1,
-                  textShadow: "0 2px 32px rgba(0,0,0,0.85), 0 1px 8px rgba(0,0,0,0.95)",
+                  fontSize: "clamp(3.2rem,13vw,6rem)",
+                  color: "#FFFFFF", lineHeight: 0.95,
+                  textShadow: "0 2px 40px rgba(0,0,0,0.95), 0 1px 8px rgba(0,0,0,1)",
                   animation: "isimFadeUp 1s ease 0.15s both",
                 }}>{isim1}</p>
 
                 <p style={{
                   fontFamily: "var(--font-playfair),serif", fontStyle: "italic",
-                  fontSize: "clamp(1.5rem,6vw,2.6rem)",
-                  color: PINK_LT, lineHeight: 1.3,
-                  textShadow: "0 1px 16px rgba(0,0,0,0.8)",
+                  fontSize: "clamp(1.6rem,6vw,2.8rem)",
+                  color: PINK_LT, lineHeight: 1.1,
+                  textShadow: "0 1px 20px rgba(0,0,0,0.95)",
                   animation: "fadeUp 0.7s ease 0.30s both",
                 }}>&</p>
 
                 {isim2 && (
                   <p style={{
                     fontFamily: "var(--font-playfair),serif",
-                    fontSize: "clamp(3rem,13vw,5.5rem)",
-                    color: "#FFFFFF", lineHeight: 1,
-                    textShadow: "0 2px 32px rgba(0,0,0,0.85), 0 1px 8px rgba(0,0,0,0.95)",
-                    marginBottom: 18, animation: "isimFadeUp 1s ease 0.42s both",
+                    fontSize: "clamp(3.2rem,13vw,6rem)",
+                    color: "#FFFFFF", lineHeight: 0.95,
+                    textShadow: "0 2px 40px rgba(0,0,0,0.95), 0 1px 8px rgba(0,0,0,1)",
+                    marginBottom: 12, animation: "isimFadeUp 1s ease 0.42s both",
                   }}>{isim2}</p>
                 )}
 
-                <div style={{ width: "clamp(120px,40vw,200px)", margin: "4px auto 16px", animation: "fadeUp 0.6s ease 0.55s both" }}>
-                  <FloralDivider color="rgba(223,168,184,0.7)" />
+                <div style={{ width: "clamp(120px,40vw,200px)", margin: "6px auto 12px", animation: "fadeUp 0.6s ease 0.55s both" }}>
+                  <FloralDivider color="rgba(223,168,184,0.75)" />
                 </div>
 
                 {(tarihStr || saatStr || gunStr) && (
                   <div style={{
                     display: "flex", justifyContent: "center", alignItems: "center",
-                    gap: "clamp(6px,2.5vw,14px)", flexWrap: "wrap", marginBottom: 8,
+                    gap: "clamp(6px,2.5vw,14px)", flexWrap: "wrap", marginBottom: 7,
                     animation: "fadeUp 0.7s ease 0.65s both",
                   }}>
-                    {gunStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.78rem,2.6vw,1rem)", color: "rgba(255,255,255,0.90)", textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}>{gunStr}</span>}
-                    {gunStr && (tarihStr || saatStr) && <span style={{ color: "rgba(200,174,221,0.60)", fontSize: 10 }}>·</span>}
-                    {tarihStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.78rem,2.6vw,1rem)", color: "rgba(255,255,255,0.90)", textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}>{tarihStr}</span>}
-                    {saatStr && <span style={{ color: "rgba(200,174,221,0.60)", fontSize: 10 }}>·</span>}
-                    {saatStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.78rem,2.6vw,1rem)", color: "rgba(255,255,255,0.90)", textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}>{saatStr}</span>}
+                    {gunStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)" }}>{gunStr}</span>}
+                    {gunStr && (tarihStr || saatStr) && <span style={{ color: "rgba(200,174,221,0.70)", fontSize: 11 }}>·</span>}
+                    {tarihStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)" }}>{tarihStr}</span>}
+                    {saatStr && <span style={{ color: "rgba(200,174,221,0.70)", fontSize: 11 }}>·</span>}
+                    {saatStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)" }}>{saatStr}</span>}
                   </div>
                 )}
 
                 {davetiye.mekan && (
                   <p style={{
                     fontFamily: "var(--font-lora),serif", fontStyle: "italic",
-                    fontSize: "clamp(0.75rem,2.5vw,0.95rem)",
-                    color: "rgba(200,174,221,0.85)",
-                    textShadow: "0 1px 12px rgba(0,0,0,0.9)",
+                    fontSize: "clamp(0.82rem,2.8vw,1.05rem)",
+                    color: "rgba(223,200,240,0.95)",
+                    textShadow: "0 1px 14px rgba(0,0,0,1), 0 0 24px rgba(0,0,0,0.9)",
                     animation: "fadeUp 0.7s ease 0.75s both",
                   }}>{davetiye.mekan}</p>
                 )}
