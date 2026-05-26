@@ -174,39 +174,6 @@ function WaxSeal({ size = 210, onClick }: { size?: number; onClick?: () => void 
   );
 }
 
-/* ─── Yıldız parıltısı (CSS ile) ─── */
-function Stars() {
-  const stars = [
-    { x: "12%",  y: "8%",  s: 1.4, d: "0s",    o: 0.6 },
-    { x: "88%",  y: "6%",  s: 1.8, d: "0.8s",  o: 0.5 },
-    { x: "5%",   y: "22%", s: 1.2, d: "1.5s",  o: 0.4 },
-    { x: "92%",  y: "25%", s: 1.5, d: "0.4s",  o: 0.55 },
-    { x: "20%",  y: "15%", s: 1.0, d: "2.1s",  o: 0.35 },
-    { x: "78%",  y: "18%", s: 1.3, d: "1.1s",  o: 0.45 },
-    { x: "35%",  y: "5%",  s: 1.6, d: "0.6s",  o: 0.5 },
-    { x: "62%",  y: "7%",  s: 1.1, d: "1.8s",  o: 0.4 },
-    { x: "48%",  y: "3%",  s: 2.0, d: "0.2s",  o: 0.65 },
-    { x: "15%",  y: "40%", s: 1.0, d: "2.5s",  o: 0.3 },
-    { x: "85%",  y: "42%", s: 1.2, d: "1.3s",  o: 0.35 },
-    { x: "7%",   y: "58%", s: 1.0, d: "3.0s",  o: 0.25 },
-    { x: "93%",  y: "60%", s: 1.0, d: "2.2s",  o: 0.28 },
-    { x: "25%",  y: "70%", s: 1.1, d: "1.7s",  o: 0.22 },
-    { x: "72%",  y: "72%", s: 1.0, d: "2.8s",  o: 0.20 },
-  ];
-  return (
-    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-      {stars.map((s, i) => (
-        <div key={i} style={{
-          position: "absolute", left: s.x, top: s.y,
-          width: s.s * 2, height: s.s * 2, borderRadius: "50%",
-          background: "#fff",
-          opacity: s.o,
-          animation: `starTwinkle 3s ease-in-out ${s.d} infinite`,
-        }} />
-      ))}
-    </div>
-  );
-}
 
 /* ─── Fotoğraf placeholder ─── */
 function PhotoPlaceholder() {
@@ -339,10 +306,6 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           65%  { transform: scale(1.08) rotate(2deg); }
           100% { transform: scale(1); }
         }
-        @keyframes starTwinkle {
-          0%, 100% { opacity: var(--o, 0.4); transform: scale(1); }
-          50%       { opacity: 1; transform: scale(1.6); }
-        }
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(40px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -383,107 +346,76 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       {/* ══ KAPALI: Gece Bahçesi Mühür Ekranı + Video ══ */}
       {!acildi && (
         <>
-          {/* ── Gece bahçesi arka planı ── */}
-          <div className="min-h-screen flex flex-col relative overflow-hidden select-none"
-            style={{
-              background: `radial-gradient(ellipse 100% 70% at 50% 0%, ${NIGHT_BG3} 0%, ${NIGHT_BG2} 45%, ${NIGHT_BG1} 100%)`,
-            }}>
+          {/* ── Gece bahçesi — sade ── */}
+          <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden select-none"
+            style={{ background: NIGHT_BG1 }}>
 
-            {/* Yıldızlar */}
-            <Stars />
-
-            {/* Üst ışık huzmesi — wisteria rengi */}
+            {/* Hafif mor halo merkeze */}
             <div style={{
-              position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
-              width: "60%", height: "45%", pointerEvents: "none",
-              background: "radial-gradient(ellipse at 50% 0%, rgba(140,100,200,0.18) 0%, transparent 70%)",
+              position: "absolute", inset: 0, pointerEvents: "none",
+              background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(122,82,160,0.12) 0%, transparent 70%)",
             }} />
 
-            {/* Sol alt köşe ışığı */}
-            <div style={{
-              position: "absolute", bottom: 0, left: 0,
-              width: "40%", height: "40%", pointerEvents: "none",
-              background: "radial-gradient(ellipse at 0% 100%, rgba(76,120,82,0.14) 0%, transparent 70%)",
-            }} />
-
-            {/* Gece sümbülleri — köşelerde */}
-            <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.6 }}>
+            {/* Köşe sümbülleri — sadece iki üst köşe, düşük opaklık */}
+            <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.35 }}>
               <NightWisteria side="left" />
             </div>
-            <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.6 }}>
+            <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.35 }}>
               <NightWisteria side="right" />
-            </div>
-            <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1)", opacity: 0.25 }}>
-              <NightWisteria side="left" />
-            </div>
-            <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scaleX(-1)", opacity: 0.25 }}>
-              <NightWisteria side="left" />
             </div>
 
             {/* Merkez içerik */}
-            <div className="flex-1 flex flex-col items-center justify-center w-full"
-              style={{ padding: "60px 24px 50px", position: "relative", zIndex: 1 }}>
-
-              {/* Üst etiket */}
-              <p style={{
-                fontFamily: "var(--font-cormorant),serif",
-                fontSize: 10, letterSpacing: "0.5em",
-                color: "rgba(200,174,221,0.65)",
-                textTransform: "uppercase", marginBottom: 6,
-                animation: "nightFadeIn 1.2s ease",
-              }}>Nişan Davetiyesi</p>
-
-              {/* İnce altın çizgi */}
-              <div style={{
-                width: 48, height: 1,
-                background: `linear-gradient(to right, transparent, ${GOLD}80, transparent)`,
-                marginBottom: 22,
-              }} />
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "60px 24px", position: "relative", zIndex: 1, textAlign: "center" }}>
 
               {/* İsimler */}
               <p style={{
+                fontFamily: "var(--font-cormorant),serif",
+                fontSize: 10, letterSpacing: "0.48em",
+                color: "rgba(200,174,221,0.55)", textTransform: "uppercase",
+                marginBottom: 20, animation: "nightFadeIn 1.2s ease",
+              }}>Nişan Davetiyesi</p>
+
+              <p style={{
                 fontFamily: "var(--font-dancing),cursive",
-                fontSize: "clamp(3rem,11vw,5.2rem)",
-                color: "#FDFAF5", lineHeight: 1,
-                textShadow: "0 0 40px rgba(180,144,216,0.4), 0 2px 20px rgba(0,0,0,0.6)",
-                animation: "nightFadeIn 1.4s ease 0.1s both",
+                fontSize: "clamp(2.8rem,10vw,4.8rem)",
+                color: "#FDFAF5", lineHeight: 1.05,
+                textShadow: "0 0 32px rgba(180,144,216,0.35)",
+                animation: "nightFadeIn 1.4s ease 0.15s both",
               }}>{isim1}</p>
 
               <p style={{
                 fontFamily: "var(--font-dancing),cursive",
-                fontSize: "clamp(1.4rem,4.5vw,2.2rem)",
-                color: "rgba(223,168,184,0.85)", lineHeight: 1.3,
-                animation: "nightFadeIn 1.4s ease 0.2s both",
+                fontSize: "clamp(1.3rem,4vw,2rem)",
+                color: "rgba(223,168,184,0.7)", lineHeight: 1.3,
+                animation: "nightFadeIn 1.4s ease 0.25s both",
               }}>&</p>
 
               {isim2 && (
                 <p style={{
                   fontFamily: "var(--font-dancing),cursive",
-                  fontSize: "clamp(3rem,11vw,5.2rem)",
-                  color: "#FDFAF5", lineHeight: 1,
-                  textShadow: "0 0 40px rgba(180,144,216,0.4), 0 2px 20px rgba(0,0,0,0.6)",
-                  animation: "nightFadeIn 1.4s ease 0.3s both",
-                  marginBottom: 4,
+                  fontSize: "clamp(2.8rem,10vw,4.8rem)",
+                  color: "#FDFAF5", lineHeight: 1.05,
+                  textShadow: "0 0 32px rgba(180,144,216,0.35)",
+                  animation: "nightFadeIn 1.4s ease 0.35s both",
+                  marginBottom: 6,
                 }}>{isim2}</p>
               )}
 
               {tarihKisa && (
                 <p style={{
                   fontFamily: "var(--font-cormorant),serif",
-                  fontSize: 11, letterSpacing: "0.3em",
-                  color: "rgba(200,162,64,0.7)",
-                  marginTop: 10, marginBottom: 36,
-                  animation: "nightFadeIn 1.4s ease 0.4s both",
+                  fontSize: 11, letterSpacing: "0.28em",
+                  color: `${GOLD}70`, marginTop: 8, marginBottom: 40,
+                  animation: "nightFadeIn 1.4s ease 0.45s both",
                 }}>{tarihKisa}</p>
               )}
 
               {/* Mühür */}
               <div style={{
-                opacity: animating ? 0 : 1,
-                transition: "opacity 0.5s ease",
-                display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
+                opacity: animating ? 0 : 1, transition: "opacity 0.5s ease",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
               }}>
-                <WaxSeal size={200} onClick={() => {
+                <WaxSeal size={190} onClick={() => {
                   setAnimating(true);
                   const v = videoRef.current;
                   if (!v) { setAcildi(true); return; }
@@ -491,12 +423,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                     .then(() => { setVideoGorunur(true); })
                     .catch(() => { setAcildi(true); });
                 }} />
-
                 <p style={{
                   fontFamily: "var(--font-cormorant),serif",
                   fontSize: 10, fontStyle: "italic",
-                  color: "rgba(200,174,221,0.45)",
-                  letterSpacing: "0.18em",
+                  color: "rgba(200,174,221,0.4)", letterSpacing: "0.2em",
                   animation: "glowPulse 3s ease-in-out infinite",
                 }}>Mühüre dokun</p>
               </div>
