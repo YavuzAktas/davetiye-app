@@ -407,7 +407,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               <div style={{
                 position: "absolute", inset: 0,
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                padding: "0 28px clamp(80px,16svh,140px)",
+                padding: "clamp(80px,20svh,160px) 28px clamp(60px,10svh,100px)",
                 pointerEvents: "none", textAlign: "center",
               }}>
                 <p style={{
@@ -512,35 +512,42 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         )}
 
         {/* ════ ETKİNLİK DETAYLARI ════ */}
-        <section style={{ padding: "80px 24px", textAlign: "center", background: BG }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 32, opacity: 0.35 }}>
-            {[LILAC, PINK, GREEN_LT, PINK, LILAC].map((c, i) => <svg key={i} width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5" fill={c} /><circle cx="5" cy="5" r="2" fill={BG} /></svg>)}
+        <section style={{ padding: "90px 24px 100px", textAlign: "center", background: BG, position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.07 }}><WisteriaBotanical side="left" /></div>
+          <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.07 }}><WisteriaBotanical side="right" /></div>
+
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.44em", color: LILAC, textTransform: "uppercase", marginBottom: 36 }}>Etkinlik Detayları</p>
+
+          {/* Tarih blok */}
+          <div style={{ maxWidth: 440, margin: "0 auto 28px" }}>
+            {gunStr && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.85rem,2.8vw,1.05rem)", letterSpacing: "0.18em", color: LILAC_MD, textTransform: "uppercase", marginBottom: 10 }}>{gunStr}</p>}
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.6rem,9vw,4.4rem)", color: WARM, lineHeight: 1.05 }}>{tarihStr ?? "—"}</p>
           </div>
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Etkinlik Detayları</p>
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.2rem,7vw,3.6rem)", color: WARM, marginBottom: 36 }}>Nerede &amp; Ne Zaman?</p>
-          <div style={{ maxWidth: 480, margin: "0 auto 40px", background: BG_CARD, borderRadius: 16, border: `1px solid ${LILAC}18`, padding: "36px 32px", boxShadow: `0 8px 40px rgba(122,82,160,0.07)`, position: "relative" }}>
-            <span style={{ position: "absolute", top: 12, left: 16, color: LILAC, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", top: 12, right: 16, color: PINK, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", bottom: 12, left: 16, color: GREEN_LT, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", bottom: 12, right: 16, color: GOLD, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <div style={{ display: "flex", justifyContent: "center", gap: "clamp(20px,6vw,52px)", flexWrap: "wrap" }}>
-              {[
-                { emoji: "🌸", lbl: "TARİH", val: tarihStr ?? "—" },
-                { emoji: "🕐", lbl: "SAAT",  val: saatStr ?? "—" },
-                { emoji: "📍", lbl: "MEKAN", val: davetiye.mekan ?? "Belirtilmedi" },
-                ...(gunStr ? [{ emoji: "🌿", lbl: "GÜN", val: gunStr }] : []),
-              ].map(col => (
-                <div key={col.lbl} style={{ textAlign: "center", minWidth: 80 }}>
-                  <div style={{ fontSize: 20, marginBottom: 8 }}>{col.emoji}</div>
-                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.28em", color: LILAC, textTransform: "uppercase", marginBottom: 6 }}>{col.lbl}</p>
-                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, fontWeight: 600, color: WARM }}>{col.val}</p>
-                </div>
-              ))}
+
+          <div style={{ maxWidth: 200, margin: "0 auto 28px" }}><FloralDivider /></div>
+
+          {/* Saat */}
+          {saatStr && (
+            <div style={{ marginBottom: 28 }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 8 }}>Saat</p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1 }}>{saatStr}</p>
             </div>
-          </div>
+          )}
+
+          <div style={{ maxWidth: 200, margin: "0 auto 28px" }}><FloralDivider /></div>
+
+          {/* Mekan */}
           {davetiye.mekan && (
-            <div style={{ maxWidth: 560, margin: "0 auto", borderRadius: 12, overflow: "hidden", border: `1px solid ${LILAC}20`, boxShadow: `0 6px 24px rgba(122,82,160,0.10)` }}>
-              <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="240" style={{ border: 0, display: "block" }} loading="lazy" allowFullScreen />
+            <div style={{ marginBottom: 48 }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 8 }}>Mekan</p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.3rem,4.5vw,2rem)", color: WARM, lineHeight: 1.3 }}>{davetiye.mekan}</p>
+            </div>
+          )}
+
+          {/* Harita */}
+          {davetiye.mekan && (
+            <div style={{ maxWidth: 560, margin: "0 auto", borderRadius: 16, overflow: "hidden", border: `1px solid ${LILAC}18`, boxShadow: `0 8px 32px rgba(122,82,160,0.10)` }}>
+              <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="260" style={{ border: 0, display: "block" }} loading="lazy" allowFullScreen />
             </div>
           )}
         </section>
@@ -580,12 +587,40 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         </section>
 
         {/* Footer */}
-        <footer style={{ background: BG_SOFT, padding: "40px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, opacity: 0.18 }}>
-            <WisteriaBotanical side="left" /><WisteriaBotanical side="right" />
+        <footer style={{ background: "#140D22", padding: "80px 24px 100px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+          {/* Köşe sümbülleri */}
+          <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.28 }}><NightWisteria side="left" /></div>
+          <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.28 }}><NightWisteria side="right" /></div>
+          {/* Hafif mor ışıma */}
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 60% at 50% 60%, rgba(122,82,160,0.14) 0%, transparent 70%)" }} />
+
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.48em", color: "rgba(200,174,221,0.55)", textTransform: "uppercase", marginBottom: 32 }}>
+              Sizi bekliyoruz
+            </p>
+
+            {isim1 && (
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3rem,11vw,5.2rem)", color: "#FDFAF5", lineHeight: 0.95 }}>
+                {isim1}
+              </p>
+            )}
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.5rem,5vw,2.4rem)", color: PINK_LT, lineHeight: 1.3, margin: "4px 0" }}>
+              &
+            </p>
+            {isim2 && (
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3rem,11vw,5.2rem)", color: "#FDFAF5", lineHeight: 0.95, marginBottom: 32 }}>
+                {isim2}
+              </p>
+            )}
+
+            <div style={{ maxWidth: 200, margin: "0 auto 32px" }}>
+              <FloralDivider color={PINK_LT + "90"} />
+            </div>
+
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.1rem,4vw,1.6rem)", color: "rgba(253,250,245,0.65)", letterSpacing: "0.04em" }}>
+              Sizi çok seviyoruz
+            </p>
           </div>
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2rem,6vw,3rem)", color: WARM }}>Sizi çok seviyoruz 🌸</p>
-          {isim1 && isim2 && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 13, letterSpacing: "0.2em", color: `${WARM}50`, marginTop: 8 }}>{isim1} &amp; {isim2}</p>}
         </footer>
       </div>
     </>
