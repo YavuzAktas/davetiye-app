@@ -1,7 +1,7 @@
 "use client";
 
 import { SablonProps } from "@/lib/sablon-tipleri";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MuzikCalar from "@/components/MuzikCalar";
 
 /* ─── Renkler ─── */
@@ -195,6 +195,12 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const [animating, setAnimating] = useState(false);
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
 
+  /* Video intro states */
+  const [videoAcik, setVideoAcik] = useState(false);
+  const [videoGorunur, setVideoGorunur] = useState(false);
+  const [isimlerGorunur, setIsimlerGorunur] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const tarihObj = davetiye.tarih ? new Date(davetiye.tarih) : null;
   const tarihStr = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) : null;
   const tarihKisa = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }).toUpperCase() : null;
@@ -245,15 +251,23 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
         }
-        @keyframes linePulse {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(6px); }
         }
-        /* Keten doku için gürültü katmanı */
+        @keyframes isimFadeUp {
+          0%   { opacity: 0; transform: translateY(36px) scale(0.96); }
+          60%  { opacity: 1; transform: translateY(-4px) scale(1.01); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes tarihFadeIn {
+          0%   { opacity: 0; letter-spacing: 0.6em; }
+          100% { opacity: 1; letter-spacing: 0.32em; }
+        }
+        @keyframes lineSvgDraw {
+          from { stroke-dashoffset: 400; }
+          to   { stroke-dashoffset: 0; }
+        }
         .linen-bg::before {
           content: "";
           position: absolute;
@@ -323,9 +337,18 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               style={{ opacity: animating ? 0 : 1, transition: "opacity 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center" }}
             >
               <WaxSeal size={190} onClick={() => {
-                document.dispatchEvent(new CustomEvent("muzik-baslat"));
                 setAnimating(true);
-                setTimeout(() => setAcildi(true), 560);
+                setTimeout(() => {
+                  setVideoAcik(true);
+                  requestAnimationFrame(() => requestAnimationFrame(() => {
+                    setVideoGorunur(true);
+                    videoRef.current?.play().catch(() => {
+                      /* Autoplay engellendiyse direkt aç */
+                      setVideoAcik(false);
+                      setAcildi(true);
+                    });
+                  }));
+                }, 320);
               }} />
 
               <div style={{ marginTop: 20, textAlign: "center" }}>
@@ -343,6 +366,123 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 }}>Mühüre dokun ✦</p>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══ VİDEO INTRO ══ */}
+      {videoAcik && (
+        <div
+          style={{
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "#000",
+            opacity: videoGorunur ? 1 : 0,
+            transition: "opacity 0.6s ease",
+          }}
+        >
+          {/* Video */}
+          <video
+            ref={videoRef}
+            src="/background.mp4"
+            playsInline
+            preload="auto"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+            onTimeUpdate={() => {
+              const v = videoRef.current;
+              if (!v || isimlerGorunur || !v.duration) return;
+              if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
+            }}
+            onEnded={() => {
+              /* İsimler ~1.5s görünür kalsın, sonra davetiye aç */
+              setTimeout(() => {
+                setVideoGorunur(false);
+                setTimeout(() => {
+                  setVideoAcik(false);
+                  setAcildi(true);
+                  document.dispatchEvent(new CustomEvent("muzik-baslat"));
+                }, 650);
+              }, 1500);
+            }}
+          />
+
+          {/* Hafif koyu vignette */}
+          <div style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
+          }} />
+
+          {/* İsimler overlay */}
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            pointerEvents: "none", textAlign: "center", padding: "0 24px",
+          }}>
+            {/* Üst botanik çizgi SVG */}
+            {isimlerGorunur && (
+              <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginBottom: 20, animation: "lineSvgDraw 1.2s ease forwards" }}>
+                <path d="M0 12 C30 4 50 20 80 12 C110 4 130 20 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.7"/>
+                <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
+                <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+              </svg>
+            )}
+
+            {/* İsim 1 */}
+            <p style={{
+              fontFamily: "var(--font-dancing),cursive",
+              fontSize: "clamp(3.5rem,14vw,6.5rem)",
+              color: BG,
+              lineHeight: 1,
+              textShadow: "0 2px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.3)",
+              opacity: isimlerGorunur ? 1 : 0,
+              animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
+            }}>{isim1}</p>
+
+            {/* & işareti */}
+            <p style={{
+              fontFamily: "var(--font-dancing),cursive",
+              fontSize: "clamp(2rem,8vw,4rem)",
+              color: TAN,
+              lineHeight: 1.3,
+              textShadow: "0 2px 16px rgba(0,0,0,0.5)",
+              opacity: isimlerGorunur ? 1 : 0,
+              animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
+            }}>&</p>
+
+            {/* İsim 2 */}
+            {isim2 && (
+              <p style={{
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(3.5rem,14vw,6.5rem)",
+                color: BG,
+                lineHeight: 1,
+                textShadow: "0 2px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.3)",
+                opacity: isimlerGorunur ? 1 : 0,
+                animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
+              }}>{isim2}</p>
+            )}
+
+            {/* Tarih */}
+            {tarihKisa && isimlerGorunur && (
+              <p style={{
+                fontFamily: "var(--font-cormorant),serif",
+                fontSize: "clamp(0.8rem,3vw,1.2rem)",
+                color: TAN,
+                marginTop: 20,
+                textShadow: "0 1px 12px rgba(0,0,0,0.5)",
+                animation: "tarihFadeIn 1.4s ease 0.5s both",
+              }}>{tarihKisa}</p>
+            )}
+
+            {/* Alt botanik çizgi */}
+            {isimlerGorunur && (
+              <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginTop: 18, animation: "lineSvgDraw 1.2s ease 0.2s both" }}>
+                <path d="M0 12 C30 20 50 4 80 12 C110 20 130 4 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" opacity="0.7"/>
+                <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
+                <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+              </svg>
+            )}
           </div>
         </div>
       )}
