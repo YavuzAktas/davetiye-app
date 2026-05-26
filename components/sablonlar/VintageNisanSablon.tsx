@@ -249,6 +249,18 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
   const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
 
+  /* Video bitince butonları göster, müziği başlat */
+  useEffect(() => {
+    if (previewModu) return;
+    if (!videoFinal) {
+      document.body.classList.add("video-oyniyor");
+      return () => document.body.classList.remove("video-oyniyor");
+    }
+    document.body.classList.remove("video-oyniyor");
+    const t = setTimeout(() => document.dispatchEvent(new CustomEvent("muzik-baslat")), 150);
+    return () => clearTimeout(t);
+  }, [videoFinal, previewModu]);
+
   /* Mühür tıklandı: play() gesture zincirinde, ardından overlay fade-out */
   const onSealClick = () => {
     const v = videoRef.current;
@@ -307,9 +319,11 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        button.bottom-24 { transition: opacity 0.5s ease, transform 0.5s ease; }
+        body.video-oyniyor button.bottom-24 { opacity: 0 !important; pointer-events: none !important; transform: translateY(8px); }
       `}</style>
 
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
+      {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
 
       {/* ══ MÜHÜR OVERLAY — position:fixed, sayfa üstünde, fade-out ile gider ══
           Video elementine dokunmaz — aynı DOM node kalır, play() çalışır       */}
@@ -376,10 +390,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 if (!v || isimlerGorunur || !v.duration) return;
                 if (v.duration - v.currentTime <= 5) setIsimlerGorunur(true);
               }}
-              onEnded={() => {
-                setVideoFinal(true);
-                document.dispatchEvent(new CustomEvent("muzik-baslat"));
-              }}
+              onEnded={() => { setVideoFinal(true); }}
             />
 
             {/* Gradient — isimler belirince yoğunlaşır */}
@@ -401,8 +412,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               }}>
                 <p style={{
                   fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.50em",
-                  color: "rgba(200,174,221,0.90)", textTransform: "uppercase",
-                  textShadow: "0 1px 12px rgba(0,0,0,1), 0 0 24px rgba(0,0,0,0.9)",
+                  color: "rgba(255,255,255,0.95)", textTransform: "uppercase",
+                  textShadow: "0 1px 14px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,1)",
                   marginBottom: 10, animation: "fadeUp 0.7s ease 0.05s both",
                 }}>Nişan Davetiyesi</p>
 
