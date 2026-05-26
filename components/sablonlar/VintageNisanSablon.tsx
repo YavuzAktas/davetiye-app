@@ -196,7 +196,6 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
 
   /* Video intro states */
-  const [videoAcik, setVideoAcik] = useState(false);
   const [videoGorunur, setVideoGorunur] = useState(false);
   const [isimlerGorunur, setIsimlerGorunur] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -280,211 +279,195 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
       {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={BURG} />}
 
-      {/* ══ KAPALI: Zarf / Mühür ══ */}
+      {/* ══ KAPALI: Zarf / Mühür + Video (her ikisi !acildi içinde) ══ */}
       {!acildi && (
-        <div
-          className="min-h-screen flex flex-col relative overflow-hidden select-none linen-bg"
-          style={{ background: BG, position: "relative" }}
-        >
-          {/* Keten doku deseni */}
-          <div style={{
-            position: "absolute", inset: 0,
-            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(61,34,25,0.018) 2px, rgba(61,34,25,0.018) 4px),
-                              repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(61,34,25,0.018) 2px, rgba(61,34,25,0.018) 4px)`,
-            pointerEvents: "none",
-          }} />
+        <>
+          {/* ── Mühür sayfası ── */}
+          <div
+            className="min-h-screen flex flex-col relative overflow-hidden select-none linen-bg"
+            style={{ background: BG, position: "relative" }}
+          >
+            {/* Keten doku deseni */}
+            <div style={{
+              position: "absolute", inset: 0,
+              backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(61,34,25,0.018) 2px, rgba(61,34,25,0.018) 4px),
+                                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(61,34,25,0.018) 2px, rgba(61,34,25,0.018) 4px)`,
+              pointerEvents: "none",
+            }} />
 
-          {/* Köşe süsleri */}
-          <div style={{ position: "absolute", top: 24, left: 24 }}>
-            <Botanical side="left" color={BURG} opacity={0.2} />
-          </div>
-          <div style={{ position: "absolute", top: 24, right: 24 }}>
-            <Botanical side="right" color={BURG} opacity={0.2} />
-          </div>
+            {/* Köşe süsleri */}
+            <div style={{ position: "absolute", top: 24, left: 24 }}>
+              <Botanical side="left" color={BURG} opacity={0.2} />
+            </div>
+            <div style={{ position: "absolute", top: 24, right: 24 }}>
+              <Botanical side="right" color={BURG} opacity={0.2} />
+            </div>
 
-          {/* Merkez içerik */}
-          <div className="flex-1 flex flex-col items-center justify-center w-full" style={{ padding: "40px 24px" }}>
-            {/* Üst metin */}
-            <p style={{
-              fontFamily: "var(--font-cormorant),serif",
-              fontSize: 12, letterSpacing: "0.4em",
-              color: BURG_MED, textTransform: "uppercase", marginBottom: 20, textAlign: "center",
-            }}>
-              Nişan Davetiyesi
-            </p>
+            {/* Merkez içerik */}
+            <div className="flex-1 flex flex-col items-center justify-center w-full" style={{ padding: "40px 24px" }}>
+              <p style={{
+                fontFamily: "var(--font-cormorant),serif",
+                fontSize: 12, letterSpacing: "0.4em",
+                color: BURG_MED, textTransform: "uppercase", marginBottom: 20, textAlign: "center",
+              }}>
+                Nişan Davetiyesi
+              </p>
 
-            {/* İsimler */}
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(3rem,10vw,5rem)",
-              color: BROWN, lineHeight: 1.1, textAlign: "center", marginBottom: 4,
-            }}>{isim1}</p>
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(1.4rem,4.5vw,2.2rem)",
-              color: TAN, textAlign: "center", marginBottom: 4,
-            }}>&</p>
-            {isim2 && (
               <p style={{
                 fontFamily: "var(--font-dancing),cursive",
                 fontSize: "clamp(3rem,10vw,5rem)",
-                color: BROWN, lineHeight: 1.1, textAlign: "center", marginBottom: 28,
-              }}>{isim2}</p>
-            )}
+                color: BROWN, lineHeight: 1.1, textAlign: "center", marginBottom: 4,
+              }}>{isim1}</p>
+              <p style={{
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(1.4rem,4.5vw,2.2rem)",
+                color: TAN, textAlign: "center", marginBottom: 4,
+              }}>&</p>
+              {isim2 && (
+                <p style={{
+                  fontFamily: "var(--font-dancing),cursive",
+                  fontSize: "clamp(3rem,10vw,5rem)",
+                  color: BROWN, lineHeight: 1.1, textAlign: "center", marginBottom: 28,
+                }}>{isim2}</p>
+              )}
 
-            {/* Mühür */}
-            <div
-              style={{ opacity: animating ? 0 : 1, transition: "opacity 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center" }}
-            >
-              <WaxSeal size={190} onClick={() => {
-                setAnimating(true);
-                setTimeout(() => {
-                  setVideoAcik(true);
-                  requestAnimationFrame(() => requestAnimationFrame(() => {
-                    setVideoGorunur(true);
-                    videoRef.current?.play().catch(() => {
-                      /* Autoplay engellendiyse direkt aç */
-                      setVideoAcik(false);
+              {/* Mühür */}
+              <div style={{ opacity: animating ? 0 : 1, transition: "opacity 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <WaxSeal size={190} onClick={() => {
+                  setAnimating(true);
+                  /* play() çağrısı DOĞRUDAN burada — kullanıcı gesture zinciri korunuyor */
+                  const v = videoRef.current;
+                  if (!v) { setAcildi(true); return; }
+                  v.play()
+                    .then(() => { setVideoGorunur(true); })
+                    .catch(() => {
+                      /* Autoplay engellenirse (nadir) direkt aç */
                       setAcildi(true);
                     });
-                  }));
-                }, 320);
-              }} />
+                }} />
 
-              <div style={{ marginTop: 20, textAlign: "center" }}>
-                {tarihKisa && (
+                <div style={{ marginTop: 20, textAlign: "center" }}>
+                  {tarihKisa && (
+                    <p style={{
+                      fontFamily: "var(--font-cormorant),serif",
+                      fontSize: 13, letterSpacing: "0.32em",
+                      color: BURG_MED, marginBottom: 8, fontWeight: 600,
+                    }}>{tarihKisa}</p>
+                  )}
                   <p style={{
                     fontFamily: "var(--font-cormorant),serif",
-                    fontSize: 13, letterSpacing: "0.32em",
-                    color: BURG_MED, marginBottom: 8, fontWeight: 600,
-                  }}>{tarihKisa}</p>
-                )}
-                <p style={{
-                  fontFamily: "var(--font-cormorant),serif",
-                  fontSize: 11, fontStyle: "italic",
-                  color: `${BROWN}55`, letterSpacing: "0.12em",
-                }}>Mühüre dokun ✦</p>
+                    fontSize: 11, fontStyle: "italic",
+                    color: `${BROWN}55`, letterSpacing: "0.12em",
+                  }}>Mühüre dokun ✦</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* ══ VİDEO INTRO ══ */}
-      {videoAcik && (
-        <div
-          style={{
-            position: "fixed", inset: 0, zIndex: 100,
-            background: "#000",
-            opacity: videoGorunur ? 1 : 0,
-            transition: "opacity 0.6s ease",
-          }}
-        >
-          {/* Video */}
-          <video
-            ref={videoRef}
-            src="/background.mp4"
-            playsInline
-            preload="auto"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-            onTimeUpdate={() => {
-              const v = videoRef.current;
-              if (!v || isimlerGorunur || !v.duration) return;
-              if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
+          {/* ── Video overlay — her zaman DOM'da, videoGorunur ile görünür ── */}
+          <div
+            style={{
+              position: "fixed", inset: 0, zIndex: 100,
+              background: "#000",
+              opacity: videoGorunur ? 1 : 0,
+              transition: "opacity 0.6s ease",
+              pointerEvents: videoGorunur ? "auto" : "none",
             }}
-            onEnded={() => {
-              /* İsimler ~1.5s görünür kalsın, sonra davetiye aç */
-              setTimeout(() => {
-                setVideoGorunur(false);
+          >
+            {/* Video pre-mounted: mühür tıklanmadan önce de DOM'da, hazır */}
+            <video
+              ref={videoRef}
+              src="/background.mp4"
+              playsInline
+              preload="auto"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              onTimeUpdate={() => {
+                const v = videoRef.current;
+                if (!v || isimlerGorunur || !v.duration) return;
+                if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
+              }}
+              onEnded={() => {
                 setTimeout(() => {
-                  setVideoAcik(false);
-                  setAcildi(true);
-                  document.dispatchEvent(new CustomEvent("muzik-baslat"));
-                }, 650);
-              }, 1500);
-            }}
-          />
+                  setVideoGorunur(false);
+                  setTimeout(() => {
+                    setAcildi(true);
+                    document.dispatchEvent(new CustomEvent("muzik-baslat"));
+                  }, 650);
+                }, 1500);
+              }}
+            />
 
-          {/* Hafif koyu vignette */}
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
-          }} />
+            {/* Vignette */}
+            <div style={{
+              position: "absolute", inset: 0, pointerEvents: "none",
+              background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
+            }} />
 
-          {/* İsimler overlay */}
-          <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            pointerEvents: "none", textAlign: "center", padding: "0 24px",
-          }}>
-            {/* Üst botanik çizgi SVG */}
-            {isimlerGorunur && (
-              <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginBottom: 20, animation: "lineSvgDraw 1.2s ease forwards" }}>
-                <path d="M0 12 C30 4 50 20 80 12 C110 4 130 20 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.7"/>
-                <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
-                <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
-                <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
-              </svg>
-            )}
+            {/* İsimler overlay */}
+            <div style={{
+              position: "absolute", inset: 0,
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              pointerEvents: "none", textAlign: "center", padding: "0 24px",
+            }}>
+              {isimlerGorunur && (
+                <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginBottom: 20, animation: "lineSvgDraw 1.2s ease forwards" }}>
+                  <path d="M0 12 C30 4 50 20 80 12 C110 4 130 20 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.7"/>
+                  <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
+                  <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                  <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                </svg>
+              )}
 
-            {/* İsim 1 */}
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(3.5rem,14vw,6.5rem)",
-              color: BG,
-              lineHeight: 1,
-              textShadow: "0 2px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.3)",
-              opacity: isimlerGorunur ? 1 : 0,
-              animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
-            }}>{isim1}</p>
-
-            {/* & işareti */}
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(2rem,8vw,4rem)",
-              color: TAN,
-              lineHeight: 1.3,
-              textShadow: "0 2px 16px rgba(0,0,0,0.5)",
-              opacity: isimlerGorunur ? 1 : 0,
-              animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
-            }}>&</p>
-
-            {/* İsim 2 */}
-            {isim2 && (
               <p style={{
                 fontFamily: "var(--font-dancing),cursive",
                 fontSize: "clamp(3.5rem,14vw,6.5rem)",
-                color: BG,
-                lineHeight: 1,
+                color: BG, lineHeight: 1,
                 textShadow: "0 2px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.3)",
                 opacity: isimlerGorunur ? 1 : 0,
-                animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
-              }}>{isim2}</p>
-            )}
+                animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
+              }}>{isim1}</p>
 
-            {/* Tarih */}
-            {tarihKisa && isimlerGorunur && (
               <p style={{
-                fontFamily: "var(--font-cormorant),serif",
-                fontSize: "clamp(0.8rem,3vw,1.2rem)",
-                color: TAN,
-                marginTop: 20,
-                textShadow: "0 1px 12px rgba(0,0,0,0.5)",
-                animation: "tarihFadeIn 1.4s ease 0.5s both",
-              }}>{tarihKisa}</p>
-            )}
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(2rem,8vw,4rem)",
+                color: TAN, lineHeight: 1.3,
+                textShadow: "0 2px 16px rgba(0,0,0,0.5)",
+                opacity: isimlerGorunur ? 1 : 0,
+                animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
+              }}>&</p>
 
-            {/* Alt botanik çizgi */}
-            {isimlerGorunur && (
-              <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginTop: 18, animation: "lineSvgDraw 1.2s ease 0.2s both" }}>
-                <path d="M0 12 C30 20 50 4 80 12 C110 20 130 4 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" opacity="0.7"/>
-                <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
-                <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
-                <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
-              </svg>
-            )}
+              {isim2 && (
+                <p style={{
+                  fontFamily: "var(--font-dancing),cursive",
+                  fontSize: "clamp(3.5rem,14vw,6.5rem)",
+                  color: BG, lineHeight: 1,
+                  textShadow: "0 2px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.3)",
+                  opacity: isimlerGorunur ? 1 : 0,
+                  animation: isimlerGorunur ? "isimFadeUp 1.1s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
+                }}>{isim2}</p>
+              )}
+
+              {tarihKisa && isimlerGorunur && (
+                <p style={{
+                  fontFamily: "var(--font-cormorant),serif",
+                  fontSize: "clamp(0.8rem,3vw,1.2rem)",
+                  color: TAN, marginTop: 20,
+                  textShadow: "0 1px 12px rgba(0,0,0,0.5)",
+                  animation: "tarihFadeIn 1.4s ease 0.5s both",
+                }}>{tarihKisa}</p>
+              )}
+
+              {isimlerGorunur && (
+                <svg width="160" height="24" viewBox="0 0 160 24" fill="none" style={{ marginTop: 18, animation: "lineSvgDraw 1.2s ease 0.2s both" }}>
+                  <path d="M0 12 C30 20 50 4 80 12 C110 20 130 4 160 12" stroke={TAN} strokeWidth="1" fill="none" strokeDasharray="400" opacity="0.7"/>
+                  <circle cx="80" cy="12" r="3" fill={TAN} opacity="0.8"/>
+                  <circle cx="40" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                  <circle cx="120" cy="12" r="1.5" fill={TAN} opacity="0.5"/>
+                </svg>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* ══ AÇIK DURUM ══ */}
