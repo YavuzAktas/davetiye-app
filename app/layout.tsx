@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Dancing_Script, Cormorant_Garamond } from "next/font/google";
+import { Geist, Dancing_Script, Cormorant_Garamond, Playfair_Display, Lora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import CerezBanner from "@/components/CerezBanner";
@@ -15,6 +15,18 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-cormorant",
   weight: ["300", "400", "500", "600"],
+});
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-lora",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 const SITE_URL = getSiteUrl();
@@ -88,7 +100,7 @@ export default function RootLayout({
 
   return (
     <html lang="tr">
-      <body className={`${geist.className} ${dancingScript.variable} ${cormorant.variable}`}>
+      <body className={`${geist.className} ${dancingScript.variable} ${cormorant.variable} ${playfair.variable} ${lora.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

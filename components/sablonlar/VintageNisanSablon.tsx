@@ -193,14 +193,14 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
   } catch { /* varsayılan */ }
   return (
     <section style={{ padding: "80px 24px 90px", textAlign: "center", background: BG_SOFT }}>
-      <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Dress Code</p>
-      <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.4rem,7vw,3.6rem)", color: WARM, lineHeight: 1.15, marginBottom: 8 }}>Gecenin Renkleri</p>
-      <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(1rem,3vw,1.3rem)", fontStyle: "italic", color: LILAC_MD, letterSpacing: "0.08em", marginBottom: 24 }}>{dressKod}</p>
+      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Dress Code</p>
+      <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.4rem,7vw,3.6rem)", color: WARM, lineHeight: 1.15, marginBottom: 8 }}>Gecenin Renkleri</p>
+      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(1rem,3vw,1.3rem)", fontStyle: "italic", color: LILAC_MD, letterSpacing: "0.08em", marginBottom: 24 }}>{dressKod}</p>
       <div style={{ maxWidth: 160, margin: "0 auto 48px" }}><FloralDivider /></div>
       <div style={{ display: "flex", justifyContent: "center", gap: "clamp(12px,4vw,20px)", flexWrap: "wrap", marginBottom: 52 }}>
         {renkler.map((r, i) => <SwatchDisk key={i} renk={r} />)}
       </div>
-      <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, fontStyle: "italic", color: `${WARM}75`, maxWidth: 300, margin: "0 auto", lineHeight: 1.8 }}>
+      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 13, fontStyle: "italic", color: `${WARM}75`, maxWidth: 300, margin: "0 auto", lineHeight: 1.8 }}>
         Şıklığınızla gecemize renk katmanızı sabırsızlıkla bekliyoruz 🌸
       </p>
     </section>
@@ -332,27 +332,27 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
           {/* İçerik */}
           <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.48em", color: "rgba(200,174,221,0.55)", textTransform: "uppercase", marginBottom: 18 }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.48em", color: "rgba(200,174,221,0.55)", textTransform: "uppercase", marginBottom: 18 }}>
               Nişan Davetiyesi
             </p>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.8rem,10vw,4.8rem)", color: "#FDFAF5", lineHeight: 1.05, textShadow: "0 0 32px rgba(180,144,216,0.35)" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,10vw,4.8rem)", color: "#FDFAF5", lineHeight: 1.05, textShadow: "0 0 32px rgba(180,144,216,0.35)" }}>
               {isim1}
             </p>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.3rem,4vw,2rem)", color: "rgba(223,168,184,0.7)", lineHeight: 1.3 }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(1.3rem,4vw,2rem)", color: "rgba(223,168,184,0.7)", lineHeight: 1.3 }}>
               &
             </p>
             {isim2 && (
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.8rem,10vw,4.8rem)", color: "#FDFAF5", lineHeight: 1.05, textShadow: "0 0 32px rgba(180,144,216,0.35)", marginBottom: 6 }}>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,10vw,4.8rem)", color: "#FDFAF5", lineHeight: 1.05, textShadow: "0 0 32px rgba(180,144,216,0.35)", marginBottom: 6 }}>
                 {isim2}
               </p>
             )}
             {tarihKisa && (
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 11, letterSpacing: "0.28em", color: `${GOLD}70`, marginTop: 8, marginBottom: 36 }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 11, letterSpacing: "0.28em", color: `${GOLD}70`, marginTop: 8, marginBottom: 36 }}>
                 {tarihKisa}
               </p>
             )}
             <WaxSeal size={190} onClick={onSealClick} />
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, fontStyle: "italic", color: "rgba(200,174,221,0.4)", letterSpacing: "0.2em", marginTop: 12, animation: "glowPulse 3s ease-in-out infinite" }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, fontStyle: "italic", color: "rgba(200,174,221,0.4)", letterSpacing: "0.2em", marginTop: 12, animation: "glowPulse 3s ease-in-out infinite" }}>
               Mühüre dokun
             </p>
           </div>
@@ -374,7 +374,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               onTimeUpdate={() => {
                 const v = videoRef.current;
                 if (!v || isimlerGorunur || !v.duration) return;
-                if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
+                if (v.duration - v.currentTime <= 5) setIsimlerGorunur(true);
               }}
               onEnded={() => {
                 setVideoFinal(true);
@@ -382,65 +382,68 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               }}
             />
 
-            {/* Gradient — daima görünür, isimler için kontrast */}
-            <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.15) 45%, transparent 100%)" }} />
-            <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.32) 100%)" }} />
+            {/* Hafif vinyette — her zaman */}
+            <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.28) 100%)" }} />
 
-            {/* İsimler — videoda belirir ve kalır */}
-            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none", textAlign: "center", padding: "0 24px" }}>
-              {isimlerGorunur && (
-                <svg width="200" height="20" viewBox="0 0 200 20" fill="none" style={{ marginBottom: 22, animation: "lineDraw 1.4s ease forwards" }}>
-                  <path d="M0 10 C40 2 60 18 100 10 C140 2 160 18 200 10" stroke={PINK_LT} strokeWidth="0.8" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.75" />
-                  <circle cx="100" cy="10" r="3"   fill={PINK_LT} opacity="0.9" />
-                  <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
-                  <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
-                </svg>
-              )}
-              <p style={{
-                fontFamily: "var(--font-dancing),cursive",
-                fontSize: "clamp(3.8rem,15vw,7rem)",
-                color: "#FDFAF5", lineHeight: 0.95,
-                textShadow: "0 2px 40px rgba(0,0,0,0.55)",
-                opacity: isimlerGorunur ? 1 : 0,
-                animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
-              }}>{isim1}</p>
-              <p style={{
-                fontFamily: "var(--font-dancing),cursive",
-                fontSize: "clamp(2rem,8vw,4rem)",
-                color: PINK_LT, lineHeight: 1.4,
-                textShadow: "0 2px 20px rgba(0,0,0,0.45)",
-                opacity: isimlerGorunur ? 1 : 0,
-                animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
-              }}>&</p>
-              {isim2 && (
-                <p style={{
-                  fontFamily: "var(--font-dancing),cursive",
-                  fontSize: "clamp(3.8rem,15vw,7rem)",
-                  color: "#FDFAF5", lineHeight: 0.95,
-                  textShadow: "0 2px 40px rgba(0,0,0,0.55)",
-                  opacity: isimlerGorunur ? 1 : 0,
-                  animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
-                }}>{isim2}</p>
-              )}
-              {tarihKisa && isimlerGorunur && (
-                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(0.75rem,2.8vw,1.1rem)", color: "rgba(253,250,245,0.75)", letterSpacing: "0.22em", marginTop: 18, textShadow: "0 1px 14px rgba(0,0,0,0.5)", animation: "tarihFadeIn 1.6s ease 0.6s both" }}>
-                  {tarihKisa}
-                </p>
-              )}
-              {isimlerGorunur && (
-                <svg width="200" height="20" viewBox="0 0 200 20" fill="none" style={{ marginTop: 20, animation: "lineDraw 1.4s ease 0.3s both" }}>
-                  <path d="M0 10 C40 18 60 2 100 10 C140 18 160 2 200 10" stroke={PINK_LT} strokeWidth="0.8" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.75" />
-                  <circle cx="100" cy="10" r="3"   fill={PINK_LT} opacity="0.9" />
-                  <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
-                  <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
-                </svg>
-              )}
-            </div>
+            {/* Blur davetiye kartı — videoda belirir ve kalır */}
+            {isimlerGorunur && (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 20px", pointerEvents: "none" }}>
+                <div style={{
+                  background: "rgba(11,8,18,0.52)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                  borderRadius: 20,
+                  border: "1px solid rgba(200,174,221,0.20)",
+                  padding: "clamp(28px,5vw,48px) clamp(24px,7vw,52px)",
+                  textAlign: "center",
+                  maxWidth: 440,
+                  width: "100%",
+                  animation: "fadeUp 0.8s cubic-bezier(0.34,1.56,0.64,1) both",
+                }}>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.48em", color: "rgba(200,174,221,0.70)", textTransform: "uppercase", marginBottom: 18, animation: "fadeUp 0.7s ease 0.1s both" }}>
+                    Nişan Davetiyesi
+                  </p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,11vw,5rem)", color: "#FDFAF5", lineHeight: 1, animation: "isimFadeUp 1s ease 0.2s both" }}>
+                    {isim1}
+                  </p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.4rem,5vw,2.2rem)", color: PINK_LT, lineHeight: 1.4, animation: "fadeUp 0.7s ease 0.35s both" }}>
+                    &
+                  </p>
+                  {isim2 && (
+                    <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,11vw,5rem)", color: "#FDFAF5", lineHeight: 1, marginBottom: 8, animation: "isimFadeUp 1s ease 0.45s both" }}>
+                      {isim2}
+                    </p>
+                  )}
+                  <div style={{ margin: "20px auto 18px", maxWidth: 200, animation: "fadeUp 0.6s ease 0.55s both" }}>
+                    <FloralDivider color={PINK_LT} />
+                  </div>
+                  {(tarihStr || saatStr || gunStr) && (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(8px,3vw,16px)", flexWrap: "wrap", marginBottom: 10, animation: "fadeUp 0.7s ease 0.65s both" }}>
+                      {gunStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.75rem,2.5vw,0.95rem)", color: "rgba(253,250,245,0.80)", letterSpacing: "0.06em" }}>{gunStr}</span>}
+                      {gunStr && (tarihStr || saatStr) && <span style={{ color: "rgba(200,174,221,0.45)", fontSize: 10 }}>·</span>}
+                      {tarihStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.75rem,2.5vw,0.95rem)", color: "rgba(253,250,245,0.80)", letterSpacing: "0.06em" }}>{tarihStr}</span>}
+                      {saatStr && <span style={{ color: "rgba(200,174,221,0.45)", fontSize: 10 }}>·</span>}
+                      {saatStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.75rem,2.5vw,0.95rem)", color: "rgba(253,250,245,0.80)", letterSpacing: "0.06em" }}>{saatStr}</span>}
+                    </div>
+                  )}
+                  {davetiye.mekan && (
+                    <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(0.72rem,2.4vw,0.9rem)", color: "rgba(200,174,221,0.75)", letterSpacing: "0.04em", marginBottom: 14, animation: "fadeUp 0.7s ease 0.75s both" }}>
+                      {davetiye.mekan}
+                    </p>
+                  )}
+                  {davetiye.mesaj && (
+                    <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(0.68rem,2.2vw,0.82rem)", color: "rgba(253,250,245,0.50)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto", animation: "fadeUp 0.7s ease 0.85s both" }}>
+                      &ldquo;{davetiye.mesaj}&rdquo;
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Scroll ipucu — video bittikten sonra */}
             {videoFinal && (
               <div style={{ position: "absolute", bottom: 32, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
-                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.38em", color: "rgba(253,250,245,0.55)", textTransform: "uppercase", marginBottom: 10 }}>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.38em", color: "rgba(253,250,245,0.55)", textTransform: "uppercase", marginBottom: 10 }}>
                   Davetiyeyi Keşfet
                 </p>
                 <div style={{ width: 28, height: 28, border: "1px solid rgba(253,250,245,0.3)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(253,250,245,0.55)", fontSize: 13, animation: "scrollPulse 2s infinite" }}>↓</div>
@@ -452,8 +455,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ════ POLAROİD ════ */}
         {davetiye.albumAktif && (
           <section style={{ padding: "80px 24px 100px", textAlign: "center", background: BG_SOFT }}>
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.4rem,7.5vw,3.8rem)", color: WARM, lineHeight: 1.1, marginBottom: 20 }}>En Güzel Anılar</p>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.4rem,7.5vw,3.8rem)", color: WARM, lineHeight: 1.1, marginBottom: 20 }}>En Güzel Anılar</p>
             <div style={{ maxWidth: 180, margin: "0 auto 56px" }}><FloralDivider /></div>
             <div style={{ display: "flex", justifyContent: "center", minHeight: 400, marginBottom: 20 }}>
               <div style={{ position: "relative", width: 320, height: 340 }}>
@@ -471,7 +474,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 ))}
               </div>
             </div>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 17, fontStyle: "italic", color: `${WARM}50` }}>Sonsuz bir yolculuğun ilk adımları... 🌸</p>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: 17, fontStyle: "italic", color: `${WARM}50` }}>Sonsuz bir yolculuğun ilk adımları... 🌸</p>
           </section>
         )}
 
@@ -480,8 +483,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 32, opacity: 0.35 }}>
             {[LILAC, PINK, GREEN_LT, PINK, LILAC].map((c, i) => <svg key={i} width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5" fill={c} /><circle cx="5" cy="5" r="2" fill={BG} /></svg>)}
           </div>
-          <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Etkinlik Detayları</p>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.6rem)", color: WARM, marginBottom: 36 }}>Nerede &amp; Ne Zaman?</p>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Etkinlik Detayları</p>
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.2rem,7vw,3.6rem)", color: WARM, marginBottom: 36 }}>Nerede &amp; Ne Zaman?</p>
           <div style={{ maxWidth: 480, margin: "0 auto 40px", background: BG_CARD, borderRadius: 16, border: `1px solid ${LILAC}18`, padding: "36px 32px", boxShadow: `0 8px 40px rgba(122,82,160,0.07)`, position: "relative" }}>
             <span style={{ position: "absolute", top: 12, left: 16, color: LILAC, opacity: 0.25, fontSize: 16 }}>✿</span>
             <span style={{ position: "absolute", top: 12, right: 16, color: PINK, opacity: 0.25, fontSize: 16 }}>✿</span>
@@ -496,8 +499,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               ].map(col => (
                 <div key={col.lbl} style={{ textAlign: "center", minWidth: 80 }}>
                   <div style={{ fontSize: 20, marginBottom: 8 }}>{col.emoji}</div>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9, letterSpacing: "0.28em", color: LILAC, textTransform: "uppercase", marginBottom: 6 }}>{col.lbl}</p>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 14, fontWeight: 600, color: WARM }}>{col.val}</p>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.28em", color: LILAC, textTransform: "uppercase", marginBottom: 6 }}>{col.lbl}</p>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, fontWeight: 600, color: WARM }}>{col.val}</p>
                 </div>
               ))}
             </div>
@@ -517,7 +520,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 <svg width="28" height="20" viewBox="0 0 28 20"><path d="M2 18 C2 10 6 5 14 2 C10 6 8 10 10 14 Z" fill={LILAC} /><path d="M16 18 C16 10 20 5 28 2 C24 6 22 10 24 14 Z" fill={LILAC} /></svg>
               </div>
               <div style={{ maxWidth: 180, margin: "0 auto 20px" }}><FloralDivider /></div>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.4rem,5vw,2rem)", color: WARM, lineHeight: 1.7, fontStyle: "italic" }}>&ldquo;{davetiye.mesaj}&rdquo;</p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(1.4rem,5vw,2rem)", color: WARM, lineHeight: 1.7, fontStyle: "italic" }}>&ldquo;{davetiye.mesaj}&rdquo;</p>
               <div style={{ maxWidth: 180, margin: "20px auto 0" }}><FloralDivider /></div>
             </div>
           </section>
@@ -525,16 +528,16 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
         {/* ════ GERİ SAYIM ════ */}
         <section style={{ padding: "80px 24px", textAlign: "center", background: BG_CARD }}>
-          <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Nişana Kalan Süre</p>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.4rem)", color: WARM, marginBottom: 48 }}>{tarihObj && tarihObj > new Date() ? "Sayıyoruz..." : "Kutlama Zamanı! 🎊"}</p>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Nişana Kalan Süre</p>
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.2rem,7vw,3.4rem)", color: WARM, marginBottom: 48 }}>{tarihObj && tarihObj > new Date() ? "Sayıyoruz..." : "Kutlama Zamanı! 🎊"}</p>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(8px,3vw,16px)", flexWrap: "wrap" }}>
             {[{ val: kalan.gun, lbl: "GÜN" }, { val: kalan.saat, lbl: "SAAT" }, { val: kalan.dakika, lbl: "DAKİKA" }, { val: kalan.saniye, lbl: "SANİYE" }].map((item, i) => (
               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "clamp(6px,2vw,14px)" }}>
                 <div style={{ textAlign: "center" }}>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(3rem,9vw,4.8rem)", fontWeight: 600, color: LILAC, lineHeight: 1, fontVariantNumeric: "tabular-nums", minWidth: "2ch" }}>{String(item.val).padStart(2, "0")}</p>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.22em", color: WARM_MD, marginTop: 8 }}>{item.lbl}</p>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(3rem,9vw,4.8rem)", fontWeight: 600, color: LILAC, lineHeight: 1, fontVariantNumeric: "tabular-nums", minWidth: "2ch" }}>{String(item.val).padStart(2, "0")}</p>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.22em", color: WARM_MD, marginTop: 8 }}>{item.lbl}</p>
                 </div>
-                {i < 3 && <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(2rem,6vw,3.2rem)", color: `${PINK}60`, lineHeight: 1.1, marginTop: 4 }}>:</p>}
+                {i < 3 && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(2rem,6vw,3.2rem)", color: `${PINK}60`, lineHeight: 1.1, marginTop: 4 }}>:</p>}
               </div>
             ))}
           </div>
@@ -549,8 +552,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             <div style={{ background: BG_CARD, borderRadius: 16, padding: "40px 32px 44px", border: `1px solid ${LILAC}18`, boxShadow: `0 16px 56px rgba(122,82,160,0.08)`, position: "relative" }}>
               <span style={{ position: "absolute", top: 16, left: 20, color: PINK, fontSize: 14, opacity: 0.35 }}>✿</span>
               <span style={{ position: "absolute", bottom: 16, right: 20, color: LILAC, fontSize: 14, opacity: 0.35 }}>✿</span>
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.32em", color: LILAC, textAlign: "center", textTransform: "uppercase", marginBottom: 10 }}>Katılım Bildirimi</p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.8rem,6.5vw,2.8rem)", color: WARM, textAlign: "center", lineHeight: 1.1, marginBottom: 22 }}>Gelecek misiniz?</p>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.32em", color: LILAC, textAlign: "center", textTransform: "uppercase", marginBottom: 10 }}>Katılım Bildirimi</p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(1.8rem,6.5vw,2.8rem)", color: WARM, textAlign: "center", lineHeight: 1.1, marginBottom: 22 }}>Gelecek misiniz?</p>
               <div style={{ height: 1, background: `linear-gradient(to right, transparent, ${LILAC_LT}60, transparent)`, marginBottom: 28 }} />
               <RsvpFormGarden davetiyeId={davetiye.id} />
             </div>
@@ -562,8 +565,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, opacity: 0.18 }}>
             <WisteriaBotanical side="left" /><WisteriaBotanical side="right" />
           </div>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2rem,6vw,3rem)", color: WARM }}>Sizi çok seviyoruz 🌸</p>
-          {isim1 && isim2 && <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, letterSpacing: "0.2em", color: `${WARM}50`, marginTop: 8 }}>{isim1} &amp; {isim2}</p>}
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2rem,6vw,3rem)", color: WARM }}>Sizi çok seviyoruz 🌸</p>
+          {isim1 && isim2 && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 13, letterSpacing: "0.2em", color: `${WARM}50`, marginTop: 8 }}>{isim1} &amp; {isim2}</p>}
         </footer>
       </div>
     </>
@@ -582,8 +585,8 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [hata, setHata] = useState("");
   const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
 
-  const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${LILAC_LT}70`, padding: "10px 0", fontSize: 14, fontFamily: "var(--font-cormorant),serif", color: WARM, outline: "none", boxSizing: "border-box", appearance: "none" as const };
-  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.28em", color: LILAC_MD, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 20 };
+  const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${LILAC_LT}70`, padding: "10px 0", fontSize: 14, fontFamily: "var(--font-lora),serif", color: WARM, outline: "none", boxSizing: "border-box", appearance: "none" as const };
+  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.28em", color: LILAC_MD, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 20 };
 
   const gonder = async () => {
     if (!form.ad.trim()) { setHata("Lütfen adınızı girin."); return; }
@@ -600,8 +603,8 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   if (adim === "tamam") return (
     <div style={{ textAlign: "center", padding: "20px 0" }}>
       <p style={{ fontSize: 38, marginBottom: 12 }}>{form.katilim === "evet" ? "🌸" : "💙"}</p>
-      <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "1.9rem", color: WARM, marginBottom: 8 }}>{form.katilim === "evet" ? "Görüşmek üzere!" : "Anlıyoruz..."}</p>
-      <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 14, color: WARM_MD }}>{form.katilim === "evet" ? "Katılım bilginiz iletildi. Sizi görmek için sabırsızlanıyoruz!" : "Katılım durumunuz iletildi."}</p>
+      <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "1.9rem", color: WARM, marginBottom: 8 }}>{form.katilim === "evet" ? "Görüşmek üzere!" : "Anlıyoruz..."}</p>
+      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, color: WARM_MD }}>{form.katilim === "evet" ? "Katılım bilginiz iletildi. Sizi görmek için sabırsızlanıyoruz!" : "Katılım durumunuz iletildi."}</p>
     </div>
   );
 
@@ -618,7 +621,7 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
         <option value="hayir">Katılamıyorum</option>
       </select>
       <div style={{ marginTop: 22, border: `1px solid ${LILAC_LT}30`, borderRadius: 10, overflow: "hidden", background: `rgba(122,82,160,0.03)` }}>
-        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-cormorant),serif", color: WARM, textAlign: "left" }}>
+        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-lora),serif", color: WARM, textAlign: "left" }}>
           <span><span style={{ display: "block", fontSize: 13, fontWeight: 700 }}>Ek bilgi ekle</span><span style={{ display: "block", fontSize: 11, color: WARM_MD, marginTop: 2 }}>Diyet tercihi veya şarkı dileği</span></span>
           <span style={{ fontSize: 18, color: LILAC_LT, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition: "transform 0.15s" }}>+</span>
         </button>
@@ -629,7 +632,7 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
                 <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
                   {[{ k: "vegan", l: "🌱 Vegan" }, { k: "vejetaryen", l: "🥗 Vejetaryen" }, { k: "glutensiz", l: "🌾 Glutensiz" }, { k: "laktozsuz", l: "🥛 Laktozsuz" }].map(opt => (
-                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "6px 12px", borderRadius: 6, fontSize: 11, cursor: "pointer", fontFamily: "var(--font-cormorant),serif", border: `1.5px solid ${secilenDiyet.includes(opt.k) ? LILAC_MD : LILAC_LT + "50"}`, color: secilenDiyet.includes(opt.k) ? WARM : WARM_MD, background: secilenDiyet.includes(opt.k) ? LILAC_LT + "28" : "transparent", transition: "all 0.15s" }}>{opt.l}</button>
+                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "6px 12px", borderRadius: 6, fontSize: 11, cursor: "pointer", fontFamily: "var(--font-lora),serif", border: `1.5px solid ${secilenDiyet.includes(opt.k) ? LILAC_MD : LILAC_LT + "50"}`, color: secilenDiyet.includes(opt.k) ? WARM : WARM_MD, background: secilenDiyet.includes(opt.k) ? LILAC_LT + "28" : "transparent", transition: "all 0.15s" }}>{opt.l}</button>
                   ))}
                 </div>
               </div>
@@ -641,11 +644,11 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
           </div>
         )}
       </div>
-      {hata && <p style={{ color: "#B91C1C", fontSize: 12, fontFamily: "var(--font-cormorant),serif", marginTop: 12 }}>{hata}</p>}
-      <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${LILAC} 0%, ${LILAC_MD} 100%)`, color: BG, border: "none", borderRadius: 8, fontFamily: "var(--font-cormorant),serif", fontSize: 13, letterSpacing: "0.32em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.7 : 1, boxShadow: `0 4px 20px ${LILAC}40` }}>
+      {hata && <p style={{ color: "#B91C1C", fontSize: 12, fontFamily: "var(--font-lora),serif", marginTop: 12 }}>{hata}</p>}
+      <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${LILAC} 0%, ${LILAC_MD} 100%)`, color: BG, border: "none", borderRadius: 8, fontFamily: "var(--font-lora),serif", fontSize: 13, letterSpacing: "0.32em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.7 : 1, boxShadow: `0 4px 20px ${LILAC}40` }}>
         {yukleniyor ? "GÖNDERİLİYOR..." : "BİLDİR"}
       </button>
-      <p style={{ marginTop: 14, fontSize: 9.5, lineHeight: 1.7, fontFamily: "var(--font-cormorant),serif", color: `${WARM_MD}60`, textAlign: "center" }}>Girdiğiniz bilgiler yalnızca katılım bildirimini davet sahibine iletmek amacıyla işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.</p>
+      <p style={{ marginTop: 14, fontSize: 9.5, lineHeight: 1.7, fontFamily: "var(--font-lora),serif", color: `${WARM_MD}60`, textAlign: "center" }}>Girdiğiniz bilgiler yalnızca katılım bildirimini davet sahibine iletmek amacıyla işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.</p>
     </div>
   );
 }
