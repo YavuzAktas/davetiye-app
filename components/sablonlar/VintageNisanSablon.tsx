@@ -4,7 +4,7 @@ import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
 import MuzikCalar from "@/components/MuzikCalar";
 
-/* ─── Bahar Bahçesi Renk Paleti ─── */
+/* ─── Renk Paleti ─── */
 const BG       = "#FDFAF5";
 const BG_SOFT  = "#F2EAD8";
 const BG_CARD  = "#FFFDF8";
@@ -19,7 +19,12 @@ const GOLD     = "#C8A240";
 const WARM     = "#3E2C18";
 const WARM_MD  = "#7A5838";
 
-/* ─── Sümbül (Wisteria) Botanik ─── */
+/* Gece bahçesi — mühür ekranı */
+const NIGHT_BG1 = "#0B0812";
+const NIGHT_BG2 = "#150F22";
+const NIGHT_BG3 = "#1C1530";
+
+/* ─── Sümbül (Wisteria) Botanik — açık tema ─── */
 function WisteriaBotanical({ side = "left", opacity = 1 }: { side?: "left" | "right"; opacity?: number }) {
   return (
     <svg width="130" height="250" viewBox="0 0 130 250" fill="none"
@@ -27,54 +32,96 @@ function WisteriaBotanical({ side = "left", opacity = 1 }: { side?: "left" | "ri
       <path d="M36 0 C38 28 32 56 36 84 C40 112 34 140 36 168 C38 196 34 220 36 250"
         stroke={GREEN} strokeWidth="2.2" fill="none" strokeLinecap="round" />
       <path d="M36 18 C55 12 72 16 88 10" stroke={GREEN} strokeWidth="1.7" fill="none" strokeLinecap="round" />
-      <path d="M36 18 C20 12 9 16 2 10" stroke={GREEN} strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      <path d="M36 18 C20 12 9 16 2 10"  stroke={GREEN} strokeWidth="1.2" fill="none" strokeLinecap="round" />
       <path d="M36 48 C56 42 74 46 90 38" stroke={GREEN} strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <path d="M36 48 C19 42 7 46 0 40" stroke={GREEN} strokeWidth="1.1" fill="none" strokeLinecap="round" />
+      <path d="M36 48 C19 42 7 46 0 40"  stroke={GREEN} strokeWidth="1.1" fill="none" strokeLinecap="round" />
       <path d="M36 80 C54 74 70 78 84 72" stroke={GREEN} strokeWidth="1.5" fill="none" strokeLinecap="round" />
       <path d="M36 112 C52 106 66 110 78 104" stroke={GREEN} strokeWidth="1.4" fill="none" strokeLinecap="round" />
       <path d="M36 144 C50 138 62 142 72 136" stroke={GREEN} strokeWidth="1.2" fill="none" strokeLinecap="round" />
-
       <ellipse cx="88" cy="17" rx="4.5" ry="8.5" fill={LILAC} opacity="0.88" />
-      <ellipse cx="81" cy="24" rx="4" ry="7.5" fill={LILAC_MD} opacity="0.76" />
-      <ellipse cx="94" cy="25" rx="3.5" ry="7" fill={LILAC_LT} opacity="0.64" />
+      <ellipse cx="81" cy="24" rx="4"   ry="7.5" fill={LILAC_MD} opacity="0.76" />
+      <ellipse cx="94" cy="25" rx="3.5" ry="7"   fill={LILAC_LT} opacity="0.64" />
       <ellipse cx="86" cy="32" rx="3.5" ry="6.5" fill={LILAC} opacity="0.56" />
-      <ellipse cx="91" cy="39" rx="3" ry="5.5" fill={LILAC_MD} opacity="0.46" />
-      <ellipse cx="60" cy="13" rx="4" ry="7" fill={LILAC_MD} opacity="0.68" />
-      <ellipse cx="54" cy="20" rx="3.5" ry="6" fill={LILAC_LT} opacity="0.56" />
-      <ellipse cx="66" cy="21" rx="3" ry="5.5" fill={LILAC} opacity="0.5" />
-
-      <ellipse cx="90" cy="45" rx="4.5" ry="9" fill={LILAC} opacity="0.85" />
-      <ellipse cx="83" cy="53" rx="4" ry="8" fill={LILAC_MD} opacity="0.74" />
+      <ellipse cx="91" cy="39" rx="3"   ry="5.5" fill={LILAC_MD} opacity="0.46" />
+      <ellipse cx="60" cy="13" rx="4"   ry="7"   fill={LILAC_MD} opacity="0.68" />
+      <ellipse cx="54" cy="20" rx="3.5" ry="6"   fill={LILAC_LT} opacity="0.56" />
+      <ellipse cx="66" cy="21" rx="3"   ry="5.5" fill={LILAC} opacity="0.5" />
+      <ellipse cx="90" cy="45" rx="4.5" ry="9"   fill={LILAC} opacity="0.85" />
+      <ellipse cx="83" cy="53" rx="4"   ry="8"   fill={LILAC_MD} opacity="0.74" />
       <ellipse cx="96" cy="54" rx="3.5" ry="7.5" fill={LILAC_LT} opacity="0.62" />
-      <ellipse cx="87" cy="62" rx="3.5" ry="7" fill={LILAC} opacity="0.54" />
-      <ellipse cx="93" cy="70" rx="3" ry="6" fill={LILAC_MD} opacity="0.44" />
-
-      <ellipse cx="84" cy="79" rx="4.2" ry="8" fill={LILAC} opacity="0.78" />
+      <ellipse cx="87" cy="62" rx="3.5" ry="7"   fill={LILAC} opacity="0.54" />
+      <ellipse cx="84" cy="79" rx="4.2" ry="8"   fill={LILAC} opacity="0.78" />
       <ellipse cx="77" cy="87" rx="3.8" ry="7.5" fill={LILAC_MD} opacity="0.67" />
-      <ellipse cx="90" cy="88" rx="3.3" ry="7" fill={LILAC_LT} opacity="0.56" />
-      <ellipse cx="83" cy="96" rx="3" ry="6" fill={LILAC} opacity="0.48" />
-
+      <ellipse cx="90" cy="88" rx="3.3" ry="7"   fill={LILAC_LT} opacity="0.56" />
       <ellipse cx="78" cy="111" rx="3.8" ry="7.5" fill={LILAC} opacity="0.72" />
-      <ellipse cx="72" cy="119" rx="3.5" ry="7" fill={LILAC_MD} opacity="0.62" />
-      <ellipse cx="84" cy="120" rx="3" ry="6.5" fill={LILAC_LT} opacity="0.52" />
-
-      <ellipse cx="72" cy="143" rx="3.5" ry="7" fill={LILAC_MD} opacity="0.65" />
-      <ellipse cx="66" cy="151" rx="3" ry="6.5" fill={LILAC} opacity="0.55" />
-      <ellipse cx="77" cy="152" rx="2.8" ry="6" fill={LILAC_LT} opacity="0.46" />
-
-      <path d="M36 33 C23 26 15 15 19 5 C27 9 34 22 36 32" fill={GREEN} opacity="0.55" />
-      <path d="M36 63 C21 56 13 44 17 34 C25 38 34 52 36 62" fill={GREEN} opacity="0.5" />
-      <path d="M36 95 C23 88 17 75 21 65 C29 69 35 82 36 94" fill={GREEN} opacity="0.45" />
+      <ellipse cx="72" cy="119" rx="3.5" ry="7"   fill={LILAC_MD} opacity="0.62" />
+      <ellipse cx="84" cy="120" rx="3"   ry="6.5" fill={LILAC_LT} opacity="0.52" />
+      <ellipse cx="72" cy="143" rx="3.5" ry="7"   fill={LILAC_MD} opacity="0.65" />
+      <ellipse cx="66" cy="151" rx="3"   ry="6.5" fill={LILAC} opacity="0.55" />
+      <path d="M36 33 C23 26 15 15 19 5 C27 9 34 22 36 32"   fill={GREEN} opacity="0.55" />
+      <path d="M36 63 C21 56 13 44 17 34 C25 38 34 52 36 62"  fill={GREEN} opacity="0.5" />
+      <path d="M36 95 C23 88 17 75 21 65 C29 69 35 82 36 94"  fill={GREEN} opacity="0.45" />
       <path d="M36 126 C25 119 20 107 24 97 C32 101 36 115 36 125" fill={GREEN} opacity="0.4" />
-
       <circle cx="18" cy="112" r="5.5" fill={PINK} opacity="0.52" />
       <circle cx="26" cy="130" r="4.5" fill={PINK_LT} opacity="0.44" />
-      <circle cx="14" cy="148" r="5" fill={PINK} opacity="0.48" />
+      <circle cx="14" cy="148" r="5"   fill={PINK} opacity="0.48" />
       <circle cx="22" cy="166" r="4.5" fill={PINK_LT} opacity="0.4" />
-      <circle cx="30" cy="182" r="5" fill={PINK} opacity="0.44" />
-      <path d="M22 112 C18 108 17 102 20 98 C23 101 24 107 22 112" fill={GREEN} opacity="0.4" />
-      <path d="M14 148 C10 144 9 138 12 134 C15 137 16 143 14 148" fill={GREEN} opacity="0.38" />
-      <path d="M30 182 C26 178 25 172 28 168 C31 171 32 177 30 182" fill={GREEN} opacity="0.4" />
+      <circle cx="30" cy="182" r="5"   fill={PINK} opacity="0.44" />
+    </svg>
+  );
+}
+
+/* ─── Sümbül — gece versiyonu (açık renkler karanlık zeminde) ─── */
+function NightWisteria({ side = "left", opacity = 1 }: { side?: "left" | "right"; opacity?: number }) {
+  return (
+    <svg width="140" height="280" viewBox="0 0 140 280" fill="none"
+      style={{ opacity, transform: side === "right" ? "scaleX(-1)" : "none" }}>
+      <path d="M40 0 C42 30 36 62 40 94 C44 124 38 154 40 184 C42 214 38 248 40 280"
+        stroke="#5A8A62" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <path d="M40 20 C60 13 78 18 96 10"  stroke="#5A8A62" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      <path d="M40 20 C22 13 10 18 2 10"   stroke="#5A8A62" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      <path d="M40 52 C62 45 80 50 98 42"  stroke="#5A8A62" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M40 52 C22 45 8 50 0 44"    stroke="#5A8A62" strokeWidth="1.1" fill="none" strokeLinecap="round" />
+      <path d="M40 86 C60 80 76 84 90 78"  stroke="#5A8A62" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      <path d="M40 120 C56 114 70 118 82 112" stroke="#5A8A62" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+      <path d="M40 156 C54 150 66 154 76 148" stroke="#5A8A62" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      {/* Salkımlar — parlak lilac gece zeminde */}
+      <ellipse cx="96" cy="17"  rx="5"   ry="9"   fill="#B490D8" opacity="0.75" />
+      <ellipse cx="88" cy="25"  rx="4.5" ry="8"   fill="#C8AEDD" opacity="0.62" />
+      <ellipse cx="103" cy="26" rx="4"   ry="7.5" fill="#9E72C4" opacity="0.55" />
+      <ellipse cx="93" cy="34"  rx="4"   ry="7"   fill="#B490D8" opacity="0.48" />
+      <ellipse cx="98" cy="42"  rx="3.5" ry="6.5" fill="#C8AEDD" opacity="0.4" />
+      <ellipse cx="68" cy="14"  rx="4.5" ry="8"   fill="#C8AEDD" opacity="0.58" />
+      <ellipse cx="62" cy="22"  rx="4"   ry="7"   fill="#B490D8" opacity="0.5" />
+      <ellipse cx="74" cy="23"  rx="3.5" ry="6.5" fill="#9E72C4" opacity="0.44" />
+      <ellipse cx="98" cy="49"  rx="5"   ry="9.5" fill="#B490D8" opacity="0.72" />
+      <ellipse cx="90" cy="58"  rx="4.5" ry="8.5" fill="#C8AEDD" opacity="0.60" />
+      <ellipse cx="106" cy="59" rx="4"   ry="8"   fill="#9E72C4" opacity="0.52" />
+      <ellipse cx="96" cy="67"  rx="3.8" ry="7.5" fill="#B490D8" opacity="0.44" />
+      <ellipse cx="101" cy="76" rx="3.3" ry="6.8" fill="#C8AEDD" opacity="0.36" />
+      <ellipse cx="90" cy="85"  rx="4.5" ry="8.5" fill="#B490D8" opacity="0.68" />
+      <ellipse cx="82" cy="94"  rx="4"   ry="8"   fill="#C8AEDD" opacity="0.57" />
+      <ellipse cx="97" cy="95"  rx="3.5" ry="7.5" fill="#9E72C4" opacity="0.49" />
+      <ellipse cx="88" cy="103" rx="3.5" ry="7"   fill="#B490D8" opacity="0.42" />
+      <ellipse cx="82" cy="119" rx="4.2" ry="8"   fill="#B490D8" opacity="0.65" />
+      <ellipse cx="75" cy="128" rx="3.8" ry="7.5" fill="#C8AEDD" opacity="0.55" />
+      <ellipse cx="88" cy="129" rx="3.3" ry="7"   fill="#9E72C4" opacity="0.47" />
+      <ellipse cx="76" cy="155" rx="3.8" ry="7.5" fill="#B490D8" opacity="0.60" />
+      <ellipse cx="69" cy="164" rx="3.3" ry="7"   fill="#C8AEDD" opacity="0.50" />
+      <ellipse cx="82" cy="165" rx="3"   ry="6.5" fill="#9E72C4" opacity="0.43" />
+      {/* Yapraklar */}
+      <path d="M40 38 C26 30 17 18 21 7 C30 12 38 26 40 37"   fill="#3D6645" opacity="0.6" />
+      <path d="M40 70 C24 62 15 48 19 38 C28 43 37 58 40 69"  fill="#3D6645" opacity="0.55" />
+      <path d="M40 104 C26 96 19 82 23 72 C32 77 39 92 40 103" fill="#3D6645" opacity="0.5" />
+      <path d="M40 138 C28 130 22 117 26 107 C35 112 40 126 40 137" fill="#3D6645" opacity="0.45" />
+      {/* Pembe çiçekler */}
+      <circle cx="20" cy="120" r="6"   fill="#D890A8" opacity="0.55" />
+      <circle cx="28" cy="140" r="5"   fill="#EBB8CA" opacity="0.48" />
+      <circle cx="16" cy="158" r="5.5" fill="#D890A8" opacity="0.52" />
+      <circle cx="24" cy="178" r="5"   fill="#EBB8CA" opacity="0.44" />
+      <circle cx="32" cy="196" r="5.5" fill="#D890A8" opacity="0.48" />
+      <path d="M24 120 C20 116 19 109 22 105 C26 108 27 115 24 120" fill="#3D6645" opacity="0.45" />
+      <path d="M16 158 C12 154 11 147 14 143 C18 146 19 153 16 158" fill="#3D6645" opacity="0.42" />
     </svg>
   );
 }
@@ -87,14 +134,76 @@ function FloralDivider({ color = GOLD }: { color?: string }) {
       <svg width="22" height="22" viewBox="0 0 22 22">
         {[0, 60, 120, 180, 240, 300].map((deg, i) => {
           const rad = (deg - 90) * Math.PI / 180;
-          const px = 11 + Math.cos(rad) * 6;
-          const py = 11 + Math.sin(rad) * 6;
+          const px = 11 + Math.cos(rad) * 6; const py = 11 + Math.sin(rad) * 6;
           return <ellipse key={i} cx={px} cy={py} rx="2.2" ry="3.8" fill={color} opacity="0.5"
             transform={`rotate(${deg}, ${px}, ${py})`} />;
         })}
         <circle cx="11" cy="11" r="2.2" fill={color} opacity="0.85" />
       </svg>
       <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${color}55)` }} />
+    </div>
+  );
+}
+
+/* ─── Beyaz mühür (Canva PNG) ─── */
+function WaxSeal({ size = 210, onClick }: { size?: number; onClick?: () => void }) {
+  const [tapped, setTapped] = useState(false);
+  const handle = () => {
+    if (tapped) return;
+    setTapped(true);
+    onClick?.();
+  };
+  return (
+    <div onClick={handle} style={{
+      width: size, height: size,
+      cursor: onClick ? "pointer" : "default",
+      animation: tapped ? "sealTap 0.4s ease forwards" : "sealFloat 5s ease-in-out infinite",
+      filter: [
+        "drop-shadow(0 0 18px rgba(180,144,216,0.55))",
+        "drop-shadow(0 0 40px rgba(140,100,190,0.30))",
+        "drop-shadow(0 12px 32px rgba(0,0,0,0.55))",
+      ].join(" "),
+    }}>
+      <img
+        src="/wax-seal.png"
+        alt=""
+        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        draggable={false}
+      />
+    </div>
+  );
+}
+
+/* ─── Yıldız parıltısı (CSS ile) ─── */
+function Stars() {
+  const stars = [
+    { x: "12%",  y: "8%",  s: 1.4, d: "0s",    o: 0.6 },
+    { x: "88%",  y: "6%",  s: 1.8, d: "0.8s",  o: 0.5 },
+    { x: "5%",   y: "22%", s: 1.2, d: "1.5s",  o: 0.4 },
+    { x: "92%",  y: "25%", s: 1.5, d: "0.4s",  o: 0.55 },
+    { x: "20%",  y: "15%", s: 1.0, d: "2.1s",  o: 0.35 },
+    { x: "78%",  y: "18%", s: 1.3, d: "1.1s",  o: 0.45 },
+    { x: "35%",  y: "5%",  s: 1.6, d: "0.6s",  o: 0.5 },
+    { x: "62%",  y: "7%",  s: 1.1, d: "1.8s",  o: 0.4 },
+    { x: "48%",  y: "3%",  s: 2.0, d: "0.2s",  o: 0.65 },
+    { x: "15%",  y: "40%", s: 1.0, d: "2.5s",  o: 0.3 },
+    { x: "85%",  y: "42%", s: 1.2, d: "1.3s",  o: 0.35 },
+    { x: "7%",   y: "58%", s: 1.0, d: "3.0s",  o: 0.25 },
+    { x: "93%",  y: "60%", s: 1.0, d: "2.2s",  o: 0.28 },
+    { x: "25%",  y: "70%", s: 1.1, d: "1.7s",  o: 0.22 },
+    { x: "72%",  y: "72%", s: 1.0, d: "2.8s",  o: 0.20 },
+  ];
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      {stars.map((s, i) => (
+        <div key={i} style={{
+          position: "absolute", left: s.x, top: s.y,
+          width: s.s * 2, height: s.s * 2, borderRadius: "50%",
+          background: "#fff",
+          opacity: s.o,
+          animation: `starTwinkle 3s ease-in-out ${s.d} infinite`,
+        }} />
+      ))}
     </div>
   );
 }
@@ -181,8 +290,10 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
    ANA BİLEŞEN
 ═══════════════════════════════════════════ */
 export default function VintageNisanSablon({ davetiye, previewModu }: SablonProps) {
+  const [acildi, setAcildi]             = useState(previewModu ?? false);
+  const [animating, setAnimating]       = useState(false);
   const [isimlerGorunur, setIsimlerGorunur] = useState(false);
-  const [videoFinal, setVideoFinal]         = useState(false);
+  const [videoGorunur, setVideoGorunur] = useState(false);
   const [aktifPolaroid, setAktifPolaroid]   = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -218,6 +329,20 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   return (
     <>
       <style>{`
+        @keyframes sealFloat {
+          0%, 100% { transform: rotate(-1deg) translateY(0) scale(1); }
+          50%       { transform: rotate(1deg) translateY(-10px) scale(1.02); }
+        }
+        @keyframes sealTap {
+          0%   { transform: scale(1); }
+          30%  { transform: scale(0.85) rotate(-3deg); }
+          65%  { transform: scale(1.08) rotate(2deg); }
+          100% { transform: scale(1); }
+        }
+        @keyframes starTwinkle {
+          0%, 100% { opacity: var(--o, 0.4); transform: scale(1); }
+          50%       { opacity: 1; transform: scale(1.6); }
+        }
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(40px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -243,395 +368,441 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           from { stroke-dashoffset: 400; }
           to   { stroke-dashoffset: 0; }
         }
-        @keyframes scrollPulse {
-          0%, 100% { opacity: 0.5; transform: translateY(0); }
-          50%      { opacity: 1;   transform: translateY(6px); }
+        @keyframes nightFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
-        @keyframes scrollFadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.55; }
+          50%       { opacity: 0.85; }
         }
       `}</style>
 
       {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
 
-      {/* ══ VİDEO HERO — sadece gerçek davetiye görünümünde ══ */}
-      {!previewModu && (
-        <section style={{ position: "relative", height: "100svh", overflow: "hidden", background: "#000" }}>
-          {/* Video — autoPlay muted zorunlu tarayıcı politikası için */}
-          <video
-            ref={videoRef}
-            src="/background.mp4"
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-            onTimeUpdate={() => {
-              const v = videoRef.current;
-              if (!v || isimlerGorunur || !v.duration) return;
-              if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
-            }}
-            onEnded={() => {
-              setVideoFinal(true);
-              document.dispatchEvent(new CustomEvent("muzik-baslat"));
-            }}
-          />
+      {/* ══ KAPALI: Gece Bahçesi Mühür Ekranı + Video ══ */}
+      {!acildi && (
+        <>
+          {/* ── Gece bahçesi arka planı ── */}
+          <div className="min-h-screen flex flex-col relative overflow-hidden select-none"
+            style={{
+              background: `radial-gradient(ellipse 100% 70% at 50% 0%, ${NIGHT_BG3} 0%, ${NIGHT_BG2} 45%, ${NIGHT_BG1} 100%)`,
+            }}>
 
-          {/* Daima görünür gradient — alttan yukarı kararır, isimler okunur */}
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 45%, transparent 100%)",
-          }} />
-          {/* Üstten hafif vignette */}
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%)",
-          }} />
+            {/* Yıldızlar */}
+            <Stars />
 
-          {/* İsimler + tarih overlay — merkezde, video bitince kalır */}
+            {/* Üst ışık huzmesi — wisteria rengi */}
+            <div style={{
+              position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+              width: "60%", height: "45%", pointerEvents: "none",
+              background: "radial-gradient(ellipse at 50% 0%, rgba(140,100,200,0.18) 0%, transparent 70%)",
+            }} />
+
+            {/* Sol alt köşe ışığı */}
+            <div style={{
+              position: "absolute", bottom: 0, left: 0,
+              width: "40%", height: "40%", pointerEvents: "none",
+              background: "radial-gradient(ellipse at 0% 100%, rgba(76,120,82,0.14) 0%, transparent 70%)",
+            }} />
+
+            {/* Gece sümbülleri — köşelerde */}
+            <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.6 }}>
+              <NightWisteria side="left" />
+            </div>
+            <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.6 }}>
+              <NightWisteria side="right" />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1)", opacity: 0.25 }}>
+              <NightWisteria side="left" />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scaleX(-1)", opacity: 0.25 }}>
+              <NightWisteria side="left" />
+            </div>
+
+            {/* Merkez içerik */}
+            <div className="flex-1 flex flex-col items-center justify-center w-full"
+              style={{ padding: "60px 24px 50px", position: "relative", zIndex: 1 }}>
+
+              {/* Üst etiket */}
+              <p style={{
+                fontFamily: "var(--font-cormorant),serif",
+                fontSize: 10, letterSpacing: "0.5em",
+                color: "rgba(200,174,221,0.65)",
+                textTransform: "uppercase", marginBottom: 6,
+                animation: "nightFadeIn 1.2s ease",
+              }}>Nişan Davetiyesi</p>
+
+              {/* İnce altın çizgi */}
+              <div style={{
+                width: 48, height: 1,
+                background: `linear-gradient(to right, transparent, ${GOLD}80, transparent)`,
+                marginBottom: 22,
+              }} />
+
+              {/* İsimler */}
+              <p style={{
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(3rem,11vw,5.2rem)",
+                color: "#FDFAF5", lineHeight: 1,
+                textShadow: "0 0 40px rgba(180,144,216,0.4), 0 2px 20px rgba(0,0,0,0.6)",
+                animation: "nightFadeIn 1.4s ease 0.1s both",
+              }}>{isim1}</p>
+
+              <p style={{
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(1.4rem,4.5vw,2.2rem)",
+                color: "rgba(223,168,184,0.85)", lineHeight: 1.3,
+                animation: "nightFadeIn 1.4s ease 0.2s both",
+              }}>&</p>
+
+              {isim2 && (
+                <p style={{
+                  fontFamily: "var(--font-dancing),cursive",
+                  fontSize: "clamp(3rem,11vw,5.2rem)",
+                  color: "#FDFAF5", lineHeight: 1,
+                  textShadow: "0 0 40px rgba(180,144,216,0.4), 0 2px 20px rgba(0,0,0,0.6)",
+                  animation: "nightFadeIn 1.4s ease 0.3s both",
+                  marginBottom: 4,
+                }}>{isim2}</p>
+              )}
+
+              {tarihKisa && (
+                <p style={{
+                  fontFamily: "var(--font-cormorant),serif",
+                  fontSize: 11, letterSpacing: "0.3em",
+                  color: "rgba(200,162,64,0.7)",
+                  marginTop: 10, marginBottom: 36,
+                  animation: "nightFadeIn 1.4s ease 0.4s both",
+                }}>{tarihKisa}</p>
+              )}
+
+              {/* Mühür */}
+              <div style={{
+                opacity: animating ? 0 : 1,
+                transition: "opacity 0.5s ease",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
+              }}>
+                <WaxSeal size={200} onClick={() => {
+                  setAnimating(true);
+                  const v = videoRef.current;
+                  if (!v) { setAcildi(true); return; }
+                  v.play()
+                    .then(() => { setVideoGorunur(true); })
+                    .catch(() => { setAcildi(true); });
+                }} />
+
+                <p style={{
+                  fontFamily: "var(--font-cormorant),serif",
+                  fontSize: 10, fontStyle: "italic",
+                  color: "rgba(200,174,221,0.45)",
+                  letterSpacing: "0.18em",
+                  animation: "glowPulse 3s ease-in-out infinite",
+                }}>Mühüre dokun</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Video overlay — her zaman DOM'da, videoGorunur ile görünür ── */}
           <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            pointerEvents: "none", textAlign: "center", padding: "0 24px",
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "#000",
+            opacity: videoGorunur ? 1 : 0,
+            transition: "opacity 0.7s ease",
+            pointerEvents: videoGorunur ? "auto" : "none",
           }}>
-            {/* Üst dekoratif çizgi */}
-            {isimlerGorunur && (
-              <svg width="200" height="20" viewBox="0 0 200 20" fill="none"
-                style={{ marginBottom: 24, animation: "lineDraw 1.4s ease forwards" }}>
-                <path d="M0 10 C40 2 60 18 100 10 C140 2 160 18 200 10"
-                  stroke={PINK_LT} strokeWidth="0.8" fill="none"
-                  strokeDasharray="400" strokeDashoffset="0" opacity="0.7" />
-                <circle cx="100" cy="10" r="3" fill={PINK_LT} opacity="0.85" />
-                <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.55" />
-                <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.55" />
-              </svg>
-            )}
+            <video
+              ref={videoRef}
+              src="/background.mp4"
+              playsInline
+              preload="auto"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              onTimeUpdate={() => {
+                const v = videoRef.current;
+                if (!v || isimlerGorunur || !v.duration) return;
+                if (v.duration - v.currentTime <= 3.2) setIsimlerGorunur(true);
+              }}
+              onEnded={() => {
+                setTimeout(() => {
+                  setVideoGorunur(false);
+                  setTimeout(() => {
+                    setAcildi(true);
+                    document.dispatchEvent(new CustomEvent("muzik-baslat"));
+                  }, 650);
+                }, 1500);
+              }}
+            />
 
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(3.8rem,15vw,7rem)",
-              color: "#FDFAF5", lineHeight: 0.95,
-              textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 80px rgba(0,0,0,0.2)",
-              opacity: isimlerGorunur ? 1 : 0,
-              animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
-            }}>{isim1}</p>
+            {/* Vignette */}
+            <div style={{
+              position: "absolute", inset: 0, pointerEvents: "none",
+              background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)",
+            }} />
 
-            <p style={{
-              fontFamily: "var(--font-dancing),cursive",
-              fontSize: "clamp(2rem,8vw,4rem)",
-              color: PINK_LT, lineHeight: 1.4,
-              textShadow: "0 2px 20px rgba(0,0,0,0.45)",
-              opacity: isimlerGorunur ? 1 : 0,
-              animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
-            }}>&</p>
-
-            {isim2 && (
+            {/* İsimler overlay */}
+            <div style={{
+              position: "absolute", inset: 0,
+              display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center",
+              pointerEvents: "none", textAlign: "center", padding: "0 24px",
+            }}>
+              {isimlerGorunur && (
+                <svg width="200" height="20" viewBox="0 0 200 20" fill="none"
+                  style={{ marginBottom: 24, animation: "lineDraw 1.4s ease forwards" }}>
+                  <path d="M0 10 C40 2 60 18 100 10 C140 2 160 18 200 10"
+                    stroke={PINK_LT} strokeWidth="0.8" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.75" />
+                  <circle cx="100" cy="10" r="3"   fill={PINK_LT} opacity="0.9" />
+                  <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
+                  <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
+                </svg>
+              )}
               <p style={{
                 fontFamily: "var(--font-dancing),cursive",
                 fontSize: "clamp(3.8rem,15vw,7rem)",
                 color: "#FDFAF5", lineHeight: 0.95,
                 textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 80px rgba(0,0,0,0.2)",
                 opacity: isimlerGorunur ? 1 : 0,
-                animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
-              }}>{isim2}</p>
-            )}
-
-            {/* Tarih — isimlerden biraz sonra gelir */}
-            {isimlerGorunur && tarihKisa && (
+                animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards" : "none",
+              }}>{isim1}</p>
               <p style={{
-                fontFamily: "var(--font-cormorant),serif",
-                fontSize: "clamp(0.75rem,2.8vw,1.1rem)",
-                color: "rgba(253,250,245,0.75)",
-                letterSpacing: "0.22em",
-                marginTop: 20,
-                textShadow: "0 1px 14px rgba(0,0,0,0.5)",
-                animation: "tarihFadeIn 1.6s ease 0.6s both",
-              }}>{tarihKisa}</p>
-            )}
-
-            {/* Alt dekoratif çizgi */}
-            {isimlerGorunur && (
-              <svg width="200" height="20" viewBox="0 0 200 20" fill="none"
-                style={{ marginTop: 22, animation: "lineDraw 1.4s ease 0.3s both" }}>
-                <path d="M0 10 C40 18 60 2 100 10 C140 18 160 2 200 10"
-                  stroke={PINK_LT} strokeWidth="0.8" fill="none"
-                  strokeDasharray="400" strokeDashoffset="0" opacity="0.7" />
-                <circle cx="100" cy="10" r="3" fill={PINK_LT} opacity="0.85" />
-                <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.55" />
-                <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.55" />
-              </svg>
-            )}
-          </div>
-
-          {/* Scroll ipucu — video bitince alta belirir */}
-          {videoFinal && (
-            <div style={{
-              position: "absolute", bottom: 36, left: 0, right: 0,
-              display: "flex", flexDirection: "column", alignItems: "center",
-              pointerEvents: "none",
-              animation: "scrollFadeIn 1s ease 0.3s both",
-            }}>
-              <p style={{
-                fontFamily: "var(--font-cormorant),serif",
-                fontSize: 10, letterSpacing: "0.38em",
-                color: "rgba(253,250,245,0.6)",
-                textTransform: "uppercase", marginBottom: 10,
-              }}>Davetiyeyi Keşfet</p>
-              <div style={{
-                width: 28, height: 28,
-                border: "1px solid rgba(253,250,245,0.35)",
-                borderRadius: "50%",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "rgba(253,250,245,0.6)", fontSize: 13,
-                animation: "scrollPulse 2s infinite",
-              }}>↓</div>
+                fontFamily: "var(--font-dancing),cursive",
+                fontSize: "clamp(2rem,8vw,4rem)",
+                color: PINK_LT, lineHeight: 1.4,
+                textShadow: "0 2px 20px rgba(0,0,0,0.45)",
+                opacity: isimlerGorunur ? 1 : 0,
+                animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.15s both" : "none",
+              }}>&</p>
+              {isim2 && (
+                <p style={{
+                  fontFamily: "var(--font-dancing),cursive",
+                  fontSize: "clamp(3.8rem,15vw,7rem)",
+                  color: "#FDFAF5", lineHeight: 0.95,
+                  textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 80px rgba(0,0,0,0.2)",
+                  opacity: isimlerGorunur ? 1 : 0,
+                  animation: isimlerGorunur ? "isimFadeUp 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.3s both" : "none",
+                }}>{isim2}</p>
+              )}
+              {tarihKisa && isimlerGorunur && (
+                <p style={{
+                  fontFamily: "var(--font-cormorant),serif",
+                  fontSize: "clamp(0.75rem,2.8vw,1.1rem)",
+                  color: "rgba(253,250,245,0.75)", letterSpacing: "0.22em", marginTop: 20,
+                  textShadow: "0 1px 14px rgba(0,0,0,0.5)",
+                  animation: "tarihFadeIn 1.6s ease 0.6s both",
+                }}>{tarihKisa}</p>
+              )}
+              {isimlerGorunur && (
+                <svg width="200" height="20" viewBox="0 0 200 20" fill="none"
+                  style={{ marginTop: 22, animation: "lineDraw 1.4s ease 0.3s both" }}>
+                  <path d="M0 10 C40 18 60 2 100 10 C140 18 160 2 200 10"
+                    stroke={PINK_LT} strokeWidth="0.8" fill="none" strokeDasharray="400" strokeDashoffset="0" opacity="0.75" />
+                  <circle cx="100" cy="10" r="3"   fill={PINK_LT} opacity="0.9" />
+                  <circle cx="50"  cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
+                  <circle cx="150" cy="10" r="1.8" fill={PINK_LT} opacity="0.6" />
+                </svg>
+              )}
             </div>
-          )}
-        </section>
+          </div>
+        </>
       )}
 
-      {/* ══ DAVETİYE İÇERİĞİ ══ */}
-      <div style={{ background: BG, minHeight: "100vh", overflowX: "hidden" }}>
+      {/* ══ AÇIK: Davetiye İçeriği ══ */}
+      {acildi && (
+        <div style={{ background: BG, minHeight: "100vh", overflowX: "hidden" }}>
 
-        {/* ════ BÖLÜM 1 — HERO KART ════ */}
-        <section style={{
-          minHeight: "100svh", display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center",
-          padding: "70px 24px 80px", position: "relative", overflow: "hidden",
-          background: BG,
-        }}>
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: `radial-gradient(ellipse 70% 50% at 50% 95%, rgba(200,162,64,0.10) 0%, transparent 70%),
-                         radial-gradient(ellipse 50% 35% at 20% 10%, rgba(122,82,160,0.07) 0%, transparent 60%),
-                         radial-gradient(ellipse 50% 35% at 80% 10%, rgba(192,112,128,0.07) 0%, transparent 60%)`,
-          }} />
-
-          <div style={{ position: "absolute", top: 0, left: 0 }}><WisteriaBotanical side="left" opacity={0.22} /></div>
-          <div style={{ position: "absolute", top: 0, right: 0 }}><WisteriaBotanical side="right" opacity={0.22} /></div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
-          <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scaleX(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
-
-          {/* Kemerli kart */}
-          <div style={{
-            position: "relative", maxWidth: 440, width: "100%",
-            borderRadius: "180px 180px 16px 16px",
-            border: `1.5px solid ${LILAC}20`,
-            padding: "10px 10px 0",
-            animation: "fadeUp 1s ease backwards 0.1s",
+          {/* ════ HERO ════ */}
+          <section style={{
+            minHeight: "100svh", display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            padding: "70px 24px 80px", position: "relative", overflow: "hidden", background: BG,
           }}>
             <div style={{
-              borderRadius: "172px 172px 10px 10px",
-              border: `1px solid ${LILAC}12`,
-              padding: "58px 36px 48px",
-              textAlign: "center",
-              background: "rgba(255,253,248,0.75)",
-              boxShadow: `0 6px 48px rgba(122,82,160,0.07), 0 2px 12px rgba(0,0,0,0.04)`,
-            }}>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-                <svg width="28" height="28" viewBox="0 0 28 28">
-                  {[0, 72, 144, 216, 288].map((deg, i) => {
-                    const rad = (deg - 90) * Math.PI / 180;
-                    const px = 14 + Math.cos(rad) * 7; const py = 14 + Math.sin(rad) * 7;
-                    return <ellipse key={i} cx={px} cy={py} rx="3.5" ry="5.5" fill={PINK} opacity="0.45" transform={`rotate(${deg}, ${px}, ${py})`} />;
-                  })}
-                  <circle cx="14" cy="14" r="3.5" fill={GOLD} opacity="0.8" />
-                </svg>
-              </div>
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.42em", color: LILAC, textTransform: "uppercase", marginBottom: 22 }}>
-                Nişan Davetiyesi
-              </p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 2 }}>{isim1}</p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.6rem,5vw,2.4rem)", color: PINK, lineHeight: 1.4 }}>&</p>
-              {isim2 && <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 8 }}>{isim2}</p>}
-              <div style={{ margin: "18px auto", maxWidth: 200 }}><FloralDivider /></div>
-              {(tarihKisa || davetiye.mekan) && (
-                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 12, letterSpacing: "0.16em", color: `${WARM}65`, marginBottom: 8 }}>
-                  {tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.toUpperCase()}
-                </p>
-              )}
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, fontStyle: "italic", color: `${WARM}50`, marginTop: 6 }}>
-                Sizi bu özel günde yanımızda görmek isteriz
-              </p>
-            </div>
-          </div>
+              position: "absolute", inset: 0, pointerEvents: "none",
+              background: `radial-gradient(ellipse 70% 50% at 50% 95%, rgba(200,162,64,0.10) 0%, transparent 70%),
+                           radial-gradient(ellipse 50% 35% at 20% 10%, rgba(122,82,160,0.07) 0%, transparent 60%),
+                           radial-gradient(ellipse 50% 35% at 80% 10%, rgba(192,112,128,0.07) 0%, transparent 60%)`,
+            }} />
+            <div style={{ position: "absolute", top: 0, left: 0 }}><WisteriaBotanical side="left" opacity={0.22} /></div>
+            <div style={{ position: "absolute", top: 0, right: 0 }}><WisteriaBotanical side="right" opacity={0.22} /></div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
+            <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scaleX(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
 
-          <div style={{ marginTop: 48, textAlign: "center" }}>
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9.5, letterSpacing: "0.32em", color: `${LILAC}55`, marginBottom: 10, textTransform: "uppercase" }}>
-              Aşağı Kaydır
-            </p>
             <div style={{
-              width: 26, height: 26, border: `1px solid ${LILAC}28`, borderRadius: "50%",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto", color: `${LILAC}50`, fontSize: 12,
-              animation: "bounce 2s infinite",
-            }}>↓</div>
-          </div>
-        </section>
+              position: "relative", maxWidth: 440, width: "100%",
+              borderRadius: "180px 180px 16px 16px",
+              border: `1.5px solid ${LILAC}20`, padding: "10px 10px 0",
+              animation: "fadeUp 1s ease backwards 0.1s",
+            }}>
+              <div style={{
+                borderRadius: "172px 172px 10px 10px", border: `1px solid ${LILAC}12`,
+                padding: "58px 36px 48px", textAlign: "center",
+                background: "rgba(255,253,248,0.75)",
+                boxShadow: `0 6px 48px rgba(122,82,160,0.07), 0 2px 12px rgba(0,0,0,0.04)`,
+              }}>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                  <svg width="28" height="28" viewBox="0 0 28 28">
+                    {[0, 72, 144, 216, 288].map((deg, i) => {
+                      const rad = (deg - 90) * Math.PI / 180;
+                      const px = 14 + Math.cos(rad) * 7; const py = 14 + Math.sin(rad) * 7;
+                      return <ellipse key={i} cx={px} cy={py} rx="3.5" ry="5.5" fill={PINK} opacity="0.45" transform={`rotate(${deg}, ${px}, ${py})`} />;
+                    })}
+                    <circle cx="14" cy="14" r="3.5" fill={GOLD} opacity="0.8" />
+                  </svg>
+                </div>
+                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.42em", color: LILAC, textTransform: "uppercase", marginBottom: 22 }}>Nişan Davetiyesi</p>
+                <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 2 }}>{isim1}</p>
+                <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.6rem,5vw,2.4rem)", color: PINK, lineHeight: 1.4 }}>&</p>
+                {isim2 && <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 8 }}>{isim2}</p>}
+                <div style={{ margin: "18px auto", maxWidth: 200 }}><FloralDivider /></div>
+                {(tarihKisa || davetiye.mekan) && (
+                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 12, letterSpacing: "0.16em", color: `${WARM}65`, marginBottom: 8 }}>
+                    {tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.toUpperCase()}
+                  </p>
+                )}
+                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, fontStyle: "italic", color: `${WARM}50`, marginTop: 6 }}>Sizi bu özel günde yanımızda görmek isteriz</p>
+              </div>
+            </div>
+            <div style={{ marginTop: 48, textAlign: "center" }}>
+              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9.5, letterSpacing: "0.32em", color: `${LILAC}55`, marginBottom: 10, textTransform: "uppercase" }}>Aşağı Kaydır</p>
+              <div style={{ width: 26, height: 26, border: `1px solid ${LILAC}28`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: `${LILAC}50`, fontSize: 12, animation: "bounce 2s infinite" }}>↓</div>
+            </div>
+          </section>
 
-        {/* ════ BÖLÜM 2 — POLAROİD ════ */}
-        {davetiye.albumAktif && (
-          <section style={{ padding: "80px 24px 100px", textAlign: "center", background: BG_SOFT }}>
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.4rem,7.5vw,3.8rem)", color: WARM, lineHeight: 1.1, marginBottom: 20 }}>En Güzel Anılar</p>
-            <div style={{ maxWidth: 180, margin: "0 auto 56px" }}><FloralDivider /></div>
-            <div style={{ display: "flex", justifyContent: "center", minHeight: 400, marginBottom: 20 }}>
-              <div style={{ position: "relative", width: 320, height: 340 }}>
-                {[
-                  { top: 60, left: -10, rotate: -9, z: 1, delay: "0s",   dur: "6s",   src: davetiye.polaroid1, idx: 1 },
-                  { top: 16, left: 60,  rotate: -2, z: 2, delay: "0.6s", dur: "6.5s", src: davetiye.polaroid2, idx: 2 },
-                  { top: 46, left: 128, rotate: 7,  z: 3, delay: "1.1s", dur: "7s",   src: davetiye.polaroid3, idx: 3 },
-                ].map(p => (
-                  <div key={p.idx}
-                    onMouseEnter={() => setAktifPolaroid(p.idx)} onMouseLeave={() => setAktifPolaroid(null)}
-                    onTouchStart={() => setAktifPolaroid(p.idx)}
-                    style={{ position: "absolute", top: p.top, left: p.left, zIndex: aktifPolaroid === p.idx ? 10 : p.z, animation: `fadeUp 0.8s ease backwards ${p.delay}` }}>
-                    <div style={{ animation: `floatPolaroid ${p.dur} ease-in-out infinite ${p.delay}` }}>
-                      <Polaroid rotate={p.rotate} isActive={aktifPolaroid === p.idx} src={p.src ?? undefined} />
+          {/* ════ POLAROİD ════ */}
+          {davetiye.albumAktif && (
+            <section style={{ padding: "80px 24px 100px", textAlign: "center", background: BG_SOFT }}>
+              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
+              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.4rem,7.5vw,3.8rem)", color: WARM, lineHeight: 1.1, marginBottom: 20 }}>En Güzel Anılar</p>
+              <div style={{ maxWidth: 180, margin: "0 auto 56px" }}><FloralDivider /></div>
+              <div style={{ display: "flex", justifyContent: "center", minHeight: 400, marginBottom: 20 }}>
+                <div style={{ position: "relative", width: 320, height: 340 }}>
+                  {[
+                    { top: 60, left: -10, rotate: -9, z: 1, delay: "0s",   dur: "6s",   src: davetiye.polaroid1, idx: 1 },
+                    { top: 16, left: 60,  rotate: -2, z: 2, delay: "0.6s", dur: "6.5s", src: davetiye.polaroid2, idx: 2 },
+                    { top: 46, left: 128, rotate: 7,  z: 3, delay: "1.1s", dur: "7s",   src: davetiye.polaroid3, idx: 3 },
+                  ].map(p => (
+                    <div key={p.idx}
+                      onMouseEnter={() => setAktifPolaroid(p.idx)} onMouseLeave={() => setAktifPolaroid(null)}
+                      onTouchStart={() => setAktifPolaroid(p.idx)}
+                      style={{ position: "absolute", top: p.top, left: p.left, zIndex: aktifPolaroid === p.idx ? 10 : p.z, animation: `fadeUp 0.8s ease backwards ${p.delay}` }}>
+                      <div style={{ animation: `floatPolaroid ${p.dur} ease-in-out infinite ${p.delay}` }}>
+                        <Polaroid rotate={p.rotate} isActive={aktifPolaroid === p.idx} src={p.src ?? undefined} />
+                      </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 17, fontStyle: "italic", color: `${WARM}50` }}>Sonsuz bir yolculuğun ilk adımları... 🌸</p>
+            </section>
+          )}
+
+          {/* ════ ETKİNLİK DETAYLARI ════ */}
+          <section style={{ padding: "80px 24px", textAlign: "center", background: BG }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 32, opacity: 0.35 }}>
+              {[LILAC, PINK, GREEN_LT, PINK, LILAC].map((c, i) => (
+                <svg key={i} width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5" fill={c} /><circle cx="5" cy="5" r="2" fill={BG} /></svg>
+              ))}
+            </div>
+            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Etkinlik Detayları</p>
+            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.6rem)", color: WARM, marginBottom: 36 }}>Nerede &amp; Ne Zaman?</p>
+            <div style={{ maxWidth: 480, margin: "0 auto 40px", background: BG_CARD, borderRadius: 16, border: `1px solid ${LILAC}18`, padding: "36px 32px", boxShadow: `0 8px 40px rgba(122,82,160,0.07)`, position: "relative" }}>
+              <span style={{ position: "absolute", top: 12, left: 16, color: LILAC, opacity: 0.25, fontSize: 16 }}>✿</span>
+              <span style={{ position: "absolute", top: 12, right: 16, color: PINK, opacity: 0.25, fontSize: 16 }}>✿</span>
+              <span style={{ position: "absolute", bottom: 12, left: 16, color: GREEN_LT, opacity: 0.25, fontSize: 16 }}>✿</span>
+              <span style={{ position: "absolute", bottom: 12, right: 16, color: GOLD, opacity: 0.25, fontSize: 16 }}>✿</span>
+              <div style={{ display: "flex", justifyContent: "center", gap: "clamp(20px,6vw,52px)", flexWrap: "wrap" }}>
+                {[
+                  { emoji: "🌸", lbl: "TARİH", val: tarihStr ?? "—" },
+                  { emoji: "🕐", lbl: "SAAT",  val: saatStr ?? "—" },
+                  { emoji: "📍", lbl: "MEKAN", val: davetiye.mekan ?? "Belirtilmedi" },
+                  ...(gunStr ? [{ emoji: "🌿", lbl: "GÜN", val: gunStr }] : []),
+                ].map(col => (
+                  <div key={col.lbl} style={{ textAlign: "center", minWidth: 80 }}>
+                    <div style={{ fontSize: 20, marginBottom: 8 }}>{col.emoji}</div>
+                    <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9, letterSpacing: "0.28em", color: LILAC, textTransform: "uppercase", marginBottom: 6 }}>{col.lbl}</p>
+                    <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 14, fontWeight: 600, color: WARM }}>{col.val}</p>
                   </div>
                 ))}
               </div>
             </div>
-            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 17, fontStyle: "italic", color: `${WARM}50` }}>Sonsuz bir yolculuğun ilk adımları... 🌸</p>
+            {davetiye.mekan && (
+              <div style={{ maxWidth: 560, margin: "0 auto", borderRadius: 12, overflow: "hidden", border: `1px solid ${LILAC}20`, boxShadow: `0 6px 24px rgba(122,82,160,0.10)` }}>
+                <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="240" style={{ border: 0, display: "block" }} loading="lazy" allowFullScreen />
+              </div>
+            )}
           </section>
-        )}
 
-        {/* ════ BÖLÜM 3 — ETKİNLİK DETAYLARI ════ */}
-        <section style={{ padding: "80px 24px", textAlign: "center", background: BG }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 32, opacity: 0.35 }}>
-            {[LILAC, PINK, GREEN_LT, PINK, LILAC].map((c, i) => (
-              <svg key={i} width="10" height="10" viewBox="0 0 10 10">
-                <circle cx="5" cy="5" r="4.5" fill={c} /><circle cx="5" cy="5" r="2" fill={BG} />
-              </svg>
-            ))}
-          </div>
-          <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Etkinlik Detayları</p>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.6rem)", color: WARM, marginBottom: 36 }}>Nerede &amp; Ne Zaman?</p>
-          <div style={{
-            maxWidth: 480, margin: "0 auto 40px",
-            background: BG_CARD, borderRadius: 16, border: `1px solid ${LILAC}18`,
-            padding: "36px 32px", boxShadow: `0 8px 40px rgba(122,82,160,0.07), 0 2px 8px rgba(0,0,0,0.04)`,
-            position: "relative",
-          }}>
-            <span style={{ position: "absolute", top: 12, left: 16, color: LILAC, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", top: 12, right: 16, color: PINK, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", bottom: 12, left: 16, color: GREEN_LT, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <span style={{ position: "absolute", bottom: 12, right: 16, color: GOLD, opacity: 0.25, fontSize: 16 }}>✿</span>
-            <div style={{ display: "flex", justifyContent: "center", gap: "clamp(20px,6vw,52px)", flexWrap: "wrap" }}>
+          {/* ════ KİŞİSEL NOT ════ */}
+          {davetiye.mesaj && (
+            <section style={{ padding: "70px 24px 80px", textAlign: "center", background: BG_SOFT }}>
+              <div style={{ maxWidth: 400, margin: "0 auto" }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 20, opacity: 0.4 }}>
+                  <svg width="28" height="20" viewBox="0 0 28 20">
+                    <path d="M2 18 C2 10 6 5 14 2 C10 6 8 10 10 14 Z" fill={LILAC} />
+                    <path d="M16 18 C16 10 20 5 28 2 C24 6 22 10 24 14 Z" fill={LILAC} />
+                  </svg>
+                </div>
+                <div style={{ maxWidth: 180, margin: "0 auto 20px" }}><FloralDivider /></div>
+                <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.4rem,5vw,2rem)", color: WARM, lineHeight: 1.7, fontStyle: "italic" }}>&ldquo;{davetiye.mesaj}&rdquo;</p>
+                <div style={{ maxWidth: 180, margin: "20px auto 0" }}><FloralDivider /></div>
+              </div>
+            </section>
+          )}
+
+          {/* ════ GERİ SAYIM ════ */}
+          <section style={{ padding: "80px 24px", textAlign: "center", background: BG_CARD }}>
+            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Nişana Kalan Süre</p>
+            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.4rem)", color: WARM, marginBottom: 48 }}>
+              {tarihObj && tarihObj > new Date() ? "Sayıyoruz..." : "Kutlama Zamanı! 🎊"}
+            </p>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(8px,3vw,16px)", flexWrap: "wrap" }}>
               {[
-                { emoji: "🌸", lbl: "TARİH", val: tarihStr ?? "—" },
-                { emoji: "🕐", lbl: "SAAT",  val: saatStr ?? "—" },
-                { emoji: "📍", lbl: "MEKAN", val: davetiye.mekan ?? "Belirtilmedi" },
-                ...(gunStr ? [{ emoji: "🌿", lbl: "GÜN", val: gunStr }] : []),
-              ].map(col => (
-                <div key={col.lbl} style={{ textAlign: "center", minWidth: 80 }}>
-                  <div style={{ fontSize: 20, marginBottom: 8 }}>{col.emoji}</div>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9, letterSpacing: "0.28em", color: LILAC, textTransform: "uppercase", marginBottom: 6 }}>{col.lbl}</p>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 14, fontWeight: 600, color: WARM }}>{col.val}</p>
+                { val: kalan.gun,    lbl: "GÜN" },
+                { val: kalan.saat,   lbl: "SAAT" },
+                { val: kalan.dakika, lbl: "DAKİKA" },
+                { val: kalan.saniye, lbl: "SANİYE" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "clamp(6px,2vw,14px)" }}>
+                  <div style={{ textAlign: "center" }}>
+                    <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(3rem,9vw,4.8rem)", fontWeight: 600, color: LILAC, lineHeight: 1, fontVariantNumeric: "tabular-nums", minWidth: "2ch" }}>{String(item.val).padStart(2, "0")}</p>
+                    <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.22em", color: WARM_MD, marginTop: 8 }}>{item.lbl}</p>
+                  </div>
+                  {i < 3 && <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(2rem,6vw,3.2rem)", color: `${PINK}60`, lineHeight: 1.1, marginTop: 4 }}>:</p>}
                 </div>
               ))}
             </div>
-          </div>
-          {davetiye.mekan && (
-            <div style={{ maxWidth: 560, margin: "0 auto", borderRadius: 12, overflow: "hidden", border: `1px solid ${LILAC}20`, boxShadow: `0 6px 24px rgba(122,82,160,0.10)` }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-                width="100%" height="240" style={{ border: 0, display: "block" }} loading="lazy" allowFullScreen
-              />
-            </div>
-          )}
-        </section>
+          </section>
 
-        {/* ════ BÖLÜM 4 — KİŞİSEL NOT ════ */}
-        {davetiye.mesaj && (
-          <section style={{ padding: "70px 24px 80px", textAlign: "center", background: BG_SOFT }}>
-            <div style={{ maxWidth: 400, margin: "0 auto" }}>
-              <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 20, opacity: 0.4 }}>
-                <svg width="28" height="20" viewBox="0 0 28 20">
-                  <path d="M2 18 C2 10 6 5 14 2 C10 6 8 10 10 14 Z" fill={LILAC} />
-                  <path d="M16 18 C16 10 20 5 28 2 C24 6 22 10 24 14 Z" fill={LILAC} />
-                </svg>
+          {/* ════ DRESS CODE ════ */}
+          {davetiye.dressKod && <DressCodeSection dressKod={davetiye.dressKod} dressKodRenkler={davetiye.dressKodRenkler} />}
+
+          {/* ════ RSVP ════ */}
+          <section style={{ padding: "80px 24px", background: BG }}>
+            <div style={{ maxWidth: 480, margin: "0 auto" }}>
+              <div style={{ background: BG_CARD, borderRadius: 16, padding: "40px 32px 44px", border: `1px solid ${LILAC}18`, boxShadow: `0 16px 56px rgba(122,82,160,0.08)`, position: "relative" }}>
+                <span style={{ position: "absolute", top: 16, left: 20, color: PINK, fontSize: 14, opacity: 0.35 }}>✿</span>
+                <span style={{ position: "absolute", bottom: 16, right: 20, color: LILAC, fontSize: 14, opacity: 0.35 }}>✿</span>
+                <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.32em", color: LILAC, textAlign: "center", textTransform: "uppercase", marginBottom: 10 }}>Katılım Bildirimi</p>
+                <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.8rem,6.5vw,2.8rem)", color: WARM, textAlign: "center", lineHeight: 1.1, marginBottom: 22 }}>Gelecek misiniz?</p>
+                <div style={{ height: 1, background: `linear-gradient(to right, transparent, ${LILAC_LT}60, transparent)`, marginBottom: 28 }} />
+                <RsvpFormGarden davetiyeId={davetiye.id} />
               </div>
-              <div style={{ maxWidth: 180, margin: "0 auto 20px" }}><FloralDivider /></div>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.4rem,5vw,2rem)", color: WARM, lineHeight: 1.7, fontStyle: "italic" }}>
-                &ldquo;{davetiye.mesaj}&rdquo;
-              </p>
-              <div style={{ maxWidth: 180, margin: "20px auto 0" }}><FloralDivider /></div>
             </div>
           </section>
-        )}
 
-        {/* ════ BÖLÜM 5 — GERİ SAYIM ════ */}
-        <section style={{ padding: "80px 24px", textAlign: "center", background: BG_CARD }}>
-          <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.36em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Nişana Kalan Süre</p>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2.2rem,7vw,3.4rem)", color: WARM, marginBottom: 48 }}>
-            {tarihObj && tarihObj > new Date() ? "Sayıyoruz..." : "Kutlama Zamanı! 🎊"}
-          </p>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(8px,3vw,16px)", flexWrap: "wrap" }}>
-            {[
-              { val: kalan.gun,    lbl: "GÜN" },
-              { val: kalan.saat,   lbl: "SAAT" },
-              { val: kalan.dakika, lbl: "DAKİKA" },
-              { val: kalan.saniye, lbl: "SANİYE" },
-            ].map((item, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "clamp(6px,2vw,14px)" }}>
-                <div style={{ textAlign: "center" }}>
-                  <p style={{
-                    fontFamily: "var(--font-cormorant),serif",
-                    fontSize: "clamp(3rem,9vw,4.8rem)", fontWeight: 600,
-                    color: LILAC, lineHeight: 1, fontVariantNumeric: "tabular-nums", minWidth: "2ch",
-                  }}>{String(item.val).padStart(2, "0")}</p>
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.22em", color: WARM_MD, marginTop: 8 }}>{item.lbl}</p>
-                </div>
-                {i < 3 && (
-                  <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: "clamp(2rem,6vw,3.2rem)", color: `${PINK}60`, lineHeight: 1.1, marginTop: 4 }}>:</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ════ BÖLÜM 6 — DRESS CODE ════ */}
-        {davetiye.dressKod && <DressCodeSection dressKod={davetiye.dressKod} dressKodRenkler={davetiye.dressKodRenkler} />}
-
-        {/* ════ BÖLÜM 7 — RSVP ════ */}
-        <section style={{ padding: "80px 24px", background: BG }}>
-          <div style={{ maxWidth: 480, margin: "0 auto" }}>
-            <div style={{
-              background: BG_CARD, borderRadius: 16, padding: "40px 32px 44px",
-              border: `1px solid ${LILAC}18`,
-              boxShadow: `0 16px 56px rgba(122,82,160,0.08), 0 4px 16px rgba(0,0,0,0.04)`,
-              position: "relative",
-            }}>
-              <span style={{ position: "absolute", top: 16, left: 20, color: PINK, fontSize: 14, opacity: 0.35 }}>✿</span>
-              <span style={{ position: "absolute", bottom: 16, right: 20, color: LILAC, fontSize: 14, opacity: 0.35 }}>✿</span>
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.32em", color: LILAC, textAlign: "center", textTransform: "uppercase", marginBottom: 10 }}>Katılım Bildirimi</p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.8rem,6.5vw,2.8rem)", color: WARM, textAlign: "center", lineHeight: 1.1, marginBottom: 22 }}>Gelecek misiniz?</p>
-              <div style={{ height: 1, background: `linear-gradient(to right, transparent, ${LILAC_LT}60, transparent)`, marginBottom: 28 }} />
-              <RsvpFormGarden davetiyeId={davetiye.id} />
+          {/* Footer */}
+          <footer style={{ background: BG_SOFT, padding: "40px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, opacity: 0.18 }}>
+              <WisteriaBotanical side="left" />
+              <WisteriaBotanical side="right" />
             </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer style={{ background: BG_SOFT, padding: "40px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, opacity: 0.18 }}>
-            <WisteriaBotanical side="left" />
-            <WisteriaBotanical side="right" />
-          </div>
-          <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2rem,6vw,3rem)", color: WARM }}>
-            Sizi çok seviyoruz 🌸
-          </p>
-          {isim1 && isim2 && (
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, letterSpacing: "0.2em", color: `${WARM}50`, marginTop: 8 }}>
-              {isim1} &amp; {isim2}
-            </p>
-          )}
-        </footer>
-      </div>
+            <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(2rem,6vw,3rem)", color: WARM }}>Sizi çok seviyoruz 🌸</p>
+            {isim1 && isim2 && (
+              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, letterSpacing: "0.2em", color: `${WARM}50`, marginTop: 8 }}>{isim1} &amp; {isim2}</p>
+            )}
+          </footer>
+        </div>
+      )}
     </>
   );
 }
@@ -649,18 +820,14 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
 
   const fieldStyle: React.CSSProperties = {
-    width: "100%", background: "transparent",
-    border: "none", borderBottom: `1px solid ${LILAC_LT}70`,
-    padding: "10px 0", fontSize: 14,
-    fontFamily: "var(--font-cormorant),serif",
-    color: WARM, outline: "none", boxSizing: "border-box",
-    appearance: "none" as const,
+    width: "100%", background: "transparent", border: "none",
+    borderBottom: `1px solid ${LILAC_LT}70`, padding: "10px 0", fontSize: 14,
+    fontFamily: "var(--font-cormorant),serif", color: WARM, outline: "none",
+    boxSizing: "border-box", appearance: "none" as const,
   };
   const labelStyle: React.CSSProperties = {
-    fontFamily: "var(--font-cormorant),serif",
-    fontSize: 10, letterSpacing: "0.28em",
-    color: LILAC_MD, textTransform: "uppercase",
-    display: "block", marginBottom: 4, marginTop: 20,
+    fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.28em",
+    color: LILAC_MD, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 20,
   };
 
   const gonder = async () => {
@@ -669,12 +836,9 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
     setYukleniyor(true); setHata("");
     try {
       const res = await fetch("/api/rsvp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          davetiyeId,
-          ad: form.ad,
-          katilim: form.katilim === "evet",
+          davetiyeId, ad: form.ad, katilim: form.katilim === "evet",
           kisiSayisi: Number(form.kisiSayisi),
           diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
           sarkiOnerisi: form.sarkiDilegi.trim() || undefined,
@@ -703,27 +867,19 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   return (
     <div>
       <label style={labelStyle}>ADINIZ SOYADINIZ</label>
-      <input type="text" value={form.ad} onChange={e => setForm({ ...form, ad: e.target.value })}
-        placeholder="örn. Selin Kaya" style={fieldStyle} />
-
+      <input type="text" value={form.ad} onChange={e => setForm({ ...form, ad: e.target.value })} placeholder="örn. Selin Kaya" style={fieldStyle} />
       <label style={labelStyle}>KAÇ KİŞİ?</label>
       <select value={form.kisiSayisi} onChange={e => setForm({ ...form, kisiSayisi: e.target.value })} style={fieldStyle}>
         {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} kişi</option>)}
       </select>
-
       <label style={labelStyle}>KATILIM DURUMU</label>
       <select value={form.katilim} onChange={e => setForm({ ...form, katilim: e.target.value })} style={fieldStyle}>
         <option value="">Seçiniz</option>
         <option value="evet">Katılıyorum ✓</option>
         <option value="hayir">Katılamıyorum</option>
       </select>
-
       <div style={{ marginTop: 22, border: `1px solid ${LILAC_LT}30`, borderRadius: 10, overflow: "hidden", background: `rgba(122,82,160,0.03)` }}>
-        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{
-          width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
-          padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer",
-          fontFamily: "var(--font-cormorant),serif", color: WARM, textAlign: "left",
-        }}>
+        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-cormorant),serif", color: WARM, textAlign: "left" }}>
           <span>
             <span style={{ display: "block", fontSize: 13, fontWeight: 700 }}>Ek bilgi ekle</span>
             <span style={{ display: "block", fontSize: 11, color: WARM_MD, marginTop: 2 }}>Diyet tercihi veya şarkı dileği</span>
@@ -737,42 +893,22 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
                 <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
                   {[{ k: "vegan", l: "🌱 Vegan" }, { k: "vejetaryen", l: "🥗 Vejetaryen" }, { k: "glutensiz", l: "🌾 Glutensiz" }, { k: "laktozsuz", l: "🥛 Laktozsuz" }].map(opt => (
-                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{
-                      padding: "6px 12px", borderRadius: 6, fontSize: 11, cursor: "pointer",
-                      fontFamily: "var(--font-cormorant),serif",
-                      border: `1.5px solid ${secilenDiyet.includes(opt.k) ? LILAC_MD : LILAC_LT + "50"}`,
-                      color: secilenDiyet.includes(opt.k) ? WARM : WARM_MD,
-                      background: secilenDiyet.includes(opt.k) ? LILAC_LT + "28" : "transparent",
-                      transition: "all 0.15s",
-                    }}>{opt.l}</button>
+                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "6px 12px", borderRadius: 6, fontSize: 11, cursor: "pointer", fontFamily: "var(--font-cormorant),serif", border: `1.5px solid ${secilenDiyet.includes(opt.k) ? LILAC_MD : LILAC_LT + "50"}`, color: secilenDiyet.includes(opt.k) ? WARM : WARM_MD, background: secilenDiyet.includes(opt.k) ? LILAC_LT + "28" : "transparent", transition: "all 0.15s" }}>{opt.l}</button>
                   ))}
                 </div>
               </div>
             )}
             <div style={{ marginTop: 14 }}>
               <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
-              <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })}
-                placeholder="Dans pistimizdeki favori şarkınız?" maxLength={200} style={fieldStyle} />
+              <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })} placeholder="Dans pistimizdeki favori şarkınız?" maxLength={200} style={fieldStyle} />
             </div>
           </div>
         )}
       </div>
-
       {hata && <p style={{ color: "#B91C1C", fontSize: 12, fontFamily: "var(--font-cormorant),serif", marginTop: 12 }}>{hata}</p>}
-
-      <button onClick={gonder} disabled={yukleniyor} style={{
-        width: "100%", marginTop: 28, padding: "14px",
-        background: `linear-gradient(135deg, ${LILAC} 0%, ${LILAC_MD} 100%)`,
-        color: BG, border: "none", borderRadius: 8,
-        fontFamily: "var(--font-cormorant),serif",
-        fontSize: 13, letterSpacing: "0.32em", textTransform: "uppercase",
-        cursor: yukleniyor ? "not-allowed" : "pointer",
-        opacity: yukleniyor ? 0.7 : 1,
-        boxShadow: `0 4px 20px ${LILAC}40`,
-      }}>
+      <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${LILAC} 0%, ${LILAC_MD} 100%)`, color: BG, border: "none", borderRadius: 8, fontFamily: "var(--font-cormorant),serif", fontSize: 13, letterSpacing: "0.32em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.7 : 1, boxShadow: `0 4px 20px ${LILAC}40` }}>
         {yukleniyor ? "GÖNDERİLİYOR..." : "BİLDİR"}
       </button>
-
       <p style={{ marginTop: 14, fontSize: 9.5, lineHeight: 1.7, fontFamily: "var(--font-cormorant),serif", color: `${WARM_MD}60`, textAlign: "center" }}>
         Girdiğiniz bilgiler yalnızca katılım bildirimini davet sahibine iletmek amacıyla işlenmekte ve etkinlik tarihinden itibaren 1 yıl içinde silinmektedir.
       </p>
