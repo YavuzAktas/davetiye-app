@@ -449,37 +449,6 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           </section>
         )}
 
-        {/* ════ HERO KART ════ */}
-        <section style={{ minHeight: "100svh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "70px 24px 80px", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: `radial-gradient(ellipse 70% 50% at 50% 95%, rgba(200,162,64,0.10) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 20% 10%, rgba(122,82,160,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 80% 10%, rgba(192,112,128,0.07) 0%, transparent 60%)` }} />
-          <div style={{ position: "absolute", top: 0, left: 0 }}><WisteriaBotanical side="left" opacity={0.22} /></div>
-          <div style={{ position: "absolute", top: 0, right: 0 }}><WisteriaBotanical side="right" opacity={0.22} /></div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
-          <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scaleX(-1)", opacity: 0.12 }}><WisteriaBotanical side="left" /></div>
-
-          <div style={{ position: "relative", maxWidth: 440, width: "100%", borderRadius: "180px 180px 16px 16px", border: `1.5px solid ${LILAC}20`, padding: "10px 10px 0", animation: "fadeUp 1s ease backwards 0.1s" }}>
-            <div style={{ borderRadius: "172px 172px 10px 10px", border: `1px solid ${LILAC}12`, padding: "58px 36px 48px", textAlign: "center", background: "rgba(255,253,248,0.75)", boxShadow: `0 6px 48px rgba(122,82,160,0.07), 0 2px 12px rgba(0,0,0,0.04)` }}>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-                <svg width="28" height="28" viewBox="0 0 28 28">
-                  {[0, 72, 144, 216, 288].map((deg, i) => { const rad = (deg - 90) * Math.PI / 180; const px = 14 + Math.cos(rad) * 7; const py = 14 + Math.sin(rad) * 7; return <ellipse key={i} cx={px} cy={py} rx="3.5" ry="5.5" fill={PINK} opacity="0.45" transform={`rotate(${deg}, ${px}, ${py})`} />; })}
-                  <circle cx="14" cy="14" r="3.5" fill={GOLD} opacity="0.8" />
-                </svg>
-              </div>
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 10, letterSpacing: "0.42em", color: LILAC, textTransform: "uppercase", marginBottom: 22 }}>Nişan Davetiyesi</p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 2 }}>{isim1}</p>
-              <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(1.6rem,5vw,2.4rem)", color: PINK, lineHeight: 1.4 }}>&</p>
-              {isim2 && <p style={{ fontFamily: "var(--font-dancing),cursive", fontSize: "clamp(3.6rem,12vw,5.5rem)", color: WARM, lineHeight: 1, marginBottom: 8 }}>{isim2}</p>}
-              <div style={{ margin: "18px auto", maxWidth: 200 }}><FloralDivider /></div>
-              {(tarihKisa || davetiye.mekan) && <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 12, letterSpacing: "0.16em", color: `${WARM}65`, marginBottom: 8 }}>{tarihKisa}{tarihKisa && davetiye.mekan ? " · " : ""}{davetiye.mekan?.toUpperCase()}</p>}
-              <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 13, fontStyle: "italic", color: `${WARM}50`, marginTop: 6 }}>Sizi bu özel günde yanımızda görmek isteriz</p>
-            </div>
-          </div>
-          <div style={{ marginTop: 48, textAlign: "center" }}>
-            <p style={{ fontFamily: "var(--font-cormorant),serif", fontSize: 9.5, letterSpacing: "0.32em", color: `${LILAC}55`, marginBottom: 10, textTransform: "uppercase" }}>Aşağı Kaydır</p>
-            <div style={{ width: 26, height: 26, border: `1px solid ${LILAC}28`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: `${LILAC}50`, fontSize: 12, animation: "bounce 2s infinite" }}>↓</div>
-          </div>
-        </section>
-
         {/* ════ POLAROİD ════ */}
         {davetiye.albumAktif && (
           <section style={{ padding: "80px 24px 100px", textAlign: "center", background: BG_SOFT }}>
