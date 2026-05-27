@@ -243,6 +243,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
 
   const onSealClick = () => {
+    if (sealFading) return;
     const v = videoRef.current;
     setSealFading(true);
     if (v) v.play().catch(() => {});
@@ -311,8 +312,9 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           MÜHÜR OVERLAY
       ══════════════════════════════════ */}
       {sealVar && (
-        <div style={{
+        <div onClick={onSealClick} style={{
           position: "fixed", inset: 0, zIndex: 45,
+          cursor: "pointer",
           background: `
             radial-gradient(ellipse 55% 45% at 15% 20%, ${GOLD}10 0%, transparent 65%),
             radial-gradient(ellipse 50% 40% at 85% 80%, ${PETAL}0C 0%, transparent 60%),
@@ -355,20 +357,12 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <WaxSeal size={180} onClick={onSealClick} />
 
           {/* İpucu */}
-          <div style={{ marginTop: 22, animation: "glowPulse 2.4s ease-in-out infinite", display: "flex", justifyContent: "center" }}>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              border: `1.5px solid ${GOLD}90`,
-              borderRadius: 999,
-              padding: "9px 22px",
-              background: `${GOLD}12`,
-              boxShadow: `0 0 22px ${GOLD}35`,
-            }}>
-              <span style={{ fontSize: 16 }}>👆</span>
-              <span style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, fontWeight: 700, fontStyle: "italic", color: GOLD, letterSpacing: "0.18em", textShadow: `0 0 12px ${GOLD}70` }}>
-                Mühüre Dokun
-              </span>
-            </div>
+          <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 12, animation: "glowPulse 2.4s ease-in-out infinite" }}>
+            <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to left, ${GOLD}70, transparent)` }} />
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 11, fontStyle: "italic", color: GOLD, letterSpacing: "0.28em", textShadow: `0 0 14px ${GOLD}60` }}>
+              Mühüre Dokun
+            </p>
+            <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to right, ${GOLD}70, transparent)` }} />
           </div>
 
           {/* Tarih */}
