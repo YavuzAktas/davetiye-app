@@ -349,6 +349,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         }
         button.bottom-24 { transition: opacity 0.5s ease, transform 0.5s ease; }
         body.video-oyniyor button.bottom-24 { opacity:0!important; pointer-events:none!important; transform:translateY(8px); }
+        .vns-video { width:100%; height:100%; object-fit:cover; }
+        @media (min-width:768px) { .vns-video { object-fit:contain; } }
       `}</style>
 
       {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
@@ -423,7 +425,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               src="/background.mp4"
               playsInline
               preload="auto"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              className="vns-video"
+              style={{ position: "absolute", inset: 0 }}
               onTimeUpdate={() => {
                 const v = videoRef.current;
                 if (!v || isimlerGorunur || !v.duration) return;
@@ -493,78 +496,6 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             )}
           </section>
         )}
-
-        {/* ══════════════════════════════════
-            KEMER DAVETİYE KARTI
-            Wisteria sütunlar + altın kemer
-        ══════════════════════════════════ */}
-        <section style={{ minHeight: "100svh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "70px 16px 80px", background: BG, position: "relative", overflow: "hidden" }}>
-          {/* Wisteria sütunları — kemerin iki yanı */}
-          <div style={{ position: "absolute", top: "-30px", left: "-18px", transform: "scale(1.6)", transformOrigin: "top left", opacity: 0.50 }}>
-            <WisteriaBotanical side="left" />
-          </div>
-          <div style={{ position: "absolute", top: "-30px", right: "-18px", transform: "scale(1.6)", transformOrigin: "top right", opacity: 0.50 }}>
-            <WisteriaBotanical side="right" />
-          </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, transform: "scaleY(-1) scale(1.1)", transformOrigin: "bottom left", opacity: 0.14 }}>
-            <WisteriaBotanical side="left" />
-          </div>
-          <div style={{ position: "absolute", bottom: 0, right: 0, transform: "scaleY(-1) scale(1.1) scaleX(-1)", transformOrigin: "bottom right", opacity: 0.14 }}>
-            <WisteriaBotanical side="left" />
-          </div>
-          {/* Soft radial glow */}
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,64,0.06) 0%, transparent 70%)" }} />
-
-          {/* Kemer kart */}
-          <div style={{
-            position: "relative", zIndex: 1,
-            maxWidth: 380, width: "calc(100% - 40px)",
-            borderRadius: "190px 190px 16px 16px",
-            border: `1px solid ${GOLD}45`,
-            background: BG_CARD,
-            boxShadow: `0 32px 100px rgba(92,52,140,0.13), 0 8px 28px rgba(0,0,0,0.05)`,
-            overflow: "hidden",
-            animation: "fadeUp 1s ease 0.1s both",
-          }}>
-            {/* İç çift kenarlık — kemer hissi */}
-            <div style={{ position: "absolute", inset: "10px 10px 0", borderRadius: "180px 180px 0 0", border: `0.5px solid ${GOLD}22`, pointerEvents: "none" }} />
-
-            <div style={{ padding: "68px 36px 56px", textAlign: "center" }}>
-              <GoldOrnament />
-              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.50em", color: GOLD, textTransform: "uppercase", marginBottom: 30 }}>
-                Nişan Davetiyesi
-              </p>
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3.2rem,11vw,5rem)", color: WARM, lineHeight: 0.90, animation: "fadeUp 1s ease 0.3s both" }}>
-                {isim1}
-              </p>
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.4rem,5vw,2.2rem)", color: PETAL, lineHeight: 1.3, margin: "4px 0" }}>
-                &
-              </p>
-              {isim2 && (
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3.2rem,11vw,5rem)", color: WARM, lineHeight: 0.90, marginBottom: 28, animation: "fadeUp 1s ease 0.45s both" }}>
-                  {isim2}
-                </p>
-              )}
-              <LuxuryDivider />
-              {tarihKisa && (
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 11, letterSpacing: "0.18em", color: `${WARM}65`, marginTop: 4, marginBottom: 6 }}>
-                  {tarihKisa}
-                </p>
-              )}
-              {davetiye.mekan && (
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(0.9rem,3vw,1.1rem)", color: `${WARM}50`, lineHeight: 1.4 }}>
-                  {davetiye.mekan}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Scroll */}
-          <div style={{ marginTop: 44, textAlign: "center", zIndex: 1 }}>
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.32em", color: `${LILAC}55`, marginBottom: 10, textTransform: "uppercase" }}>Devamını Keşfet</p>
-            <div style={{ width: 26, height: 26, border: `1px solid ${LILAC}28`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: `${LILAC}50`, fontSize: 12, animation: "bounce 2s infinite" }}>↓</div>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════
             ETKİNLİK DETAYLARI — gece lüks
