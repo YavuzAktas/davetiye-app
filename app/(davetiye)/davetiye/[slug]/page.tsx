@@ -88,7 +88,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     "nisan-luks":     "#C4A05A",
     "dugun-luks":     "#D4AA70",
     "dogumgunu-luks": "#D4A84B",
-    "vintage-nisan":  "#6E1C2A",
+    "vintage-nisan":  "#C9A840",
   };
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 

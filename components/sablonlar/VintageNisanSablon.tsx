@@ -340,7 +340,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         @media (min-width:768px) { .vns-video { object-fit:contain; } }
       `}</style>
 
-      {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
+      {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══════════════════════════════════
           MÜHÜR OVERLAY — davet zarfı
