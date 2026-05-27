@@ -69,6 +69,7 @@ export default async function DavetiyeDetay({ params }: Props) {
           katilim: true,
           kisiSayisi: true,
           diyet: true,
+          sarkiOnerisi: true,
         },
       },
     },
@@ -354,6 +355,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                 katilim: r.katilim,
                 kisiSayisi: r.kisiSayisi,
                 diyet: r.diyet,
+                sarkiOnerisi: r.sarkiOnerisi,
               }))}
               slug={slug}
               renk={renk}

@@ -14,6 +14,7 @@ type RsvpItem = {
   katilim: boolean;
   kisiSayisi: number;
   diyet: string | null;
+  sarkiOnerisi: string | null;
 };
 
 type YuklenenAlan = { id: string; alan: "katilim" | "kisi" } | null;
@@ -195,6 +196,12 @@ export default function RsvpListesi({
                       <span className="text-xs text-gray-400 italic truncate max-w-45">"{rsvp.mesaj}"</span>
                     )}
                   </div>
+                  {rsvp.sarkiOnerisi && (
+                    <div className="mt-1.5 flex items-center gap-1.5">
+                      <span className="text-xs">🎵</span>
+                      <span className="text-xs text-gray-500 italic truncate">{rsvp.sarkiOnerisi}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             );
