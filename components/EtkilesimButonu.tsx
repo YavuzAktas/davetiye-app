@@ -42,9 +42,10 @@ export default function EtkilesimButonu({
   const [fotoListeYuk,      setFotoListeYuk]      = useState(false);
   const [fotoListeYuklendi, setFotoListeYuklendi] = useState(false);
   const [fotoAd,            setFotoAd]            = useState("");
-  const [seciliDosya,       setSeciliDosya]       = useState<File | null>(null);
-  const [onizleme,          setOnizleme]          = useState<string | null>(null);
+  const [seciliDosyalar,    setSeciliDosyalar]    = useState<File[]>([]);
+  const [onizlemeler,       setOnizlemeler]       = useState<string[]>([]);
   const [fotoYukleniyor,    setFotoYukleniyor]    = useState(false);
+  const [yuklenenSayisi,    setYuklenenSayisi]    = useState(0);
   const [fotoBasari,        setFotoBasari]        = useState(false);
   const [fotoHata,          setFotoHata]          = useState("");
   const dosyaInputRef = useRef<HTMLInputElement>(null);
@@ -125,34 +126,47 @@ export default function EtkilesimButonu({
   }
 
   /* ─ Fotoğraf yükle ─ */
-  async function dosyaSec(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (onizleme) URL.revokeObjectURL(onizleme);
-    setOnizleme(URL.createObjectURL(file));
-    setSeciliDosya(file);
+  function dosyaSec(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    onizlemeler.forEach(u => URL.revokeObjectURL(u));
+    setOnizlemeler(files.map(f => URL.createObjectURL(f)));
+    setSeciliDosyalar(files);
     setFotoHata("");
   }
 
   async function fotoYukle(e: React.FormEvent) {
     e.preventDefault();
-    if (!seciliDosya || !fotoAd.trim()) return;
-    setFotoYukleniyor(true); setFotoHata("");
-    try {
-      const sikis = await imageCompression(seciliDosya, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true });
-      const form  = new FormData();
-      form.append("ad", fotoAd.trim());
-      form.append("dosya", sikis, seciliDosya.name);
-      const res  = await fetch(`/api/davetiye/${slug}/album`, { method: "POST", body: form });
-      const json = await res.json();
-      if (!res.ok) { setFotoHata(json.hata); return; }
+    if (!seciliDosyalar.length || !fotoAd.trim()) return;
+    setFotoYukleniyor(true); setFotoHata(""); setYuklenenSayisi(0);
+    const sonuclar = await Promise.allSettled(
+      seciliDosyalar.map(async (dosya) => {
+        const sikis = await imageCompression(dosya, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true });
+        const form  = new FormData();
+        form.append("ad", fotoAd.trim());
+        form.append("dosya", sikis, dosya.name);
+        const res  = await fetch(`/api/davetiye/${slug}/album`, { method: "POST", body: form });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.hata ?? "Yükleme başarısız");
+        setYuklenenSayisi(n => n + 1);
+      })
+    );
+    const hatalar = sonuclar.filter(r => r.status === "rejected") as PromiseRejectedResult[];
+    const basarili = seciliDosyalar.length - hatalar.length;
+    if (hatalar.length === 0) {
       setFotoBasari(true);
-      setFotoAd(""); setSeciliDosya(null); setOnizleme(null);
+      setFotoAd(""); setSeciliDosyalar([]); setOnizlemeler([]);
       if (dosyaInputRef.current) dosyaInputRef.current.value = "";
       fetchFotolar(true);
       setTimeout(() => setFotoBasari(false), 4000);
-    } catch { setFotoHata("Yükleme başarısız, tekrar dene."); }
-    finally { setFotoYukleniyor(false); }
+    } else {
+      setFotoHata(basarili > 0
+        ? `${basarili} fotoğraf yüklendi, ${hatalar.length} başarısız: ${hatalar[0].reason.message}`
+        : hatalar[0].reason.message
+      );
+      if (basarili > 0) fetchFotolar(true);
+    }
+    setFotoYukleniyor(false);
   }
 
   /* ─ Anı gönder ─ */
@@ -417,20 +431,28 @@ export default function EtkilesimButonu({
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white"
                       maxLength={40} required />
                     <div onClick={() => dosyaInputRef.current?.click()}
-                      className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-purple-300 hover:bg-purple-50/30 transition-colors">
-                      {onizleme ? (
-                        <div className="relative w-full h-40 rounded-lg overflow-hidden">
-                          <Image src={onizleme} alt="önizleme" fill className="object-cover" />
+                      className="border-2 border-dashed border-gray-200 rounded-xl p-3 cursor-pointer hover:border-purple-300 hover:bg-purple-50/30 transition-colors">
+                      {onizlemeler.length > 0 ? (
+                        <div className="grid grid-cols-3 gap-2">
+                          {onizlemeler.map((url, i) => (
+                            <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                              <Image src={url} alt={`seçili ${i + 1}`} fill className="object-cover" />
+                            </div>
+                          ))}
+                          <div className="aspect-square rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 gap-1">
+                            <span className="text-xl">+</span>
+                            <span className="text-[10px]">ekle</span>
+                          </div>
                         </div>
                       ) : (
-                        <>
-                          <p className="text-3xl mb-2">🖼️</p>
+                        <div className="text-center py-3">
+                          <p className="text-3xl mb-1">🖼️</p>
                           <p className="text-sm text-gray-500">Fotoğraf seç</p>
-                          <p className="text-xs text-gray-400 mt-0.5">max 4 MB</p>
-                        </>
+                          <p className="text-xs text-gray-400 mt-0.5">Birden fazla seçebilirsin · max 4 MB/adet</p>
+                        </div>
                       )}
                     </div>
-                    <input ref={dosyaInputRef} type="file" accept="image/*" className="hidden" onChange={dosyaSec} />
+                    <input ref={dosyaInputRef} type="file" accept="image/*" multiple className="hidden" onChange={dosyaSec} />
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
@@ -444,10 +466,14 @@ export default function EtkilesimButonu({
                       </p>
                     </div>
                     {fotoHata && <p className="text-xs text-red-500">{fotoHata}</p>}
-                    <button type="submit" disabled={fotoYukleniyor || !seciliDosya || !fotoAd.trim()}
+                    <button type="submit" disabled={fotoYukleniyor || !seciliDosyalar.length || !fotoAd.trim()}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
-                      {fotoYukleniyor ? "Yükleniyor..." : "Fotoğrafı Gönder"}
+                      {fotoYukleniyor
+                        ? `${yuklenenSayisi}/${seciliDosyalar.length} yükleniyor...`
+                        : seciliDosyalar.length > 1
+                          ? `${seciliDosyalar.length} Fotoğrafı Gönder`
+                          : "Fotoğrafı Gönder"}
                     </button>
                   </form>
                 )}
