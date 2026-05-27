@@ -451,7 +451,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
             {/* Scroll ipucu */}
             {videoFinal && (
-              <div style={{ position: "absolute", bottom: 28, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 0, pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
+              <div style={{ position: "absolute", bottom: 24, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 0, pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: 11, letterSpacing: "0.30em", color: `${GOLD}CC`, marginBottom: 6, textShadow: "0 1px 12px rgba(0,0,0,0.9)" }}>
+                  kaydır
+                </p>
                 {[0, 1, 2].map(i => (
                   <svg key={i} width="28" height="16" viewBox="0 0 28 16" fill="none"
                     style={{ display: "block", animation: `chevronFlow 1.6s ease-in-out ${i * 0.28}s infinite` }}>
