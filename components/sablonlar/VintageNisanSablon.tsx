@@ -324,7 +324,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           transition: "opacity 1.2s ease",
           pointerEvents: sealFading ? "none" : "auto",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          textAlign: "center", padding: "40px 32px",
+          textAlign: "center", padding: "clamp(28px,8vw,40px) clamp(16px,6vw,32px)",
           overflow: "hidden",
         }}>
           {/* Nişan Davetiyesi — çizgili başlık */}
@@ -337,8 +337,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           </div>
 
           {/* İsimler */}
-          <div style={{ marginBottom: 36, textAlign: "center" }}>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1 }}>
+          <div style={{ marginBottom: 36, textAlign: "center", maxWidth: "90vw" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>
               {isim1}
             </p>
             {isim2 && (
@@ -346,7 +346,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(1rem,4vw,1.5rem)", color: `${GOLD}CC`, lineHeight: 1, margin: "6px 0" }}>
                   &
                 </p>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1 }}>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>
                   {isim2}
                 </p>
               </>
@@ -469,7 +469,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             ETKİNLİK DETAYLARI — gece lüks
         ══════════════════════════════════ */}
-        <section style={{ background: SHADOW, padding: "100px 24px 110px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <section style={{ background: SHADOW, padding: "clamp(56px,14vw,100px) clamp(16px,5vw,24px) clamp(60px,14vw,110px)", textAlign: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.12 }}><NightWisteria side="left" /></div>
           <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.12 }}><NightWisteria side="right" /></div>
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(90,50,140,0.14) 0%, transparent 70%)" }} />
@@ -492,7 +492,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             <div style={{ maxWidth: 220, margin: "28px auto" }}><LuxuryDivider color={GOLD + "70"} /></div>
 
             {/* Saat + Mekan — yan yana */}
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(20px,6vw,48px)", flexWrap: "nowrap", marginBottom: 56, padding: "0 16px" }}>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(20px,6vw,48px)", flexWrap: "nowrap", marginBottom: "clamp(32px,8vw,56px)", padding: "0 clamp(8px,4vw,16px)" }}>
               {saatStr && (
                 <div style={{ textAlign: "center", flexShrink: 0 }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Saat</p>
@@ -505,7 +505,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               {davetiye.mekan && (
                 <div style={{ minWidth: 0, textAlign: "center" }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Mekan</p>
-                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1rem,3.8vw,1.6rem)", color: "#FEFCF8", lineHeight: 1.3 }}>{davetiye.mekan}</p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1rem,3.8vw,1.6rem)", color: "#FEFCF8", lineHeight: 1.3, wordBreak: "break-word" }}>{davetiye.mekan}</p>
                 </div>
               )}
             </div>
@@ -523,13 +523,13 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             POLAROİD ANI ALBÜMÜ
         ══════════════════════════════════ */}
         {davetiye.albumAktif && (
-          <section style={{ padding: "90px 24px 100px", textAlign: "center", background: BG_SOFT, position: "relative", overflow: "hidden" }}>
+          <section style={{ padding: "clamp(52px,12vw,90px) clamp(16px,5vw,24px) clamp(56px,12vw,100px)", textAlign: "center", background: BG_SOFT, position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 40% at 50% 100%, rgba(201,168,64,0.07) 0%, transparent 70%)" }} />
             <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.44em", color: LILAC, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
             <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2.6rem,8vw,4rem)", color: WARM, lineHeight: 1.05, marginBottom: 12 }}>En Güzel Anlar</p>
             <div style={{ maxWidth: 200, margin: "0 auto 56px" }}><LuxuryDivider /></div>
-            <div style={{ display: "flex", justifyContent: "center", minHeight: 400, marginBottom: 28 }}>
-              <div style={{ position: "relative", width: 320, height: 340 }}>
+            <div style={{ display: "flex", justifyContent: "center", minHeight: 360, marginBottom: 28 }}>
+              <div style={{ position: "relative", width: "min(320px, 88vw)", height: 340 }}>
                 {[
                   { top: 60, left: -10, rotate: -9, z: 1, delay: "0s",   dur: "6s",   src: davetiye.polaroid1, idx: 1 },
                   { top: 16, left: 60,  rotate: -2, z: 2, delay: "0.6s", dur: "6.5s", src: davetiye.polaroid2, idx: 2 },
@@ -554,7 +554,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             GERİ SAYIM — gece + altın
         ══════════════════════════════════ */}
-        <section style={{ padding: "100px 24px", textAlign: "center", background: DUSK, position: "relative", overflow: "hidden" }}>
+        <section style={{ padding: "clamp(56px,14vw,100px) clamp(16px,5vw,24px)", textAlign: "center", background: DUSK, position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(80,40,130,0.16) 0%, transparent 70%)" }} />
           <div style={{ position: "relative", zIndex: 1 }}>
             <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.46em", color: `${GOLD}75`, textTransform: "uppercase", marginBottom: 14 }}>Nişana Kalan Süre</p>
@@ -583,7 +583,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             RSVP — gece + kemer kart
         ══════════════════════════════════ */}
-        <section style={{ background: SHADOW, padding: "80px 16px 100px", position: "relative", overflow: "hidden" }}>
+        <section style={{ background: SHADOW, padding: "clamp(48px,10vw,80px) clamp(12px,4vw,16px) clamp(56px,12vw,100px)", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 60% at 50% 40%, rgba(80,40,130,0.12) 0%, transparent 70%)" }} />
           <div style={{ position: "relative", zIndex: 1, maxWidth: 400, margin: "0 auto" }}>
             <div style={{
@@ -594,7 +594,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               overflow: "hidden",
             }}>
               <div style={{ position: "absolute", inset: "10px 10px 0", borderRadius: "190px 190px 0 0", border: `0.5px solid ${GOLD}18`, pointerEvents: "none" }} />
-              <div style={{ padding: "68px 32px 56px", textAlign: "center" }}>
+              <div style={{ padding: "clamp(44px,12vw,68px) clamp(16px,6vw,32px) clamp(36px,10vw,56px)", textAlign: "center" }}>
                 <GoldOrnament />
                 <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.48em", color: GOLD, textTransform: "uppercase", marginBottom: 12 }}>Katılım Bildirimi</p>
                 <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3rem)", color: WARM, lineHeight: 1.1, marginBottom: 8 }}>Gelecek misiniz?</p>
@@ -610,10 +610,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             FOOTER — sade kapanış
         ══════════════════════════════════ */}
-        <footer style={{ background: BG, padding: "64px 24px 72px", textAlign: "center" }}>
+        <footer style={{ background: BG, padding: "clamp(40px,10vw,64px) clamp(16px,5vw,24px) clamp(48px,10vw,72px)", textAlign: "center" }}>
           <div style={{ width: 48, height: 1, background: `${GOLD}50`, margin: "0 auto 40px" }} />
-          <div style={{ textAlign: "center" }}>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
+          <div style={{ textAlign: "center", maxWidth: "90vw", margin: "0 auto" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>
               {isim1}
             </p>
             {isim2 && (
@@ -621,7 +621,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(0.9rem,3.5vw,1.3rem)", color: `${GOLD}CC`, lineHeight: 1, margin: "4px 0" }}>
                   &
                 </p>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>
                   {isim2}
                 </p>
               </>
