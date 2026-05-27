@@ -19,14 +19,9 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
     ad: "",
     email: "",
     telefon: "",
-    kisiSayisi: 1,
     mesaj: "",
     sarkiDilegi: "",
   });
-  const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
-
-  const toggleDiyet = (key: string) =>
-    setSecilenDiyet(prev => prev.includes(key) ? prev.filter(d => d !== key) : [...prev, key]);
 
   const handleSecim = (karar: boolean) => {
     setKatilim(karar);
@@ -54,8 +49,6 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
           email: form.email,
           telefon: form.telefon,
           katilim,
-          kisiSayisi: form.kisiSayisi,
-          diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
           mesaj: form.mesaj,
           sarkiOnerisi: form.sarkiDilegi.trim() || undefined,
         }),
@@ -131,23 +124,6 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             />
           </div>
 
-          {katilim && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kaç kişi katılacak?
-              </label>
-              <select
-                value={form.kisiSayisi}
-                onChange={(e) => setForm({ ...form, kisiSayisi: Number(e.target.value) })}
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
-              >
-                {[1, 2].map((n) => (
-                  <option key={n} value={n}>{n} kişi</option>
-                ))}
-              </select>
-            </div>
-          )}
-
           <div className="rounded-xl border border-gray-100 bg-gray-50/70">
             <button
               type="button"
@@ -156,7 +132,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
             >
               <span>
                 <span className="block text-sm font-semibold text-gray-700">Ek bilgi ekle</span>
-                <span className="block text-xs text-gray-400">E-posta, not, diyet veya şarkı dileği</span>
+                <span className="block text-xs text-gray-400">E-posta, not veya şarkı dileği</span>
               </span>
               <span className={`text-gray-400 transition-transform ${ekBilgiAcik ? "rotate-45" : ""}`}>+</span>
             </button>
@@ -176,34 +152,6 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
                   />
                 </div>
-
-                {katilim && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Diyet tercihleri <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { key: "vegan", label: "🌱 Vegan" },
-                        { key: "vejetaryen", label: "🥗 Vejetaryen" },
-                        { key: "glutensiz", label: "🌾 Glutensiz" },
-                        { key: "laktozsuz", label: "🥛 Laktozsuz" },
-                      ].map(opt => (
-                        <button
-                          key={opt.key}
-                          type="button"
-                          onClick={() => toggleDiyet(opt.key)}
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition-all"
-                          style={secilenDiyet.includes(opt.key)
-                            ? { borderColor: renk, color: renk, backgroundColor: renk + "12" }
-                            : { borderColor: "#e5e7eb", color: "#6b7280" }}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
