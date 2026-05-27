@@ -38,10 +38,12 @@ export default function DavetiyeOdemePanel({
   davetiyeId,
   baslik,
   fiyat,
+  adminMi = false,
 }: {
   davetiyeId: string;
   baslik: string;
   fiyat: DavetiyeFiyatSonucu;
+  adminMi?: boolean;
 }) {
   const { data: session } = useSession();
   const [fatura, setFatura] = useState<FaturaBilgileri>(BOS_FATURA);
@@ -137,6 +139,29 @@ export default function DavetiyeOdemePanel({
         ? "border-red-300 bg-red-50/50 focus:ring-red-100"
         : "border-gray-200 bg-white focus:border-purple-400 focus:ring-purple-100"
     }`;
+
+  if (!adminMi) {
+    return (
+      <section className="rounded-3xl border border-amber-200 bg-linear-to-br from-amber-50 via-white to-purple-50 p-5 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">Ödeme Bekliyor</p>
+            <h2 className="mt-2 text-xl font-black text-gray-950">{baslik} taslak olarak hazır</h2>
+            <p className="mt-2 text-sm leading-relaxed text-gray-500 max-w-xl">
+              Ödeme sistemi henüz aktif değil. Çok yakında hizmetinize sunulacak.
+            </p>
+          </div>
+          <div className="shrink-0 flex items-center gap-2 rounded-2xl border border-amber-300 bg-amber-100 px-4 py-2">
+            <span className="text-lg">⏳</span>
+            <div>
+              <p className="text-xs font-black text-amber-700 tracking-wide uppercase">Yakında</p>
+              <p className="text-[11px] text-amber-600 font-medium">{tutarMetni(fiyat.toplamTutar)}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>

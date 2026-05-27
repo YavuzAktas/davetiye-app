@@ -61,6 +61,50 @@ export default async function OdemeCheckoutPage({ params }: Props) {
   if (!davetiye) notFound();
   if (davetiye.odemeDurumu === "odendi") redirect(`/dashboard/davetiye/${slug}`);
 
+  const adminMi = session.user.email === "aylinyavuz@gmail.com";
+  if (!adminMi) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: "linear-gradient(148deg, #05000d 0%, #0c0120 55%, #07000f 100%)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "24px",
+      }}>
+        <div style={{
+          maxWidth: 440, width: "100%", textAlign: "center",
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 28, padding: "52px 40px",
+          boxShadow: "0 28px 72px rgba(0,0,0,0.45)",
+        }}>
+          <div style={{ fontSize: 52, marginBottom: 20 }}>⏳</div>
+          <p style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
+            textTransform: "uppercase", color: "rgba(168,85,247,0.65)", marginBottom: 12,
+          }}>
+            Çok Yakında
+          </p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 12 }}>
+            Ödeme sistemi yakında aktif olacak
+          </h1>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.65, marginBottom: 32 }}>
+            Davetiyeniz hazır ve taslak olarak kaydedildi. Ödeme özelliği çok yakında devreye girecek, o güne kadar davetiyenizi düzenleyebilirsiniz.
+          </p>
+          <Link href={`/dashboard/davetiye/${slug}`} style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: "linear-gradient(135deg,#7C3AED,#DB2777)",
+            color: "#fff", textDecoration: "none",
+            padding: "12px 28px", borderRadius: 16,
+            fontSize: 14, fontWeight: 700,
+            boxShadow: "0 8px 24px rgba(124,58,237,0.4)",
+          }}>
+            ← Davetiyeye Dön
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const sablon = SABLONLAR.find(s => s.id === davetiye.sablon) ?? SABLONLAR[0];
   const renk = sablon.renk;
   const emoji = EMOJILER[davetiye.etkinlikTur] ?? "🎉";

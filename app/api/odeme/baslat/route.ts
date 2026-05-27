@@ -89,6 +89,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
+  if (session.user.email !== "aylinyavuz@gmail.com") {
+    return NextResponse.json({ hata: "Ödeme sistemi henüz aktif değil. Çok yakında hizmetinize sunulacak." }, { status: 503 });
+  }
+
   // 2. Kullanıcı tabanlı limit: 3 deneme / saat
   if (!(await ipIzinVer("odeme-kullanici", session.user.id, 3, 60 * 60_000))) {
     return NextResponse.json(
