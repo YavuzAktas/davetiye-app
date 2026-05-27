@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface Props { muzikUrl: string; renk?: string }
 
@@ -42,6 +43,7 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
 function useAudio(src: string) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [caliyor, setCaliyor] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const audio = new Audio(src);
@@ -64,6 +66,12 @@ function useAudio(src: string) {
       document.removeEventListener("muzik-baslat", handleBaslat);
     };
   }, [src]);
+
+  /* Rota değişince durdur — Next.js router cache component'i unmount etmeyebilir */
+  useEffect(() => {
+    const a = audioRef.current;
+    if (a && !a.paused) a.pause();
+  }, [pathname]);
 
   const toggle = () => {
     const a = audioRef.current;
