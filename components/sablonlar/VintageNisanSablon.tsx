@@ -205,7 +205,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
   const calc = () => {
     if (!tarihObj) return { gun: 0, saat: 0, dakika: 0, saniye: 0 };
-    const f = tarihObj.getTime() - Date.now();
+    /* Tarih UTC olarak saklanıyor ama timeZone:"UTC" ile yerel saat gibi gösteriliyor.
+       getTimezoneOffset() (UTC+3 → -180) ekleyerek countdown'ı hizalıyoruz. */
+    const tzOffsetMs = new Date().getTimezoneOffset() * 60_000;
+    const f = tarihObj.getTime() + tzOffsetMs - Date.now();
     if (f <= 0) return { gun: 0, saat: 0, dakika: 0, saniye: 0 };
     return {
       gun:    Math.floor(f / 86400000),
