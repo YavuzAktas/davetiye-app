@@ -129,14 +129,18 @@ export default function EtkilesimButonu({
   }
 
   /* ─ Fotoğraf yükle ─ */
+  const MAKS_FOTO = 20;
+
   function dosyaSec(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
+    let files = Array.from(e.target.files ?? []);
     if (!files.length) return;
+    const fazla = files.length > MAKS_FOTO;
+    if (fazla) files = files.slice(0, MAKS_FOTO);
     onizlemeler.forEach(u => URL.revokeObjectURL(u));
     setOnizlemeler(files.map(f => URL.createObjectURL(f)));
     setSeciliDosyalar(files);
     setFotoDurumlar(files.map(() => "bekliyor"));
-    setFotoHata("");
+    setFotoHata(fazla ? `Tek seferde en fazla ${MAKS_FOTO} fotoğraf yükleyebilirsin. İlk ${MAKS_FOTO} seçildi.` : "");
   }
 
   function dosyaCikar(index: number) {
@@ -530,7 +534,11 @@ export default function EtkilesimButonu({
                         adresine yazabilirsiniz.
                       </p>
                     </div>
-                    {fotoHata && <p className="text-xs text-red-500">{fotoHata}</p>}
+                    {fotoHata && (
+                      <p className={`text-xs ${fotoHata.includes("en fazla") ? "text-amber-600" : "text-red-500"}`}>
+                        {fotoHata}
+                      </p>
+                    )}
                     <button type="submit" disabled={fotoYukleniyor || !seciliDosyalar.length || !fotoAd.trim()}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
