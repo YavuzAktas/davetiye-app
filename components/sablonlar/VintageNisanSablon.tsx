@@ -8,7 +8,6 @@ import MuzikCalar from "@/components/MuzikCalar";
 const BG      = "#FAF7EE";
 const BG_SOFT = "#F0E8D8";
 const BG_CARD = "#FEFCF8";
-const NIGHT   = "#07050E";
 const DUSK    = "#110820";
 const SHADOW  = "#1C1030";
 
@@ -28,16 +27,6 @@ const WARM_MD = "#6B3E18";
 const GREEN   = "#3D6645";
 const GREEN_LT= "#6A9872";
 
-/* ════════════════ YILDIZLAR (seal overlay) ════════════════ */
-const STARS = [
-  {x:7,y:9,s:1.1,d:0},{x:21,y:5,s:0.8,d:0.6},{x:88,y:7,s:1.2,d:1.1},
-  {x:76,y:13,s:0.9,d:0.4},{x:14,y:32,s:0.7,d:0.9},{x:93,y:38,s:1.0,d:1.4},
-  {x:4,y:56,s:1.3,d:0.5},{x:96,y:60,s:0.8,d:0.8},{x:18,y:74,s:1.0,d:1.2},
-  {x:84,y:80,s:1.1,d:0.3},{x:38,y:17,s:0.9,d:1.0},{x:62,y:8,s:0.7,d:0.7},
-  {x:50,y:4,s:1.2,d:0.2},{x:44,y:90,s:0.8,d:1.5},{x:56,y:94,s:1.0,d:0.9},
-  {x:30,y:97,s:0.7,d:0.5},{x:70,y:92,s:0.9,d:1.3},{x:2,y:84,s:1.1,d:0.4},
-  {x:98,y:22,s:0.8,d:1.0},{x:11,y:50,s:0.6,d:1.6},{x:86,y:50,s:0.9,d:0.7},
-];
 
 /* ════════════════ YARDIMCI BİLEŞENLER ════════════════ */
 
@@ -642,39 +631,16 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         </section>
 
         {/* ══════════════════════════════════
-            FOOTER — gece bahçesi kapanışı
+            FOOTER — sade kapanış
         ══════════════════════════════════ */}
-        <footer style={{ background: NIGHT, padding: "90px 24px 110px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-          {STARS.slice(0, 12).map((s, i) => (
-            <div key={i} style={{ position: "absolute", left: `${s.x}%`, top: `${s.y * 1.1}%`, width: s.s, height: s.s, borderRadius: "50%", background: "#FFFFFF", animation: `starPulse ${2.2 + i * 0.2}s ease-in-out ${s.d}s infinite` }} />
-          ))}
-          <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.35 }}><NightWisteria side="left" /></div>
-          <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.35 }}><NightWisteria side="right" /></div>
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 60% at 50% 55%, rgba(90,50,150,0.15) 0%, transparent 70%)" }} />
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <GoldOrnament />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.52em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 28 }}>
-              Sizi bekliyoruz
-            </p>
-            {isim1 && (
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.5rem)", color: "#FEFCF8", lineHeight: 0.90, textShadow: "0 0 40px rgba(169,120,216,0.3)" }}>
-                {isim1}
-              </p>
-            )}
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.5rem,5vw,2.5rem)", color: PETAL_LT, lineHeight: 1.2, margin: "4px 0" }}>
-              &
-            </p>
-            {isim2 && (
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.5rem)", color: "#FEFCF8", lineHeight: 0.90, marginBottom: 36, textShadow: "0 0 40px rgba(169,120,216,0.3)" }}>
-                {isim2}
-              </p>
-            )}
-            <div style={{ maxWidth: 200, margin: "0 auto 28px" }}><LuxuryDivider color={GOLD + "70"} /></div>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.1rem,4vw,1.6rem)", color: "rgba(253,252,248,0.55)" }}>
-              Sizi çok seviyoruz
-            </p>
-          </div>
+        <footer style={{ background: BG, padding: "64px 24px 72px", textAlign: "center" }}>
+          <div style={{ width: 48, height: 1, background: `${GOLD}50`, margin: "0 auto 40px" }} />
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
+            {isim1}{isim2 ? ` & ${isim2}` : ""}
+          </p>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.40em", color: `${GOLD}90`, textTransform: "uppercase", marginTop: 18 }}>
+            Sizi bekliyoruz
+          </p>
         </footer>
       </div>
     </>
