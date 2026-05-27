@@ -124,12 +124,12 @@ function NightWisteria({ side = "left", opacity = 1 }: { side?: "left"|"right"; 
 function GoldOrnament() {
   return (
     <svg width="100" height="36" viewBox="0 0 100 36" fill="none" style={{ display: "block", margin: "0 auto 20px" }}>
-      <line x1="0"  y1="18" x2="34" y2="18" stroke={GOLD} strokeWidth="0.7" opacity="0.6" />
-      <line x1="66" y1="18" x2="100" y2="18" stroke={GOLD} strokeWidth="0.7" opacity="0.6" />
+      <line x1="0"  y1="18" x2="36" y2="18" stroke={GOLD} strokeWidth="0.7" opacity="0.6" />
+      <line x1="64" y1="18" x2="100" y2="18" stroke={GOLD} strokeWidth="0.7" opacity="0.6" />
       <circle cx="10" cy="18" r="1.5" fill={GOLD} opacity="0.45" />
       <circle cx="90" cy="18" r="1.5" fill={GOLD} opacity="0.45" />
-      <path d="M50 4 L58 18 L50 32 L42 18 Z" stroke={GOLD} strokeWidth="0.9" fill={GOLD} fillOpacity="0.12" />
-      <circle cx="50" cy="18" r="3" fill={GOLD} opacity="0.85" />
+      <circle cx="50" cy="18" r="8" stroke={GOLD} strokeWidth="0.7" fill="none" opacity="0.40" />
+      <circle cx="50" cy="18" r="2.8" fill={GOLD} opacity="0.88" />
     </svg>
   );
 }
@@ -139,13 +139,11 @@ function LuxuryDivider({ color = GOLD }: { color?: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "20px 0" }}>
       <div style={{ flex: 1, height: 0.5, background: `linear-gradient(to right, transparent, ${color}70)` }} />
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-        <path d="M16 2 L24 16 L16 30 L8 16 Z" stroke={color} strokeWidth="0.8" fill={color} fillOpacity="0.1" />
-        <circle cx="16" cy="2"  r="2"   fill={color} opacity="0.5" />
-        <circle cx="24" cy="16" r="2"   fill={color} opacity="0.5" />
-        <circle cx="16" cy="30" r="2"   fill={color} opacity="0.5" />
-        <circle cx="8"  cy="16" r="2"   fill={color} opacity="0.5" />
-        <circle cx="16" cy="16" r="3.5" fill={color} opacity="0.9" />
+      <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
+        <circle cx="4"  cy="8" r="2"   fill={color} opacity="0.35" />
+        <circle cx="20" cy="8" r="5.5" stroke={color} strokeWidth="0.7" fill={color} fillOpacity="0.08" opacity="0.75" />
+        <circle cx="20" cy="8" r="2"   fill={color} opacity="0.90" />
+        <circle cx="36" cy="8" r="2"   fill={color} opacity="0.35" />
       </svg>
       <div style={{ flex: 1, height: 0.5, background: `linear-gradient(to left, transparent, ${color}70)` }} />
     </div>
