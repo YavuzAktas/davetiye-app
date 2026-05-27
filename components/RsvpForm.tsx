@@ -141,7 +141,7 @@ export default function RsvpForm({ davetiyeId, renk }: Props) {
                 onChange={(e) => setForm({ ...form, kisiSayisi: Number(e.target.value) })}
                 className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
               >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                {[1, 2].map((n) => (
                   <option key={n} value={n}>{n} kişi</option>
                 ))}
               </select>
