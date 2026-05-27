@@ -614,7 +614,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               </>
             )}
           </div>
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.40em", color: `${GOLD}90`, textTransform: "uppercase", marginTop: 18 }}>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 13, letterSpacing: "0.32em", color: GOLD, textTransform: "uppercase", marginTop: 22, textShadow: `0 0 20px ${GOLD}55` }}>
             Sizi seviyoruz
           </p>
         </footer>
