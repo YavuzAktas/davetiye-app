@@ -276,8 +276,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           to   { stroke-dashoffset: 0; }
         }
         @keyframes glowPulse {
-          0%,100% { opacity: 0.4; }
-          50%     { opacity: 0.85; }
+          0%,100% { opacity: 0.7; transform: scale(1); }
+          50%     { opacity: 1; transform: scale(1.04); }
         }
         @keyframes starPulse {
           0%,100% { opacity: 0.35; transform: scale(1); }
@@ -355,9 +355,21 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <WaxSeal size={180} onClick={onSealClick} />
 
           {/* İpucu */}
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, fontStyle: "italic", color: GOLD, letterSpacing: "0.22em", marginTop: 18, animation: "glowPulse 3s ease-in-out infinite", textShadow: `0 0 18px ${GOLD}80` }}>
-            Mühüre dokun
-          </p>
+          <div style={{ marginTop: 22, animation: "glowPulse 2.4s ease-in-out infinite", display: "flex", justifyContent: "center" }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              border: `1.5px solid ${GOLD}90`,
+              borderRadius: 999,
+              padding: "9px 22px",
+              background: `${GOLD}12`,
+              boxShadow: `0 0 22px ${GOLD}35`,
+            }}>
+              <span style={{ fontSize: 16 }}>👆</span>
+              <span style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, fontWeight: 700, fontStyle: "italic", color: GOLD, letterSpacing: "0.18em", textShadow: `0 0 12px ${GOLD}70` }}>
+                Mühüre Dokun
+              </span>
+            </div>
+          </div>
 
           {/* Tarih */}
           {tarihKisa && (
