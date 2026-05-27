@@ -357,12 +357,12 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <WaxSeal size={180} onClick={onSealClick} />
 
           {/* İpucu */}
-          <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 12, animation: "glowPulse 2.4s ease-in-out infinite" }}>
-            <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to left, ${GOLD}70, transparent)` }} />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, fontStyle: "italic", fontWeight: 700, color: GOLD, letterSpacing: "0.28em", textShadow: `0 0 14px ${GOLD}60` }}>
+          <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 14, animation: "glowPulse 2.4s ease-in-out infinite" }}>
+            <div style={{ width: 40, height: "0.5px", background: `linear-gradient(to left, ${GOLD}70, transparent)` }} />
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(15px,4.5vw,20px)", fontStyle: "italic", fontWeight: 700, color: GOLD, letterSpacing: "0.22em", textShadow: `0 0 18px ${GOLD}70` }}>
               Mühüre Dokun
             </p>
-            <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to right, ${GOLD}70, transparent)` }} />
+            <div style={{ width: 40, height: "0.5px", background: `linear-gradient(to right, ${GOLD}70, transparent)` }} />
           </div>
 
           {/* Tarih */}
