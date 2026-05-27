@@ -292,7 +292,8 @@ export default function EtkilesimButonu({
     const p = new URLSearchParams(window.location.search).get("panel") as Sekme | null;
     if (!p || !sekmeler.includes(p)) return;
     setSekme(p);
-    setAcik(true);
+    const t = setTimeout(() => setAcik(true), 300);
+    return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

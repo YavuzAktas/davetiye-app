@@ -186,7 +186,11 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
    ANA BİLEŞEN
 ═══════════════════════════════════════════ */
 export default function VintageNisanSablon({ davetiye, previewModu }: SablonProps) {
-  const [sealVar, setSealVar]       = useState(!previewModu);
+  const [sealVar, setSealVar]       = useState(() => {
+    if (previewModu) return false;
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("panel")) return false;
+    return true;
+  });
   const [sealFading, setSealFading] = useState(false);
   const [isimlerGorunur, setIsimlerGorunur] = useState(false);
   const [videoFinal, setVideoFinal]         = useState(false);
