@@ -604,9 +604,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 ═══════════════════════════════════════════ */
 function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
-  const [form, setForm] = useState({ ad: "", kisiSayisi: "1", katilim: "", sarkiDilegi: "" });
-  const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
-  const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
+  const [form, setForm] = useState({ ad: "", katilim: "", sarkiDilegi: "" });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
   const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
@@ -619,7 +617,7 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
     if (!form.katilim)   { setHata("Lütfen katılım durumunu seçin."); return; }
     setYukleniyor(true); setHata("");
     try {
-      const res = await fetch("/api/rsvp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ davetiyeId, ad: form.ad, katilim: form.katilim === "evet", kisiSayisi: Number(form.kisiSayisi), diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined, sarkiOnerisi: form.sarkiDilegi.trim() || undefined }) });
+      const res = await fetch("/api/rsvp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ davetiyeId, ad: form.ad, katilim: form.katilim === "evet", sarkiOnerisi: form.sarkiDilegi.trim() || undefined }) });
       if (!res.ok) { const d = await res.json().catch(() => ({})); setHata(d.hata || "Bir hata oluştu."); return; }
       setAdim("tamam");
     } catch { setHata("Bir hata oluştu."); }
@@ -638,8 +636,6 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
     <div>
       <label style={labelStyle}>ADINIZ SOYADINIZ</label>
       <input type="text" value={form.ad} onChange={e => setForm({ ...form, ad: e.target.value })} placeholder="örn. Selin Kaya" style={fieldStyle} />
-      <label style={labelStyle}>KAÇ KİŞİ?</label>
-      <select value={form.kisiSayisi} onChange={e => setForm({ ...form, kisiSayisi: e.target.value })} style={fieldStyle}>{[1,2,3,4,5].map(n => <option key={n} value={n}>{n} kişi</option>)}</select>
       <label style={labelStyle}>KATILIM DURUMU</label>
       <select value={form.katilim} onChange={e => setForm({ ...form, katilim: e.target.value })} style={fieldStyle}>
         <option value="">Seçiniz</option>
@@ -648,21 +644,11 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
       </select>
       <div style={{ marginTop: 22, border: `1px solid ${LILAC_LT}28`, borderRadius: 10, overflow: "hidden", background: `rgba(122,82,160,0.03)` }}>
         <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-lora),serif", color: WARM, textAlign: "left" }}>
-          <span><span style={{ display: "block", fontSize: 13, fontWeight: 700 }}>Ek bilgi ekle</span><span style={{ display: "block", fontSize: 11, color: WARM_MD, marginTop: 2 }}>Diyet tercihi veya şarkı dileği</span></span>
+          <span><span style={{ display: "block", fontSize: 13, fontWeight: 700 }}>Ek bilgi ekle</span><span style={{ display: "block", fontSize: 11, color: WARM_MD, marginTop: 2 }}>Şarkı dileği veya not</span></span>
           <span style={{ fontSize: 18, color: LILAC_LT, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition: "transform 0.15s" }}>+</span>
         </button>
         {ekBilgiAcik && (
           <div style={{ padding: "0 14px 14px", borderTop: `1px solid ${LILAC_LT}20` }}>
-            {form.katilim === "evet" && (
-              <div style={{ marginTop: 14 }}>
-                <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
-                  {[{ k: "vegan", l: "🌱 Vegan" }, { k: "vejetaryen", l: "🥗 Vejetaryen" }, { k: "glutensiz", l: "🌾 Glutensiz" }, { k: "laktozsuz", l: "🥛 Laktozsuz" }].map(opt => (
-                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "6px 12px", borderRadius: 6, fontSize: 11, cursor: "pointer", fontFamily: "var(--font-lora),serif", border: `1.5px solid ${secilenDiyet.includes(opt.k) ? LILAC_MD : LILAC_LT + "45"}`, color: secilenDiyet.includes(opt.k) ? WARM : WARM_MD, background: secilenDiyet.includes(opt.k) ? LILAC_LT + "28" : "transparent", transition: "all 0.15s" }}>{opt.l}</button>
-                  ))}
-                </div>
-              </div>
-            )}
             <div style={{ marginTop: 14 }}>
               <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
               <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })} placeholder="Dans pistindeki favori şarkınız?" maxLength={200} style={fieldStyle} />
