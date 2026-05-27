@@ -518,7 +518,7 @@ export default function EtkilesimButonu({
                       >
                         <p className="text-3xl mb-1">🖼️</p>
                         <p className="text-sm text-gray-500">Fotoğraf seç</p>
-                        <p className="text-xs text-gray-400 mt-0.5">Birden fazla seçebilirsin · max 4 MB/adet</p>
+                        <p className="text-xs text-gray-400 mt-0.5">Tek seferde en fazla 20 · max 4 MB/adet</p>
                       </div>
                     )}
                     <input ref={dosyaInputRef} type="file" accept="image/*" multiple className="hidden" onChange={dosyaSec} />
