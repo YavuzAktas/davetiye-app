@@ -492,9 +492,9 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             <div style={{ maxWidth: 220, margin: "28px auto" }}><LuxuryDivider color={GOLD + "70"} /></div>
 
             {/* Saat + Mekan — yan yana */}
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(20px,6vw,48px)", flexWrap: "nowrap", marginBottom: "clamp(32px,8vw,56px)", padding: "0 clamp(8px,4vw,16px)" }}>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(20px,6vw,48px)", flexWrap: "nowrap", marginBottom: "clamp(32px,8vw,56px)", padding: "0 clamp(8px,4vw,16px)" }}>
               {saatStr && (
-                <div style={{ textAlign: "center", flexShrink: 0 }}>
+                <div style={{ textAlign: "center", flexShrink: 0, flex: 1 }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Saat</p>
                   <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.4rem,8vw,3.8rem)", color: "#FEFCF8", lineHeight: 1 }}>{saatStr}</p>
                 </div>
@@ -503,7 +503,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 <div style={{ width: 1, alignSelf: "stretch", minHeight: 60, flexShrink: 0, background: `${GOLD}22` }} />
               )}
               {davetiye.mekan && (
-                <div style={{ minWidth: 0, textAlign: "center" }}>
+                <div style={{ minWidth: 0, textAlign: "center", flex: 1 }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Mekan</p>
                   <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1rem,3.8vw,1.6rem)", color: "#FEFCF8", lineHeight: 1.3, wordBreak: "break-word" }}>{davetiye.mekan}</p>
                 </div>
