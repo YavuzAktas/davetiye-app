@@ -7,6 +7,7 @@ import imageCompression from "browser-image-compression";
 /* ─── Tipler ─── */
 type Sekme = "foto" | "ani" | "sesli";
 type KayitDurum = "bekliyor" | "kayit" | "gozden" | "gonderiliyor" | "tamam" | "hata";
+type FotoDurum = "bekliyor" | "sikistiriliyor" | "yukleniyor" | "tamam" | "hata";
 
 interface AlbumFoto  { id: string; yukleyenAd: string; dosyaUrl: string; createdAt: string; }
 interface AniYazisi  { id: string; yazarAd: string;   icerik: string;   createdAt: string; }
@@ -44,6 +45,7 @@ export default function EtkilesimButonu({
   const [fotoAd,            setFotoAd]            = useState("");
   const [seciliDosyalar,    setSeciliDosyalar]    = useState<File[]>([]);
   const [onizlemeler,       setOnizlemeler]       = useState<string[]>([]);
+  const [fotoDurumlar,      setFotoDurumlar]      = useState<FotoDurum[]>([]);
   const [fotoYukleniyor,    setFotoYukleniyor]    = useState(false);
   const [yuklenenSayisi,    setYuklenenSayisi]    = useState(0);
   const [fotoBasari,        setFotoBasari]        = useState(false);
@@ -132,37 +134,64 @@ export default function EtkilesimButonu({
     onizlemeler.forEach(u => URL.revokeObjectURL(u));
     setOnizlemeler(files.map(f => URL.createObjectURL(f)));
     setSeciliDosyalar(files);
+    setFotoDurumlar(files.map(() => "bekliyor"));
     setFotoHata("");
+  }
+
+  function dosyaCikar(index: number) {
+    URL.revokeObjectURL(onizlemeler[index]);
+    setSeciliDosyalar(prev => prev.filter((_, i) => i !== index));
+    setOnizlemeler(prev => prev.filter((_, i) => i !== index));
+    setFotoDurumlar(prev => prev.filter((_, i) => i !== index));
   }
 
   async function fotoYukle(e: React.FormEvent) {
     e.preventDefault();
     if (!seciliDosyalar.length || !fotoAd.trim()) return;
     setFotoYukleniyor(true); setFotoHata(""); setYuklenenSayisi(0);
-    const sonuclar = await Promise.allSettled(
-      seciliDosyalar.map(async (dosya) => {
+    setFotoDurumlar(seciliDosyalar.map(() => "bekliyor"));
+
+    let hataSayisi = 0;
+    let ilkHata = "";
+
+    const gorevler = seciliDosyalar.map((dosya, i) => async () => {
+      setFotoDurumlar(prev => { const n = [...prev]; n[i] = "sikistiriliyor"; return n; });
+      try {
         const sikis = await imageCompression(dosya, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true });
-        const form  = new FormData();
+        setFotoDurumlar(prev => { const n = [...prev]; n[i] = "yukleniyor"; return n; });
+        const form = new FormData();
         form.append("ad", fotoAd.trim());
         form.append("dosya", sikis, dosya.name);
         const res  = await fetch(`/api/davetiye/${slug}/album`, { method: "POST", body: form });
         const json = await res.json();
         if (!res.ok) throw new Error(json.hata ?? "Yükleme başarısız");
+        setFotoDurumlar(prev => { const n = [...prev]; n[i] = "tamam"; return n; });
         setYuklenenSayisi(n => n + 1);
-      })
-    );
-    const hatalar = sonuclar.filter(r => r.status === "rejected") as PromiseRejectedResult[];
-    const basarili = seciliDosyalar.length - hatalar.length;
-    if (hatalar.length === 0) {
+      } catch (err: unknown) {
+        setFotoDurumlar(prev => { const n = [...prev]; n[i] = "hata"; return n; });
+        hataSayisi++;
+        if (!ilkHata) ilkHata = (err as Error).message;
+      }
+    });
+
+    /* Aynı anda max 3 yükleme — tarayıcının donmaması için */
+    let idx = 0;
+    async function worker() {
+      while (idx < gorevler.length) { await gorevler[idx++](); }
+    }
+    await Promise.all([worker(), worker(), worker()]);
+
+    const basarili = seciliDosyalar.length - hataSayisi;
+    if (hataSayisi === 0) {
       setFotoBasari(true);
-      setFotoAd(""); setSeciliDosyalar([]); setOnizlemeler([]);
+      setFotoAd(""); setSeciliDosyalar([]); setOnizlemeler([]); setFotoDurumlar([]);
       if (dosyaInputRef.current) dosyaInputRef.current.value = "";
       fetchFotolar(true);
       setTimeout(() => setFotoBasari(false), 4000);
     } else {
       setFotoHata(basarili > 0
-        ? `${basarili} fotoğraf yüklendi, ${hatalar.length} başarısız: ${hatalar[0].reason.message}`
-        : hatalar[0].reason.message
+        ? `${basarili} fotoğraf yüklendi, ${hataSayisi} başarısız: ${ilkHata}`
+        : ilkHata
       );
       if (basarili > 0) fetchFotolar(true);
     }
@@ -430,28 +459,62 @@ export default function EtkilesimButonu({
                       onChange={e => setFotoAd(e.target.value)}
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white"
                       maxLength={40} required />
-                    <div onClick={() => dosyaInputRef.current?.click()}
-                      className="border-2 border-dashed border-gray-200 rounded-xl p-3 cursor-pointer hover:border-purple-300 hover:bg-purple-50/30 transition-colors">
-                      {onizlemeler.length > 0 ? (
-                        <div className="grid grid-cols-3 gap-2">
-                          {onizlemeler.map((url, i) => (
+                    {onizlemeler.length > 0 ? (
+                      <div className="grid grid-cols-3 gap-2">
+                        {onizlemeler.map((url, i) => {
+                          const durum = fotoDurumlar[i] ?? "bekliyor";
+                          return (
                             <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
                               <Image src={url} alt={`seçili ${i + 1}`} fill className="object-cover" />
+                              {/* X butonu — yükleme başlamadan görünür */}
+                              {!fotoYukleniyor && (
+                                <button
+                                  type="button"
+                                  onClick={() => dosyaCikar(i)}
+                                  className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-xs leading-none transition-colors"
+                                >
+                                  ×
+                                </button>
+                              )}
+                              {/* Yükleme durumu overlay */}
+                              {fotoYukleniyor && (
+                                <div className="absolute inset-0 flex items-center justify-center" style={{
+                                  background: durum === "tamam" ? "rgba(16,185,129,0.45)"
+                                    : durum === "hata"   ? "rgba(239,68,68,0.45)"
+                                    : "rgba(0,0,0,0.40)",
+                                }}>
+                                  {durum === "tamam" && <span className="text-white text-lg font-bold">✓</span>}
+                                  {durum === "hata"  && <span className="text-white text-lg font-bold">✗</span>}
+                                  {(durum === "bekliyor" || durum === "sikistiriliyor" || durum === "yukleniyor") && (
+                                    <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                                  )}
+                                </div>
+                              )}
                             </div>
-                          ))}
-                          <div className="aspect-square rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 gap-1">
-                            <span className="text-xl">+</span>
-                            <span className="text-[10px]">ekle</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center py-3">
-                          <p className="text-3xl mb-1">🖼️</p>
-                          <p className="text-sm text-gray-500">Fotoğraf seç</p>
-                          <p className="text-xs text-gray-400 mt-0.5">Birden fazla seçebilirsin · max 4 MB/adet</p>
-                        </div>
-                      )}
-                    </div>
+                          );
+                        })}
+                        {/* Yeni seç tile'ı — yükleme başlamadan görünür */}
+                        {!fotoYukleniyor && (
+                          <button
+                            type="button"
+                            onClick={() => dosyaInputRef.current?.click()}
+                            className="aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-purple-300 hover:bg-purple-50/30 flex flex-col items-center justify-center text-gray-400 gap-1 transition-colors"
+                          >
+                            <span className="text-xl leading-none">+</span>
+                            <span className="text-[10px]">değiştir</span>
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        onClick={() => dosyaInputRef.current?.click()}
+                        className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-purple-300 hover:bg-purple-50/30 transition-colors"
+                      >
+                        <p className="text-3xl mb-1">🖼️</p>
+                        <p className="text-sm text-gray-500">Fotoğraf seç</p>
+                        <p className="text-xs text-gray-400 mt-0.5">Birden fazla seçebilirsin · max 4 MB/adet</p>
+                      </div>
+                    )}
                     <input ref={dosyaInputRef} type="file" accept="image/*" multiple className="hidden" onChange={dosyaSec} />
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
