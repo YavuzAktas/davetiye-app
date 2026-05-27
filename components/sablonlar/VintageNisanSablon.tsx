@@ -300,53 +300,51 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══════════════════════════════════
-          MÜHÜR OVERLAY — zarf
+          MÜHÜR OVERLAY
       ══════════════════════════════════ */}
       {sealVar && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 45,
-          background: "#F7F2EA",
+          background: `
+            radial-gradient(ellipse 55% 45% at 15% 20%, ${GOLD}10 0%, transparent 65%),
+            radial-gradient(ellipse 50% 40% at 85% 80%, ${PETAL}0C 0%, transparent 60%),
+            radial-gradient(ellipse 80% 70% at 50% 50%, #FFFDF9 0%, #F2EAE0 100%)
+          `,
           opacity: sealFading ? 0 : 1,
           transition: "opacity 1.2s ease",
           pointerEvents: sealFading ? "none" : "auto",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          textAlign: "center", padding: "40px 32px",
           overflow: "hidden",
         }}>
-          {/* Zarf fold çizgileri */}
-          <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 100 100" preserveAspectRatio="none">
-            <polygon points="0,0 100,0 50,40" fill="#EDE6D9" />
-            <line x1="0" y1="0" x2="50" y2="40" stroke={GOLD} strokeWidth="0.12" opacity="0.55" />
-            <line x1="100" y1="0" x2="50" y2="40" stroke={GOLD} strokeWidth="0.12" opacity="0.55" />
-            <rect x="1" y="1" width="98" height="98" fill="none" stroke={GOLD} strokeWidth="0.18" opacity="0.25" />
-          </svg>
-          {/* Katlama gölgesi */}
-          <div style={{ position: "absolute", left: 0, right: 0, top: "39%", height: 28, background: "linear-gradient(to bottom, rgba(150,120,80,0.07), transparent)", pointerEvents: "none" }} />
-
-          {/* İçerik */}
-          <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", flexDirection: "column", alignItems: "center",
-            paddingTop: "clamp(110px,26svh,200px)",
-            padding: "clamp(110px,26svh,200px) 32px 40px",
-            textAlign: "center",
-          }}>
-            <WaxSeal size={170} onClick={onSealClick} />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}65`, letterSpacing: "0.24em", marginTop: 14, animation: "glowPulse 3s ease-in-out infinite" }}>
-              Mühüre dokun
+          {/* Nişan Davetiyesi — çizgili başlık */}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+            <div style={{ width: 48, height: "0.5px", background: `linear-gradient(to left, ${GOLD}50, transparent)` }} />
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.46em", color: GOLD, textTransform: "uppercase" }}>
+              Nişan Davetiyesi
             </p>
-            <div style={{ marginTop: "clamp(28px,6svh,52px)" }}>
-              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.44em", color: `${GOLD}90`, textTransform: "uppercase", marginBottom: 14 }}>
-                Nişan Davetiyesi
-              </p>
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8vw,3.5rem)", color: WARM, lineHeight: 1.1 }}>
-                {isim1}{isim2 ? ` & ${isim2}` : ""}
-              </p>
-              {tarihKisa && (
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.18em", color: `${WARM}50`, marginTop: 10 }}>
-                  {tarihKisa}
-                </p>
-              )}
-            </div>
+            <div style={{ width: 48, height: "0.5px", background: `linear-gradient(to right, ${GOLD}50, transparent)` }} />
           </div>
+
+          {/* İsimler */}
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2.2rem,9vw,4rem)", color: WARM, lineHeight: 1.1, marginBottom: 36 }}>
+            {isim1}{isim2 ? ` & ${isim2}` : ""}
+          </p>
+
+          {/* Mühür */}
+          <WaxSeal size={180} onClick={onSealClick} />
+
+          {/* İpucu */}
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}65`, letterSpacing: "0.24em", marginTop: 18, animation: "glowPulse 3s ease-in-out infinite" }}>
+            Mühüre dokun
+          </p>
+
+          {/* Tarih */}
+          {tarihKisa && (
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.18em", color: `${WARM}40`, marginTop: 20 }}>
+              {tarihKisa}
+            </p>
+          )}
         </div>
       )}
 
