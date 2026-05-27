@@ -647,7 +647,6 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [form, setForm] = useState({ ad: "", katilim: "", sarkiDilegi: "" });
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
-  const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
 
   const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${LILAC_LT}60`, padding: "10px 0", fontSize: 14, fontFamily: "var(--font-lora),serif", color: WARM, outline: "none", boxSizing: "border-box", appearance: "none" as const };
   const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.28em", color: WARM_MD, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 20 };
@@ -682,20 +681,8 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
         <option value="evet">Katılıyorum</option>
         <option value="hayir">Katılamıyorum</option>
       </select>
-      <div style={{ marginTop: 22, border: `1px solid ${LILAC_LT}28`, borderRadius: 10, overflow: "hidden", background: `rgba(122,82,160,0.03)` }}>
-        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-lora),serif", color: WARM, textAlign: "left" }}>
-          <span><span style={{ display: "block", fontSize: 13, fontWeight: 700 }}>Ek bilgi ekle</span><span style={{ display: "block", fontSize: 11, color: WARM_MD, marginTop: 2 }}>Şarkı dileği veya not</span></span>
-          <span style={{ fontSize: 18, color: LILAC_LT, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition: "transform 0.15s" }}>+</span>
-        </button>
-        {ekBilgiAcik && (
-          <div style={{ padding: "0 14px 14px", borderTop: `1px solid ${LILAC_LT}20` }}>
-            <div style={{ marginTop: 14 }}>
-              <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
-              <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })} placeholder="Dans pistindeki favori şarkınız?" maxLength={200} style={fieldStyle} />
-            </div>
-          </div>
-        )}
-      </div>
+      <label style={labelStyle}>🎵 Şarkı dileğiniz <span style={{ textTransform: "none", letterSpacing: 0, fontSize: 10, color: WARM_MD }}>(isteğe bağlı)</span></label>
+      <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })} placeholder="Dans pistindeki favori şarkınız?" maxLength={200} style={fieldStyle} />
       {hata && <p style={{ color: "#B91C1C", fontSize: 12, fontFamily: "var(--font-lora),serif", marginTop: 12 }}>{hata}</p>}
       <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${LILAC} 0%, ${LILAC_MD} 100%)`, color: BG_CARD, border: "none", borderRadius: 8, fontFamily: "var(--font-lora),serif", fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.7 : 1, boxShadow: `0 4px 20px ${LILAC}40` }}>
         {yukleniyor ? "GÖNDERİLİYOR..." : "BİLDİR"}
