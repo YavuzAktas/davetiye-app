@@ -381,136 +381,197 @@ function DGMekan() {
 /* ══════════════════════════════════════════════
    PREMIUM ÖNİZLEMELER — Vintage Nişan
 ══════════════════════════════════════════════ */
-const V = { BG:"#F7F0E4", BG_DARK:"#EDE0C8", BG_PAPER:"#FDFAF6", BURG:"#6E1C2A", BURG_MED:"#8B2A3A", BROWN:"#3D2219", TAN:"#B8865A" };
+const V = {
+  BG:"#FAF7EE", BG_SOFT:"#F0E8D8", BG_CARD:"#FEFCF8",
+  DUSK:"#110820", SHADOW:"#1C1030",
+  GOLD:"#C9A840", GOLD_LT:"#E8D070",
+  WARM:"#2A1808", WARM_MD:"#6B3E18",
+  LILAC:"#7A52A0", LILAC_LT:"#CCB0E8",
+  PETAL:"#C07888", PETAL_LT:"#E0AABC",
+};
 
 function VintageKapak() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden select-none"
-      style={{ background: V.BG }}>
-      {/* Keten doku */}
-      <div style={{ position:"absolute", inset:0, backgroundImage:`repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(61,34,25,0.025) 3px,rgba(61,34,25,0.025) 6px)`, pointerEvents:"none" }} />
-      {/* Köşe botanik */}
-      <div style={{ position:"absolute", top:0, left:0, opacity:0.2 }}>
-        <svg width="60" height="100" viewBox="0 0 90 160" fill="none">
-          <path d="M45 155 C45 140 42 120 44 100 C46 80 44 60 45 40 C46 20 45 10 45 5" stroke={V.BURG} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-          <path d="M44 110 C30 105 18 95 14 80 C24 78 36 88 44 100" fill={V.BURG}/>
-          <path d="M44 88 C28 80 16 68 15 52 C26 52 38 64 44 78" fill={V.BURG} opacity="0.8"/>
-          <path d="M46 100 C60 92 72 80 72 64 C62 64 50 76 46 90" fill={V.BURG} opacity="0.75"/>
-        </svg>
+      style={{ background:`radial-gradient(ellipse 80% 70% at 50% 50%, #FFFDF9 0%, #F2EAE0 100%)` }}>
+      {/* Soluk altın / petal renk akcentleri */}
+      <div style={{ position:"absolute", top:0, left:0, width:120, height:120, borderRadius:"50%", background:`radial-gradient(${V.GOLD}12, transparent 70%)`, pointerEvents:"none" }} />
+      <div style={{ position:"absolute", bottom:0, right:0, width:100, height:100, borderRadius:"50%", background:`radial-gradient(${V.PETAL}0C, transparent 65%)`, pointerEvents:"none" }} />
+
+      {/* "Nişan Davetiyesi" — çizgili başlık */}
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:18, zIndex:1 }}>
+        <div style={{ width:36, height:"0.5px", background:`linear-gradient(to left,${V.GOLD}55,transparent)` }}/>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.42em", color:V.GOLD, textTransform:"uppercase" }}>Nişan Davetiyesi</p>
+        <div style={{ width:36, height:"0.5px", background:`linear-gradient(to right,${V.GOLD}55,transparent)` }}/>
       </div>
-      <div style={{ position:"absolute", top:0, right:0, opacity:0.2, transform:"scaleX(-1)" }}>
-        <svg width="60" height="100" viewBox="0 0 90 160" fill="none">
-          <path d="M45 155 C45 140 42 120 44 100 C46 80 44 60 45 40 C46 20 45 10 45 5" stroke={V.BURG} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-          <path d="M44 110 C30 105 18 95 14 80 C24 78 36 88 44 100" fill={V.BURG}/>
-          <path d="M44 88 C28 80 16 68 15 52 C26 52 38 64 44 78" fill={V.BURG} opacity="0.8"/>
-          <path d="M46 100 C60 92 72 80 72 64 C62 64 50 76 46 90" fill={V.BURG} opacity="0.75"/>
-        </svg>
-      </div>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.36em", color:V.BURG, textTransform:"uppercase", marginBottom:14, zIndex:1 }}>Nişan Davetiyesi</p>
-      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.BROWN, lineHeight:1.15, textAlign:"center", zIndex:1 }}>
-        Selin <span style={{ color:V.TAN }}>&amp;</span> Emre
+
+      {/* İsimler */}
+      <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1, textAlign:"center", zIndex:1, marginBottom:22 }}>
+        Selin &amp; Emre
       </p>
-      {/* Mum Mühür */}
-      <div style={{ width:100, height:100, borderRadius:"50%", margin:"16px auto 0", zIndex:1, position:"relative",
-        background:`radial-gradient(circle at 38% 38%, ${V.BURG_MED}, ${V.BURG})`,
-        boxShadow:`0 6px 24px rgba(110,28,42,0.4), inset 0 1px 2px rgba(255,255,255,0.1)`,
+
+      {/* Mühür */}
+      <div style={{ width:80, height:80, borderRadius:"50%", zIndex:1,
+        background:`radial-gradient(circle at 38% 35%, ${V.GOLD_LT}cc, ${V.GOLD})`,
+        boxShadow:`0 6px 24px rgba(42,24,8,0.18), 0 2px 6px rgba(42,24,8,0.09)`,
         display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ width:"78%", height:"78%", borderRadius:"50%", border:"1.5px solid rgba(247,240,228,0.3)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:3 }}>
-          <svg width="22" height="20" viewBox="0 0 32 28" fill="none"><path d="M16 24 C16 18 10 12 6 8 C10 6 16 10 16 16 C16 10 22 6 26 8 C22 12 16 18 16 24Z" fill="rgba(247,240,228,0.85)"/></svg>
-          <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:9, color:"rgba(247,240,228,0.8)", letterSpacing:2 }}>Nişan</p>
+        <div style={{ width:"78%", height:"78%", borderRadius:"50%", border:"1px solid rgba(255,253,249,0.35)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:2 }}>
+          <svg width="18" height="16" viewBox="0 0 32 28" fill="none">
+            <path d="M16 24 C16 18 10 12 6 8 C10 6 16 10 16 16 C16 10 22 6 26 8 C22 12 16 18 16 24Z" fill="rgba(255,253,249,0.9)"/>
+          </svg>
+          <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, color:"rgba(255,253,249,0.82)", letterSpacing:2 }}>Nişan</p>
         </div>
       </div>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:10, letterSpacing:"0.28em", color:V.BURG, marginTop:14, zIndex:1 }}>12 TEMMUZ 2026</p>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, fontStyle:"italic", color:`${V.BROWN}55`, marginTop:4, zIndex:1 }}>Mühüre dokun ✦</p>
+
+      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, fontStyle:"italic", letterSpacing:"0.22em", color:`${V.GOLD}70`, marginTop:14, zIndex:1 }}>Mühüre dokun</p>
+      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, letterSpacing:"0.16em", color:`${V.WARM}45`, marginTop:10, zIndex:1 }}>12 TEMMUZ 2026</p>
     </div>
   );
 }
+
 function VintageHero() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-5 relative" style={{ background:V.BG }}>
-      <div style={{ position:"absolute", inset:0, backgroundImage:`repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(61,34,25,0.018) 3px,rgba(61,34,25,0.018) 6px)`, pointerEvents:"none" }} />
-      {["top-3 left-3","top-3 right-3","bottom-3 left-3","bottom-3 right-3"].map((c,i)=>(
-        <span key={i} className={`absolute ${c}`} style={{ color:`${V.BURG}30`, fontSize:11 }}>✦</span>
-      ))}
-      <div className="w-full text-center py-6 px-5" style={{ borderRadius:"80px 80px 12px 12px", border:`1px solid ${V.BURG}22`, background:"rgba(253,250,246,0.7)", position:"relative", zIndex:1 }}>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.32em", color:V.BURG, marginBottom:12 }}>NİŞAN DAVETİYESİ</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.7rem,5.5vw,2.3rem)", color:V.BROWN, lineHeight:1 }}>Selin</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(0.9rem,3vw,1.2rem)", color:V.TAN, lineHeight:1.4 }}>&amp;</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.7rem,5.5vw,2.3rem)", color:V.BROWN, lineHeight:1, marginBottom:10 }}>Emre</p>
-        <div style={{ height:1, background:`linear-gradient(to right,transparent,${V.TAN}50,transparent)`, margin:"10px 0" }}/>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.12em", color:`${V.BROWN}60` }}>12 TEMMUZ 2026 · İSTANBUL</p>
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden select-none"
+      style={{ background:V.DUSK }}>
+      {/* Gradient overlay */}
+      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.32) 55%, transparent 100%)", pointerEvents:"none" }}/>
+      {/* Mor parıltı */}
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 65% 55% at 50% 55%, rgba(80,40,130,0.18) 0%, transparent 70%)", pointerEvents:"none" }}/>
+
+      <div style={{ position:"relative", zIndex:1, textAlign:"center", padding:"0 16px" }}>
+        {/* Pill label */}
+        <div style={{ display:"inline-block", background:"rgba(0,0,0,0.38)", backdropFilter:"blur(6px)", padding:"4px 14px 4px 16px", borderRadius:20, marginBottom:16 }}>
+          <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.42em", color:"rgba(255,255,255,0.95)", textTransform:"uppercase" }}>Nişan Davetiyesi</p>
+        </div>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.95, textShadow:"0 2px 20px rgba(0,0,0,0.9)" }}>Selin</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1rem,3.5vw,1.4rem)", color:V.PETAL_LT, lineHeight:1.2, textShadow:"0 1px 12px rgba(0,0,0,0.9)" }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.95, marginBottom:14, textShadow:"0 2px 20px rgba(0,0,0,0.9)" }}>Emre</p>
+        {/* Divider */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8, margin:"10px 0" }}>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to right,transparent,${V.PETAL_LT}60)` }}/>
+          <div style={{ width:6, height:6, borderRadius:"50%", background:V.PETAL_LT, opacity:0.7 }}/>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to left,transparent,${V.PETAL_LT}60)` }}/>
+        </div>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, color:"rgba(255,255,255,0.7)", letterSpacing:"0.1em" }}>12 Temmuz 2026 · Swissôtel</p>
       </div>
     </div>
   );
 }
+
+function VintageDetaylar() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden select-none"
+      style={{ background:V.SHADOW }}>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 60% 50% at 50% 50%, rgba(90,50,140,0.14) 0%, transparent 70%)", pointerEvents:"none" }}/>
+      {/* Wisteria silüet */}
+      <div style={{ position:"absolute", top:0, left:0, opacity:0.1 }}>
+        <svg width="50" height="110" viewBox="0 0 140 280" fill="none">
+          <path d="M40 0 C42 30 36 62 40 94 C44 124 38 154 40 184 C42 214 38 248 40 280" stroke="#5A8A62" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+          <ellipse cx="96" cy="17" rx="5" ry="9" fill="#B490D8" opacity="0.8"/>
+          <ellipse cx="88" cy="25" rx="4.5" ry="8" fill="#CCB0E8" opacity="0.7"/>
+          <ellipse cx="103" cy="26" rx="4" ry="7.5" fill="#9E72C4" opacity="0.6"/>
+        </svg>
+      </div>
+      <div style={{ position:"relative", zIndex:1, textAlign:"center", padding:"0 20px" }}>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.44em", color:`${V.GOLD}80`, textTransform:"uppercase", marginBottom:14 }}>Etkinlik Detayları</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.4rem)", color:V.GOLD_LT, lineHeight:1, marginBottom:14 }}>12 Temmuz 2026</p>
+        {/* Divider */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8, margin:"10px auto", maxWidth:140 }}>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to right,transparent,${V.GOLD}55)` }}/>
+          <div style={{ width:5, height:5, borderRadius:"50%", border:`1px solid ${V.GOLD}60`, background:"transparent" }}/>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to left,transparent,${V.GOLD}55)` }}/>
+        </div>
+        {/* Saat / Mekan */}
+        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:20, marginTop:12 }}>
+          <div style={{ textAlign:"center" }}>
+            <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.34em", color:`${V.GOLD}65`, textTransform:"uppercase", marginBottom:6 }}>Saat</p>
+            <p style={{ fontFamily:"var(--font-playfair),serif", fontSize:"clamp(1.4rem,4.5vw,2rem)", color:"#FEFCF8", lineHeight:1 }}>18:30</p>
+          </div>
+          <div style={{ width:1, alignSelf:"stretch", minHeight:40, background:`${V.GOLD}22` }}/>
+          <div style={{ textAlign:"center", maxWidth:100 }}>
+            <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.34em", color:`${V.GOLD}65`, textTransform:"uppercase", marginBottom:6 }}>Mekan</p>
+            <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(0.85rem,3vw,1.1rem)", color:"#FEFCF8", lineHeight:1.2 }}>Swissôtel İstanbul</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function VintageSayim() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center" style={{ background:V.BG_PAPER }}>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.34em", color:V.BURG, marginBottom:10, textTransform:"uppercase" }}>NİŞANA KALAN SÜRE</p>
-      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.4rem,4.5vw,1.8rem)", color:V.BROWN, marginBottom:24 }}>Sayıyoruz...</p>
-      <div className="flex items-start gap-3 justify-center">
-        {[{v:"55",l:"GÜN"},{v:"12",l:"SAAT"},{v:"38",l:"DAK"},{v:"07",l:"SAN"}].map((item,i)=>(
-          <div key={i} className="flex items-start gap-2">
-            <div className="text-center">
-              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"clamp(1.7rem,5.5vw,2.4rem)", fontWeight:600, color:V.BURG, lineHeight:1 }}>{item.v}</p>
-              <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.14em", color:V.TAN, marginTop:5 }}>{item.l}</p>
+    <div className="w-full h-full flex flex-col items-center justify-center px-5 text-center relative overflow-hidden select-none"
+      style={{ background:V.DUSK }}>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 65% 55% at 50% 50%, rgba(80,40,130,0.16) 0%, transparent 70%)", pointerEvents:"none" }}/>
+      <div style={{ position:"relative", zIndex:1 }}>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.44em", color:`${V.GOLD}75`, textTransform:"uppercase", marginBottom:10 }}>Nişana Kalan Süre</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.2rem,4vw,1.6rem)", color:"#FEFCF8", marginBottom:22 }}>Sayıyoruz...</p>
+        <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-start", gap:"clamp(6px,2.5vw,12px)" }}>
+          {[{v:"55",l:"GÜN"},{v:"12",l:"SAAT"},{v:"38",l:"DAK"},{v:"07",l:"SAN"}].map((item,i)=>(
+            <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"clamp(4px,1.5vw,10px)" }}>
+              <div style={{ textAlign:"center" }}>
+                <p style={{ fontFamily:"var(--font-playfair),serif", fontSize:"clamp(1.6rem,5vw,2.2rem)", fontWeight:600, color:V.GOLD_LT, lineHeight:1, textShadow:`0 0 24px ${V.GOLD}55` }}>{item.v}</p>
+                <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.16em", color:`${V.GOLD}70`, marginTop:4 }}>{item.l}</p>
+              </div>
+              {i<3 && <p style={{ fontFamily:"var(--font-playfair),serif", fontSize:"1.2rem", color:`${V.GOLD}50`, lineHeight:1.1, marginTop:2 }}>:</p>}
             </div>
-            {i<3 && <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:"1.4rem", color:`${V.TAN}70`, lineHeight:1.1, marginTop:2 }}>:</p>}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
 function VintageKatilim() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-4" style={{ background:V.BG }}>
-      <div className="w-full relative rounded-2xl p-5" style={{ background:V.BG_PAPER, boxShadow:`0 8px 32px rgba(110,28,42,0.1)`, border:`1px solid ${V.BURG}18` }}>
-        <span className="absolute top-3 left-4" style={{ color:V.BURG, fontSize:11, opacity:0.3 }}>✦</span>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.28em", color:V.BURG, textAlign:"center", marginBottom:6, textTransform:"uppercase" }}>KATILIM BİLDİRİMİ</p>
-        <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.2rem,4.5vw,1.6rem)", color:V.BROWN, textAlign:"center", marginBottom:10 }}>Gelecek misiniz?</p>
-        <div style={{ height:1, background:`linear-gradient(to right,transparent,${V.TAN}50,transparent)`, marginBottom:12 }}/>
-        {["ADINIZ SOYADINIZ","KAÇ KİŞİ?","KATILIM DURUMU"].map(lbl=>(
+    <div className="w-full h-full flex flex-col items-center justify-center px-4 relative" style={{ background:V.BG }}>
+      <div className="w-full rounded-2xl p-5" style={{ background:V.BG_CARD, boxShadow:`0 8px 32px rgba(42,24,8,0.08)`, border:`1px solid ${V.GOLD}20` }}>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.36em", color:V.GOLD, textAlign:"center", marginBottom:6, textTransform:"uppercase" }}>Katılım Bildirimi</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.1rem,4vw,1.5rem)", color:V.WARM, textAlign:"center", marginBottom:12 }}>Gelecek misiniz?</p>
+        <div style={{ height:"0.5px", background:`linear-gradient(to right,transparent,${V.GOLD}45,transparent)`, marginBottom:12 }}/>
+        {["Adınız Soyadınız","Kaç kişisiniz?","Katılım durumu"].map(lbl=>(
           <div key={lbl} style={{ marginBottom:10 }}>
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.2em", color:V.BURG, marginBottom:4, textTransform:"uppercase" }}>{lbl}</p>
-            <div style={{ height:1, background:`${V.TAN}40` }}/>
+            <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.2em", color:`${V.WARM_MD}80`, marginBottom:5 }}>{lbl}</p>
+            <div style={{ height:"0.5px", background:`${V.GOLD}30` }}/>
           </div>
         ))}
-        <div style={{ marginTop:14, padding:"8px", background:V.BURG, borderRadius:8, textAlign:"center", fontFamily:"var(--font-cormorant),serif", fontSize:8, letterSpacing:"0.28em", color:V.BG }}>BİLDİR</div>
+        <div style={{ marginTop:14, padding:"8px", background:`linear-gradient(135deg,${V.GOLD},${V.GOLD}cc)`, borderRadius:8, textAlign:"center", fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.28em", color:"#FEFCF8" }}>BİLDİR</div>
       </div>
     </div>
   );
 }
+
 function VintageMekan() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-4 text-center" style={{ background:V.BG_DARK }}>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.34em", color:V.BURG, marginBottom:8, textTransform:"uppercase" }}>MEKAN</p>
-      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.2rem,4.5vw,1.7rem)", color:V.BROWN, marginBottom:16 }}>Nerede Buluşuyoruz?</p>
-      <div className="flex gap-6 justify-center mb-4">
-        {[{e:"📍",l:"MEKAN",v:"Swissôtel"},{e:"🕐",l:"SAAT",v:"18:30"},{e:"📅",l:"TARİH",v:"12 Tem 2026"}].map(col=>(
-          <div key={col.l} className="text-center">
-            <p style={{ fontSize:16, marginBottom:5 }}>{col.e}</p>
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:7, letterSpacing:"0.18em", color:V.BURG, marginBottom:3, textTransform:"uppercase" }}>{col.l}</p>
-            <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, fontWeight:600, color:V.BROWN }}>{col.v}</p>
-          </div>
-        ))}
-      </div>
-      <div style={{ width:"85%", height:70, borderRadius:10, background:"rgba(110,28,42,0.06)", border:`1px solid ${V.BURG}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, color:`${V.BURG}50`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+    <div className="w-full h-full flex flex-col items-center justify-center px-4 text-center relative overflow-hidden select-none"
+      style={{ background:V.SHADOW }}>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 60% 50% at 50% 50%, rgba(90,50,140,0.12) 0%, transparent 70%)", pointerEvents:"none" }}/>
+      <div style={{ position:"relative", zIndex:1, width:"100%" }}>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.4em", color:`${V.GOLD}80`, marginBottom:6, textTransform:"uppercase" }}>Konum</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.1rem,4vw,1.5rem)", color:"#FEFCF8", marginBottom:14 }}>Swissôtel İstanbul</p>
+        <div style={{ height:"0.5px", background:`linear-gradient(to right,transparent,${V.GOLD}40,transparent)`, marginBottom:14 }}/>
+        {/* Harita placeholder */}
+        <div style={{ width:"90%", margin:"0 auto", height:72, borderRadius:10, background:"rgba(201,168,64,0.06)", border:`1px solid ${V.GOLD}22`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, color:`${V.GOLD}45`, fontStyle:"italic" }}>📍 Harita görünümü</p>
+        </div>
       </div>
     </div>
   );
 }
+
 function VintageAnilar() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-4 text-center" style={{ background:V.BG_DARK }}>
-      <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:9, letterSpacing:"0.32em", color:V.BURG, marginBottom:8, textTransform:"uppercase" }}>BİZİM HİKAYEMİZ</p>
-      <p style={{ fontFamily:"var(--font-dancing),cursive", fontSize:"clamp(1.2rem,4.5vw,1.8rem)", color:V.BROWN, marginBottom:16 }}>En Güzel Anılar</p>
-      <div style={{ position:"relative", width:210, height:170 }}>
-        {[{t:8,l:-18,r:-9},{t:16,l:26,r:5},{t:4,l:64,r:-3}].map((p,i)=>(
-          <div key={i} style={{ position:"absolute", top:p.t, left:p.l, background:"#FEFCF8", borderRadius:3, padding:"6px 6px 22px", transform:`rotate(${p.r}deg)`, boxShadow:"0 6px 20px rgba(61,34,25,0.2)", width:112 }}>
-            <div style={{ width:"100%", height:88, background:`linear-gradient(135deg,${V.BG_DARK},${V.BG})`, borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <span style={{ fontSize:22, opacity:0.25 }}>📷</span>
+    <div className="w-full h-full flex flex-col items-center justify-center px-4 text-center relative overflow-hidden select-none"
+      style={{ background:V.BG_SOFT }}>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 70% 40% at 50% 100%, rgba(201,168,64,0.07) 0%, transparent 70%)", pointerEvents:"none" }}/>
+      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.4em", color:V.LILAC, textTransform:"uppercase", marginBottom:8, zIndex:1 }}>Bizim Hikayemiz</p>
+      <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.1rem,4vw,1.6rem)", color:V.WARM, marginBottom:18, zIndex:1 }}>En Güzel Anlar</p>
+      {/* Polaroid kartlar */}
+      <div style={{ position:"relative", width:210, height:150, zIndex:1 }}>
+        {[{t:20,l:-10,r:-9},{t:8,l:52,r:-2},{t:18,l:112,r:7}].map((p,i)=>(
+          <div key={i} style={{ position:"absolute", top:p.t, left:p.l, background:V.BG_CARD, borderRadius:3, padding:"5px 5px 18px", transform:`rotate(${p.r}deg)`, boxShadow:`0 6px 20px rgba(42,24,8,0.18)`, width:100 }}>
+            <div style={{ width:"100%", height:78, background:`linear-gradient(135deg,${V.BG_SOFT},${V.BG})`, borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <span style={{ fontSize:20, opacity:0.22 }}>📷</span>
             </div>
           </div>
         ))}
@@ -549,12 +610,12 @@ function StdKapak({ sablon }: { sablon: Sablon }) {
    BÖLÜM TANIMLARI
 ══════════════════════════════════════════════ */
 const VINTAGE_BOLUMLER = [
-  { id:"kapak",    icon:"🌿", label:"Kapak",    etiket:"Açılış", baslik:"Mum Mühürlü Kapak",      aciklama:"Bordo mum mühürüne dokunulunca açılan krem & botanik kapak.", node:<VintageKapak/> },
-  { id:"davetiye", icon:"🌸", label:"Davetiye", etiket:"Hero",   baslik:"Kemer Çerçeveli Hero",   aciklama:"İsimler el yazısıyla krem kemer çerçeve içinde gösterilir.",  node:<VintageHero/> },
-  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Nişana kaç gün kaldığını saniye saniye bordo renkle gösterir.", node:<VintageSayim/> },
-  { id:"katilim",  icon:"💌", label:"Katılım",  etiket:"RSVP",   baslik:"Vintage Katılım Formu",  aciklama:"Krem kart içinde el yazısı stilinde RSVP formu.",              node:<VintageKatilim/> },
-  { id:"mekan",    icon:"📍", label:"Mekan",    etiket:"Harita", baslik:"Konum & Harita",         aciklama:"Mekan, saat ve tarih. Google Maps bağlantılı harita.",         node:<VintageMekan/> },
-  { id:"anilar",   icon:"📷", label:"Anılar",   etiket:"Galeri", baslik:"Polaroid Galeri",        aciklama:"Fotoğraflar polaroid tarzında üst üste, krem zemin üzerinde.", node:<VintageAnilar/> },
+  { id:"kapak",    icon:"🌿", label:"Kapak",    etiket:"Açılış", baslik:"Altın Mühürlü Kapak",    aciklama:"Altın balmumu mühürüne dokunulunca açılan krem & botanik kapak.",  node:<VintageKapak/> },
+  { id:"video",    icon:"🎬", label:"Video",    etiket:"Hero",   baslik:"Sinematik Video Hero",   aciklama:"Tam ekran arka plan videosu üzerinde isimler ve tarih bilgisi.",    node:<VintageHero/> },
+  { id:"detaylar", icon:"✨", label:"Detaylar", etiket:"Gece",   baslik:"Gece Lüks Etkinlik",     aciklama:"Koyu zemin üzerinde altın tonlu saat, mekan ve Google Harita.",     node:<VintageDetaylar/> },
+  { id:"sayim",    icon:"⏱️", label:"Sayım",    etiket:"Canlı",  baslik:"Geri Sayım",             aciklama:"Nişana kalan süreyi saniye saniye altın tonlarında gösterir.",      node:<VintageSayim/> },
+  { id:"katilim",  icon:"💌", label:"Katılım",  etiket:"RSVP",   baslik:"Vintage Katılım Formu",  aciklama:"Krem kart içinde altın vurgulu RSVP formu.",                       node:<VintageKatilim/> },
+  { id:"anilar",   icon:"📷", label:"Anılar",   etiket:"Galeri", baslik:"Polaroid Galeri",        aciklama:"Fotoğraflar polaroid tarzında üst üste, krem zemin üzerinde.",     node:<VintageAnilar/> },
 ] as const;
 
 const NISAN_BOLUMLER = [
@@ -667,9 +728,9 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
 
   if (bolumler.length === 0) return null;
 
-  const darkBg  = sablon.id === "vintage-nisan" ? "#2a0e14" : sablon.id === "nisan-luks" ? "#120308" : sablon.id === "dugun-luks" ? "#050d1a" : "#080315";
-  const accent  = sablon.id === "vintage-nisan" ? "#C49A6C" : sablon.id === "nisan-luks" ? "#C4A05A" : sablon.id === "dugun-luks" ? "#D4AA70" : "#D4A84B";
-  const glowRgb = sablon.id === "vintage-nisan" ? "196,154,108" : sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
+  const darkBg  = sablon.id === "vintage-nisan" ? "#110820" : sablon.id === "nisan-luks" ? "#120308" : sablon.id === "dugun-luks" ? "#050d1a" : "#080315";
+  const accent  = sablon.id === "vintage-nisan" ? "#C9A840" : sablon.id === "nisan-luks" ? "#C4A05A" : sablon.id === "dugun-luks" ? "#D4AA70" : "#D4A84B";
+  const glowRgb = sablon.id === "vintage-nisan" ? "201,168,64"  : sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
 
