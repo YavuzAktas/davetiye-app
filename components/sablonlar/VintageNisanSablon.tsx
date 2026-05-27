@@ -428,10 +428,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 </div>
                 {(tarihStr || saatStr || gunStr) && (
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(6px,2.5vw,14px)", flexWrap: "wrap", marginBottom: 7, animation: "fadeUp 0.7s ease 0.65s both" }}>
-                    {gunStr  && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1)" }}>{gunStr}</span>}
-                    {gunStr  && (tarihStr || saatStr) && <span style={{ color: "rgba(200,174,221,0.65)", fontSize: 11 }}>·</span>}
                     {tarihStr && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1)" }}>{tarihStr}</span>}
-                    {saatStr  && <span style={{ color: "rgba(200,174,221,0.65)", fontSize: 11 }}>·</span>}
+                    {tarihStr && (gunStr || saatStr) && <span style={{ color: "rgba(200,174,221,0.65)", fontSize: 11 }}>·</span>}
+                    {gunStr  && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1)" }}>{gunStr}</span>}
+                    {gunStr  && saatStr && <span style={{ color: "rgba(200,174,221,0.65)", fontSize: 11 }}>·</span>}
                     {saatStr  && <span style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.88rem,3vw,1.1rem)", color: "#FFFFFF", textShadow: "0 1px 12px rgba(0,0,0,1)" }}>{saatStr}</span>}
                   </div>
                 )}
