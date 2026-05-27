@@ -342,7 +342,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <WaxSeal size={180} onClick={onSealClick} />
 
           {/* İpucu */}
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}65`, letterSpacing: "0.24em", marginTop: 18, animation: "glowPulse 3s ease-in-out infinite" }}>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, fontStyle: "italic", color: GOLD, letterSpacing: "0.22em", marginTop: 18, animation: "glowPulse 3s ease-in-out infinite", textShadow: `0 0 18px ${GOLD}80` }}>
             Mühüre dokun
           </p>
 
@@ -433,8 +433,8 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             {/* Scroll ipucu */}
             {videoFinal && (
               <div style={{ position: "absolute", bottom: 32, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.40em", color: "rgba(253,250,245,0.50)", textTransform: "uppercase", marginBottom: 10 }}>Davetiyeyi Keşfet</p>
-                <div style={{ width: 28, height: 28, border: "1px solid rgba(253,250,245,0.28)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(253,250,245,0.50)", fontSize: 13, animation: "scrollPulse 2s infinite" }}>↓</div>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, letterSpacing: "0.36em", color: "rgba(253,250,245,0.90)", textTransform: "uppercase", marginBottom: 10, textShadow: "0 2px 16px rgba(0,0,0,0.8)" }}>Davetiyeyi Keşfet</p>
+                <div style={{ width: 30, height: 30, border: "1px solid rgba(253,250,245,0.65)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(253,250,245,0.90)", fontSize: 14, animation: "scrollPulse 2s infinite" }}>↓</div>
               </div>
             )}
           </section>
@@ -590,7 +590,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             {isim1}{isim2 ? ` & ${isim2}` : ""}
           </p>
           <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.40em", color: `${GOLD}90`, textTransform: "uppercase", marginTop: 18 }}>
-            Sizi bekliyoruz
+            Sizi seviyoruz
           </p>
         </footer>
       </div>
