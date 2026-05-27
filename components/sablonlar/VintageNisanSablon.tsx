@@ -356,56 +356,61 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={LILAC} />}
 
       {/* ══════════════════════════════════
-          MÜHÜR OVERLAY — gece bahçesi
+          MÜHÜR OVERLAY — davet zarfı
       ══════════════════════════════════ */}
       {sealVar && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 45,
-          background: NIGHT,
+          background: BG_CARD,
+          backgroundImage: "radial-gradient(ellipse 100% 100% at 50% 50%, #FEFCF8 0%, #F0E8D8 100%)",
           opacity: sealFading ? 0 : 1,
-          transition: "opacity 0.9s ease",
+          transition: "opacity 1.1s ease",
           pointerEvents: sealFading ? "none" : "auto",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
           textAlign: "center", padding: "40px 24px",
           overflow: "hidden",
         }}>
-          {/* Yıldızlar */}
-          {STARS.map((s, i) => (
-            <div key={i} style={{
-              position: "absolute", left: `${s.x}%`, top: `${s.y}%`,
-              width: s.s, height: s.s, borderRadius: "50%", background: "#FFFFFF",
-              animation: `starPulse ${2.2 + i * 0.18}s ease-in-out ${s.d}s infinite`,
-            }} />
-          ))}
-          {/* Mor ışıma */}
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 75% 65% at 50% 52%, rgba(100,56,160,0.18) 0%, transparent 70%)" }} />
-          {/* Köşe wisteria */}
-          <div style={{ position: "absolute", top: 0, left: 0, opacity: 0.42 }}><NightWisteria side="left" /></div>
-          <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.42 }}><NightWisteria side="right" /></div>
+          {/* İnce altın çerçeve */}
+          <div style={{ position: "absolute", inset: 16, border: `0.5px solid ${GOLD}30`, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 20, border: `0.5px solid ${GOLD}15`, pointerEvents: "none" }} />
+
+          {/* Köşe botanik — hafif */}
+          <div style={{ position: "absolute", top: -10, left: -10, opacity: 0.22, transform: "scale(0.9)", transformOrigin: "top left" }}>
+            <WisteriaBotanical side="left" />
+          </div>
+          <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.22, transform: "scale(0.9)", transformOrigin: "top right" }}>
+            <WisteriaBotanical side="right" />
+          </div>
+          <div style={{ position: "absolute", bottom: -10, left: -10, opacity: 0.12, transform: "scale(0.7) scaleY(-1)", transformOrigin: "bottom left" }}>
+            <WisteriaBotanical side="left" />
+          </div>
+          <div style={{ position: "absolute", bottom: -10, right: -10, opacity: 0.12, transform: "scale(0.7) scaleY(-1)", transformOrigin: "bottom right" }}>
+            <WisteriaBotanical side="right" />
+          </div>
 
           <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <GoldOrnament />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.52em", color: `${GOLD}80`, textTransform: "uppercase", marginBottom: 22 }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.50em", color: GOLD, textTransform: "uppercase", marginBottom: 20 }}>
               Nişan Davetiyesi
             </p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: "#FEFCF8", lineHeight: 0.92, textShadow: "0 0 40px rgba(169,120,216,0.4)" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: WARM, lineHeight: 0.92 }}>
               {isim1}
             </p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.4rem,5vw,2.4rem)", color: PETAL_LT, lineHeight: 1.3 }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.4rem,5vw,2.4rem)", color: PETAL, lineHeight: 1.3 }}>
               &
             </p>
             {isim2 && (
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: "#FEFCF8", lineHeight: 0.92, marginBottom: 8, textShadow: "0 0 40px rgba(169,120,216,0.4)" }}>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: WARM, lineHeight: 0.92, marginBottom: 6 }}>
                 {isim2}
               </p>
             )}
             {tarihKisa && (
-              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.24em", color: `${GOLD_LT}80`, marginTop: 10, marginBottom: 36 }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.22em", color: `${WARM}55`, marginTop: 8, marginBottom: 34 }}>
                 {tarihKisa}
               </p>
             )}
             <WaxSeal size={190} onClick={onSealClick} />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: "rgba(200,174,221,0.38)", letterSpacing: "0.22em", marginTop: 14, animation: "glowPulse 3s ease-in-out infinite" }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}70`, letterSpacing: "0.22em", marginTop: 16, animation: "glowPulse 3s ease-in-out infinite" }}>
               Mühüre dokun
             </p>
           </div>
