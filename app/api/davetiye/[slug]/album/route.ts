@@ -68,18 +68,18 @@ export async function POST(
 
   const ip = ipAlNextRequest(req);
   if (
-    !(await ipIzinVer("album-yukleme-ip", ip, 12, 60 * 60_000)) ||
-    !(await ipIzinVer("album-yukleme-davetiye-ip", `${davetiye.id}:${ip}`, 4, 60 * 60_000))
+    !(await ipIzinVer("album-yukleme-ip", ip, 40, 60 * 60_000)) ||
+    !(await ipIzinVer("album-yukleme-davetiye-ip", `${davetiye.id}:${ip}`, 20, 60 * 60_000))
   ) {
     return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
   }
 
-  /* Rate limit: son 1 saatte aynı davette 10 fotoğraf */
+  /* Rate limit: son 1 saatte aynı davette 100 fotoğraf */
   const birSaatOnce = new Date(Date.now() - 3_600_000);
   const sonSaatSayisi = await prisma.albumFoto.count({
     where: { davetiyeId: davetiye.id, createdAt: { gte: birSaatOnce } },
   });
-  if (sonSaatSayisi >= 10)
+  if (sonSaatSayisi >= 100)
     return NextResponse.json({ hata: "Saatlik yükleme limiti doldu." }, { status: 429 });
 
   const form = await req.formData();
