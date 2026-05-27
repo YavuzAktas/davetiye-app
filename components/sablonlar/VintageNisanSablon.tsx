@@ -242,6 +242,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
   const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
 
+  const soyad1 = isim1.trim().split(/\s+/).pop() ?? null;
+  const soyad2 = isim2 ? (isim2.trim().split(/\s+/).pop() ?? null) : null;
+  const aileStr = soyad1 && soyad2 ? `${soyad1} & ${soyad2} Aileleri` : soyad1 ? `${soyad1} Ailesi` : null;
+
   const onSealClick = () => {
     if (sealFading) return;
     const v = videoRef.current;
@@ -337,7 +341,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           </div>
 
           {/* İsimler */}
-          <div style={{ marginBottom: 36, textAlign: "center", maxWidth: "90vw" }}>
+          <div style={{ marginBottom: 28, textAlign: "center", maxWidth: "90vw" }}>
             <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>
               {isim1}
             </p>
@@ -350,6 +354,11 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                   {isim2}
                 </p>
               </>
+            )}
+            {aileStr && (
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(10px,3vw,13px)", letterSpacing: "0.22em", color: `${WARM_MD}99`, textTransform: "uppercase", marginTop: 14 }}>
+                {aileStr}
+              </p>
             )}
           </div>
 
@@ -630,6 +639,11 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 13, letterSpacing: "0.32em", color: GOLD, textTransform: "uppercase", marginTop: 22, textShadow: `0 0 20px ${GOLD}55` }}>
             Sizi seviyoruz
           </p>
+          {aileStr && (
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(10px,3vw,12px)", letterSpacing: "0.20em", color: `${WARM_MD}80`, textTransform: "uppercase", marginTop: 10 }}>
+              {aileStr}
+            </p>
+          )}
         </footer>
       </div>
     </>
