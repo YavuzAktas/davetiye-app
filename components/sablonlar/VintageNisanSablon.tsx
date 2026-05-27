@@ -359,7 +359,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           {/* İpucu */}
           <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 12, animation: "glowPulse 2.4s ease-in-out infinite" }}>
             <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to left, ${GOLD}70, transparent)` }} />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 11, fontStyle: "italic", color: GOLD, letterSpacing: "0.28em", textShadow: `0 0 14px ${GOLD}60` }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, fontStyle: "italic", fontWeight: 700, color: GOLD, letterSpacing: "0.28em", textShadow: `0 0 14px ${GOLD}60` }}>
               Mühüre Dokun
             </p>
             <div style={{ width: 32, height: "0.5px", background: `linear-gradient(to right, ${GOLD}70, transparent)` }} />
@@ -452,7 +452,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
             {/* Scroll ipucu */}
             {videoFinal && (
               <div style={{ position: "absolute", bottom: 24, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 0, pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: 11, letterSpacing: "0.30em", color: `${GOLD}CC`, marginBottom: 6, textShadow: "0 1px 12px rgba(0,0,0,0.9)" }}>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontWeight: 700, fontSize: 12, letterSpacing: "0.30em", color: GOLD, marginBottom: 6, textShadow: "0 1px 12px rgba(0,0,0,0.9)" }}>
                   kaydır
                 </p>
                 {[0, 1, 2].map(i => (
