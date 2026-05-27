@@ -496,7 +496,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               {saatStr && (
                 <div style={{ textAlign: "center", flexShrink: 0, flex: 1 }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Saat</p>
-                  <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.4rem,8vw,3.8rem)", color: "#FEFCF8", lineHeight: 1 }}>{saatStr}</p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(1.6rem,5.5vw,2.4rem)", color: "#FEFCF8", lineHeight: 1.2 }}>{saatStr}</p>
                 </div>
               )}
               {saatStr && davetiye.mekan && (
@@ -505,7 +505,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               {davetiye.mekan && (
                 <div style={{ minWidth: 0, textAlign: "center", flex: 1 }}>
                   <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.36em", color: `${GOLD}65`, textTransform: "uppercase", marginBottom: 12 }}>Mekan</p>
-                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1rem,3.8vw,1.6rem)", color: "#FEFCF8", lineHeight: 1.3, wordBreak: "break-word" }}>{davetiye.mekan}</p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.6rem,5.5vw,2.4rem)", color: "#FEFCF8", lineHeight: 1.2, wordBreak: "break-word" }}>{davetiye.mekan}</p>
                 </div>
               )}
             </div>
