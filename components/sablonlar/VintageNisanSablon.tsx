@@ -4,111 +4,77 @@ import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
 import MuzikCalar from "@/components/MuzikCalar";
 
-/* ════════════════ FINE ART PALET ════════════════ */
-const PEARL      = "#FCFBF9";
-const CHAMPAGNE  = "#F4EFE6";
-const ALABASTER  = "#EAE6DF";
-const GOLD_DARK  = "#9E8755";
-const GOLD       = "#C2A878";
-const TEXT_DARK  = "#242424";
-const TEXT_MUTED = "#6B6A65";
-const SAGE       = "#859082";
+/* ════════════════ FINE ART & BOTANİKAL PALET ════════════════ */
+// Renkler tamamen video ve mühürden çekildi
+const PAPER       = "#F9F8F5"; // Mühürün krem tonu
+const PAPER_DARK  = "#F0EBE1";
+const WISTERIA    = "#9A7E9F"; // Mor salkım tonu
+const IVY_GREEN   = "#4A5D4E"; // Sarmaşık yeşili (Metinler için ana renk)
+const IVY_LIGHT   = "#7B8E7D";
+const GOLDEN_SUN  = "#D4AF37"; // Güneş ışığı
+const BLUSH       = "#D9A0A8"; // Çelenkteki pembe çiçekler
 
 /* ════════════════ YARDIMCI BİLEŞENLER ════════════════ */
 
-/* Zarif Altın Ayırıcı */
-function FineArtDivider({ width = 140 }: { width?: number }) {
+/* Zarif Botanik Ayırıcı */
+function EtherealDivider() {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, margin: "30px auto", width }}>
-      <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${GOLD}80)` }} />
-      <div style={{ width: 4, height: 4, borderRadius: "50%", background: GOLD_DARK, opacity: 0.8 }} />
-      <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${GOLD}80)` }} />
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, margin: "40px auto", width: "100%", maxWidth: 200 }}>
+      <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${IVY_LIGHT}50)` }} />
+      <div style={{ width: 6, height: 6, borderRadius: "50%", border: `1px solid ${WISTERIA}`, background: "transparent" }} />
+      <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${IVY_LIGHT}50)` }} />
     </div>
   );
 }
 
-/* Minimal Yaprak Süsü */
-function LeafOrnament() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ margin: "0 auto 16px", display: "block", opacity: 0.7 }}>
-      <path d="M20 5 C20 5 30 10 30 20 C30 30 20 35 20 35 C20 35 10 30 10 20 C10 10 20 5 20 5 Z" stroke={GOLD_DARK} strokeWidth="1" fill="none" />
-      <line x1="20" y1="5" x2="20" y2="35" stroke={GOLD_DARK} strokeWidth="1" />
-    </svg>
-  );
-}
-
-/* Wax Seal (Mühür) */
-function WaxSeal({ size = 160, onClick }: { size?: number; onClick?: () => void }) {
+/* Wax Seal (Gönderilen Beyaz Mühür) */
+function WaxSeal({ size = 180, onClick }: { size?: number; onClick?: () => void }) {
   const [tapped, setTapped] = useState(false);
   const handle = () => { if (tapped) return; setTapped(true); onClick?.(); };
   return (
     <div onClick={handle} style={{
       width: size, height: size,
       cursor: onClick ? "pointer" : "default",
-      animation: tapped ? "sealTap 0.5s ease forwards" : "sealFloat 4s ease-in-out infinite",
-      filter: "drop-shadow(0 15px 25px rgba(0,0,0,0.15))",
-      margin: "0 auto"
+      animation: tapped ? "sealTap 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards" : "sealFloat 5s ease-in-out infinite",
+      filter: "drop-shadow(0 20px 40px rgba(74, 93, 78, 0.15))", // Sarmaşık yeşili tonunda çok hafif gölge
+      margin: "0 auto",
+      position: "relative",
+      zIndex: 10
     }}>
-      <img src="/wax-seal.png" alt="Mühür" style={{ width: "100%", height: "100%", objectFit: "contain" }} draggable={false} />
+      {/* Kullanıcının yüklediği mühür resmi (wax-seal.jpg) */}
+      <img src="/wax-seal.jpg" alt="Mühür" style={{ width: "100%", height: "100%", objectFit: "contain", mixBlendMode: "multiply" }} draggable={false} />
     </div>
   );
 }
 
-/* Polaroid (Fine Art Galeri Stili) */
+/* Polaroid (Cam Efektli Fine Art Albüm) */
 function Polaroid({ rotate = 0, isActive = false, src }: { rotate?: number; isActive?: boolean; src?: string }) {
   const [imgErr, setImgErr] = useState(false);
   const valid = src && (src.startsWith("http://") || src.startsWith("https://"));
   return (
     <div style={{
-      background: "#FFFFFF",
-      padding: "10px 10px 36px",
-      border: `1px solid ${ALABASTER}`,
-      transform: isActive ? `rotate(${rotate}deg) scale(1.05)` : `rotate(${rotate}deg) scale(1)`,
-      boxShadow: isActive ? "0 20px 40px rgba(0,0,0,0.12)" : "0 10px 25px rgba(0,0,0,0.06)",
-      width: 240, flexShrink: 0,
-      transition: "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
+      background: "rgba(255, 255, 255, 0.85)",
+      backdropFilter: "blur(10px)",
+      WebkitBackdropFilter: "blur(10px)",
+      padding: "12px 12px 40px",
+      borderRadius: "4px",
+      border: `1px solid rgba(255,255,255,0.6)`,
+      transform: isActive ? `rotate(${rotate}deg) scale(1.08)` : `rotate(${rotate}deg) scale(1)`,
+      boxShadow: isActive ? "0 30px 60px rgba(74, 93, 78, 0.15)" : "0 15px 35px rgba(0,0,0,0.06)",
+      width: 260, flexShrink: 0,
+      transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
       cursor: "pointer",
     }}>
-      <div style={{ width: "100%", height: 280, overflow: "hidden", background: CHAMPAGNE }}>
-        {valid && !imgErr ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={() => setImgErr(true)} /> : <div style={{width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", color:GOLD}}><LeafOrnament/></div>}
+      <div style={{ width: "100%", height: 300, overflow: "hidden", background: PAPER_DARK, borderRadius: "2px" }}>
+        {valid && !imgErr ? (
+          <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={() => setImgErr(true)} />
+        ) : (
+          <div style={{width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", color: IVY_LIGHT, fontFamily: "var(--font-playfair),serif", fontStyle: "italic"}}>
+            En Güzel An
+          </div>
+        )}
       </div>
     </div>
-  );
-}
-
-/* Dress Code disk */
-function SwatchDisk({ renk }: { renk: string }) {
-  const [h, setH] = useState(false);
-  return (
-    <div onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
-      width: 44, height: 44, borderRadius: "50%", background: renk,
-      boxShadow: h ? `0 0 0 1px ${PEARL}, 0 0 0 3px ${renk}80` : `0 4px 10px rgba(0,0,0,0.05)`,
-      transform: h ? "scale(1.1)" : "scale(1)",
-      transition: "all 0.3s ease", cursor: "default", flexShrink: 0,
-    }} />
-  );
-}
-
-/* Dress Code section */
-function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dressKodRenkler: string | null }) {
-  let renkler = [GOLD, SAGE, TEXT_DARK, CHAMPAGNE];
-  try {
-    const p = JSON.parse(dressKodRenkler ?? "[]");
-    if (Array.isArray(p) && p.length >= 3) renkler = p.slice(0, 5);
-  } catch { /* varsayılan */ }
-  return (
-    <section style={{ padding: "100px 24px", textAlign: "center", background: CHAMPAGNE }}>
-      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: GOLD_DARK, textTransform: "uppercase", marginBottom: 12 }}>Dress Code</p>
-      <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.5rem)", color: TEXT_DARK, lineHeight: 1.2, marginBottom: 16 }}>Gecenin Renkleri</p>
-      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(0.95rem,3vw,1.1rem)", color: TEXT_MUTED, marginBottom: 30, maxWidth: 400, margin: "0 auto 30px" }}>{dressKod}</p>
-      
-      <div style={{ display: "flex", justifyContent: "center", gap: "20px", flexWrap: "wrap", marginBottom: 30 }}>
-        {renkler.map((r, i) => <SwatchDisk key={i} renk={r} />)}
-      </div>
-      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, fontStyle: "italic", color: TEXT_MUTED, maxWidth: 300, margin: "0 auto", lineHeight: 1.8 }}>
-        Sizleri bu uyumun bir parçası olarak görmekten mutluluk duyarız.
-      </p>
-    </section>
   );
 }
 
@@ -125,7 +91,6 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
   const tarihObj  = davetiye.tarih ? new Date(davetiye.tarih) : null;
   const tarihStr  = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) : null;
-  const tarihKisa = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }).toUpperCase() : null;
   const saatStr   = tarihObj ? tarihObj.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }) : null;
   const gunStr    = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { weekday: "long" }) : null;
 
@@ -167,7 +132,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
     const v = videoRef.current;
     setSealFading(true);
     if (v) v.play().catch(() => {});
-    setTimeout(() => setSealVar(false), 1200);
+    setTimeout(() => setSealVar(false), 1400); // Daha yavaş ve zarif geçiş
   };
 
   return (
@@ -175,86 +140,88 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       <style>{`
         @keyframes sealFloat {
           0%,100% { transform: translateY(0); }
-          50%      { transform: translateY(-6px); }
+          50%      { transform: translateY(-8px); }
         }
         @keyframes sealTap {
-          0%   { transform: scale(1); }
-          50%  { transform: scale(0.92); opacity: 0.8; }
-          100% { transform: scale(1.1); opacity: 0; }
+          0%   { transform: scale(1); filter: drop-shadow(0 20px 40px rgba(74, 93, 78, 0.15)); }
+          40%  { transform: scale(0.95); opacity: 1; filter: drop-shadow(0 5px 10px rgba(74, 93, 78, 0.1)); }
+          100% { transform: scale(1.15); opacity: 0; filter: drop-shadow(0 0 0 transparent); }
         }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes fadeUpEthereal {
+          from { opacity: 0; transform: translateY(30px); filter: blur(4px); }
+          to   { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-        @keyframes isimFadeUp {
-          0%   { opacity: 0; filter: blur(4px); transform: translateY(15px); }
-          100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+        @keyframes letterSpaceIn {
+          from { opacity: 0; letter-spacing: 0.8em; }
+          to   { opacity: 1; letter-spacing: 0.4em; }
         }
         @keyframes scrollPulse {
-          0%,100% { opacity: 0.3; transform: translateY(0); }
-          50%     { opacity: 0.8; transform: translateY(6px); }
+          0%,100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
+          50%     { opacity: 0.9; transform: scaleY(1.5); transform-origin: top; }
         }
-        button.bottom-24 { transition: opacity 0.5s ease, transform 0.5s ease; }
+        /* Özel doku (Noise effect) - Fine Art Hissi */
+        .fine-art-grain {
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          pointer-events: none; z-index: 50; opacity: 0.03;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
         body.video-oyniyor button.bottom-24 { opacity:0!important; pointer-events:none!important; transform:translateY(8px); }
         .vns-video { width:100%; height:100%; object-fit:cover; }
         @media (min-width:768px) { .vns-video { object-fit:contain; } }
       `}</style>
 
-      {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD_DARK} />}
+      <div className="fine-art-grain" />
+
+      {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={WISTERIA} />}
 
       {/* ══════════════════════════════════
-          MÜHÜR OVERLAY — Zarif Zarf
+          MÜHÜR OVERLAY — Yüksek Kalite Krem Zarf
       ══════════════════════════════════ */}
       {sealVar && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 45,
-          background: PEARL,
+          background: PAPER,
+          backgroundImage: "radial-gradient(circle at center, #FFFFFF 0%, #F4F1EA 100%)",
           opacity: sealFading ? 0 : 1,
-          transition: "opacity 1.2s ease",
+          transition: "opacity 1.4s ease-in-out",
           pointerEvents: sealFading ? "none" : "auto",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
           textAlign: "center", padding: "40px 24px",
         }}>
           
-          <div style={{ padding: "40px", border: `1px solid ${ALABASTER}`, borderRadius: "4px", background: "#FFFFFF", boxShadow: "0 25px 50px rgba(0,0,0,0.03)", width: "100%", maxWidth: "400px" }}>
-            <LeafOrnament />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: TEXT_MUTED, textTransform: "uppercase", marginBottom: 30 }}>
-              Nişan Davetiyesi
+          <div style={{ animation: "fadeUpEthereal 1.5s ease-out" }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: IVY_LIGHT, textTransform: "uppercase", marginBottom: 36 }}>
+              Lütfen Zarfı Açınız
             </p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.5rem,8vw,4rem)", color: TEXT_DARK, lineHeight: 1.1 }}>
+            
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,10vw,4.5rem)", color: IVY_GREEN, lineHeight: 1 }}>
               {isim1}
             </p>
             {isim2 && (
               <>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.5rem,5vw,2rem)", color: GOLD_DARK, margin: "10px 0" }}>&</p>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.5rem,8vw,4rem)", color: TEXT_DARK, lineHeight: 1.1, marginBottom: 40 }}>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.6rem,5vw,2.2rem)", color: WISTERIA, margin: "12px 0" }}>ile</p>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,10vw,4.5rem)", color: IVY_GREEN, lineHeight: 1, marginBottom: 50 }}>
                   {isim2}
                 </p>
               </>
             )}
             
-            <div style={{ marginTop: 20 }}>
-              <WaxSeal size={110} onClick={onSealClick} />
-            </div>
-            
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, fontStyle: "italic", color: TEXT_MUTED, letterSpacing: "0.1em", marginTop: 24, opacity: 0.7 }}>
-              Zarfı açmak için mühüre dokunun
-            </p>
+            <WaxSeal size={150} onClick={onSealClick} />
           </div>
         </div>
       )}
 
       {/* ══════════════════════════════════
-          SAYFA — Zarafet Odaklı Tasarım
+          SAYFA — Ethereal Botanical Tasarım
       ══════════════════════════════════ */}
-      <div style={{ background: PEARL, color: TEXT_DARK }}>
+      <div style={{ background: PAPER, color: IVY_GREEN, overflowX: "hidden" }}>
 
         {/* ── VİDEO HERO ── */}
         {!previewModu && (
-          <section style={{ position: "relative", height: "100svh", overflow: "hidden", background: CHAMPAGNE }}>
+          <section style={{ position: "relative", height: "100svh", overflow: "hidden", background: IVY_GREEN }}>
             <video
               ref={videoRef}
-              src="/background.mp4"
+              src="/background.mp4" // Kullanıcının gönderdiği muazzam video
               playsInline
               preload="auto"
               className="vns-video"
@@ -262,114 +229,114 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               onTimeUpdate={() => {
                 const v = videoRef.current;
                 if (!v || isimlerGorunur || !v.duration) return;
-                if (v.duration - v.currentTime <= 5) setIsimlerGorunur(true);
+                // Kapı açılıp bahçe görünmeye başladığında (yaklaşık 5.5 - 6. saniye) metin belirmeli
+                if (v.currentTime >= 5.5) setIsimlerGorunur(true);
               }}
               onEnded={() => { setVideoFinal(true); }}
             />
-            {/* Soft Overlay */}
+            
+            {/* Alt kısıma çok zarif, belli belirsiz bir gölge (yazı okunsun diye, videoyu kapatmadan) */}
             <div style={{
               position: "absolute", inset: 0, pointerEvents: "none",
               background: isimlerGorunur
-                ? "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)"
-                : "linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 40%)",
-              transition: "background 2s ease",
+                ? "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 30%, transparent 60%)"
+                : "linear-gradient(to top, rgba(0,0,0,0) 0%, transparent 100%)",
+              transition: "background 2.5s ease-in-out",
             }} />
 
+            {/* Davetiye bilgileri — Videonun Alt Kısmında */}
             {isimlerGorunur && (
               <div style={{
                 position: "absolute", inset: 0,
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
-                padding: "40px 24px 12vh",
+                padding: "24px 24px 10svh",
                 pointerEvents: "none", textAlign: "center",
               }}>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3.5rem,12vw,6rem)", color: "#FFFFFF", lineHeight: 1, textShadow: "0 4px 20px rgba(0,0,0,0.3)", animation: "isimFadeUp 1.5s ease 0.2s both" }}>
-                  {isim1}
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: "rgba(255,255,255,0.85)", textTransform: "uppercase", textShadow: "0 2px 10px rgba(0,0,0,0.5)", marginBottom: 16, animation: "letterSpaceIn 2s ease-out both" }}>
+                  Nişan Töreni
                 </p>
-                {isim2 && (
-                  <>
-                    <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,6vw,2.5rem)", color: GOLD, margin: "8px 0", animation: "fadeUp 1.2s ease 0.6s both" }}>&</p>
-                    <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3.5rem,12vw,6rem)", color: "#FFFFFF", lineHeight: 1, textShadow: "0 4px 20px rgba(0,0,0,0.3)", animation: "isimFadeUp 1.5s ease 0.8s both" }}>
-                      {isim2}
-                    </p>
-                  </>
-                )}
-                
-                <div style={{ width: "120px", height: "1px", background: "rgba(255,255,255,0.4)", margin: "30px auto 20px", animation: "fadeUp 1s ease 1.2s both" }} />
-                
-                {(tarihStr || saatStr) && (
-                  <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "1rem", letterSpacing: "0.15em", color: "rgba(255,255,255,0.9)", textTransform: "uppercase", animation: "fadeUp 1s ease 1.4s both" }}>
-                    {tarihStr} {saatStr && `| ${saatStr}`}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3.5rem,13vw,6.5rem)", color: "#FFFFFF", lineHeight: 0.9, textShadow: "0 4px 25px rgba(0,0,0,0.6)", animation: "fadeUpEthereal 2s ease-out 0.5s both" }}>
+                    {isim1}
                   </p>
-                )}
+                  {isim2 && (
+                    <>
+                      <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,6vw,3rem)", color: BLUSH, margin: "2px 0", textShadow: "0 2px 15px rgba(0,0,0,0.5)", animation: "fadeUpEthereal 2s ease-out 1s both" }}>&</p>
+                      <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3.5rem,13vw,6.5rem)", color: "#FFFFFF", lineHeight: 0.9, textShadow: "0 4px 25px rgba(0,0,0,0.6)", animation: "fadeUpEthereal 2s ease-out 1.5s both" }}>
+                        {isim2}
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
+            {/* Scroll İpucu */}
             {videoFinal && (
-              <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
-                <div style={{ width: "1px", height: 40, background: "rgba(255,255,255,0.5)", animation: "scrollPulse 2s infinite" }} />
+              <div style={{ position: "absolute", bottom: 30, left: 0, right: 0, display: "flex", justifyContent: "center", pointerEvents: "none", animation: "fadeUpEthereal 2s ease-out 1s both" }}>
+                <div style={{ width: 1, height: 50, background: "rgba(255,255,255,0.6)", animation: "scrollPulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite" }} />
               </div>
             )}
           </section>
         )}
 
         {/* ══════════════════════════════════
-            ETKİNLİK DETAYLARI
+            ETKİNLİK DETAYLARI — Ferah & Okunaklı
         ══════════════════════════════════ */}
-        <section style={{ padding: "120px 24px", textAlign: "center" }}>
-          <LeafOrnament />
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: GOLD_DARK, textTransform: "uppercase", marginBottom: 20 }}>Davet</p>
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.5rem,4vw,2.2rem)", color: TEXT_DARK, lineHeight: 1.6, maxWidth: "600px", margin: "0 auto 60px" }}>
-            Hayatımızı birleştirdiğimiz bu özel ve anlamlı günde, mutluluğumuzu sizinle paylaşmaktan onur duyarız.
+        <section style={{ padding: "140px 24px", textAlign: "center", position: "relative" }}>
+          {/* Arka planda çok silik mor salkım renk dokunuşu */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "500px", background: `linear-gradient(to bottom, ${WISTERIA}08, transparent)`, pointerEvents: "none" }} />
+          
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: IVY_LIGHT, textTransform: "uppercase", marginBottom: 24 }}>Davetlisiniz</p>
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.6rem,5vw,2.4rem)", color: IVY_GREEN, lineHeight: 1.6, maxWidth: "650px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+            Güneşin çiçekleri açtırdığı gibi, sevgimizin yeşerdiği bu özel günü sizlerle paylaşmaktan sonsuz mutluluk duyacağız.
           </p>
 
-          <FineArtDivider />
+          <EtherealDivider />
 
-          <div style={{ margin: "50px 0" }}>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.5rem,8vw,4rem)", color: TEXT_DARK, lineHeight: 1 }}>
+          <div style={{ margin: "60px 0" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.8rem,9vw,4.5rem)", color: IVY_GREEN, lineHeight: 1 }}>
               {tarihStr ?? "—"}
             </p>
-            {gunStr && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "1rem", color: TEXT_MUTED, marginTop: 12, letterSpacing: "0.1em" }}>{gunStr}</p>}
+            {gunStr && <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "1.1rem", color: WISTERIA, marginTop: 16, letterSpacing: "0.15em", fontStyle: "italic" }}>{gunStr}</p>}
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(30px,8vw,80px)", flexWrap: "wrap", marginBottom: 60 }}>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "clamp(40px,10vw,100px)", flexWrap: "wrap", marginBottom: 80 }}>
             {saatStr && (
               <div>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.2em", color: TEXT_MUTED, textTransform: "uppercase", marginBottom: 12 }}>Saat</p>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "2rem", color: TEXT_DARK }}>{saatStr}</p>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: IVY_LIGHT, textTransform: "uppercase", marginBottom: 12 }}>Saat</p>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "2.2rem", color: IVY_GREEN }}>{saatStr}</p>
               </div>
             )}
-            {saatStr && davetiye.mekan && (
-              <div style={{ width: 1, height: 60, background: ALABASTER, alignSelf: "center" }} />
-            )}
             {davetiye.mekan && (
-              <div style={{ maxWidth: 260 }}>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.2em", color: TEXT_MUTED, textTransform: "uppercase", marginBottom: 12 }}>Mekan</p>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "1.4rem", color: TEXT_DARK, lineHeight: 1.4 }}>{davetiye.mekan}</p>
+              <div style={{ maxWidth: 300 }}>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: IVY_LIGHT, textTransform: "uppercase", marginBottom: 12 }}>Mekan</p>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "1.6rem", color: IVY_GREEN, lineHeight: 1.4 }}>{davetiye.mekan}</p>
               </div>
             )}
           </div>
 
           {davetiye.mekan && (
-            <div style={{ maxWidth: 600, margin: "0 auto", padding: "10px", background: "#FFF", border: `1px solid ${ALABASTER}`, boxShadow: "0 20px 40px rgba(0,0,0,0.04)" }}>
-              <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="300" style={{ border: 0, display: "block", filter: "grayscale(0.4) contrast(1.1)" }} loading="lazy" allowFullScreen />
+            <div style={{ maxWidth: 700, margin: "0 auto", padding: "8px", background: "#FFFFFF", borderRadius: "8px", boxShadow: "0 30px 60px rgba(74, 93, 78, 0.08)" }}>
+              <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="350" style={{ border: 0, borderRadius: "4px", display: "block", filter: "contrast(1.05) sepia(0.1)" }} loading="lazy" allowFullScreen />
             </div>
           )}
         </section>
 
         {/* ══════════════════════════════════
-            POLAROİD (FİNE ART GALERİ)
+            POLAROİD (FİNE ART ALBÜM)
         ══════════════════════════════════ */}
         {davetiye.albumAktif && (
-          <section style={{ padding: "100px 24px", textAlign: "center", background: CHAMPAGNE, borderTop: `1px solid ${ALABASTER}`, borderBottom: `1px solid ${ALABASTER}` }}>
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: GOLD_DARK, textTransform: "uppercase", marginBottom: 12 }}>Bizim Hikayemiz</p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2.2rem,7vw,3.5rem)", color: TEXT_DARK, marginBottom: 50 }}>En Güzel Anlar</p>
+          <section style={{ padding: "120px 24px", textAlign: "center", background: PAPER_DARK, position: "relative" }}>
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: WISTERIA, textTransform: "uppercase", marginBottom: 16 }}>Birlikte Geçen Zaman</p>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2.4rem,8vw,3.8rem)", color: IVY_GREEN, marginBottom: 70 }}>Güzel Anılarımız</p>
             
-            <div style={{ display: "flex", justifyContent: "center", minHeight: 420 }}>
-              <div style={{ position: "relative", width: 340, height: 380 }}>
+            <div style={{ display: "flex", justifyContent: "center", minHeight: 450 }}>
+              <div style={{ position: "relative", width: 360, height: 400 }}>
                 {[
-                  { top: 40, left: -20, rotate: -6, z: 1, src: davetiye.polaroid1, idx: 1 },
-                  { top: 0,  left: 50,  rotate: 2,  z: 2, src: davetiye.polaroid2, idx: 2 },
-                  { top: 60, left: 120, rotate: 8,  z: 3, src: davetiye.polaroid3, idx: 3 },
+                  { top: 50, left: -30, rotate: -8, z: 1, src: davetiye.polaroid1, idx: 1 },
+                  { top: 0,  left: 50,  rotate: 3,  z: 2, src: davetiye.polaroid2, idx: 2 },
+                  { top: 70, left: 130, rotate: 10, z: 3, src: davetiye.polaroid3, idx: 3 },
                 ].map(p => (
                   <div key={p.idx}
                     onMouseEnter={() => setAktifPolaroid(p.idx)}
@@ -387,32 +354,44 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             GERİ SAYIM
         ══════════════════════════════════ */}
-        <section style={{ padding: "100px 24px", textAlign: "center" }}>
-          <FineArtDivider width={80} />
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: TEXT_MUTED, textTransform: "uppercase", marginTop: 30, marginBottom: 40 }}>Büyük Güne Kalan Süre</p>
+        <section style={{ padding: "120px 24px", textAlign: "center", background: PAPER }}>
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: IVY_LIGHT, textTransform: "uppercase", marginBottom: 50 }}>Kavuşmaya Kalan Süre</p>
           
-          <div style={{ display: "flex", justifyContent: "center", gap: "clamp(15px,4vw,40px)", flexWrap: "wrap" }}>
-            {[{ val: kalan.gun, lbl: "GÜN" }, { val: kalan.saat, lbl: "SAAT" }, { val: kalan.dakika, lbl: "DAKİKA" }, { val: kalan.saniye, lbl: "SANİYE" }].map((item, i) => (
+          <div style={{ display: "flex", justifyContent: "center", gap: "clamp(20px,5vw,60px)", flexWrap: "wrap" }}>
+            {[{ val: kalan.gun, lbl: "GÜN" }, { val: kalan.saat, lbl: "SAAT" }, { val: kalan.dakika, lbl: "DAK" }, { val: kalan.saniye, lbl: "SAN" }].map((item, i) => (
               <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.5rem,8vw,4rem)", color: TEXT_DARK, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3rem,10vw,5rem)", color: IVY_GREEN, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
                   {String(item.val).padStart(2, "0")}
                 </p>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.2em", color: GOLD_DARK, marginTop: 12 }}>{item.lbl}</p>
+                <div style={{ width: "30px", height: "1px", background: WISTERIA, margin: "16px 0 12px" }} />
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.2em", color: IVY_LIGHT }}>{item.lbl}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {davetiye.dressKod && <DressCodeSection dressKod={davetiye.dressKod} dressKodRenkler={davetiye.dressKodRenkler} />}
-
         {/* ══════════════════════════════════
-            RSVP (KATILIM BİLDİRİMİ)
+            RSVP (GLASSMORPHISM KART)
         ══════════════════════════════════ */}
-        <section style={{ padding: "100px 16px 120px", background: CHAMPAGNE, borderTop: `1px solid ${ALABASTER}` }}>
-          <div style={{ maxWidth: 460, margin: "0 auto", background: "#FFFFFF", padding: "60px 40px", border: `1px solid ${ALABASTER}`, boxShadow: "0 30px 60px rgba(0,0,0,0.05)" }}>
-            <div style={{ textAlign: "center", marginBottom: 40 }}>
-              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.3em", color: GOLD_DARK, textTransform: "uppercase", marginBottom: 12 }}>LCV</p>
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "2rem", color: TEXT_DARK }}>Katılım Durumu</p>
+        <section style={{ padding: "100px 16px 140px", position: "relative", overflow: "hidden" }}>
+          {/* Arka planda soft renk geçişleri */}
+          <div style={{ position: "absolute", inset: 0, background: PAPER_DARK, zIndex: 0 }} />
+          <div style={{ position: "absolute", top: "-10%", left: "-10%", width: "50%", height: "50%", background: `radial-gradient(circle, ${WISTERIA}20 0%, transparent 70%)`, filter: "blur(60px)", zIndex: 0 }} />
+          <div style={{ position: "absolute", bottom: "-10%", right: "-10%", width: "50%", height: "50%", background: `radial-gradient(circle, ${IVY_LIGHT}20 0%, transparent 70%)`, filter: "blur(60px)", zIndex: 0 }} />
+
+          <div style={{ 
+            position: "relative", zIndex: 1, 
+            maxWidth: 500, margin: "0 auto", 
+            background: "rgba(255, 255, 255, 0.6)", 
+            backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+            padding: "60px 40px", 
+            borderRadius: "16px", 
+            border: `1px solid rgba(255,255,255,0.8)`, 
+            boxShadow: "0 40px 80px rgba(74, 93, 78, 0.1)" 
+          }}>
+            <div style={{ textAlign: "center", marginBottom: 50 }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.4em", color: WISTERIA, textTransform: "uppercase", marginBottom: 16 }}>LCV</p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "2.4rem", color: IVY_GREEN }}>Lütfen Bildiriniz</p>
             </div>
             <RsvpFormGarden davetiyeId={davetiye.id} />
           </div>
@@ -421,13 +400,13 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         {/* ══════════════════════════════════
             FOOTER
         ══════════════════════════════════ */}
-        <footer style={{ padding: "80px 24px", textAlign: "center", background: TEXT_DARK, color: PEARL }}>
-          <LeafOrnament />
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(2.5rem,8vw,4rem)", lineHeight: 1, marginTop: 30 }}>
-            {isim1} <span style={{ color: GOLD, fontStyle: "italic", margin: "0 10px" }}>&</span> {isim2}
+        <footer style={{ padding: "100px 24px", textAlign: "center", background: IVY_GREEN, color: PAPER }}>
+          <p style={{ fontFamily: "var(--font-playfair),serif", fontSize: "clamp(3rem,10vw,5rem)", lineHeight: 1 }}>
+            {isim1} <span style={{ color: BLUSH, fontStyle: "italic", margin: "0 15px" }}>&</span> {isim2}
           </p>
-          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "0.9rem", color: "rgba(252,251,249,0.5)", marginTop: 40, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            Sizi aramızda görmekten mutluluk duyacağız
+          <EtherealDivider />
+          <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "1rem", color: "rgba(249,248,245,0.7)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+            Sizi aramızda görmekten mutluluk duyacağız.
           </p>
         </footer>
       </div>
@@ -436,7 +415,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 }
 
 /* ═══════════════════════════════════════════
-   RSVP FORMU
+   RSVP FORMU (İNCELTİLMİŞ ŞIKLIK)
 ═══════════════════════════════════════════ */
 function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
@@ -447,8 +426,9 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [hata, setHata] = useState("");
   const [ekBilgiAcik, setEkBilgiAcik] = useState(false);
 
-  const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${ALABASTER}`, padding: "12px 0", fontSize: 15, fontFamily: "var(--font-lora),serif", color: TEXT_DARK, outline: "none", boxSizing: "border-box", appearance: "none" as const, transition: "border-color 0.3s ease" };
-  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.2em", color: TEXT_MUTED, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 24 };
+  // Minimal form alanları stili
+  const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${IVY_LIGHT}50`, padding: "14px 0", fontSize: 16, fontFamily: "var(--font-lora),serif", color: IVY_GREEN, outline: "none", boxSizing: "border-box", appearance: "none" as const, transition: "border-color 0.4s ease" };
+  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.25em", color: IVY_LIGHT, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 28 };
 
   const gonder = async () => {
     if (!form.ad.trim()) { setHata("Lütfen adınızı girin."); return; }
@@ -463,9 +443,9 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   };
 
   if (adim === "tamam") return (
-    <div style={{ textAlign: "center", padding: "30px 0" }}>
-      <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "2rem", color: TEXT_DARK, marginBottom: 16 }}>{form.katilim === "evet" ? "Teşekkür Ederiz" : "Anlıyoruz..."}</p>
-      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6 }}>{form.katilim === "evet" ? "Katılım bilginiz sevgiyle iletildi. O gün görüşmek dileğiyle!" : "Durumunuz iletildi. Kalplerimiz bir."}</p>
+    <div style={{ textAlign: "center", padding: "40px 0", animation: "fadeUpEthereal 0.6s ease" }}>
+      <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "2.4rem", color: IVY_GREEN, marginBottom: 20 }}>{form.katilim === "evet" ? "Teşekkür Ederiz" : "Anlıyoruz..."}</p>
+      <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 15, color: IVY_LIGHT, lineHeight: 1.8 }}>{form.katilim === "evet" ? "Katılım bilginiz sevgiyle iletildi. O büyülü günde görüşmek dileğiyle!" : "Durumunuz iletildi. Kalplerimiz bir."}</p>
     </div>
   );
 
@@ -484,24 +464,24 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
         <option value="hayir">Maalesef katılamayacağım</option>
       </select>
 
-      <div style={{ marginTop: 30, borderTop: `1px solid ${ALABASTER}`, paddingTop: 10 }}>
-        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-lora),serif", color: TEXT_DARK }}>
-          <span style={{ fontSize: 13, letterSpacing: "0.05em" }}>Ek Bilgi / Not Ekle</span>
-          <span style={{ fontSize: 16, color: GOLD_DARK, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition: "transform 0.3s" }}>+</span>
+      <div style={{ marginTop: 40, borderTop: `1px solid ${IVY_LIGHT}30`, paddingTop: 10 }}>
+        <button type="button" onClick={() => setEkBilgiAcik(!ekBilgiAcik)} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 0", background: "transparent", border: "none", cursor: "pointer", fontFamily: "var(--font-lora),serif", color: IVY_GREEN }}>
+          <span style={{ fontSize: 14, letterSpacing: "0.05em" }}>Ek Bilgi / Not Ekle</span>
+          <span style={{ fontSize: 20, color: WISTERIA, transform: ekBilgiAcik ? "rotate(45deg)" : "none", transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>+</span>
         </button>
         {ekBilgiAcik && (
-          <div style={{ paddingBottom: 10, animation: "fadeUp 0.4s ease" }}>
+          <div style={{ paddingBottom: 20, animation: "fadeUpEthereal 0.5s ease" }}>
             {form.katilim === "evet" && (
               <div style={{ marginTop: 10 }}>
                 <label style={labelStyle}>Diyet Tercihleri <span style={{ textTransform: "none", letterSpacing: 0 }}>(isteğe bağlı)</span></label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
                   {[{ k: "vegan", l: "Vegan" }, { k: "vejetaryen", l: "Vejetaryen" }, { k: "glutensiz", l: "Glutensiz" }].map(opt => (
-                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "8px 16px", borderRadius: 0, fontSize: 11, cursor: "pointer", fontFamily: "var(--font-lora),serif", border: `1px solid ${secilenDiyet.includes(opt.k) ? GOLD_DARK : ALABASTER}`, color: secilenDiyet.includes(opt.k) ? "#FFF" : TEXT_MUTED, background: secilenDiyet.includes(opt.k) ? GOLD_DARK : "transparent", transition: "all 0.2s" }}>{opt.l}</button>
+                    <button key={opt.k} type="button" onClick={() => toggleDiyet(opt.k)} style={{ padding: "10px 20px", borderRadius: "30px", fontSize: 12, cursor: "pointer", fontFamily: "var(--font-lora),serif", border: `1px solid ${secilenDiyet.includes(opt.k) ? IVY_GREEN : IVY_LIGHT + "50"}`, color: secilenDiyet.includes(opt.k) ? PAPER : IVY_GREEN, background: secilenDiyet.includes(opt.k) ? IVY_GREEN : "transparent", transition: "all 0.3s ease" }}>{opt.l}</button>
                   ))}
                 </div>
               </div>
             )}
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 30 }}>
               <label style={labelStyle}>Şarkı Dileğiniz <span style={{ textTransform: "none", letterSpacing: 0 }}>(isteğe bağlı)</span></label>
               <input type="text" value={form.sarkiDilegi} onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })} placeholder="Dans pistindeki favori şarkınız?" maxLength={200} style={fieldStyle} />
             </div>
@@ -509,9 +489,9 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
         )}
       </div>
 
-      {hata && <p style={{ color: "#9E3C3C", fontSize: 13, fontFamily: "var(--font-lora),serif", marginTop: 16, textAlign: "center" }}>{hata}</p>}
+      {hata && <p style={{ color: "#A85C6A", fontSize: 13, fontFamily: "var(--font-lora),serif", marginTop: 20, textAlign: "center" }}>{hata}</p>}
       
-      <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 40, padding: "16px", background: TEXT_DARK, color: PEARL, border: "none", fontFamily: "var(--font-lora),serif", fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.7 : 1, transition: "background 0.3s ease" }}>
+      <button onClick={gonder} disabled={yukleniyor} style={{ width: "100%", marginTop: 40, padding: "20px", background: IVY_GREEN, color: PAPER, border: "none", borderRadius: "4px", fontFamily: "var(--font-lora),serif", fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", cursor: yukleniyor ? "not-allowed" : "pointer", opacity: yukleniyor ? 0.8 : 1, transition: "background 0.4s ease", boxShadow: "0 10px 20px rgba(74, 93, 78, 0.2)" }}>
         {yukleniyor ? "GÖNDERİLİYOR..." : "YANITI İLET"}
       </button>
     </div>
