@@ -239,11 +239,18 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
     return () => clearTimeout(t);
   }, [videoFinal, previewModu]);
 
-  const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
-  const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
+  const tamIsim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
+  const tamIsim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
 
-  const soyad1 = isim1.trim().split(/\s+/).pop() ?? null;
-  const soyad2 = isim2 ? (isim2.trim().split(/\s+/).pop() ?? null) : null;
+  // Soyadı ayır: 2+ kelimeli adlarda son kelime soyad, geri kalanı görüntü adı
+  const p1 = tamIsim1.trim().split(/\s+/);
+  const soyad1 = p1.length > 1 ? p1[p1.length - 1] : null;
+  const isim1  = p1.length > 1 ? p1.slice(0, -1).join(" ") : tamIsim1;
+
+  const p2     = tamIsim2 ? tamIsim2.trim().split(/\s+/) : null;
+  const soyad2 = p2 && p2.length > 1 ? p2[p2.length - 1] : null;
+  const isim2  = p2 ? (p2.length > 1 ? p2.slice(0, -1).join(" ") : tamIsim2) : null;
+
   const aileStr = soyad1 && soyad2 ? `${soyad1} & ${soyad2} Aileleri` : soyad1 ? `${soyad1} Ailesi` : null;
 
   const onSealClick = () => {
