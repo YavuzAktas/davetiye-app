@@ -283,13 +283,13 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           0%,100% { opacity: 0.35; transform: scale(1); }
           50%     { opacity: 1;    transform: scale(1.4); }
         }
-        @keyframes scrollPulse {
-          0%,100% { opacity: 0.5; transform: translateY(0); }
-          50%     { opacity: 1;   transform: translateY(5px); }
-        }
         @keyframes scrollFadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes chevronFlow {
+          0%,100% { opacity: 0.15; transform: translateY(0); }
+          50%     { opacity: 0.9;  transform: translateY(5px); }
         }
         @keyframes floatPolaroid {
           0%,100% { transform: translateY(0); }
@@ -457,9 +457,13 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
 
             {/* Scroll ipucu */}
             {videoFinal && (
-              <div style={{ position: "absolute", bottom: 32, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 12, letterSpacing: "0.36em", color: "rgba(253,250,245,0.90)", textTransform: "uppercase", marginBottom: 10, textShadow: "0 2px 16px rgba(0,0,0,0.8)" }}>Davetiyeyi Keşfet</p>
-                <div style={{ width: 30, height: 30, border: "1px solid rgba(253,250,245,0.65)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(253,250,245,0.90)", fontSize: 14, animation: "scrollPulse 2s infinite" }}>↓</div>
+              <div style={{ position: "absolute", bottom: 28, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 0, pointerEvents: "none", animation: "scrollFadeIn 1s ease 0.3s both" }}>
+                {[0, 1, 2].map(i => (
+                  <svg key={i} width="28" height="16" viewBox="0 0 28 16" fill="none"
+                    style={{ display: "block", animation: `chevronFlow 1.6s ease-in-out ${i * 0.28}s infinite` }}>
+                    <path d="M2 2L14 13L26 2" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ))}
               </div>
             )}
           </section>
