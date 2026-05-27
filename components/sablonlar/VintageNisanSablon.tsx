@@ -25,52 +25,9 @@ const WARM    = "#2A1808";
 const WARM_MD = "#6B3E18";
 
 const GREEN   = "#3D6645";
-const GREEN_LT= "#6A9872";
 
 
 /* ════════════════ YARDIMCI BİLEŞENLER ════════════════ */
-
-function WisteriaBotanical({ side = "left", opacity = 1 }: { side?: "left"|"right"; opacity?: number }) {
-  return (
-    <svg width="130" height="250" viewBox="0 0 130 250" fill="none"
-      style={{ opacity, transform: side === "right" ? "scaleX(-1)" : "none" }}>
-      <path d="M36 0 C38 28 32 56 36 84 C40 112 34 140 36 168 C38 196 34 220 36 250" stroke={GREEN} strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      <path d="M36 18 C55 12 72 16 88 10" stroke={GREEN} strokeWidth="1.7" fill="none" strokeLinecap="round" />
-      <path d="M36 18 C20 12 9 16 2 10"  stroke={GREEN} strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <path d="M36 48 C56 42 74 46 90 38" stroke={GREEN} strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <path d="M36 48 C19 42 7 46 0 40"  stroke={GREEN} strokeWidth="1.1" fill="none" strokeLinecap="round" />
-      <path d="M36 80 C54 74 70 78 84 72" stroke={GREEN} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M36 112 C52 106 66 110 78 104" stroke={GREEN} strokeWidth="1.4" fill="none" strokeLinecap="round" />
-      <path d="M36 144 C50 138 62 142 72 136" stroke={GREEN} strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <ellipse cx="88" cy="17" rx="4.5" ry="8.5" fill={LILAC}    opacity="0.88" />
-      <ellipse cx="81" cy="24" rx="4"   ry="7.5" fill={LILAC_MD} opacity="0.76" />
-      <ellipse cx="94" cy="25" rx="3.5" ry="7"   fill={LILAC_LT} opacity="0.64" />
-      <ellipse cx="86" cy="32" rx="3.5" ry="6.5" fill={LILAC}    opacity="0.56" />
-      <ellipse cx="60" cy="13" rx="4"   ry="7"   fill={LILAC_MD} opacity="0.68" />
-      <ellipse cx="54" cy="20" rx="3.5" ry="6"   fill={LILAC_LT} opacity="0.56" />
-      <ellipse cx="90" cy="45" rx="4.5" ry="9"   fill={LILAC}    opacity="0.85" />
-      <ellipse cx="83" cy="53" rx="4"   ry="8"   fill={LILAC_MD} opacity="0.74" />
-      <ellipse cx="96" cy="54" rx="3.5" ry="7.5" fill={LILAC_LT} opacity="0.62" />
-      <ellipse cx="87" cy="62" rx="3.5" ry="7"   fill={LILAC}    opacity="0.54" />
-      <ellipse cx="84" cy="79" rx="4.2" ry="8"   fill={LILAC}    opacity="0.78" />
-      <ellipse cx="77" cy="87" rx="3.8" ry="7.5" fill={LILAC_MD} opacity="0.67" />
-      <ellipse cx="90" cy="88" rx="3.3" ry="7"   fill={LILAC_LT} opacity="0.56" />
-      <ellipse cx="78" cy="111" rx="3.8" ry="7.5" fill={LILAC}   opacity="0.72" />
-      <ellipse cx="72" cy="119" rx="3.5" ry="7"   fill={LILAC_MD} opacity="0.62" />
-      <ellipse cx="72" cy="143" rx="3.5" ry="7"   fill={LILAC_MD} opacity="0.65" />
-      <ellipse cx="66" cy="151" rx="3"   ry="6.5" fill={LILAC}   opacity="0.55" />
-      <path d="M36 33 C23 26 15 15 19 5 C27 9 34 22 36 32"   fill={GREEN} opacity="0.55" />
-      <path d="M36 63 C21 56 13 44 17 34 C25 38 34 52 36 62"  fill={GREEN} opacity="0.5" />
-      <path d="M36 95 C23 88 17 75 21 65 C29 69 35 82 36 94"  fill={GREEN} opacity="0.45" />
-      <path d="M36 126 C25 119 20 107 24 97 C32 101 36 115 36 125" fill={GREEN} opacity="0.4" />
-      <circle cx="18" cy="112" r="5.5" fill={PETAL}    opacity="0.52" />
-      <circle cx="26" cy="130" r="4.5" fill={PETAL_LT} opacity="0.44" />
-      <circle cx="14" cy="148" r="5"   fill={PETAL}    opacity="0.48" />
-      <circle cx="22" cy="166" r="4.5" fill={PETAL_LT} opacity="0.4" />
-      <circle cx="30" cy="182" r="5"   fill={PETAL}    opacity="0.44" />
-    </svg>
-  );
-}
 
 function NightWisteria({ side = "left", opacity = 1 }: { side?: "left"|"right"; opacity?: number }) {
   return (
@@ -343,63 +300,52 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       {davetiye.muzik && videoFinal && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══════════════════════════════════
-          MÜHÜR OVERLAY — davet zarfı
+          MÜHÜR OVERLAY — zarf
       ══════════════════════════════════ */}
       {sealVar && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 45,
-          background: BG_CARD,
-          backgroundImage: "radial-gradient(ellipse 100% 100% at 50% 50%, #FEFCF8 0%, #F0E8D8 100%)",
+          background: "#F7F2EA",
           opacity: sealFading ? 0 : 1,
-          transition: "opacity 1.1s ease",
+          transition: "opacity 1.2s ease",
           pointerEvents: sealFading ? "none" : "auto",
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          textAlign: "center", padding: "40px 24px",
           overflow: "hidden",
         }}>
-          {/* İnce altın çerçeve */}
-          <div style={{ position: "absolute", inset: 16, border: `0.5px solid ${GOLD}30`, pointerEvents: "none" }} />
-          <div style={{ position: "absolute", inset: 20, border: `0.5px solid ${GOLD}15`, pointerEvents: "none" }} />
+          {/* Zarf fold çizgileri */}
+          <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon points="0,0 100,0 50,40" fill="#EDE6D9" />
+            <line x1="0" y1="0" x2="50" y2="40" stroke={GOLD} strokeWidth="0.12" opacity="0.55" />
+            <line x1="100" y1="0" x2="50" y2="40" stroke={GOLD} strokeWidth="0.12" opacity="0.55" />
+            <rect x="1" y="1" width="98" height="98" fill="none" stroke={GOLD} strokeWidth="0.18" opacity="0.25" />
+          </svg>
+          {/* Katlama gölgesi */}
+          <div style={{ position: "absolute", left: 0, right: 0, top: "39%", height: 28, background: "linear-gradient(to bottom, rgba(150,120,80,0.07), transparent)", pointerEvents: "none" }} />
 
-          {/* Köşe botanik — hafif */}
-          <div style={{ position: "absolute", top: -10, left: -10, opacity: 0.22, transform: "scale(0.9)", transformOrigin: "top left" }}>
-            <WisteriaBotanical side="left" />
-          </div>
-          <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.22, transform: "scale(0.9)", transformOrigin: "top right" }}>
-            <WisteriaBotanical side="right" />
-          </div>
-          <div style={{ position: "absolute", bottom: -10, left: -10, opacity: 0.12, transform: "scale(0.7) scaleY(-1)", transformOrigin: "bottom left" }}>
-            <WisteriaBotanical side="left" />
-          </div>
-          <div style={{ position: "absolute", bottom: -10, right: -10, opacity: 0.12, transform: "scale(0.7) scaleY(-1)", transformOrigin: "bottom right" }}>
-            <WisteriaBotanical side="right" />
-          </div>
-
-          <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <GoldOrnament />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.50em", color: GOLD, textTransform: "uppercase", marginBottom: 20 }}>
-              Nişan Davetiyesi
-            </p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: WARM, lineHeight: 0.92 }}>
-              {isim1}
-            </p>
-            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.4rem,5vw,2.4rem)", color: PETAL, lineHeight: 1.3 }}>
-              &
-            </p>
-            {isim2 && (
-              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3rem,11vw,5.2rem)", color: WARM, lineHeight: 0.92, marginBottom: 6 }}>
-                {isim2}
-              </p>
-            )}
-            {tarihKisa && (
-              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.22em", color: `${WARM}55`, marginTop: 8, marginBottom: 34 }}>
-                {tarihKisa}
-              </p>
-            )}
-            <WaxSeal size={190} onClick={onSealClick} />
-            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}70`, letterSpacing: "0.22em", marginTop: 16, animation: "glowPulse 3s ease-in-out infinite" }}>
+          {/* İçerik */}
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", flexDirection: "column", alignItems: "center",
+            paddingTop: "clamp(110px,26svh,200px)",
+            padding: "clamp(110px,26svh,200px) 32px 40px",
+            textAlign: "center",
+          }}>
+            <WaxSeal size={170} onClick={onSealClick} />
+            <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, fontStyle: "italic", color: `${GOLD}65`, letterSpacing: "0.24em", marginTop: 14, animation: "glowPulse 3s ease-in-out infinite" }}>
               Mühüre dokun
             </p>
+            <div style={{ marginTop: "clamp(28px,6svh,52px)" }}>
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.44em", color: `${GOLD}90`, textTransform: "uppercase", marginBottom: 14 }}>
+                Nişan Davetiyesi
+              </p>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8vw,3.5rem)", color: WARM, lineHeight: 1.1 }}>
+                {isim1}{isim2 ? ` & ${isim2}` : ""}
+              </p>
+              {tarihKisa && (
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.18em", color: `${WARM}50`, marginTop: 10 }}>
+                  {tarihKisa}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
