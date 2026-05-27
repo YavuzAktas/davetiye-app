@@ -149,7 +149,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     <>
       <DavetiyeGoruntulenmeKaydedici slug={davetiye.slug} />
       {sablon}
-      <BeklerizWatermark />
+      {sablonTipi !== "vintage-nisan" && <BeklerizWatermark />}
       <EtkilesimButonu
         slug={davetiye.slug}
         renk={temaRenk}

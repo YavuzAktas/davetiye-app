@@ -1,6 +1,5 @@
 import VintageNisanSablon from "@/components/sablonlar/VintageNisanSablon";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
-import BeklerizWatermark from "@/components/BeklerizWatermark";
 
 export const metadata = {
   title: "Vintage Nişan Davetiyesi — Örnek",
@@ -40,6 +39,5 @@ const ORNEK: DavetiyeVeri = {
 export default function OrnekVintageNisanSayfasi() {
   return <>
     <VintageNisanSablon davetiye={ORNEK} rsvpBileseni={null} />
-    <BeklerizWatermark />
   </>;
 }
