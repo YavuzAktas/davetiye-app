@@ -47,6 +47,7 @@ export default function EtkilesimButonu({
   const [seciliDosyalar,    setSeciliDosyalar]    = useState<File[]>([]);
   const [onizlemeler,       setOnizlemeler]       = useState<string[]>([]);
   const [fotoDurumlar,      setFotoDurumlar]      = useState<FotoDurum[]>([]);
+  const [dosyaSeciliyor,    setDosyaSeciliyor]    = useState(false);
   const [fotoYukleniyor,    setFotoYukleniyor]    = useState(false);
   const [yuklenenSayisi,    setYuklenenSayisi]    = useState(0);
   const [fotoBasari,        setFotoBasari]        = useState(false);
@@ -136,11 +137,17 @@ export default function EtkilesimButonu({
     if (!files.length) return;
     const fazla = files.length > MAKS_FOTO;
     if (fazla) files = files.slice(0, MAKS_FOTO);
-    onizlemeler.forEach(u => URL.revokeObjectURL(u));
-    setOnizlemeler(files.map(f => URL.createObjectURL(f)));
-    setSeciliDosyalar(files);
-    setFotoDurumlar(files.map(() => "bekliyor"));
+    /* UI'yı önce "yükleniyor" state'ine al, sonra object URL'leri oluştur */
+    setDosyaSeciliyor(true);
     setFotoHata(fazla ? `Tek seferde en fazla ${MAKS_FOTO} fotoğraf yükleyebilirsin. İlk ${MAKS_FOTO} seçildi.` : "");
+    const snapshot = files;
+    requestAnimationFrame(() => {
+      onizlemeler.forEach(u => URL.revokeObjectURL(u));
+      setOnizlemeler(snapshot.map(f => URL.createObjectURL(f)));
+      setSeciliDosyalar(snapshot);
+      setFotoDurumlar(snapshot.map(() => "bekliyor"));
+      setDosyaSeciliyor(false);
+    });
   }
 
   function dosyaCikar(index: number) {
@@ -465,7 +472,12 @@ export default function EtkilesimButonu({
                       onChange={e => setFotoAd(e.target.value)}
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white"
                       maxLength={40} required />
-                    {onizlemeler.length > 0 ? (
+                    {dosyaSeciliyor ? (
+                      <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center gap-2">
+                        <div className="w-6 h-6 border-2 border-gray-200 border-t-purple-500 rounded-full animate-spin" />
+                        <p className="text-xs text-gray-400">Fotoğraflar hazırlanıyor...</p>
+                      </div>
+                    ) : onizlemeler.length > 0 ? (
                       <div className="grid grid-cols-3 gap-2">
                         {onizlemeler.map((url, i) => {
                           const durum = fotoDurumlar[i] ?? "bekliyor";
@@ -569,9 +581,9 @@ export default function EtkilesimButonu({
                     <p className="text-xs mt-1">İlk fotoğrafı sen paylaş!</p>
                   </div>
                 ) : (
-                  <div className="columns-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {fotolar.map(foto => (
-                      <div key={foto.id} className="mb-2 rounded-xl overflow-hidden break-inside-avoid cursor-zoom-in group" onClick={() => setLightbox(foto)}>
+                      <div key={foto.id} className="rounded-xl overflow-hidden cursor-zoom-in group" onClick={() => setLightbox(foto)}>
                         <div className="relative w-full" style={{ aspectRatio: "1" }}>
                           <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
                         </div>
