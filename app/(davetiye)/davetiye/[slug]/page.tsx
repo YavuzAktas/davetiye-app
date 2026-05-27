@@ -58,6 +58,12 @@ function publicDavetiyeGetir(slug: string) {
   )();
 }
 
+const ETKINLIK_ETIKET: Record<string, string> = {
+  dugun: "Düğün Davetiyesi", nisan: "Nişan Davetiyesi",
+  dogumgunu: "Doğum Günü Davetiyesi", sunnet: "Sünnet Davetiyesi",
+  kina: "Kına Davetiyesi", kurumsal: "Etkinlik Davetiyesi", diger: "Davetiye",
+};
+
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const davetiye = await publicDavetiyeGetir(slug);
@@ -68,9 +74,33 @@ export async function generateMetadata({ params }: Props) {
     };
   }
 
+  const etiket = ETKINLIK_ETIKET[davetiye.etkinlikTur] ?? "Davetiye";
+  const tarihStr = davetiye.tarih
+    ? new Date(davetiye.tarih).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+    : null;
+
+  const descParcalar: string[] = [];
+  if (tarihStr) descParcalar.push(tarihStr);
+  if (davetiye.mekan) descParcalar.push(davetiye.mekan);
+  descParcalar.push("Davetiyeyi görüntülemek için tıklayın.");
+
+  const description = descParcalar.join(" · ");
+  const title = `${davetiye.baslik} | ${etiket}`;
+
   return {
-    title: davetiye.baslik,
+    title,
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 }
 
