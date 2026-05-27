@@ -73,6 +73,24 @@ function useAudio(src: string) {
     if (a && !a.paused) a.pause();
   }, [pathname]);
 
+  /* Sayfa gizlenince durdur (başka uygulamaya/taba geçince) */
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden && audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+    const handlePageHide = () => {
+      if (audioRef.current) audioRef.current.pause();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("pagehide", handlePageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, []);
+
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;

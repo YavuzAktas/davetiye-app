@@ -646,7 +646,7 @@ function RsvpFormGarden({ davetiyeId }: { davetiyeId: string }) {
   const [hata, setHata] = useState("");
 
   const fieldStyle: React.CSSProperties = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${LILAC_LT}60`, padding: "10px 0", fontSize: 14, fontFamily: "var(--font-lora),serif", color: WARM, outline: "none", boxSizing: "border-box", appearance: "none" as const };
-  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.28em", color: WARM_MD, textTransform: "uppercase", display: "block", marginBottom: 4, marginTop: 20 };
+  const labelStyle: React.CSSProperties = { fontFamily: "var(--font-lora),serif", fontSize: 12, letterSpacing: "0.10em", color: WARM, textTransform: "uppercase", display: "block", marginBottom: 6, marginTop: 20 };
 
   const gonder = async () => {
     if (!form.ad.trim()) { setHata("Lütfen adınızı girin."); return; }
