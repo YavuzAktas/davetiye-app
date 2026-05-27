@@ -89,7 +89,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  if (session.user.email !== "aylinyavuz@gmail.com") {
+  if (!["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "")) {
     return NextResponse.json({ hata: "Ödeme sistemi henüz aktif değil. Çok yakında hizmetinize sunulacak." }, { status: 503 });
   }
 

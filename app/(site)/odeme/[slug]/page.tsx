@@ -61,7 +61,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
   if (!davetiye) notFound();
   if (davetiye.odemeDurumu === "odendi") redirect(`/dashboard/davetiye/${slug}`);
 
-  const adminMi = session.user.email === "aylinyavuz@gmail.com";
+  const adminMi = ["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "");
   if (!adminMi) {
     return (
       <div style={{
