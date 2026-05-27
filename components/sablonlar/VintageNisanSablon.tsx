@@ -335,9 +335,21 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
           </div>
 
           {/* İsimler */}
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2.2rem,9vw,4rem)", color: WARM, lineHeight: 1.1, marginBottom: 36 }}>
-            {isim1}{isim2 ? ` & ${isim2}` : ""}
-          </p>
+          <div style={{ marginBottom: 36, textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1 }}>
+              {isim1}
+            </p>
+            {isim2 && (
+              <>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(1rem,4vw,1.5rem)", color: `${GOLD}CC`, lineHeight: 1, margin: "6px 0" }}>
+                  &
+                </p>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1 }}>
+                  {isim2}
+                </p>
+              </>
+            )}
+          </div>
 
           {/* Mühür */}
           <WaxSeal size={180} onClick={onSealClick} />
@@ -587,9 +599,21 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
         ══════════════════════════════════ */}
         <footer style={{ background: BG, padding: "64px 24px 72px", textAlign: "center" }}>
           <div style={{ width: 48, height: 1, background: `${GOLD}50`, margin: "0 auto 40px" }} />
-          <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
-            {isim1}{isim2 ? ` & ${isim2}` : ""}
-          </p>
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
+              {isim1}
+            </p>
+            {isim2 && (
+              <>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(0.9rem,3.5vw,1.3rem)", color: `${GOLD}CC`, lineHeight: 1, margin: "4px 0" }}>
+                  &
+                </p>
+                <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3.2rem)", color: WARM, lineHeight: 1.1 }}>
+                  {isim2}
+                </p>
+              </>
+            )}
+          </div>
           <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.40em", color: `${GOLD}90`, textTransform: "uppercase", marginTop: 18 }}>
             Sizi seviyoruz
           </p>
