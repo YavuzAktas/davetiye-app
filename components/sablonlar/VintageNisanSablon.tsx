@@ -1,5 +1,6 @@
 "use client";
 
+// Vintage Nişan Şablonu
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
 import MuzikCalar from "@/components/MuzikCalar";
