@@ -37,6 +37,7 @@ export default function EtkilesimButonu({
   const [acik, setAcik]           = useState(false);
   const [sekme, setSekme]         = useState<Sekme>(sekmeler[0] ?? "foto");
   const [lightbox, setLightbox]   = useState<AlbumFoto | null>(null);
+  const [qrModu, setQrModu]       = useState(false);
 
   /* ─ Fotoğraf state ─ */
   const [fotolar,           setFotolar]           = useState<AlbumFoto[]>([]);
@@ -335,6 +336,7 @@ export default function EtkilesimButonu({
     const p = new URLSearchParams(window.location.search).get("panel") as Sekme | null;
     if (!p || !sekmeler.includes(p)) return;
     setSekme(p);
+    setQrModu(true);
     const t = setTimeout(() => setAcik(true), 300);
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -343,7 +345,7 @@ export default function EtkilesimButonu({
   /* ─ Klavye & scroll ─ */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { if (lightbox) setLightbox(null); else setAcik(false); }
+      if (e.key === "Escape") { if (lightbox) setLightbox(null); else if (!qrModu) setAcik(false); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -385,7 +387,7 @@ export default function EtkilesimButonu({
       </button>
 
       {/* Backdrop */}
-      {acik && (
+      {acik && !qrModu && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={() => setAcik(false)} />
       )}
 
@@ -417,7 +419,7 @@ export default function EtkilesimButonu({
           <h2 className="text-base font-bold text-gray-900">
             {sekmeler.length === 1 ? sekmeEtiket[sekmeler[0]].isim : "Anı & Katılım"}
           </h2>
-          <button onClick={() => setAcik(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 text-lg">×</button>
+          {!qrModu && <button onClick={() => setAcik(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 text-lg">×</button>}
         </div>
 
         {/* Sekmeler — sadece birden fazlaysa göster */}
