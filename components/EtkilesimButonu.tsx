@@ -287,6 +287,15 @@ export default function EtkilesimButonu({
     setKayitDurum("bekliyor");
   }
 
+  /* ─ QR deep-link: ?panel=ani|foto|sesli paneli otomatik aç ─ */
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get("panel") as Sekme | null;
+    if (!p || !sekmeler.includes(p)) return;
+    setSekme(p);
+    setAcik(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ─ Klavye & scroll ─ */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

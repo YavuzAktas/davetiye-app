@@ -176,6 +176,49 @@ export default async function AlbumModerasyon({ params }: Props) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        {/* ── Masa QR Kartı ── */}
+        <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+          <div className="px-6 pt-6 pb-4 border-b border-gray-50">
+            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Masa QR Kodu</p>
+            <p className="text-xs text-gray-300 mt-0.5">Masalara koyunca misafirler direkt bu sayfayı açar</p>
+          </div>
+          <div className="p-6 flex flex-col sm:flex-row items-center gap-6">
+            <div className="flex flex-col items-center gap-3 shrink-0">
+              <div className="p-3 rounded-2xl" style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}>
+                <img
+                  src={`/api/qr?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}?panel=ani`)}`}
+                  alt="Anı & Katılım QR"
+                  className="w-36 h-36 rounded-lg"
+                />
+              </div>
+              <a
+                href={`/api/qr?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}?panel=ani`)}`}
+                download={`ani-qr-${slug}.png`}
+                className="text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity"
+                style={{ color: renk }}
+              >
+                ⬇ QR İndir
+              </a>
+            </div>
+            <div className="flex-1 space-y-3">
+              <div>
+                <p className="text-sm font-bold text-gray-800 mb-1">Nasıl kullanılır?</p>
+                <ol className="text-xs text-gray-500 space-y-1.5 leading-relaxed list-decimal list-inside">
+                  <li>QR kodunu indirip yazdır (A7 veya kartvizit boyutu önerilir)</li>
+                  <li>Etkinlik masalarına veya düğün defterine yerleştir</li>
+                  <li>Misafirler telefon kameralarıyla okutunca anı paneli otomatik açılır</li>
+                  <li>Fotoğraf, anı yazısı veya sesli mesaj bırakabilirler</li>
+                </ol>
+              </div>
+              <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gray-100 bg-gray-50">
+                <span className="text-gray-400 text-xs font-mono truncate flex-1 select-all">
+                  /davetiye/{slug}?panel=ani
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <ModerasyonIcerik
           baslangicFotolar={davetiye.albumFotolar.map((f) => ({ ...f, createdAt: f.createdAt.toISOString() }))}
           baslangicAnilar={davetiye.aniDefterleri.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
