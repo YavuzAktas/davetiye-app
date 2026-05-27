@@ -248,10 +248,10 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const tarihObj  = davetiye.tarih ? new Date(davetiye.tarih) : null;
-  const tarihStr  = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) : null;
-  const tarihKisa = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }).toUpperCase() : null;
-  const saatStr   = tarihObj ? tarihObj.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }) : null;
-  const gunStr    = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { weekday: "long" }) : null;
+  const tarihStr  = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : null;
+  const tarihKisa = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).toUpperCase() : null;
+  const saatStr   = tarihObj ? tarihObj.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) : null;
+  const gunStr    = tarihObj ? tarihObj.toLocaleDateString("tr-TR", { weekday: "long", timeZone: "UTC" }) : null;
 
   const calc = () => {
     if (!tarihObj) return { gun: 0, saat: 0, dakika: 0, saniye: 0 };
@@ -456,7 +456,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 padding: "clamp(80px,20svh,160px) 28px clamp(60px,10svh,100px)",
                 pointerEvents: "none", textAlign: "center",
               }}>
-                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.52em", color: "rgba(255,255,255,0.95)", textTransform: "uppercase", textShadow: "0 1px 14px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,1)", marginBottom: 10, animation: "fadeUp 0.7s ease 0.05s both" }}>
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.44em", color: "rgba(255,255,255,0.96)", textTransform: "uppercase", marginBottom: 14, animation: "fadeUp 0.7s ease 0.05s both", background: "rgba(0,0,0,0.32)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", padding: "5px 16px 5px 20px", borderRadius: 20 }}>
                   Nişan Davetiyesi
                 </p>
                 <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(3.2rem,13vw,6rem)", color: "#FFFFFF", lineHeight: 0.92, textShadow: "0 2px 40px rgba(0,0,0,0.95), 0 1px 8px rgba(0,0,0,1)", animation: "isimFadeUp 1s ease 0.15s both" }}>
