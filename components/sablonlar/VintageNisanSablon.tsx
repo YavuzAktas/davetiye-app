@@ -105,7 +105,7 @@ function WaxSeal({ size = 190, onClick }: { size?: number; onClick?: () => void 
       width: size, height: size,
       cursor: onClick ? "pointer" : "default",
       animation: tapped ? "sealTap 0.4s ease forwards" : "sealFloat 5s ease-in-out infinite",
-      filter: "drop-shadow(0 0 20px rgba(169,120,216,0.6)) drop-shadow(0 10px 32px rgba(0,0,0,0.55))",
+      filter: "drop-shadow(0 8px 28px rgba(42,24,8,0.18)) drop-shadow(0 2px 6px rgba(42,24,8,0.09))",
     }}>
       <img src="/wax-seal.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} draggable={false} />
     </div>
