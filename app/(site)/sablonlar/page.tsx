@@ -1165,6 +1165,48 @@ export default function SablonlarSayfasi() {
         )}
       </div>
 
+      {/* ── Özellik Banner ── */}
+      <section className="border-t border-gray-100 px-4 py-12 sm:py-16 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-600/70 mb-2">Ek Özellikler</p>
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-2">Her davetiyeye anı özelliği eklenebilir</h2>
+            <p className="text-sm text-gray-500 max-w-xl mx-auto">
+              Misafirleriniz QR kodla fotoğraf, yazılı anı ve sesli mesaj bırakabilir. Siz de tümünü tek PDF'e derleyebilirsiniz.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {[
+              { icon: "📸", title: "Fotoğraf Albümü",   desc: "Misafirler yükler, siz onaylarsınız" },
+              { icon: "💌", title: "Anı Defteri",        desc: "Yazılı dilekler ve anılar" },
+              { icon: "🎙", title: "Sesli Anı",          desc: "Ses kaydıyla tebrik mesajı" },
+              { icon: "📖", title: "Anı Kitabı PDF",     desc: "Tek tıkla premium PDF" },
+            ].map(f => (
+              <div key={f.title} className="rounded-2xl border border-gray-100 bg-white p-4 text-center hover:border-purple-100 hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-xl mx-auto mb-2.5 group-hover:scale-110 transition-transform">
+                  {f.icon}
+                </div>
+                <p className="text-xs font-bold text-gray-800 mb-1">{f.title}</p>
+                <p className="text-[11px] text-gray-400 leading-snug">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/fiyatlar"
+              className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-700 hover:-translate-y-0.5 transition-all shadow-sm shadow-purple-200"
+            >
+              Özellikleri ve fiyatları gör
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="border-t border-gray-200 px-4 py-16 bg-white">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
           <div>
