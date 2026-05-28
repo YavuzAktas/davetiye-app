@@ -29,7 +29,10 @@ export default async function AlbumModerasyon({ params }: Props) {
 
   const davetiyeTemel = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true, albumAktif: true },
+    select: {
+      id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true,
+      albumAktif: true, aniDefteriAktif: true, sesliAniAktif: true, canliDuvarAktif: true,
+    },
   });
   if (!davetiyeTemel || davetiyeTemel.userId !== user.id) notFound();
 
@@ -79,6 +82,18 @@ export default async function AlbumModerasyon({ params }: Props) {
       </div>
     );
   }
+
+  // ── Hangi panel QR'a bağlansın? ──
+  const qrPanel = davetiyeOzelligiAktif(davetiyeTemel, "aniDefteri")
+    ? "ani"
+    : davetiyeTemel.albumAktif || davetiyeOzelligiAktif(davetiyeTemel, "canliDuvar")
+    ? "foto"
+    : davetiyeOzelligiAktif(davetiyeTemel, "sesliAni")
+    ? "sesli"
+    : null;
+  const qrUrl = qrPanel
+    ? `${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}?panel=${qrPanel}`
+    : `${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}`;
 
   // ── Özellik aktif: tam veri yükle ──
   const davetiye = await prisma.davetiye.findFirst({
@@ -186,13 +201,13 @@ export default async function AlbumModerasyon({ params }: Props) {
             <div className="flex flex-col items-center gap-3 shrink-0">
               <div className="p-3 rounded-2xl" style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}>
                 <img
-                  src={`/api/qr?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}?panel=ani`)}`}
+                  src={`/api/qr?url=${encodeURIComponent(qrUrl)}`}
                   alt="Anı & Katılım QR"
                   className="w-36 h-36 rounded-lg"
                 />
               </div>
               <a
-                href={`/api/qr?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/davetiye/${slug}?panel=ani`)}`}
+                href={`/api/qr?url=${encodeURIComponent(qrUrl)}`}
                 download={`ani-qr-${slug}.png`}
                 className="text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity"
                 style={{ color: renk }}
@@ -212,7 +227,7 @@ export default async function AlbumModerasyon({ params }: Props) {
               </div>
               <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gray-100 bg-gray-50">
                 <span className="text-gray-400 text-xs font-mono truncate flex-1 select-all">
-                  /davetiye/{slug}?panel=ani
+                  /davetiye/{slug}{qrPanel ? `?panel=${qrPanel}` : ""}
                 </span>
               </div>
             </div>
