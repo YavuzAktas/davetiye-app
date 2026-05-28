@@ -787,7 +787,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
               <iframe
                 src={demoUrl}
                 title={sablon.isim}
-                allow="autoplay 'none'"
+                allow="autoplay"
                 style={{
                   display: "block",
                   width: RENDER_W,
