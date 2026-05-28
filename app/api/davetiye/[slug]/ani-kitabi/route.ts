@@ -1,5 +1,6 @@
 import https from "https";
 import http  from "http";
+import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -32,10 +33,21 @@ function toDataUri(url: string): Promise<string | null> {
       }
       const chunks: Buffer[] = [];
       res.on("data", (c: Buffer) => chunks.push(c));
-      res.on("end", () => {
-        const buf  = Buffer.concat(chunks);
-        const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0];
-        resolve(`data:${mime};base64,${buf.toString("base64")}`);
+      res.on("end", async () => {
+        try {
+          const buf  = Buffer.concat(chunks);
+          const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0].trim();
+          // react-pdf desteklemediği için webp/avif → jpeg dönüştür
+          if (mime === "image/webp" || mime === "image/avif" || mime === "image/gif") {
+            const jpeg = await sharp(buf).jpeg({ quality: 85 }).toBuffer();
+            resolve(`data:image/jpeg;base64,${jpeg.toString("base64")}`);
+          } else {
+            resolve(`data:${mime};base64,${buf.toString("base64")}`);
+          }
+        } catch (e) {
+          console.error("[ani-kitabi] sharp convert error", e);
+          resolve(null);
+        }
       });
       res.on("error", (e) => { console.error("[ani-kitabi] image stream", e.message); resolve(null); });
     });

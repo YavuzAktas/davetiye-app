@@ -9,7 +9,7 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["iyzipay", "@react-pdf/renderer"],
+  serverExternalPackages: ["iyzipay", "@react-pdf/renderer", "sharp"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
