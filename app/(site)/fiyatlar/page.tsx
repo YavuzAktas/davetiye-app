@@ -338,6 +338,90 @@ export default async function FiyatlarSayfasi({
         </div>
       </section>
 
+      {/* ══ § 2.5  ÖZELLİK VİTRİNİ ══ */}
+      <section className="relative px-4 sm:px-6 py-10 sm:py-14 bg-white border-y border-gray-100">
+        <div className="max-w-5xl mx-auto">
+          <SectionHead
+            label="Öne Çıkan Özellikler"
+            title="Misafirlerinizle anı biriktirin"
+            sub="QR kodu masaya koyun; misafirler fotoğraf, dilekçe ve sesli mesaj bıraksın. Siz hepsini tek PDF'e derleyin."
+          />
+
+          {/* Anı Kitabı ana kart */}
+          <div className="rounded-3xl bg-gray-50 border border-gray-100 overflow-hidden mb-4 group hover:border-purple-100 hover:shadow-sm transition-all">
+            <div className="grid sm:grid-cols-5 gap-0">
+              <div className="sm:col-span-3 p-7 sm:p-10 flex flex-col justify-center">
+                <div className="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100 rounded-full px-3 py-1 mb-4 self-start">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                  <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-purple-600">Yeni Özellik</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-3">Anı Kitabı PDF</h3>
+                <p className="text-sm text-gray-500 leading-relaxed mb-5 max-w-sm">
+                  Onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir premium PDF'e derliyoruz. Ömür boyu saklayabileceğiniz dijital bir hatıra kitabı.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["📸 Fotoğraflar", "💌 Yazılı anılar", "🎙 Sesli mesajlar"].map(t => (
+                    <span key={t} className="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-full font-medium">{t}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="sm:col-span-2 relative flex items-center justify-center min-h-44 overflow-hidden"
+                style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #db2777 100%)" }}>
+                {/* Decorative dots */}
+                <div className="absolute inset-0 opacity-10"
+                  style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+                <div className="relative text-center text-white p-8">
+                  <div className="text-5xl mb-3">📖</div>
+                  <p className="text-sm font-bold">Tek tıkla indir</p>
+                  <p className="text-xs mt-1 opacity-60">Etkinlik sonrası hazır</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 küçük özellik kartı */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              {
+                icon: "📸",
+                title: "Fotoğraf Albümü",
+                desc: "Misafirler etkinlik fotoğraflarını yükler. Moderasyon sonrası davetiye sayfasında herkese açılır.",
+                renk: "purple",
+              },
+              {
+                icon: "💌",
+                title: "Anı Defteri",
+                desc: "Yazılı dilekler ve anılar bırakılabilir. Onayladığınız içerikler davetiyede görünür.",
+                renk: "pink",
+              },
+              {
+                icon: "🎙",
+                title: "Sesli Anı",
+                desc: "Misafirler ses kaydıyla tebrik mesajı bırakır. Anı Kitabı PDF'inde listelenir.",
+                renk: "violet",
+              },
+            ].map(f => (
+              <div key={f.title} className="rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-sm hover:border-purple-100 transition-all group">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition-transform">
+                  {f.icon}
+                </div>
+                <h4 className="text-sm font-bold text-gray-800 mb-1.5">{f.title}</h4>
+                <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* QR akışı notu */}
+          <div className="mt-4 rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4 flex items-center gap-4">
+            <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-base shrink-0">📲</div>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              <span className="font-semibold text-gray-800">Masa QR Kodu:</span>{" "}
+              Yönetim panelinden QR kodu indirip masalara koyun. Misafirler telefon kameralarıyla okutunca anı paneli otomatik açılır.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ══ § 3  PRICE CALCULATOR ══ */}
       <section id="hesapla" className="relative px-4 sm:px-6 py-10 sm:py-14 bg-white border-y border-gray-100">
         <div className="max-w-5xl mx-auto">
