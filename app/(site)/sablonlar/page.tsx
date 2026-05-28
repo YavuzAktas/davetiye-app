@@ -892,29 +892,29 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: (index % 3) * 0.07, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{
-        y: -5,
-        boxShadow: `0 20px 56px rgba(0,0,0,0.5), 0 0 0 1px ${r}35, inset 0 1px 0 rgba(255,255,255,0.07)`,
+        y: -4,
+        boxShadow: `0 16px 40px rgba(0,0,0,0.1), 0 0 0 1px ${r}30`,
       }}
       onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
       className="flex flex-col cursor-pointer"
       style={{
-        background: "#0d0b18",
+        background: "#ffffff",
         borderRadius: 24,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04)",
         overflow: "hidden",
       }}
     >
       {/* ── Telefon Önizlemesi ── */}
       <div className="relative overflow-hidden shrink-0" style={{ height: 218 }}>
         <div className="absolute inset-0"
-          style={{ background: `radial-gradient(ellipse at 50% -15%, ${r}1a 0%, transparent 65%)` }} />
+          style={{ background: `radial-gradient(ellipse at 50% -15%, ${r}14 0%, transparent 65%)` }} />
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
           <div style={{ transform: "scale(0.56)", transformOrigin: "center center", width: 260, flexShrink: 0 }}>
             <TelefonMockup><StdKapak sablon={sablon} /></TelefonMockup>
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0"
-          style={{ height: 64, background: "linear-gradient(to top, #0d0b18, transparent)" }} />
+          style={{ height: 64, background: "linear-gradient(to top, #ffffff, transparent)" }} />
       </div>
 
       {/* ── Bilgi Paneli ── */}
@@ -922,50 +922,48 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
 
         {/* Kategori rozeti */}
         <span className="self-start text-[9px] font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full"
-          style={{ background: `${r}18`, color: r, border: `1px solid ${r}28` }}>
+          style={{ background: `${r}12`, color: r, border: `1px solid ${r}28` }}>
           {emoji} {sablon.kategori}
         </span>
 
-        {/* Cormorant Garamond isim — premium dili, düşük opaklık */}
+        {/* İsim */}
         <div>
-          <h3 className="font-bold leading-tight"
+          <h3 className="font-bold leading-tight text-gray-800"
             style={{
               fontFamily: "var(--font-cormorant), 'Georgia', serif",
               fontSize: "clamp(1.2rem, 2.2vw, 1.45rem)",
-              color: "rgba(255,255,255,0.78)",
               letterSpacing: "-0.01em",
             }}>
             {sablon.isim}
           </h3>
           {sablon.aciklama && (
-            <p className="mt-1 text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.28)" }}>
+            <p className="mt-1 text-xs text-gray-500 leading-relaxed">
               {sablon.aciklama}
             </p>
           )}
         </div>
 
-        {/* Özellik mini-kartları — 2×2 glassmorphism */}
+        {/* Özellik mini-kartları */}
         <div className="grid grid-cols-2 gap-1.5">
           {STD_OZELLIKLER.map(({ Icon, label }) => (
-            <div key={label} className="flex items-center gap-2 px-2.5 py-2 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <Icon size={12} strokeWidth={1.75} style={{ color: `${r}aa`, flexShrink: 0 }} />
-              <span className="text-[10px] font-medium" style={{ color: "rgba(255,255,255,0.42)" }}>
+            <div key={label} className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-gray-50 border border-gray-100">
+              <Icon size={12} strokeWidth={1.75} style={{ color: `${r}cc`, flexShrink: 0 }} />
+              <span className="text-[10px] font-medium text-gray-500">
                 {label}
               </span>
             </div>
           ))}
         </div>
 
-        {/* CTA — template rengi gradient, gold değil */}
+        {/* CTA */}
         <motion.button
-          whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}40` }}
+          whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}35` }}
           whileTap={{ scale: 0.97 }}
           onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
           className="w-full py-3 rounded-2xl text-xs font-bold text-white"
           style={{
-            background: `linear-gradient(135deg, ${r}dd 0%, ${r}99 100%)`,
-            boxShadow: `0 4px 16px ${r}2a`,
+            background: `linear-gradient(135deg, ${r} 0%, ${r}cc 100%)`,
+            boxShadow: `0 4px 16px ${r}25`,
             letterSpacing: "0.01em",
           }}
         >
@@ -996,35 +994,30 @@ export default function SablonlarSayfasi() {
   const toplamSonuc = goruntulenenPremium.length + goruntulenenStandart.length;
 
   return (
-    <div className="min-h-screen" style={{ background:"#05040f" }}>
+    <div className="min-h-screen bg-gray-50">
 
       {/* ════════════ HERO ════════════ */}
-      <div className="relative overflow-hidden">
-        {/* Arka plan efektleri */}
-        <div className="absolute inset-0" style={{ background:"linear-gradient(135deg,#0f0118 0%,#0d0826 40%,#060f20 100%)" }}/>
-        <div className="absolute inset-0" style={{ backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.018) 1px,transparent 1px)", backgroundSize:"28px 28px" }}/>
-        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full" style={{ background:"radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%)" }}/>
-        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full" style={{ background:"radial-gradient(circle,rgba(29,78,216,0.1),transparent 70%)" }}/>
-        <div className="absolute bottom-0 inset-x-0 h-32" style={{ background:"linear-gradient(to bottom,transparent,#05040f)" }}/>
+      <div className="relative overflow-hidden bg-white border-b border-gray-100">
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-175 h-96 rounded-full bg-purple-100/60 blur-[100px] pointer-events-none"/>
+        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-pink-100/40 blur-[80px] pointer-events-none"/>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-16 pb-20 text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
-            className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full"
-            style={{ background:"rgba(124,58,237,0.12)", border:"1px solid rgba(124,58,237,0.22)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" style={{ boxShadow:"0 0 6px rgba(167,139,250,0.8)" }}/>
-            <span className="text-[11px] font-bold tracking-[0.28em] uppercase text-purple-300">Şablon Galerisi</span>
+            className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-purple-50 border border-purple-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"/>
+            <span className="text-[11px] font-bold tracking-[0.28em] uppercase text-purple-600">Şablon Galerisi</span>
           </motion.div>
 
           {/* Başlık */}
           <motion.h1
             initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
-            className="font-bold text-white mb-5 leading-[1.08]"
+            className="font-bold text-gray-900 mb-5 leading-[1.08]"
             style={{ fontSize:"clamp(2.4rem,6vw,4rem)" }}>
             Her Anın
             <br/>
-            <span style={{ background:"linear-gradient(90deg,#a78bfa 0%,#60a5fa 50%,#a78bfa 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundSize:"200%" }}>
+            <span className="bg-linear-to-r from-purple-600 via-pink-500 to-purple-500 bg-clip-text text-transparent">
               Özel Davetiyesi
             </span>
           </motion.h1>
@@ -1032,8 +1025,7 @@ export default function SablonlarSayfasi() {
           {/* Alt başlık */}
           <motion.p
             initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.18 }}
-            className="text-base max-w-xl mx-auto mb-10 leading-relaxed"
-            style={{ color:"rgba(255,255,255,0.42)" }}>
+            className="text-base text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed">
             {SABLONLAR.length} şablon arasından seçin. Her bölümü anında önizleyin,
             dakikalar içinde davetiyenizi oluşturun ve paylaşın.
           </motion.p>
@@ -1048,17 +1040,16 @@ export default function SablonlarSayfasi() {
               { val:"7", label:"Kategori" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-3xl font-bold text-white mb-0.5" style={{ fontVariantNumeric:"tabular-nums" }}>{stat.val}</p>
-                <p className="text-xs font-medium" style={{ color:"rgba(255,255,255,0.3)", letterSpacing:"0.08em" }}>{stat.label}</p>
+                <p className="text-3xl font-bold text-gray-900 mb-0.5 tabular-nums">{stat.val}</p>
+                <p className="text-xs font-medium text-gray-400 tracking-wide">{stat.label}</p>
               </div>
             ))}
           </motion.div>
         </div>
       </div>
 
-      {/* ════════════ FİLTRE BAR — sticky glassmorphism ════════════ */}
-      <div className="sticky top-16 z-30"
-        style={{ background:"rgba(5,4,15,0.85)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
+      {/* ════════════ FİLTRE BAR — sticky ════════════ */}
+      <div className="sticky top-16 z-30 bg-white/90 backdrop-blur border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
           {KATEGORILER.map(kat => {
             const sayi = kat.id === "hepsi" ? SABLONLAR.length : SABLONLAR.filter(s => s.kategori === kat.id).length;
@@ -1069,15 +1060,15 @@ export default function SablonlarSayfasi() {
                 onClick={() => setAktifKat(kat.id)}
                 className="relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-colors"
                 style={{
-                  background: isActive ? "linear-gradient(135deg,#6d28d9,#1d4ed8)" : "rgba(255,255,255,0.05)",
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-                  border: isActive ? "1px solid transparent" : "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: isActive ? "0 4px 16px rgba(109,40,217,0.4)" : "none",
+                  background: isActive ? "linear-gradient(135deg,#7c3aed,#6d28d9)" : "#f3f4f6",
+                  color: isActive ? "#fff" : "#6b7280",
+                  border: isActive ? "1px solid transparent" : "1px solid #e5e7eb",
+                  boxShadow: isActive ? "0 4px 16px rgba(109,40,217,0.25)" : "none",
                 }}>
                 {kat.id !== "hepsi" && <span>{KAT_EMOJI[kat.id]}</span>}
                 {kat.isim}
                 <span className="text-[10px] px-1.5 py-0.5 rounded-full"
-                  style={{ background: isActive ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)", color: isActive ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                  style={{ background: isActive ? "rgba(255,255,255,0.2)" : "#e5e7eb", color: isActive ? "#fff" : "#9ca3af" }}>
                   {sayi}
                 </span>
               </motion.button>
@@ -1092,8 +1083,8 @@ export default function SablonlarSayfasi() {
         {toplamSonuc === 0 ? (
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} className="text-center py-28">
             <p className="text-5xl mb-4">🔍</p>
-            <p className="font-semibold mb-3" style={{ color:"rgba(255,255,255,0.5)" }}>Bu kategoride şablon bulunamadı.</p>
-            <button onClick={() => setAktifKat("hepsi")} className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors">
+            <p className="font-semibold mb-3 text-gray-500">Bu kategoride şablon bulunamadı.</p>
+            <button onClick={() => setAktifKat("hepsi")} className="text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
               Tüm şablonlara bak →
             </button>
           </motion.div>
@@ -1130,27 +1121,24 @@ export default function SablonlarSayfasi() {
                 {/* Bölüm başlığı */}
                 {goruntulenenPremium.length > 0 && (
                   <div className="flex items-center gap-4 mb-10">
-                    <div className="h-px flex-1"
-                      style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.1))" }} />
+                    <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent" />
                     <div className="flex items-center gap-2.5 shrink-0">
-                      <span style={{ color: "rgba(255,255,255,0.18)", fontSize: 9 }}>◆</span>
-                      <span className="text-[10px] font-bold tracking-[0.26em] uppercase"
-                        style={{ color: "rgba(255,255,255,0.28)" }}>
+                      <span className="text-gray-300 text-[9px]">◆</span>
+                      <span className="text-[10px] font-bold tracking-[0.26em] uppercase text-gray-400">
                         Klasik Koleksiyon
                       </span>
-                      <span style={{ color: "rgba(255,255,255,0.18)", fontSize: 9 }}>◆</span>
+                      <span className="text-gray-300 text-[9px]">◆</span>
                     </div>
-                    <div className="h-px flex-1"
-                      style={{ background: "linear-gradient(to left, transparent, rgba(255,255,255,0.1))" }} />
+                    <div className="h-px flex-1 bg-linear-to-l from-transparent via-gray-200 to-transparent" />
                   </div>
                 )}
 
                 {/* Şablon sayısı */}
                 <div className="flex items-center justify-end mb-6 px-1">
-                  <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.2)", letterSpacing: "0.06em" }}>
+                  <span className="text-[11px] text-gray-400 tracking-wide">
                     {goruntulenenStandart.length} şablon
                     {aktifKat !== "hepsi" && (
-                      <button onClick={() => setAktifKat("hepsi")} className="ml-2 text-purple-400 hover:text-purple-300 transition-colors">
+                      <button onClick={() => setAktifKat("hepsi")} className="ml-2 text-purple-600 hover:text-purple-700 transition-colors">
                         Tümünü gör →
                       </button>
                     )}
@@ -1177,16 +1165,16 @@ export default function SablonlarSayfasi() {
         )}
       </div>
 
-      <section className="border-t border-white/8 px-4 py-16" style={{ background: "#080712" }}>
+      <section className="border-t border-gray-200 px-4 py-16 bg-white">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
           <div>
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.22em]" style={{ color: "#a78bfa" }}>
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.22em] text-purple-600">
               Şablon seçimi
             </p>
-            <h2 className="text-2xl font-semibold leading-tight text-white sm:text-3xl">
+            <h2 className="text-2xl font-semibold leading-tight text-gray-900 sm:text-3xl">
               Online davetiye şablonunu etkinliğine göre seç
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7" style={{ color: "rgba(255,255,255,0.62)" }}>
+            <p className="mt-4 max-w-2xl text-sm text-gray-500 leading-7">
               Bekleriz&apos;de düğün davetiyesi, nişan davetiyesi, doğum günü davetiyesi ve özel etkinlikler için
               dijital davetiye şablonları bulunur. Şablonu seçtikten sonra bilgilerini düzenleyebilir, davetiye
               linkini WhatsApp veya sosyal medya üzerinden paylaşabilirsin.
@@ -1196,7 +1184,7 @@ export default function SablonlarSayfasi() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/72 transition hover:border-purple-300/50 hover:bg-purple-400/10 hover:text-white"
+                  className="rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 transition hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700"
                 >
                   {link.label}
                 </Link>
@@ -1208,10 +1196,10 @@ export default function SablonlarSayfasi() {
             {SABLON_SECIM_IPUCLARI.map((ipucu) => (
               <div
                 key={ipucu.baslik}
-                className="rounded-lg border border-white/10 bg-white/3 p-4"
+                className="rounded-lg border border-gray-100 bg-gray-50 p-4"
               >
-                <h3 className="text-sm font-semibold text-white">{ipucu.baslik}</h3>
-                <p className="mt-2 text-xs leading-6" style={{ color: "rgba(255,255,255,0.58)" }}>
+                <h3 className="text-sm font-semibold text-gray-800">{ipucu.baslik}</h3>
+                <p className="mt-2 text-xs text-gray-500 leading-6">
                   {ipucu.aciklama}
                 </p>
               </div>

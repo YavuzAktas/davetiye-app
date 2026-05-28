@@ -97,9 +97,9 @@ function tekilParametre(deger: string | string[] | undefined) {
 function SectionHead({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
     <div className="mb-8">
-      <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-400/70 mb-2">{label}</p>
-      <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">{title}</h2>
-      {sub && <p className="text-white/40 text-sm max-w-xl">{sub}</p>}
+      <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-600/70 mb-2">{label}</p>
+      <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">{title}</h2>
+      {sub && <p className="text-gray-500 text-sm max-w-xl">{sub}</p>}
     </div>
   );
 }
@@ -117,36 +117,32 @@ export default async function FiyatlarSayfasi({
   const luksSablonSecili = !!seciliSablon && LUKS_SABLONLAR.has(seciliSablon.id);
 
   return (
-    <div className="min-h-screen bg-[#05000d]">
+    <div className="min-h-screen bg-gray-50">
 
       {/* ══ § 1  HERO ══ */}
-      <section className="relative overflow-hidden pt-12 sm:pt-16 pb-10 sm:pb-14 px-4 sm:px-6">
-        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-96 sm:w-175 h-96 sm:h-175 rounded-full bg-purple-700/20 blur-[100px] pointer-events-none" />
-        <div className="absolute top-32 right-0 w-56 sm:w-80 h-56 sm:h-80 rounded-full bg-pink-700/15 blur-[80px] pointer-events-none" />
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
-          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }} />
+      <section className="relative overflow-hidden pt-12 sm:pt-16 pb-10 sm:pb-14 px-4 sm:px-6 bg-white border-b border-gray-100">
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-96 sm:w-175 h-96 sm:h-175 rounded-full bg-purple-100/60 blur-[100px] pointer-events-none" />
+        <div className="absolute top-32 right-0 w-56 sm:w-80 h-56 sm:h-80 rounded-full bg-pink-100/50 blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/25 rounded-full px-3.5 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse shrink-0" />
-            <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-purple-300">
+          <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-full px-3.5 py-1.5 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shrink-0" />
+            <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-purple-600">
               Davetiye Bazlı Fiyatlandırma
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight mb-5">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.08] tracking-tight mb-5">
             Seçtiğin kadar,{" "}
             <span className="relative inline-block">
-              <span className="bg-linear-to-r from-purple-400 via-pink-400 to-purple-300 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 via-pink-500 to-purple-500 bg-clip-text text-transparent">
                 o kadar öde
               </span>
-              <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-linear-to-r from-purple-500/0 via-purple-500/50 to-purple-500/0" />
+              <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-linear-to-r from-purple-500/0 via-purple-400/50 to-purple-500/0" />
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-white/45 max-w-xl mx-auto leading-relaxed mb-8">
+          <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
             Plan, abonelik veya otomatik yenileme yok. Toplam tutarı canlı görürsün,
             ödeme sonrası yalnızca seçtiğin özellikler aktif olur.
           </p>
@@ -158,7 +154,7 @@ export default async function FiyatlarSayfasi({
               { icon: "🎯", text: "Tek seferlik" },
               { icon: "💳", text: "iyzico güvencesi" },
             ].map(pill => (
-              <span key={pill.text} className="flex items-center gap-1.5 bg-white/6 border border-white/10 rounded-full px-3.5 py-1.5 text-xs font-medium text-white/55">
+              <span key={pill.text} className="flex items-center gap-1.5 bg-gray-100 border border-gray-200 rounded-full px-3.5 py-1.5 text-xs font-medium text-gray-600">
                 <span>{pill.icon}</span>
                 {pill.text}
               </span>
@@ -168,8 +164,7 @@ export default async function FiyatlarSayfasi({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href={baslaHref}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:opacity-90 hover:-translate-y-0.5 transition-all"
-              style={{ boxShadow: "0 10px 30px rgba(124,58,237,0.45)" }}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-purple-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:bg-purple-700 hover:-translate-y-0.5 transition-all shadow-sm shadow-purple-200"
             >
               {baslaMetni}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -178,7 +173,7 @@ export default async function FiyatlarSayfasi({
             </Link>
             <a
               href="#hesapla"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 border border-white/15 text-white/65 px-7 py-3.5 rounded-2xl text-sm font-semibold hover:bg-white/8 hover:text-white transition-all"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-300 text-gray-600 px-7 py-3.5 rounded-2xl text-sm font-semibold hover:bg-gray-100 hover:text-gray-800 transition-all"
             >
               Fiyat Hesapla
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -191,9 +186,8 @@ export default async function FiyatlarSayfasi({
 
       {/* ══ § 2  PAKET ANKRAJI ══ */}
       <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden">
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 w-175 h-96 rounded-full bg-purple-700/10 blur-[120px] pointer-events-none" />
         <div className="max-w-5xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
+          <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-8" />
           <SectionHead
             label="Hazır Paketler"
             title="Hangi paket sana uygun?"
@@ -211,30 +205,27 @@ export default async function FiyatlarSayfasi({
               return (
                 <div
                   key={paket.id}
-                  className={`relative flex flex-col rounded-3xl border overflow-hidden transition-all duration-300 ${
+                  className={`relative flex flex-col rounded-3xl overflow-hidden transition-all duration-300 ${
                     paket.populer
-                      ? "border-purple-500/50 sm:-mt-4 sm:mb-0"
-                      : "border-white/8 hover:border-white/18"
+                      ? "sm:-mt-4 sm:mb-0 shadow-xl shadow-purple-200/60"
+                      : "bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200"
                   }`}
                   style={paket.populer ? {
-                    background: "linear-gradient(160deg, rgba(147,51,234,0.12) 0%, rgba(219,39,119,0.07) 100%)",
-                    boxShadow: "0 0 0 1px rgba(147,51,234,0.3), 0 32px 64px rgba(124,58,237,0.25)",
-                  } : {
-                    background: "rgba(255,255,255,0.025)",
-                  }}
+                    background: "linear-gradient(160deg, #7c3aed 0%, #9333ea 50%, #a855f7 100%)",
+                  } : {}}
                 >
                   {/* Popular badge */}
                   {paket.populer && (
                     <div className="absolute top-0 left-0 right-0 flex justify-center">
-                      <div className="bg-linear-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black tracking-[0.18em] uppercase px-4 py-1.5 rounded-b-xl">
+                      <div className="bg-white/20 text-white text-[10px] font-black tracking-[0.18em] uppercase px-4 py-1.5 rounded-b-xl">
                         En Popüler
                       </div>
                     </div>
                   )}
 
-                  {/* Gradient top strip */}
-                  {paket.populer && (
-                    <div className="h-0.5 bg-linear-to-r from-purple-500 via-fuchsia-500 to-pink-500" />
+                  {/* Gradient top strip for non-popular */}
+                  {!paket.populer && (
+                    <div className="h-1" style={{ background: paket.renk }} />
                   )}
 
                   <div className={`flex flex-col flex-1 p-6 ${paket.populer ? "pt-10" : ""}`}>
@@ -242,34 +233,38 @@ export default async function FiyatlarSayfasi({
                     <div className="mb-6">
                       <div
                         className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl mb-3"
-                        style={{ background: `${paket.renk}20`, border: `1px solid ${paket.renk}35` }}
+                        style={paket.populer
+                          ? { background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)" }
+                          : { background: `${paket.renk}14`, border: `1px solid ${paket.renk}28` }
+                        }
                       >
                         {paket.icon}
                       </div>
-                      <h3 className={`text-base font-black mb-0.5 ${paket.populer ? "text-white" : "text-white/85"}`}>
+                      <h3 className={`text-base font-black mb-0.5 ${paket.populer ? "text-white" : "text-gray-800"}`}>
                         {paket.ad}
                       </h3>
-                      <p className="text-xs text-white/35">{paket.slogan}</p>
+                      <p className={`text-xs ${paket.populer ? "text-white/70" : "text-gray-400"}`}>{paket.slogan}</p>
                     </div>
 
                     {/* Price */}
                     <div className="mb-6">
-                      {/* Üstü çizili asıl fiyat + indirim rozeti */}
                       <div className="flex items-center gap-2 mb-1.5">
-                        <span className="text-sm tabular-nums text-white/30 line-through">{tutarMetni(asil)}</span>
+                        <span className={`text-sm tabular-nums line-through ${paket.populer ? "text-white/50" : "text-gray-400"}`}>{tutarMetni(asil)}</span>
                         <span className="text-[10px] font-black tracking-wide px-2 py-0.5 rounded-full"
-                          style={{ background: "rgba(34,197,94,0.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,0.25)" }}>
+                          style={paket.populer
+                            ? { background: "rgba(255,255,255,0.2)", color: "#fff" }
+                            : { background: "rgba(16,185,129,0.1)", color: "#059669", border: "1px solid rgba(16,185,129,0.2)" }
+                          }>
                           %{indirim} İNDİRİM
                         </span>
                       </div>
-                      {/* Güncel fiyat */}
                       <div className="flex items-baseline gap-1.5 mb-1">
-                        <span className={`text-4xl font-black tabular-nums leading-none ${paket.populer ? "text-white" : "text-white/90"}`}>
+                        <span className={`text-4xl font-black tabular-nums leading-none ${paket.populer ? "text-white" : "text-gray-900"}`}>
                           {tutarMetni(tutar)}
                         </span>
                       </div>
-                      <p className="text-xs text-white/30">
-                        ≈ 100 misafir için <span className="text-white/50 font-semibold">kişi başı {tutarMetni(kisiBasi)}</span>
+                      <p className={`text-xs ${paket.populer ? "text-white/60" : "text-gray-400"}`}>
+                        ≈ 100 misafir için <span className={`font-semibold ${paket.populer ? "text-white/80" : "text-gray-600"}`}>kişi başı {tutarMetni(kisiBasi)}</span>
                       </p>
                     </div>
 
@@ -278,25 +273,25 @@ export default async function FiyatlarSayfasi({
                       {paket.dahil.map(f => (
                         <div key={f} className="flex items-center gap-2.5">
                           <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                            paket.populer
-                              ? "bg-linear-to-br from-purple-500 to-pink-500"
-                              : "bg-white/10"
+                            paket.populer ? "bg-white/25" : "bg-purple-100"
                           }`}>
-                            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className={`w-2.5 h-2.5 ${paket.populer ? "text-white" : "text-purple-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <span className="text-xs text-white/65">{f}</span>
+                          <span className={`text-xs ${paket.populer ? "text-white/85" : "text-gray-600"}`}>{f}</span>
                         </div>
                       ))}
                       {paket.dahilDegil.map(f => (
                         <div key={f} className="flex items-center gap-2.5">
-                          <div className="w-4 h-4 rounded-full bg-white/4 border border-white/8 flex items-center justify-center shrink-0">
-                            <svg className="w-2.5 h-2.5 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 border ${
+                            paket.populer ? "border-white/20 bg-white/5" : "border-gray-200 bg-gray-50"
+                          }`}>
+                            <svg className={`w-2.5 h-2.5 ${paket.populer ? "text-white/30" : "text-gray-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                           </div>
-                          <span className="text-xs text-white/20 line-through">{f}</span>
+                          <span className={`text-xs line-through ${paket.populer ? "text-white/30" : "text-gray-300"}`}>{f}</span>
                         </div>
                       ))}
                     </div>
@@ -306,10 +301,9 @@ export default async function FiyatlarSayfasi({
                       href={baslaHref}
                       className={`flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-sm font-bold transition-all ${
                         paket.populer
-                          ? "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 hover:-translate-y-0.5"
-                          : "border border-white/12 text-white/60 hover:bg-white/6 hover:text-white hover:border-white/20"
+                          ? "bg-white text-purple-600 hover:bg-purple-50"
+                          : "bg-purple-600 text-white hover:bg-purple-700"
                       }`}
-                      style={paket.populer ? { boxShadow: "0 8px 24px rgba(124,58,237,0.4)" } : {}}
                     >
                       {seciliSablon ? "Bu Şablonla Devam Et" : "Bu Paketle Başla"}
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -324,19 +318,19 @@ export default async function FiyatlarSayfasi({
 
           {/* Karşılaştırma notu */}
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-            <p className="text-xs text-white/25 text-center">
+            <p className="text-xs text-gray-400 text-center">
               Baskılı davetiye: 2.000–8.000₺ + dağıtım maliyeti
             </p>
-            <span className="hidden sm:block text-white/15">·</span>
-            <p className="text-xs text-white/25 text-center">
-              Bekleriz ile tüm misafirlere <span className="text-white/45">sınırsız dijital</span> ulaşım
+            <span className="hidden sm:block text-gray-200">·</span>
+            <p className="text-xs text-gray-400 text-center">
+              Bekleriz ile tüm misafirlere <span className="text-gray-600 font-medium">sınırsız dijital</span> ulaşım
             </p>
           </div>
 
           {/* Custom note */}
-          <p className="text-center text-xs text-white/20 mt-4">
+          <p className="text-center text-xs text-gray-400 mt-4">
             Kendi kombinasyonunu oluşturmak için{" "}
-            <a href="#hesapla" className="text-purple-400/70 hover:text-purple-300 transition-colors underline underline-offset-2">
+            <a href="#hesapla" className="text-purple-600 hover:text-purple-700 transition-colors underline underline-offset-2">
               aşağıdaki hesaplayıcıyı
             </a>{" "}
             kullan.
@@ -345,9 +339,8 @@ export default async function FiyatlarSayfasi({
       </section>
 
       {/* ══ § 3  PRICE CALCULATOR ══ */}
-      <section id="hesapla" className="relative px-4 sm:px-6 py-10 sm:py-14">
+      <section id="hesapla" className="relative px-4 sm:px-6 py-10 sm:py-14 bg-white border-y border-gray-100">
         <div className="max-w-5xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
           <SectionHead
             label="Etkileşimli Hesaplama"
             title="Kendi fiyatını hesapla"
@@ -364,23 +357,23 @@ export default async function FiyatlarSayfasi({
       {/* ══ § 4  HOW IT WORKS ══ */}
       <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden">
         <div className="max-w-5xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
+          <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-8" />
           <SectionHead label="Nasıl çalışır?" title="4 adımda hazır" />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {NASIL_CALISIR.map((adim, idx) => (
               <div key={adim.n} className="relative group">
                 {idx < NASIL_CALISIR.length - 1 && (
-                  <div className="hidden lg:block absolute top-7 left-full w-4 h-px bg-linear-to-r from-purple-500/30 to-transparent z-10" />
+                  <div className="hidden lg:block absolute top-7 left-full w-4 h-px bg-linear-to-r from-purple-300/50 to-transparent z-10" />
                 )}
-                <div className="rounded-2xl border border-white/8 bg-white/3 p-4 sm:p-5 h-full hover:bg-white/6 hover:border-white/15 transition-all duration-300">
+                <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-5 h-full hover:shadow-sm hover:border-purple-100 transition-all duration-300">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="w-7 h-7 rounded-xl bg-linear-to-br from-purple-600/40 to-pink-600/20 border border-white/10 flex items-center justify-center text-xs font-black text-purple-300 shrink-0">
+                    <span className="w-7 h-7 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-xs font-black text-purple-700 shrink-0">
                       {adim.n}
                     </span>
                     <span className="text-lg">{adim.icon}</span>
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-white mb-1.5">{adim.baslik}</h3>
-                  <p className="text-xs text-white/38 leading-relaxed">{adim.aciklama}</p>
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1.5">{adim.baslik}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{adim.aciklama}</p>
                 </div>
               </div>
             ))}
@@ -389,9 +382,8 @@ export default async function FiyatlarSayfasi({
       </section>
 
       {/* ══ § 5  TRUST ══ */}
-      <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden">
+      <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden bg-white border-y border-gray-100">
         <div className="max-w-5xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
           <SectionHead
             label="Ödeme Güvenliği"
             title="Güvenli, şeffaf, sürprizsiz"
@@ -399,13 +391,13 @@ export default async function FiyatlarSayfasi({
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {GUVEN_BADGELERI.map(badge => (
-              <div key={badge.baslik} className="flex items-center gap-3 p-4 rounded-2xl border border-white/7 bg-white/2.5 hover:bg-white/5 hover:border-white/12 transition-all group">
-                <div className="w-9 h-9 rounded-xl bg-linear-to-br from-purple-600/20 to-pink-600/10 border border-white/10 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+              <div key={badge.baslik} className="flex items-center gap-3 p-4 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-white hover:border-purple-100 hover:shadow-sm transition-all group">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
                   {badge.icon}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{badge.baslik}</p>
-                  <p className="text-xs text-white/35">{badge.aciklama}</p>
+                  <p className="text-sm font-bold text-gray-800">{badge.baslik}</p>
+                  <p className="text-xs text-gray-500">{badge.aciklama}</p>
                 </div>
               </div>
             ))}
@@ -416,27 +408,27 @@ export default async function FiyatlarSayfasi({
       {/* ══ § 6  FAQ ══ */}
       <section className="relative px-4 sm:px-6 py-10 sm:py-14">
         <div className="max-w-3xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
+          <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-8" />
           <SectionHead label="Sık Sorulan Sorular" title="Aklında soru var mı?" />
           <div className="space-y-2">
             {SORU_CEVAP.map((item, idx) => (
-              <details key={idx} className="group rounded-xl sm:rounded-2xl border border-white/8 bg-white/3 overflow-hidden">
-                <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none select-none hover:bg-white/4 transition-colors">
-                  <span className="text-sm font-semibold text-white/85">{item.soru}</span>
-                  <span className="shrink-0 w-5 h-5 rounded-full border border-white/15 flex items-center justify-center text-white/40 transition-transform duration-200 group-open:rotate-45 text-base leading-none">
+              <details key={idx} className="group rounded-xl sm:rounded-2xl border border-gray-100 bg-white overflow-hidden">
+                <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none select-none hover:bg-gray-50 transition-colors">
+                  <span className="text-sm font-semibold text-gray-700">{item.soru}</span>
+                  <span className="shrink-0 w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 transition-transform duration-200 group-open:rotate-45 text-base leading-none">
                     +
                   </span>
                 </summary>
                 <div className="px-5 pb-4">
-                  <div className="h-px bg-white/8 mb-3" />
-                  <p className="text-sm text-white/45 leading-relaxed">{item.cevap}</p>
+                  <div className="h-px bg-gray-100 mb-3" />
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.cevap}</p>
                 </div>
               </details>
             ))}
           </div>
-          <p className="text-center text-sm text-white/30 mt-6">
+          <p className="text-center text-sm text-gray-400 mt-6">
             Başka sorun mu var?{" "}
-            <a href="mailto:destek@bekleriz.com" className="text-purple-400 hover:text-purple-300 transition-colors">
+            <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:text-purple-700 transition-colors">
               destek@bekleriz.com
             </a>
           </p>
@@ -444,35 +436,32 @@ export default async function FiyatlarSayfasi({
       </section>
 
       {/* ══ § 7  CTA ══ */}
-      <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-linear-to-br from-purple-700/15 to-pink-700/10 blur-[120px] pointer-events-none" />
+      <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden bg-white border-t border-gray-100">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-purple-50 blur-[120px] pointer-events-none" />
         <div className="relative max-w-2xl mx-auto">
-          <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
-          <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/3 backdrop-blur-sm p-7 sm:p-10 text-center"
-            style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)" }}>
+          <div className="rounded-2xl sm:rounded-3xl border border-gray-100 bg-white shadow-sm p-7 sm:p-10 text-center">
             <div className="text-4xl mb-4">🎉</div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white mb-3">Davetiyeni bugün oluştur</h2>
-            <p className="text-white/40 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3">Davetiyeni bugün oluştur</h2>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
               30+ şablon, dakikalar içinde hazır, anında paylaşılabilir.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href={baslaHref}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:opacity-90 hover:-translate-y-0.5 transition-all"
-                style={{ boxShadow: "0 10px 30px rgba(124,58,237,0.45)" }}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-purple-600 text-white px-7 py-3.5 rounded-2xl text-sm font-bold hover:bg-purple-700 hover:-translate-y-0.5 transition-all shadow-sm shadow-purple-200"
               >
                 {seciliSablon ? `${seciliSablon.isim} ile Devam Et →` : "Şablonlara Göz At →"}
               </Link>
               <Link
                 href="/dashboard"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 border border-white/15 text-white/60 px-7 py-3.5 rounded-2xl text-sm font-semibold hover:bg-white/8 hover:text-white transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-300 text-gray-600 px-7 py-3.5 rounded-2xl text-sm font-semibold hover:bg-gray-100 hover:text-gray-800 transition-all"
               >
                 Dashboard&apos;a Dön
               </Link>
             </div>
             <div className="mt-6 flex justify-center gap-5 flex-wrap">
               {["🔒 SSL", "✅ iyzico", "💳 3D Secure", "🚫 Abonelik Yok"].map(b => (
-                <span key={b} className="text-xs text-white/20">{b}</span>
+                <span key={b} className="text-xs text-gray-400">{b}</span>
               ))}
             </div>
           </div>
