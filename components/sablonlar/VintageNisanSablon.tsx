@@ -402,6 +402,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
               ref={videoRef}
               src="/background.mp4"
               playsInline
+              muted
               preload="auto"
               className="vns-video"
               style={{ position: "absolute", inset: 0 }}

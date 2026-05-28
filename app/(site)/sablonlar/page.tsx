@@ -777,7 +777,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         <div className="shrink-0 mx-auto lg:mx-0">
           <TelefonMockup>
             {demoUrl ? (
-              <div style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
+              <div style={{ width: PHONE_W, height: 420, overflow: "hidden", position: "relative", flexShrink: 0 }}>
                 <iframe
                   src={demoUrl}
                   title={sablon.isim}
