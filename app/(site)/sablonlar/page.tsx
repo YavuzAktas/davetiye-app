@@ -712,12 +712,12 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
 
-  /* iframe ölçekleme: telefon ekranı 204×420px, render 390px genişlik */
-  const PHONE_W = 204;
-  const PHONE_H = 420;
+  /* iframe ölçekleme: TelefonMockup iç ekran 240×500px (260 - 2×10px padding, height:500) */
+  const PHONE_W = 240;
+  const PHONE_H = 500;
   const RENDER_W = 390;
-  const zoom = PHONE_W / RENDER_W;          // 0.5231 — CSS zoom layout'u da etkiler
-  const iframeH = Math.round(PHONE_H / zoom); // 803px
+  const zoom = PHONE_W / RENDER_W;            // 0.6154 — CSS zoom layout'u da etkiler
+  const iframeH = Math.round(PHONE_H / zoom); // 812px
 
   return (
     <motion.div
@@ -778,20 +778,12 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         <div className="shrink-0 mx-auto lg:mx-0">
           <TelefonMockup>
             {demoUrl ? (
-              <div style={{ width: PHONE_W, height: PHONE_H, overflow: "hidden", flexShrink: 0 }}>
-                <iframe
-                  src={demoUrl}
-                  title={sablon.isim}
-                  allow="autoplay 'none'"
-                  style={{
-                    display: "block",
-                    width: RENDER_W,
-                    height: iframeH,
-                    border: "none",
-                    zoom,
-                  }}
-                />
-              </div>
+              <iframe
+                src={demoUrl}
+                title={sablon.isim}
+                allow="autoplay 'none'"
+                style={{ display: "block", width: RENDER_W, height: iframeH, border: "none", zoom }}
+              />
             ) : (
               <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: darkBg }}>
                 <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>Önizleme yok</p>
