@@ -141,6 +141,11 @@ export default async function AlbumModerasyon({ params }: Props) {
     davetiye.aniDefterleri.filter((a) => !a.onaylandi).length +
     davetiye.sesliAnilar.filter((s) => !s.onaylandi).length;
 
+  const hicIcerikYok =
+    davetiye.albumFotolar.length === 0 &&
+    davetiye.aniDefterleri.length === 0 &&
+    davetiye.sesliAnilar.length === 0;
+
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <div className="relative bg-[#080112] overflow-hidden">
@@ -234,6 +239,52 @@ export default async function AlbumModerasyon({ params }: Props) {
             </div>
           </div>
         </div>
+
+        {/* ── Onboarding: henüz içerik yokken göster ── */}
+        {hicIcerikYok && (
+          <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+            <div className="h-1" style={{ background: `linear-gradient(to right, ${renk}, ${renk}88)` }} />
+            <div className="px-6 pt-6 pb-2">
+              <p className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">Nasıl Kullanılır?</p>
+              <h3 className="text-sm font-bold text-gray-800">Misafirlerinizden ilk anıyı almak için 3 adım</h3>
+            </div>
+            <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                {
+                  n: "1",
+                  icon: "🖨️",
+                  baslik: "QR Kodu Yazdır",
+                  aciklama: "Yukarıdaki QR kodunu A7 veya kartvizit boyutunda çıktı alın.",
+                },
+                {
+                  n: "2",
+                  icon: "📲",
+                  baslik: "Masalara Koy",
+                  aciklama: "Etkinlik masalarına veya misafir defterine yerleştirin. Misafirler kamerasıyla okutunca anı paneli açılır.",
+                },
+                {
+                  n: "3",
+                  icon: "📖",
+                  baslik: "Anı Kitabını İndir",
+                  aciklama: "Etkinlik sonrası onaylı fotoğraf ve anıları tek PDF'e derleyin.",
+                },
+              ].map((adim) => (
+                <div key={adim.n} className="flex gap-3">
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 mt-0.5"
+                    style={{ backgroundColor: renk + "18", color: renk }}
+                  >
+                    {adim.n}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-800 mb-1">{adim.icon} {adim.baslik}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{adim.aciklama}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Anı Kitabı ── */}
         {(davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 ||
