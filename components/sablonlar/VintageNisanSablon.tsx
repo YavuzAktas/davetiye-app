@@ -395,6 +395,47 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
       ══════════════════════════════════ */}
       <div style={{ background: BG }}>
 
+        {/* ── PREVIEW KAPAK — video yerine statik kapak (previewModu) ── */}
+        {previewModu && (
+          <section style={{
+            height: "100svh", overflow: "hidden", position: "relative",
+            background: `
+              radial-gradient(ellipse 55% 45% at 15% 20%, ${GOLD}10 0%, transparent 65%),
+              radial-gradient(ellipse 50% 40% at 85% 80%, ${PETAL}0C 0%, transparent 60%),
+              radial-gradient(ellipse 80% 70% at 50% 50%, #FFFDF9 0%, #F2EAE0 100%)
+            `,
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            textAlign: "center", padding: "clamp(28px,8vw,40px) clamp(16px,6vw,32px)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{ width: 48, height: "0.5px", background: `linear-gradient(to left, ${GOLD}50, transparent)` }} />
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 9, letterSpacing: "0.46em", color: GOLD, textTransform: "uppercase" }}>Nişan Davetiyesi</p>
+              <div style={{ width: 48, height: "0.5px", background: `linear-gradient(to right, ${GOLD}50, transparent)` }} />
+            </div>
+            <div style={{ marginBottom: 28, textAlign: "center", maxWidth: "90vw" }}>
+              <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>{isim1}</p>
+              {isim2 && (
+                <>
+                  <p style={{ fontFamily: "var(--font-lora),serif", fontStyle: "italic", fontSize: "clamp(1rem,4vw,1.5rem)", color: `${GOLD}CC`, lineHeight: 1, margin: "6px 0" }}>&</p>
+                  <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(1.8rem,8.5vw,3.8rem)", color: WARM, lineHeight: 1.1, wordBreak: "break-word" }}>{isim2}</p>
+                </>
+              )}
+              {aileStr && (
+                <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(10px,3vw,13px)", letterSpacing: "0.22em", color: `${WARM_MD}99`, textTransform: "uppercase", marginTop: 14 }}>{aileStr}</p>
+              )}
+            </div>
+            <WaxSeal size={180} />
+            <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ width: 40, height: "0.5px", background: `linear-gradient(to left, ${GOLD}70, transparent)` }} />
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: "clamp(15px,4.5vw,20px)", fontStyle: "italic", fontWeight: 700, color: GOLD, letterSpacing: "0.22em" }}>Mühüre Dokun</p>
+              <div style={{ width: 40, height: "0.5px", background: `linear-gradient(to right, ${GOLD}70, transparent)` }} />
+            </div>
+            {tarihKisa && (
+              <p style={{ fontFamily: "var(--font-lora),serif", fontSize: 10, letterSpacing: "0.18em", color: `${WARM}40`, marginTop: 20 }}>{tarihKisa}</p>
+            )}
+          </section>
+        )}
+
         {/* ── VİDEO HERO ── */}
         {!previewModu && (
           <section style={{ position: "relative", height: "100svh", overflow: "hidden", background: "#000" }}>
