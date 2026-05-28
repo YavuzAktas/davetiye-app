@@ -406,9 +406,12 @@ function VintageKapak() {
       </div>
 
       {/* İsimler */}
-      <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1, textAlign:"center", zIndex:1, marginBottom:22 }}>
-        Selin &amp; Emre
-      </p>
+      <div style={{ textAlign:"center", zIndex:1, marginBottom:16 }}>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1 }}>Selin</p>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontStyle:"italic", fontSize:"clamp(0.8rem,3vw,1.1rem)", color:`${V.GOLD}CC`, lineHeight:1, margin:"4px 0" }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1 }}>Emre</p>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.20em", color:`${V.WARM_MD}80`, textTransform:"uppercase", marginTop:8 }}>Kaya &amp; Demir Aileleri</p>
+      </div>
 
       {/* Mühür */}
       <div style={{ width:80, height:80, borderRadius:"50%", zIndex:1,
@@ -529,7 +532,7 @@ function VintageKatilim() {
         <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.36em", color:V.GOLD, textAlign:"center", marginBottom:6, textTransform:"uppercase" }}>Katılım Bildirimi</p>
         <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.1rem,4vw,1.5rem)", color:V.WARM, textAlign:"center", marginBottom:12 }}>Gelecek misiniz?</p>
         <div style={{ height:"0.5px", background:`linear-gradient(to right,transparent,${V.GOLD}45,transparent)`, marginBottom:12 }}/>
-        {["Adınız Soyadınız","Kaç kişisiniz?","Katılım durumu"].map(lbl=>(
+        {["Adınız Soyadınız","🎵 Şarkı dileğiniz","💬 Not"].map(lbl=>(
           <div key={lbl} style={{ marginBottom:10 }}>
             <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.2em", color:`${V.WARM_MD}80`, marginBottom:5 }}>{lbl}</p>
             <div style={{ height:"0.5px", background:`${V.GOLD}30` }}/>
