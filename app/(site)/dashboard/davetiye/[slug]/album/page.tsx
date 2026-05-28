@@ -234,6 +234,49 @@ export default async function AlbumModerasyon({ params }: Props) {
           </div>
         </div>
 
+        {/* ── Anı Kitabı ── */}
+        {(davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 ||
+          davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 ||
+          davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0) && (
+          <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+            <div className="h-1" style={{ background: `linear-gradient(to right, ${renk}, ${renk}99)` }} />
+            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                style={{ backgroundColor: renk + "15", border: `1px solid ${renk}30` }}>
+                📖
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-gray-800 mb-1">Anı Kitabı</p>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Misafirlerin bıraktığı onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir PDF'e derliyoruz.
+                </p>
+                <div className="flex items-center gap-3 mt-2 flex-wrap">
+                  {davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 && (
+                    <span className="text-[11px] text-gray-400">📸 {davetiye.albumFotolar.filter(f => f.onaylandi).length} fotoğraf</span>
+                  )}
+                  {davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 && (
+                    <span className="text-[11px] text-gray-400">💌 {davetiye.aniDefterleri.filter(a => a.onaylandi).length} anı</span>
+                  )}
+                  {davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0 && (
+                    <span className="text-[11px] text-gray-400">🎙 {davetiye.sesliAnilar.filter(s => s.onaylandi).length} ses kaydı</span>
+                  )}
+                </div>
+              </div>
+              <a
+                href={`/api/davetiye/${slug}/ani-kitabi`}
+                download={`ani-kitabi-${slug}.pdf`}
+                className="shrink-0 flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 active:scale-[0.98]"
+                style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)`, color: "#fff", boxShadow: `0 4px 20px rgba(${rgb}, 0.3)` }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                PDF İndir
+              </a>
+            </div>
+          </div>
+        )}
+
         <ModerasyonIcerik
           baslangicFotolar={davetiye.albumFotolar.map((f) => ({ ...f, createdAt: f.createdAt.toISOString() }))}
           baslangicAnilar={davetiye.aniDefterleri.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
