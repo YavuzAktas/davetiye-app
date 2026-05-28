@@ -121,9 +121,8 @@ export default async function OdemeCheckoutPage({ params }: Props) {
   });
 
   const TUM_UPSELL: UpsellOzellik[] = [
-    { kod: "album-ani",    icon: "📸", ad: "Albüm & Anı",          desc: "Misafirler fotoğraf yükler, sen onaylarsın", tutar: DAVETIYE_FIYAT_KALEMLERI.album.tutar },
+    { kod: "album-ani",    icon: "📸", ad: "Misafir Albümü",        desc: "Fotoğraf, anı ve canlı duvar modu dahil",   tutar: DAVETIYE_FIYAT_KALEMLERI.album.tutar },
     { kod: "sesli-ani",    icon: "🎙️", ad: "Sesli Anı Defteri",    desc: "Misafirler sesli mesaj bırakır",            tutar: DAVETIYE_FIYAT_KALEMLERI.sesliAni.tutar },
-    { kod: "canli-duvar",  icon: "🖼️", ad: "Canlı Fotoğraf Duvarı", desc: "Gerçek zamanlı fotoğraf akışı",           tutar: DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar },
     { kod: "oturma-plani", icon: "🪑", ad: "Oturma Planı",          desc: "Masa ve koltuk düzeni, davetli atama",     tutar: DAVETIYE_FIYAT_KALEMLERI.oturmaPlan.tutar },
   ];
 

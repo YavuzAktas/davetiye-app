@@ -31,12 +31,6 @@ const OZELLIKLER = [
     rozet: null as string | null,
   },
   {
-    ...DAVETIYE_FIYAT_KALEMLERI.canliDuvar,
-    icon: "🖼️",
-    desc: "Gerçek zamanlı fotoğraf akışı",
-    rozet: null as string | null,
-  },
-  {
     ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan,
     icon: "🪑",
     desc: "Masa ve koltuk düzeni, davetli atama",
