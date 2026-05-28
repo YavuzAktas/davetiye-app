@@ -714,12 +714,16 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
 
-  /* iframe ölçekleme: TelefonMockup iç ekran 240×500px (260 - 2×10px padding, height:500) */
+  /* iframe ölçekleme: TelefonMockup iç ekran 240×500px (260 - 2×10px padding, height:500)
+     transform+negatif margin: layout boyutunu görsel boyuta eşitler → iOS Safari'de de çalışır
+     (zoom iOS Safari'de iframe viewport'unu etkilemez) */
   const PHONE_W = 240;
   const PHONE_H = 500;
   const RENDER_W = 390;
-  const zoom = PHONE_W / RENDER_W;            // 0.6154 — CSS zoom layout'u da etkiler
-  const iframeH = Math.round(PHONE_H / zoom); // 812px
+  const iframeScale = PHONE_W / RENDER_W;
+  const iframeH = Math.round(PHONE_H / iframeScale);
+  const iframeMR = Math.round(RENDER_W * (1 - iframeScale));  // negatif margin-right
+  const iframeMB = Math.round(iframeH * (1 - iframeScale));   // negatif margin-bottom
 
   return (
     <motion.div
@@ -784,7 +788,16 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
                 src={demoUrl}
                 title={sablon.isim}
                 allow="autoplay 'none'"
-                style={{ display: "block", width: RENDER_W, height: iframeH, border: "none", zoom }}
+                style={{
+                  display: "block",
+                  width: RENDER_W,
+                  height: iframeH,
+                  border: "none",
+                  transform: `scale(${iframeScale})`,
+                  transformOrigin: "0 0",
+                  marginRight: `-${iframeMR}px`,
+                  marginBottom: `-${iframeMB}px`,
+                }}
               />
             ) : (
               <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: darkBg }}>
