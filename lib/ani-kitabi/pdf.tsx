@@ -1,3 +1,4 @@
+import path from "path";
 import {
   Document,
   Page,
@@ -8,18 +9,12 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
-/* ── Türkçe karakter desteği ── */
+/* ── Türkçe karakter desteği — dosyadan okur, network gerekmez ── */
 Font.register({
   family: "NotoSans",
   fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/notosans/v36/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf",
-      fontWeight: "normal",
-    },
-    {
-      src: "https://fonts.gstatic.com/s/notosans/v36/o-0NIpQlx3QUlC5A4PNjXhFVadyBx2pqPIif.ttf",
-      fontWeight: "bold",
-    },
+    { src: path.resolve(process.cwd(), "public/fonts/NotoSans-Regular.ttf"), fontWeight: "normal" },
+    { src: path.resolve(process.cwd(), "public/fonts/NotoSans-Bold.ttf"),    fontWeight: "bold"   },
   ],
 });
 
