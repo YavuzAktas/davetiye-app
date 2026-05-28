@@ -712,11 +712,12 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
 
-  /* iframe ölçekleme: telefon ekranı 204×420px, render 390×803px */
+  /* iframe ölçekleme: telefon ekranı 204×420px, render 390px genişlik */
   const PHONE_W = 204;
+  const PHONE_H = 420;
   const RENDER_W = 390;
-  const scale = PHONE_W / RENDER_W;
-  const iframeH = Math.round(420 / scale);
+  const zoom = PHONE_W / RENDER_W;          // 0.5231 — CSS zoom layout'u da etkiler
+  const iframeH = Math.round(PHONE_H / zoom); // 803px
 
   return (
     <motion.div
@@ -777,20 +778,17 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         <div className="shrink-0 mx-auto lg:mx-0">
           <TelefonMockup>
             {demoUrl ? (
-              <div style={{ width: PHONE_W, height: 420, overflow: "hidden", position: "relative", flexShrink: 0 }}>
+              <div style={{ width: PHONE_W, height: PHONE_H, overflow: "hidden", flexShrink: 0 }}>
                 <iframe
                   src={demoUrl}
                   title={sablon.isim}
                   allow="autoplay 'none'"
                   style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
+                    display: "block",
                     width: RENDER_W,
                     height: iframeH,
                     border: "none",
-                    transform: `scale(${scale})`,
-                    transformOrigin: "top left",
+                    zoom,
                   }}
                 />
               </div>
