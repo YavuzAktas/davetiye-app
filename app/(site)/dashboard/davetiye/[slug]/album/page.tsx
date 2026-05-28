@@ -84,10 +84,10 @@ export default async function AlbumModerasyon({ params }: Props) {
   }
 
   // ── Hangi panel QR'a bağlansın? ──
-  const qrPanel = davetiyeOzelligiAktif(davetiyeTemel, "aniDefteri")
-    ? "ani"
-    : davetiyeTemel.albumAktif || davetiyeOzelligiAktif(davetiyeTemel, "canliDuvar")
+  const qrPanel = davetiyeTemel.albumAktif || davetiyeOzelligiAktif(davetiyeTemel, "canliDuvar")
     ? "foto"
+    : davetiyeOzelligiAktif(davetiyeTemel, "aniDefteri")
+    ? "ani"
     : davetiyeOzelligiAktif(davetiyeTemel, "sesliAni")
     ? "sesli"
     : null;
