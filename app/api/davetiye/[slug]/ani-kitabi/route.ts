@@ -72,7 +72,7 @@ export async function GET(req: NextRequest, { params }: Props) {
     const davetiye = await prisma.davetiye.findUnique({
       where: { slug },
       select: {
-        id: true, userId: true, baslik: true, kisi1: true, kisi2: true,
+        id: true, userId: true, baslik: true, kisi1: true, kisi2: true, aniKitabiAktif: true, odemeDurumu: true,
         tarih: true, mekan: true, etkinlikTur: true, sablon: true,
         albumFotolar: {
           where: { onaylandi: true },
@@ -94,6 +94,10 @@ export async function GET(req: NextRequest, { params }: Props) {
 
     if (!davetiye || davetiye.userId !== user.id) {
       return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
+    }
+
+    if (!davetiye.aniKitabiAktif || davetiye.odemeDurumu !== "odendi") {
+      return NextResponse.json({ hata: "Bu davetiyede Anı Kitabı PDF özelliği aktif değil." }, { status: 403 });
     }
 
     const sablon = SABLONLAR.find((s) => s.id === davetiye.sablon) ?? SABLONLAR[0];

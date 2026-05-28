@@ -191,8 +191,9 @@ function OlusturIcerigi() {
       if (t.albumAcik      != null) setAlbumAcik(t.albumAcik);
       if (t.aniDefteriAcik != null) setAniDefteriAcik(t.aniDefteriAcik);
       if (t.sesliAniAcik   != null) setSesliAniAcik(t.sesliAniAcik);
-      if (t.canliDuvarAcik != null) setCanliDuvarAcik(t.canliDuvarAcik);
-      if (t.oturmaPlanAcik != null) setOturmaPlanAcik(t.oturmaPlanAcik);
+      if (t.canliDuvarAcik  != null) setCanliDuvarAcik(t.canliDuvarAcik);
+      if (t.oturmaPlanAcik  != null) setOturmaPlanAcik(t.oturmaPlanAcik);
+      if (t.aniKitabiAcik   != null) setAniKitabiAcik(t.aniKitabiAcik);
       if (t.dressKodAcik   != null) setDressKodAcik(t.dressKodAcik);
       if (t.dressKodMetin)          setDressKodMetin(t.dressKodMetin);
     } catch {}
@@ -216,6 +217,7 @@ function OlusturIcerigi() {
   const [sesliAniAcik,    setSesliAniAcik]    = useState(false);
   const [canliDuvarAcik,  setCanliDuvarAcik]  = useState(false);
   const [oturmaPlanAcik,  setOturmaPlanAcik]  = useState(false);
+  const [aniKitabiAcik,   setAniKitabiAcik]   = useState(false);
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
@@ -272,6 +274,7 @@ function OlusturIcerigi() {
     sesliAniAktif: sesliAniAcik,
     canliDuvarAktif: canliDuvarAcik,
     oturmaPlanAktif: oturmaPlanAcik,
+    aniKitabiAktif:  aniKitabiAcik,
   });
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
@@ -314,7 +317,7 @@ function OlusturIcerigi() {
         sessionStorage.setItem(TASLAK_KEY, JSON.stringify({
           form, kisi1Ad, kisi1Soyad, kisi2Ad, kisi2Soyad,
           notAcik, muzikAcik, albumAcik, aniDefteriAcik,
-          sesliAniAcik, canliDuvarAcik, oturmaPlanAcik,
+          sesliAniAcik, canliDuvarAcik, oturmaPlanAcik, aniKitabiAcik,
           dressKodAcik, dressKodMetin,
         }));
       } catch {}
@@ -366,6 +369,7 @@ function OlusturIcerigi() {
           sesliAniAktif:     sesliAniAcik,
           canliDuvarAktif:   canliDuvarAcik,
           oturmaPlanAktif:   oturmaPlanAcik,
+          aniKitabiAktif:    aniKitabiAcik,
           dressKod:          dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
           dressKodRenkler:   dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
         }),
@@ -829,6 +833,20 @@ function OlusturIcerigi() {
                         </div>
                       </OzellikKarti>
                     )}
+
+                    {/* 📖 Anı Kitabı PDF */}
+                    <OzellikKarti
+                      icon="📖" baslik="Anı Kitabı PDF"
+                      aciklama="Onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir premium PDF'e derle"
+                      misafirGorur="Bu özellik sadece davetiye sahibi için geçerlidir"
+                      planEtiketi="Ek ücret"
+                      acik={aniKitabiAcik} onToggle={() => setAniKitabiAcik(!aniKitabiAcik)}
+                    >
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">Anı Kitabı aktif. Etkinlik sonrası Dashboard → Albüm sayfasından tek tıkla PDF indirebilirsiniz.</p>
+                      </div>
+                    </OzellikKarti>
 
                     {/* 🪑 Oturma Planı */}
                     <OzellikKarti

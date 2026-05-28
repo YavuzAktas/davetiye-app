@@ -48,6 +48,12 @@ const OZELLIKLER = [
     desc: "Masa ve koltuk düzeni, davetli atama",
     rozet: null as string | null,
   },
+  {
+    ...DAVETIYE_FIYAT_KALEMLERI.aniKitabi,
+    icon: "📖",
+    desc: "Fotoğraf, yazılı anı ve sesli mesajları tek PDF'e derle",
+    rozet: "Yeni" as string | null,
+  },
 ];
 
 const VARSAYILAN_SECILI = new Set([

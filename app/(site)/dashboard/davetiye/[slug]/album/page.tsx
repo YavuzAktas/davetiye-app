@@ -32,7 +32,7 @@ export default async function AlbumModerasyon({ params }: Props) {
     where: { slug },
     select: {
       id: true, userId: true, baslik: true, sablon: true, odemeDurumu: true,
-      albumAktif: true, aniDefteriAktif: true, sesliAniAktif: true, canliDuvarAktif: true,
+      albumAktif: true, aniDefteriAktif: true, sesliAniAktif: true, canliDuvarAktif: true, aniKitabiAktif: true,
     },
   });
   if (!davetiyeTemel || davetiyeTemel.userId !== user.id) notFound();
@@ -287,34 +287,55 @@ export default async function AlbumModerasyon({ params }: Props) {
         )}
 
         {/* ── Anı Kitabı ── */}
-        {(davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 ||
-          davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 ||
-          davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0) && (
-          <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
-            <div className="h-1" style={{ background: `linear-gradient(to right, ${renk}, ${renk}99)` }} />
+        {davetiyeOzelligiAktif(davetiyeTemel, "aniKitabi") ? (
+          /* Özellik aktif → içerik varsa indir butonu göster */
+          (davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 ||
+           davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 ||
+           davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0) && (
+            <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+              <div className="h-1" style={{ background: `linear-gradient(to right, ${renk}, ${renk}99)` }} />
+              <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                  style={{ backgroundColor: renk + "15", border: `1px solid ${renk}30` }}>
+                  📖
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-gray-800 mb-1">Anı Kitabı</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Onaylı içerikleri tek bir premium PDF'e derleyip indirebilirsiniz.
+                  </p>
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
+                    {davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 && (
+                      <span className="text-[11px] text-gray-400">📸 {davetiye.albumFotolar.filter(f => f.onaylandi).length} fotoğraf</span>
+                    )}
+                    {davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 && (
+                      <span className="text-[11px] text-gray-400">💌 {davetiye.aniDefterleri.filter(a => a.onaylandi).length} anı</span>
+                    )}
+                    {davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0 && (
+                      <span className="text-[11px] text-gray-400">🎙 {davetiye.sesliAnilar.filter(s => s.onaylandi).length} ses kaydı</span>
+                    )}
+                  </div>
+                </div>
+                <AniKitabiButon slug={slug} renk={renk} rgb={rgb} />
+              </div>
+            </div>
+          )
+        ) : (
+          /* Özellik aktif değil → upsell kartı */
+          <div className="bg-white border border-dashed border-gray-200 rounded-3xl overflow-hidden">
             <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
-                style={{ backgroundColor: renk + "15", border: `1px solid ${renk}30` }}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 bg-gray-50 border border-gray-100">
                 📖
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-800 mb-1">Anı Kitabı</p>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  Misafirlerin bıraktığı onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir PDF'e derliyoruz.
-                </p>
-                <div className="flex items-center gap-3 mt-2 flex-wrap">
-                  {davetiye.albumFotolar.filter(f => f.onaylandi).length > 0 && (
-                    <span className="text-[11px] text-gray-400">📸 {davetiye.albumFotolar.filter(f => f.onaylandi).length} fotoğraf</span>
-                  )}
-                  {davetiye.aniDefterleri.filter(a => a.onaylandi).length > 0 && (
-                    <span className="text-[11px] text-gray-400">💌 {davetiye.aniDefterleri.filter(a => a.onaylandi).length} anı</span>
-                  )}
-                  {davetiye.sesliAnilar.filter(s => s.onaylandi).length > 0 && (
-                    <span className="text-[11px] text-gray-400">🎙 {davetiye.sesliAnilar.filter(s => s.onaylandi).length} ses kaydı</span>
-                  )}
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-sm font-bold text-gray-700">Anı Kitabı PDF</p>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-700">Bu davetiyede aktif değil</span>
                 </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir premium PDF'e derlemek için bu özelliği yeni bir davetiyeye ekleyebilirsiniz.
+                </p>
               </div>
-              <AniKitabiButon slug={slug} renk={renk} rgb={rgb} />
             </div>
           </div>
         )}
