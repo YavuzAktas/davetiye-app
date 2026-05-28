@@ -103,7 +103,9 @@ export default async function DavetiyeDetay({ params }: Props) {
     canliDuvarAktif: davetiye.canliDuvarAktif,
     oturmaPlanAktif: davetiye.oturmaPlanAktif,
   });
-  const oturmaPlanAktif = davetiyeOzelligiAktif(davetiye, "oturmaPlan");
+  const oturmaPlanAktif  = davetiyeOzelligiAktif(davetiye, "oturmaPlan");
+  const canliDuvarOdendi = davetiyeOzelligiAktif(davetiye, "canliDuvar");
+  const canliDuvarUrl    = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}/canli-duvar`;
 
   const tarihStr = davetiye.tarih
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
@@ -315,6 +317,30 @@ export default async function DavetiyeDetay({ params }: Props) {
                       <CopyButton text={davetiyeUrl} />
                     </div>
                   </div>
+
+                  {canliDuvarOdendi && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Canlı Duvar</p>
+                      <div className="flex gap-2 items-center">
+                        <input
+                          readOnly
+                          value={canliDuvarUrl}
+                          className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-gray-50 text-gray-500 focus:outline-none font-mono"
+                        />
+                        <CopyButton text={canliDuvarUrl} />
+                        <a
+                          href={canliDuvarUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors"
+                          style={{ background: renk + "18", color: renk }}
+                        >
+                          Aç →
+                        </a>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1.5">Bu linki salon TV&apos;sinde aç — fotoğraflar otomatik akar.</p>
+                    </div>
+                  )}
 
                   <div>
                     <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Hızlı Paylaşım</p>
