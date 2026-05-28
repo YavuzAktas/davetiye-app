@@ -323,6 +323,7 @@ export default async function AlbumModerasyon({ params }: Props) {
           baslangicFotolar={davetiye.albumFotolar.map((f) => ({ ...f, createdAt: f.createdAt.toISOString() }))}
           baslangicAnilar={davetiye.aniDefterleri.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
           baslangicSesliAnilar={davetiye.sesliAnilar.map((s) => ({ ...s, createdAt: s.createdAt.toISOString() }))}
+          sesliAniAktif={davetiyeOzelligiAktif(davetiyeTemel, "sesliAni")}
           slug={slug}
           renk={renk}
         />

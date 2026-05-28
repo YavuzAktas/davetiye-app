@@ -35,12 +35,14 @@ export function ModerasyonIcerik({
   baslangicFotolar,
   baslangicAnilar,
   baslangicSesliAnilar = [],
+  sesliAniAktif = false,
   slug,
   renk,
 }: {
   baslangicFotolar: FotoItem[];
   baslangicAnilar: AniItem[];
   baslangicSesliAnilar?: SesliAniItem[];
+  sesliAniAktif?: boolean;
   slug: string;
   renk: string;
 }) {
@@ -123,8 +125,8 @@ export function ModerasyonIcerik({
           <AniListesi liste={anilar} setListe={setAnilar} slug={slug} renk={renk} />
         </div>
 
-        {/* Sesli Anılar — sadece kayıt varsa göster */}
-        {baslangicSesliAnilar.length > 0 || sesliAnilar.length > 0 ? (
+        {/* Sesli Anılar — özellik aktifse her zaman göster */}
+        {(sesliAniAktif || sesliAnilar.length > 0) && (
           <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden lg:col-span-2">
             <div className="px-6 pt-6 pb-4 border-b border-gray-50">
               <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Sesli Anılar</p>
@@ -139,7 +141,7 @@ export function ModerasyonIcerik({
             </div>
             <SesliAniListesi liste={sesliAnilar} setListe={setSesliAnilar} slug={slug} renk={renk} />
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );
