@@ -669,12 +669,14 @@ type Bolum = { id:string; icon:string; label:string; etiket:string; baslik:strin
 ══════════════════════════════════════════════ */
 const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklama: string }[]> = {
   "vintage-nisan": [
-    { icon: "🌿", baslik: "Botanik Mum Mühürü",    aciklama: "Dokunulunca açılan bordo mum mühürlü kapak" },
-    { icon: "🌸", baslik: "Krem & Bordo Vintage",  aciklama: "Keten dokulu krem zemin, botanik SVG süslemeler" },
-    { icon: "⏱️", baslik: "Canlı Geri Sayım",      aciklama: "Nişana kalan süreyi saniye saniye gösterir" },
-    { icon: "📍", baslik: "Harita Entegrasyonu",   aciklama: "Google Maps bağlantılı mekan kartı" },
-    { icon: "📷", baslik: "Polaroid Galeri",       aciklama: "Fotoğraflar vintage polaroid tarzında" },
-    { icon: "✅", baslik: "RSVP + Şarkı Dileği",  aciklama: "Kişi sayısı, katılım ve müzik isteği" },
+    { icon: "🌿", baslik: "Botanik Mum Mühürü",    aciklama: "Dokunulunca açılan mum mühürlü kapak animasyonu" },
+    { icon: "🎬", baslik: "Video Açılış Sahnesi",  aciklama: "Mühür açılışına eşlik eden video; isimleri overlay'de sunar" },
+    { icon: "🎵", baslik: "Arka Plan Müziği",       aciklama: "Video bitiminde otomatik başlayan altın müzik çalar" },
+    { icon: "⏱️", baslik: "Canlı Geri Sayım",       aciklama: "Nişana kalan süreyi saniye saniye gösterir" },
+    { icon: "📍", baslik: "Harita Entegrasyonu",    aciklama: "Google Maps bağlantılı mekan kartı" },
+    { icon: "📷", baslik: "Polaroid Galeri",        aciklama: "3 fotoğraf vintage polaroid çerçevesinde sergilenir" },
+    { icon: "👗", baslik: "Dress Code Bölümü",      aciklama: "Renk paletiyle kıyafet kodu sahnesi" },
+    { icon: "✅", baslik: "RSVP + Şarkı Dileği",   aciklama: "Katılım bildirimi ve müzik isteği formu" },
   ],
   "nisan-luks": [
     { icon: "🌹", baslik: "Gül Mühürlü Kapak",   aciklama: "Dokunulunca açılan zarif kapak animasyonu" },
