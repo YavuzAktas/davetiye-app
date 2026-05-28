@@ -7,7 +7,8 @@ import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 import { revalidatePath } from "next/cache";
 
 const DB_ALANI: Record<string, string> = {
-  "album-ani":     "albumAktif",
+  "album-foto":    "albumAktif",
+  "ani-defteri":   "aniDefteriAktif",
   "sesli-ani":     "sesliAniAktif",
   "canli-duvar":   "canliDuvarAktif",
   "oturma-plani":  "oturmaPlanAktif",
@@ -31,18 +32,19 @@ export async function upsellOzellikEkle(davetiyeId: string, ozellikKod: string) 
     data: { [alan]: true },
     select: {
       sablon: true, muzik: true,
-      albumAktif: true, sesliAniAktif: true,
-      canliDuvarAktif: true, oturmaPlanAktif: true,
+      albumAktif: true, aniDefteriAktif: true,
+      sesliAniAktif: true, canliDuvarAktif: true, oturmaPlanAktif: true,
     },
   });
 
   const yeniFiyat = davetiyeFiyatiHesapla({
-    sablon:          guncellendi.sablon,
-    muzik:           guncellendi.muzik,
-    albumAktif:      guncellendi.albumAktif,
-    sesliAniAktif:   guncellendi.sesliAniAktif,
-    canliDuvarAktif: guncellendi.canliDuvarAktif,
-    oturmaPlanAktif: guncellendi.oturmaPlanAktif,
+    sablon:           guncellendi.sablon,
+    muzik:            guncellendi.muzik,
+    albumAktif:       guncellendi.albumAktif,
+    aniDefteriAktif:  guncellendi.aniDefteriAktif,
+    sesliAniAktif:    guncellendi.sesliAniAktif,
+    canliDuvarAktif:  guncellendi.canliDuvarAktif,
+    oturmaPlanAktif:  guncellendi.oturmaPlanAktif,
   });
 
   await prisma.davetiye.update({

@@ -16,22 +16,24 @@ interface SesliAni   { id: string; adSoyad: string;   dosyaUrl: string; sure: nu
 interface Props {
   slug: string;
   renk?: string;
-  albumAktif:      boolean;
-  canliDuvarAktif: boolean;
-  sesliAniAktif:   boolean;
+  albumAktif:       boolean;
+  aniDefteriAktif:  boolean;
+  canliDuvarAktif:  boolean;
+  sesliAniAktif:    boolean;
 }
 
 export default function EtkilesimButonu({
   slug,
   renk = "#7C3AED",
   albumAktif,
+  aniDefteriAktif,
   canliDuvarAktif,
   sesliAniAktif,
 }: Props) {
   /* Hangi sekmeler aktif? */
   const sekmeler: Sekme[] = [];
   if (albumAktif || canliDuvarAktif) sekmeler.push("foto");
-  if (albumAktif)                    sekmeler.push("ani");
+  if (aniDefteriAktif)               sekmeler.push("ani");
   if (sesliAniAktif)                 sekmeler.push("sesli");
 
   const [acik, setAcik]           = useState(false);

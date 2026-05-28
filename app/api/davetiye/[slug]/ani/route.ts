@@ -54,12 +54,12 @@ export async function POST(
 
   const davetiye = await prisma.davetiye.findUnique({
     where: { slug },
-    select: { id: true, aktif: true, odemeDurumu: true, albumAktif: true, userId: true, baslik: true },
+    select: { id: true, aktif: true, odemeDurumu: true, aniDefteriAktif: true, userId: true, baslik: true },
   });
   if (!davetiye || !davetiye.aktif)
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
-  if (!davetiyeOzelligiAktif(davetiye, "album"))
-    return NextResponse.json({ hata: "Bu davetiyede anı özelliği aktif değil." }, { status: 403 });
+  if (!davetiyeOzelligiAktif(davetiye, "aniDefteri"))
+    return NextResponse.json({ hata: "Bu davetiyede anı defteri özelliği aktif değil." }, { status: 403 });
 
   const birSaatOnce = new Date(Date.now() - 3_600_000);
   const sonSaatSayisi = await prisma.aniDefteri.count({

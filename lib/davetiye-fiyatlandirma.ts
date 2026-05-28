@@ -4,6 +4,7 @@ export type DavetiyeFiyatGirdisi = {
   sablon?: string | null;
   muzik?: string | null;
   albumAktif?: boolean | null;
+  aniDefteriAktif?: boolean | null;
   sesliAniAktif?: boolean | null;
   canliDuvarAktif?: boolean | null;
   oturmaPlanAktif?: boolean | null;
@@ -26,7 +27,9 @@ export const DAVETIYE_FIYAT_KALEMLERI = {
   temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 299 },
   luksSablon: { kod: "luks-sablon", ad: "Lüks şablon", tutar: 100 },
   muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 69 },
-  album: { kod: "album-ani", ad: "Misafir albümü & canlı duvar", tutar: 129 },
+  album: { kod: "album-foto", ad: "Fotoğraf albümü", tutar: 99 },
+  aniDefteri: { kod: "ani-defteri", ad: "Anı defteri", tutar: 99 },
+  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 99 },
   sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 149 },
   oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
 } as const;
@@ -41,6 +44,8 @@ export function davetiyeFiyatiHesapla(girdi: DavetiyeFiyatGirdisi): DavetiyeFiya
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.luksSablon }, !!girdi.sablon && LUKS_SABLON_IDS.has(girdi.sablon));
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.muzik }, !!girdi.muzik);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.album }, girdi.albumAktif === true);
+  kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.aniDefteri }, girdi.aniDefteriAktif === true);
+  kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.canliDuvar }, girdi.canliDuvarAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.sesliAni }, girdi.sesliAniAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan }, girdi.oturmaPlanAktif === true);
 
@@ -59,7 +64,9 @@ export const ASIL_FIYAT_KODU: Record<string, number> = {
   "temel-davetiye": 399,
   "luks-sablon":    149,
   "muzik":          99,
-  "album-ani":      179,
+  "album-foto":     149,
+  "ani-defteri":    149,
+  "canli-duvar":    149,
   "sesli-ani":      199,
   "oturma-plani":   269,
 };

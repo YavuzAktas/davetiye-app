@@ -33,6 +33,7 @@ const ORNEK: DavetiyeVeri = {
   polaroid3: null,
   sesliAniAktif: false,
   canliDuvarAktif: false,
+  aniDefteriAktif: false,
   dressKod: null,
   dressKodRenkler: null,
 };

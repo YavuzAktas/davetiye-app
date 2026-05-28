@@ -16,7 +16,7 @@ const PAKETLER = [
     populer: false,
     kalemler: [K.temel],
     dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli"],
-    dahilDegil: ["Müzik", "Misafir albümü", "Sesli anı", "Oturma planı"],
+    dahilDegil: ["Müzik", "Fotoğraf albümü", "Anı defteri", "Sesli anı", "Canlı duvar", "Oturma planı"],
   },
   {
     id: "populer",
@@ -25,9 +25,9 @@ const PAKETLER = [
     slogan: "En çok tercih edilen",
     renk: "#9333EA",
     populer: true,
-    kalemler: [K.temel, K.muzik, K.album],
-    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Albüm & anı alanı"],
-    dahilDegil: ["Sesli anı", "Oturma planı"],
+    kalemler: [K.temel, K.muzik, K.album, K.aniDefteri],
+    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri"],
+    dahilDegil: ["Canlı duvar", "Sesli anı", "Oturma planı"],
   },
   {
     id: "tam-paket",
@@ -36,8 +36,8 @@ const PAKETLER = [
     slogan: "Düğün & nişan için tam paket",
     renk: "#DB2777",
     populer: false,
-    kalemler: [K.temel, K.muzik, K.album, K.sesliAni],
-    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Misafir albümü & canlı duvar", "Sesli anı defteri"],
+    kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.canliDuvar, K.sesliAni],
+    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri", "Canlı fotoğraf duvarı", "Sesli anı defteri"],
     dahilDegil: ["Oturma planı"],
   },
 ] as const;

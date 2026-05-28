@@ -15,9 +15,9 @@ async function yetkiKontrol(slug: string) {
 
   const davetiye = await prisma.davetiye.findFirst({
     where: { slug, user: { email: session.user.email } },
-    select: { id: true, odemeDurumu: true, albumAktif: true },
+    select: { id: true, odemeDurumu: true, aniDefteriAktif: true },
   });
-  return davetiye && davetiyeOzelligiAktif(davetiye, "album") ? davetiye : null;
+  return davetiye && davetiyeOzelligiAktif(davetiye, "aniDefteri") ? davetiye : null;
 }
 
 export async function PATCH(req: NextRequest, { params }: Params): Promise<NextResponse> {

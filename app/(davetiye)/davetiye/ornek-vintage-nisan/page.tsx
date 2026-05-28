@@ -32,6 +32,7 @@ const ORNEK: DavetiyeVeri = {
   polaroid3: null,
   sesliAniAktif: false,
   canliDuvarAktif: false,
+  aniDefteriAktif: false,
   dressKod: "Şık / Kokteyl",
   dressKodRenkler: JSON.stringify(["#6E1C2A", "#C49A6C", "#3D2219", "#8B4C36", "#F7F0E4"]),
 };

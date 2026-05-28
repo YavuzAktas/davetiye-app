@@ -25,6 +25,18 @@ const OZELLIKLER = [
     rozet: "Çok Sevilen" as string | null,
   },
   {
+    ...DAVETIYE_FIYAT_KALEMLERI.aniDefteri,
+    icon: "💌",
+    desc: "Misafirler yazılı anı ve iyi dilek bırakır",
+    rozet: null as string | null,
+  },
+  {
+    ...DAVETIYE_FIYAT_KALEMLERI.canliDuvar,
+    icon: "📺",
+    desc: "Fotoğraflar salonunuzdaki ekranda canlı akar",
+    rozet: null as string | null,
+  },
+  {
     ...DAVETIYE_FIYAT_KALEMLERI.sesliAni,
     icon: "🎙️",
     desc: "Misafirler sesli mesaj bırakır, 30 sn limit",

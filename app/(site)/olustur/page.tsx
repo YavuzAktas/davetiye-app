@@ -29,7 +29,7 @@ const DogumGunuLuksSablon = dynamic(() => import("@/components/sablonlar/DogumGu
 const VintageNisanSablon = dynamic(() => import("@/components/sablonlar/VintageNisanSablon"));
 
 type DressRenkler = [string,string,string,string,string];
-type ZorunluAlan = "kisi1" | "kisi2" | "baslik" | "tarih" | "mekan";
+type ZorunluAlan = "kisi1" | "kisi1Soyad" | "kisi2" | "kisi2Soyad" | "baslik" | "tarih" | "mekan";
 
 const DRESS_KOD_PRESETLER: { isim: string; renkler: DressRenkler }[] = [
   { isim: "Şık & Zarif",     renkler: ["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"] },
@@ -154,8 +154,12 @@ function OlusturIcerigi() {
     baslik: "", etkinlikTur: sablon.kategori,
     tarih: "", saat: "", mekan: "", mesaj: "",
     font: "font-sans", renk: sablon.renk,
-    kisi1: "", kisi2: "", muzik: "",
+    muzik: "",
   });
+  const [kisi1Ad,     setKisi1Ad]     = useState("");
+  const [kisi1Soyad,  setKisi1Soyad]  = useState("");
+  const [kisi2Ad,     setKisi2Ad]     = useState("");
+  const [kisi2Soyad,  setKisi2Soyad]  = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata]             = useState("");
   const [alanHatalari, setAlanHatalari] = useState<Partial<Record<ZorunluAlan, string>>>({});
@@ -177,10 +181,15 @@ function OlusturIcerigi() {
       if (!s) return;
       const t = JSON.parse(s);
       sessionStorage.removeItem(TASLAK_KEY);
-      if (t.form)           setForm(t.form);
+      if (t.form)                setForm(t.form);
+      if (t.kisi1Ad)             setKisi1Ad(t.kisi1Ad);
+      if (t.kisi1Soyad)          setKisi1Soyad(t.kisi1Soyad);
+      if (t.kisi2Ad)             setKisi2Ad(t.kisi2Ad);
+      if (t.kisi2Soyad)          setKisi2Soyad(t.kisi2Soyad);
       if (t.notAcik        != null) setNotAcik(t.notAcik);
       if (t.muzikAcik      != null) setMuzikAcik(t.muzikAcik);
-      if (t.aniAcik        != null) setAniAcik(t.aniAcik);
+      if (t.albumAcik      != null) setAlbumAcik(t.albumAcik);
+      if (t.aniDefteriAcik != null) setAniDefteriAcik(t.aniDefteriAcik);
       if (t.sesliAniAcik   != null) setSesliAniAcik(t.sesliAniAcik);
       if (t.canliDuvarAcik != null) setCanliDuvarAcik(t.canliDuvarAcik);
       if (t.oturmaPlanAcik != null) setOturmaPlanAcik(t.oturmaPlanAcik);
@@ -200,12 +209,13 @@ function OlusturIcerigi() {
     return () => { document.body.style.overflow = ""; };
   }, [mobilOnizlemeAcik]);
 
-  const [notAcik,        setNotAcik]        = useState(false);
-  const [muzikAcik,      setMuzikAcik]      = useState(false);
-  const [aniAcik,        setAniAcik]        = useState(false);
-  const [sesliAniAcik,   setSesliAniAcik]   = useState(false);
-  const [canliDuvarAcik, setCanliDuvarAcik] = useState(false);
-  const [oturmaPlanAcik, setOturmaPlanAcik] = useState(false);
+  const [notAcik,         setNotAcik]         = useState(false);
+  const [muzikAcik,       setMuzikAcik]       = useState(false);
+  const [albumAcik,       setAlbumAcik]       = useState(false);
+  const [aniDefteriAcik,  setAniDefteriAcik]  = useState(false);
+  const [sesliAniAcik,    setSesliAniAcik]    = useState(false);
+  const [canliDuvarAcik,  setCanliDuvarAcik]  = useState(false);
+  const [oturmaPlanAcik,  setOturmaPlanAcik]  = useState(false);
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
@@ -257,7 +267,8 @@ function OlusturIcerigi() {
   const fiyat = davetiyeFiyatiHesapla({
     sablon: sablonId,
     muzik: muzikAcik ? form.muzik : null,
-    albumAktif: aniAcik,
+    albumAktif: albumAcik,
+    aniDefteriAktif: aniDefteriAcik,
     sesliAniAktif: sesliAniAcik,
     canliDuvarAktif: canliDuvarAcik,
     oturmaPlanAktif: oturmaPlanAcik,
@@ -277,7 +288,7 @@ function OlusturIcerigi() {
 
   const formAlaniGuncelle = (alan: keyof typeof form, deger: string) => {
     setForm(prev => ({ ...prev, [alan]: deger }));
-    if (["kisi1", "kisi2", "baslik", "tarih", "mekan"].includes(alan)) {
+    if (["baslik", "tarih", "mekan"].includes(alan)) {
       setAlanHatalari(prev => ({ ...prev, [alan]: undefined }));
       setHata("");
     }
@@ -285,7 +296,7 @@ function OlusturIcerigi() {
 
   const ilkHataliAlanaGit = (hatalar: Partial<Record<ZorunluAlan, string>>) => {
     const siraliAlanlar: ZorunluAlan[] = nisanVeyaDugun
-      ? ["kisi1", "kisi2", "tarih", "mekan"]
+      ? ["kisi1", "kisi1Soyad", "kisi2", "kisi2Soyad", "tarih", "mekan"]
       : ["baslik", "tarih", "mekan"];
     const ilkAlan = siraliAlanlar.find(alan => hatalar[alan]);
     if (!ilkAlan) return;
@@ -301,7 +312,8 @@ function OlusturIcerigi() {
     if (!session) {
       try {
         sessionStorage.setItem(TASLAK_KEY, JSON.stringify({
-          form, notAcik, muzikAcik, aniAcik,
+          form, kisi1Ad, kisi1Soyad, kisi2Ad, kisi2Soyad,
+          notAcik, muzikAcik, albumAcik, aniDefteriAcik,
           sesliAniAcik, canliDuvarAcik, oturmaPlanAcik,
           dressKodAcik, dressKodMetin,
         }));
@@ -313,8 +325,10 @@ function OlusturIcerigi() {
     const yeniHatalar: Partial<Record<ZorunluAlan, string>> = {};
 
     if (nisanVeyaDugun) {
-      if (!form.kisi1.trim()) yeniHatalar.kisi1 = "1. kişinin adını girin.";
-      if (!form.kisi2.trim()) yeniHatalar.kisi2 = "2. kişinin adını girin.";
+      if (!kisi1Ad.trim())    yeniHatalar.kisi1      = "1. kişinin adını girin.";
+      if (!kisi1Soyad.trim()) yeniHatalar.kisi1Soyad = "1. kişinin soyadını girin.";
+      if (!kisi2Ad.trim())    yeniHatalar.kisi2      = "2. kişinin adını girin.";
+      if (!kisi2Soyad.trim()) yeniHatalar.kisi2Soyad = "2. kişinin soyadını girin.";
     } else if (!form.baslik.trim()) {
       yeniHatalar.baslik = "Davetiye başlığını girin.";
     }
@@ -329,7 +343,9 @@ function OlusturIcerigi() {
     }
 
     setYukleniyor(true); setHata("");
-    const gonderilecekBaslik = nisanVeyaDugun ? `${form.kisi1} & ${form.kisi2}` : form.baslik;
+    const kisi1 = `${kisi1Ad.trim()} ${kisi1Soyad.trim()}`.trim();
+    const kisi2 = `${kisi2Ad.trim()} ${kisi2Soyad.trim()}`.trim();
+    const gonderilecekBaslik = nisanVeyaDugun ? `${kisi1} & ${kisi2}` : form.baslik;
     try {
       const res = await fetch("/api/davetiye/olustur", {
         method: "POST",
@@ -338,12 +354,15 @@ function OlusturIcerigi() {
           ...form,
           baslik:            gonderilecekBaslik,
           sablon:            sablonId,
+          kisi1:             nisanVeyaDugun ? kisi1 : null,
+          kisi2:             nisanVeyaDugun ? kisi2 : null,
           mesaj:             notAcik ? form.mesaj : null,
           muzik:             muzikAcik ? form.muzik : null,
           polaroid1:         polaroidler[0],
           polaroid2:         polaroidler[1],
           polaroid3:         polaroidler[2],
-          albumAktif:        aniAcik,
+          albumAktif:        albumAcik,
+          aniDefteriAktif:   aniDefteriAcik,
           sesliAniAktif:     sesliAniAcik,
           canliDuvarAktif:   canliDuvarAcik,
           oturmaPlanAktif:   oturmaPlanAcik,
@@ -361,30 +380,34 @@ function OlusturIcerigi() {
     finally { setYukleniyor(false); }
   };
 
+  const kisi1Preview = `${kisi1Ad || "Kişi 1"} ${kisi1Soyad || ""}`.trim();
+  const kisi2Preview = `${kisi2Ad || "Kişi 2"} ${kisi2Soyad || ""}`.trim();
+
   const previewVeri: DavetiyeVeri = {
     id: "preview", slug: "preview",
     baslik: nisanVeyaDugun
-      ? `${form.kisi1 || "Kişi 1"} & ${form.kisi2 || "Kişi 2"}`
+      ? `${kisi1Preview} & ${kisi2Preview}`
       : form.baslik || "Davetiye Başlığı",
-    etkinlikTur:    sablon.kategori,
-    tarih:          form.tarih ? new Date(`${form.tarih}T${form.saat || "12:00"}`) : null,
-    mekan:          form.mekan || null,
-    mesaj:          notAcik ? (form.mesaj || null) : null,
-    sablon:         sablonId,
-    ozelRenk:       form.renk || null,
-    font:           form.font || null,
-    muzik:          muzikAcik ? (form.muzik || null) : null,
-    goruntulenme:   0,
-    user:           { name: null, email: null },
-    kisi1:          form.kisi1 || null,
-    kisi2:          form.kisi2 || null,
-    albumAktif:     polaroidAcik,
-    polaroid1:      polaroidAcik ? polaroidler[0] : null,
-    polaroid2:      polaroidAcik ? polaroidler[1] : null,
-    polaroid3:      polaroidAcik ? polaroidler[2] : null,
-    sesliAniAktif:  sesliAniAcik,
+    etkinlikTur:     sablon.kategori,
+    tarih:           form.tarih ? new Date(`${form.tarih}T${form.saat || "12:00"}`) : null,
+    mekan:           form.mekan || null,
+    mesaj:           notAcik ? (form.mesaj || null) : null,
+    sablon:          sablonId,
+    ozelRenk:        form.renk || null,
+    font:            form.font || null,
+    muzik:           muzikAcik ? (form.muzik || null) : null,
+    goruntulenme:    0,
+    user:            { name: null, email: null },
+    kisi1:           nisanVeyaDugun ? kisi1Preview : null,
+    kisi2:           nisanVeyaDugun ? kisi2Preview : null,
+    albumAktif:      polaroidAcik,
+    polaroid1:       polaroidAcik ? polaroidler[0] : null,
+    polaroid2:       polaroidAcik ? polaroidler[1] : null,
+    polaroid3:       polaroidAcik ? polaroidler[2] : null,
+    aniDefteriAktif: aniDefteriAcik,
+    sesliAniAktif:   sesliAniAcik,
     canliDuvarAktif: canliDuvarAcik,
-    dressKod:       dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
+    dressKod:        dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
     dressKodRenkler: dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
   };
 
@@ -461,29 +484,59 @@ function OlusturIcerigi() {
                   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
 
                     {nisanVeyaDugun ? (
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      <div className="space-y-3">
+                        <label className="block text-sm font-semibold text-gray-700">
                           İsimler <span className="text-red-400 font-normal text-xs">zorunlu</span>
                         </label>
-                        <div className="grid grid-cols-2 gap-2.5">
-                          <input type="text" placeholder="1. kişi (örn. Ayşe)"
-                            ref={alanRefi("kisi1")}
-                            value={form.kisi1} onChange={e => formAlaniGuncelle("kisi1", e.target.value)}
-                            aria-invalid={!!alanHatalari.kisi1}
-                            className={zorunluAlanClass("kisi1")} />
-                          <input type="text" placeholder="2. kişi (örn. Mehmet)"
-                            ref={alanRefi("kisi2")}
-                            value={form.kisi2} onChange={e => formAlaniGuncelle("kisi2", e.target.value)}
-                            aria-invalid={!!alanHatalari.kisi2}
-                            className={zorunluAlanClass("kisi2")} />
-                        </div>
-                        {(alanHatalari.kisi1 || alanHatalari.kisi2) && (
+                        {/* 1. Kişi */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1.5">1. Kişi</p>
                           <div className="grid grid-cols-2 gap-2.5">
-                            {alanHatasi("kisi1") ?? <span />}
-                            {alanHatasi("kisi2") ?? <span />}
+                            <div>
+                              <input type="text" placeholder="Ad (örn. Ayşe)"
+                                ref={alanRefi("kisi1")}
+                                value={kisi1Ad}
+                                onChange={e => { setKisi1Ad(e.target.value); setAlanHatalari(p => ({ ...p, kisi1: undefined })); setHata(""); }}
+                                aria-invalid={!!alanHatalari.kisi1}
+                                className={zorunluAlanClass("kisi1")} />
+                              {alanHatasi("kisi1")}
+                            </div>
+                            <div>
+                              <input type="text" placeholder="Soyad (örn. Yılmaz)"
+                                ref={alanRefi("kisi1Soyad")}
+                                value={kisi1Soyad}
+                                onChange={e => { setKisi1Soyad(e.target.value); setAlanHatalari(p => ({ ...p, kisi1Soyad: undefined })); setHata(""); }}
+                                aria-invalid={!!alanHatalari.kisi1Soyad}
+                                className={zorunluAlanClass("kisi1Soyad")} />
+                              {alanHatasi("kisi1Soyad")}
+                            </div>
                           </div>
-                        )}
-                        <p className="text-xs text-gray-400 mt-1">Davetiyede büyük harfle "Ayşe &amp; Mehmet" şeklinde görünür.</p>
+                        </div>
+                        {/* 2. Kişi */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1.5">2. Kişi</p>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <div>
+                              <input type="text" placeholder="Ad (örn. Mehmet)"
+                                ref={alanRefi("kisi2")}
+                                value={kisi2Ad}
+                                onChange={e => { setKisi2Ad(e.target.value); setAlanHatalari(p => ({ ...p, kisi2: undefined })); setHata(""); }}
+                                aria-invalid={!!alanHatalari.kisi2}
+                                className={zorunluAlanClass("kisi2")} />
+                              {alanHatasi("kisi2")}
+                            </div>
+                            <div>
+                              <input type="text" placeholder="Soyad (örn. Demir)"
+                                ref={alanRefi("kisi2Soyad")}
+                                value={kisi2Soyad}
+                                onChange={e => { setKisi2Soyad(e.target.value); setAlanHatalari(p => ({ ...p, kisi2Soyad: undefined })); setHata(""); }}
+                                aria-invalid={!!alanHatalari.kisi2Soyad}
+                                className={zorunluAlanClass("kisi2Soyad")} />
+                              {alanHatasi("kisi2Soyad")}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-400">Davetiyede "Ayşe Yılmaz &amp; Mehmet Demir" şeklinde görünür.</p>
                       </div>
                     ) : (
                       <div>
@@ -719,30 +772,45 @@ function OlusturIcerigi() {
                       <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
                     </OzellikKarti>
 
-                    {/* 📸 Misafir Albümü (foto + anı + opsiyonel canlı duvar modu) */}
+                    {/* 📸 Fotoğraf Albümü */}
                     <OzellikKarti
-                      icon="📸" baslik="Misafir Albümü"
-                      aciklama="Misafirler etkinlik boyunca fotoğraf yükler ve yazılı anı bırakır"
-                      misafirGorur="Davetiyede 📸 Fotoğraflar ve 💌 Anı Defteri sekmeleri belirir"
+                      icon="📸" baslik="Fotoğraf Albümü"
+                      aciklama="Misafirler etkinlik boyunca fotoğraf yükler, sen onaylarsın"
+                      misafirGorur="Davetiyede 📸 Fotoğraflar sekmesi belirir"
                       planEtiketi="Ek ücret"
-                      acik={aniAcik} onToggle={() => {
-                        if (aniAcik) { setAniAcik(false); setCanliDuvarAcik(false); }
-                        else setAniAcik(true);
-                      }}
+                      acik={albumAcik} onToggle={() => setAlbumAcik(!albumAcik)}
                     >
-                      <div className="space-y-2.5">
-                        <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
-                          <span className="text-base shrink-0">✅</span>
-                          <p className="text-xs text-gray-600 leading-relaxed">Albüm aktif. Misafirler fotoğraf yükleyip anı yazabilir. Yüklenenler Dashboard → Albüm&apos;den onaylanabilir.</p>
-                        </div>
-                        {/* Canlı Duvar Modu — albüm açıkken görünür, ücretsiz */}
-                        <div className="rounded-xl border border-gray-200 p-3.5 flex items-center justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="text-xs font-semibold text-gray-700">📺 Canlı Duvar Modu</p>
-                            <p className="text-xs text-gray-400 mt-0.5">Salonunuzdaki ekrana yansıtmak için fotoğrafları canlı akış olarak gösterir</p>
-                          </div>
-                          <Toggle acik={canliDuvarAcik} onChange={() => setCanliDuvarAcik(!canliDuvarAcik)} />
-                        </div>
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">Albüm aktif. Misafirler fotoğraf yükleyebilir. Yüklenenler Dashboard → Albüm&apos;den onaylanabilir.</p>
+                      </div>
+                    </OzellikKarti>
+
+                    {/* 💌 Anı Defteri */}
+                    <OzellikKarti
+                      icon="💌" baslik="Anı Defteri"
+                      aciklama="Misafirler etkinlik için yazılı iyi dilek ve anı bırakır"
+                      misafirGorur="Davetiyede 💌 Anı Defteri sekmesi belirir"
+                      planEtiketi="Ek ücret"
+                      acik={aniDefteriAcik} onToggle={() => setAniDefteriAcik(!aniDefteriAcik)}
+                    >
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">Anı Defteri aktif. Dashboard → Anı Defteri&apos;nden yazıları onaylayabilirsiniz.</p>
+                      </div>
+                    </OzellikKarti>
+
+                    {/* 📺 Canlı Fotoğraf Duvarı */}
+                    <OzellikKarti
+                      icon="📺" baslik="Canlı Fotoğraf Duvarı"
+                      aciklama="Misafir fotoğrafları salonunuzdaki ekranda canlı akış olarak görünür"
+                      misafirGorur="Fotoğraf yükleyen misafirler canlı duvarda görebilir"
+                      planEtiketi="Ek ücret"
+                      acik={canliDuvarAcik} onToggle={() => setCanliDuvarAcik(!canliDuvarAcik)}
+                    >
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">Canlı Duvar aktif. Misafirlerin yüklediği fotoğraflar ekranınızda otomatik akar.</p>
                       </div>
                     </OzellikKarti>
 

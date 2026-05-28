@@ -128,6 +128,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       sablon: true,
       muzik: true,
       albumAktif: true,
+      aniDefteriAktif: true,
       sesliAniAktif: true,
       canliDuvarAktif: true,
       oturmaPlanAktif: true,

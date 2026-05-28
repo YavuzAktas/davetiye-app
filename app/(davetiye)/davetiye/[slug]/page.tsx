@@ -40,6 +40,7 @@ function publicDavetiyeGetir(slug: string) {
         polaroid3: true,
         sesliAniAktif: true,
         canliDuvarAktif: true,
+        aniDefteriAktif: true,
         dressKod: true,
         dressKodRenkler: true,
         albumAktif: true,
@@ -123,6 +124,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   const temaRenk = TEMA_RENKLER[sablonTipi] ?? "#7C3AED";
 
   const albumAktif      = davetiyeOzelligiAktif(davetiye, "album");
+  const aniDefteriAktif = davetiyeOzelligiAktif(davetiye, "aniDefteri");
   const sesliAniAktif   = davetiyeOzelligiAktif(davetiye, "sesliAni");
   const canliDuvarAktif = davetiyeOzelligiAktif(davetiye, "canliDuvar");
 
@@ -149,6 +151,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     polaroid1: davetiye.polaroid1 ?? null,
     polaroid2: davetiye.polaroid2 ?? null,
     polaroid3: davetiye.polaroid3 ?? null,
+    aniDefteriAktif,
     sesliAniAktif,
     canliDuvarAktif,
     dressKod: davetiye.dressKod ?? null,
@@ -184,6 +187,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
         slug={davetiye.slug}
         renk={temaRenk}
         albumAktif={albumAktif}
+        aniDefteriAktif={aniDefteriAktif}
         canliDuvarAktif={canliDuvarAktif}
         sesliAniAktif={sesliAniAktif}
       />

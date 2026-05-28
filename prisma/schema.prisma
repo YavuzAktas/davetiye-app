@@ -111,13 +111,14 @@ model Davetiye {
   polaroid1       String?
   polaroid2       String?
   polaroid3       String?
-  sesliAniAktif   Boolean      @default(false)
-  canliDuvarAktif Boolean      @default(false)
-  oturmaPlanAktif Boolean      @default(false)
-  sesliAnilar     SesliAni[]
-  dressKod        String?
-  dressKodRenkler String?
-  albumAktif      Boolean      @default(true)
+  sesliAniAktif    Boolean      @default(false)
+  canliDuvarAktif  Boolean      @default(false)
+  aniDefteriAktif  Boolean      @default(false)
+  oturmaPlanAktif  Boolean      @default(false)
+  sesliAnilar      SesliAni[]
+  dressKod         String?
+  dressKodRenkler  String?
+  albumAktif       Boolean      @default(true)
   odemeDurumu          String       @default("ucretsiz")
   fiyatSnapshot        Json?
   hatirlatiMail30dk    Boolean      @default(false)

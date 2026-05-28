@@ -50,6 +50,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
       sablon: true,
       muzik: true,
       albumAktif: true,
+      aniDefteriAktif: true,
       sesliAniAktif: true,
       canliDuvarAktif: true,
       oturmaPlanAktif: true,
@@ -115,15 +116,18 @@ export default async function OdemeCheckoutPage({ params }: Props) {
     sablon: davetiye.sablon,
     muzik: davetiye.muzik,
     albumAktif: davetiye.albumAktif,
+    aniDefteriAktif: davetiye.aniDefteriAktif,
     sesliAniAktif: davetiye.sesliAniAktif,
     canliDuvarAktif: davetiye.canliDuvarAktif,
     oturmaPlanAktif: davetiye.oturmaPlanAktif,
   });
 
   const TUM_UPSELL: UpsellOzellik[] = [
-    { kod: "album-ani",    icon: "📸", ad: "Misafir Albümü",        desc: "Fotoğraf, anı ve canlı duvar modu dahil",   tutar: DAVETIYE_FIYAT_KALEMLERI.album.tutar },
-    { kod: "sesli-ani",    icon: "🎙️", ad: "Sesli Anı Defteri",    desc: "Misafirler sesli mesaj bırakır",            tutar: DAVETIYE_FIYAT_KALEMLERI.sesliAni.tutar },
-    { kod: "oturma-plani", icon: "🪑", ad: "Oturma Planı",          desc: "Masa ve koltuk düzeni, davetli atama",     tutar: DAVETIYE_FIYAT_KALEMLERI.oturmaPlan.tutar },
+    { kod: "album-foto",   icon: "📸", ad: "Fotoğraf Albümü",       desc: "Misafirler fotoğraf yükler, sen onaylarsın",        tutar: DAVETIYE_FIYAT_KALEMLERI.album.tutar },
+    { kod: "ani-defteri",  icon: "💌", ad: "Anı Defteri",           desc: "Misafirler yazılı iyi dilek bırakır",              tutar: DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar },
+    { kod: "canli-duvar",  icon: "📺", ad: "Canlı Fotoğraf Duvarı", desc: "Fotoğraflar salonunuzdaki ekranda akar",           tutar: DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar },
+    { kod: "sesli-ani",    icon: "🎙️", ad: "Sesli Anı Defteri",    desc: "Misafirler sesli mesaj bırakır",                   tutar: DAVETIYE_FIYAT_KALEMLERI.sesliAni.tutar },
+    { kod: "oturma-plani", icon: "🪑", ad: "Oturma Planı",          desc: "Masa ve koltuk düzeni, davetli atama",             tutar: DAVETIYE_FIYAT_KALEMLERI.oturmaPlan.tutar },
   ];
 
   const seciliKodlar = new Set(fiyat.kalemler.map(k => k.kod));
