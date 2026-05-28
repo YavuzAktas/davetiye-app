@@ -73,10 +73,10 @@ const S = StyleSheet.create({
   coverRule:     { width: 28, height: 1, backgroundColor: "rgba(255,255,255,0.25)", marginVertical: 18 },
   coverMeta:     { fontSize: 9, color: "rgba(255,255,255,0.50)", textAlign: "center", marginBottom: 4, letterSpacing: 0.4 },
 
-  coverStats:     { flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 44, paddingTop: 24, borderTopWidth: 0.5, borderTopColor: "rgba(255,255,255,0.12)", width: 260 },
-  coverStatBlock: { alignItems: "center", flex: 1 },
+  coverStats:     { flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 44, paddingTop: 24, borderTopWidth: 0.5, borderTopColor: "rgba(255,255,255,0.12)" },
+  coverStatBlock: { alignItems: "center", paddingHorizontal: 28 },
   coverStatNum:   { fontSize: 22, fontWeight: "bold", color: "#ffffff" },
-  coverStatLbl:   { fontSize: 5.5, letterSpacing: 2, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginTop: 3 },
+  coverStatLbl:   { fontSize: 7, color: "rgba(255,255,255,0.38)", textTransform: "uppercase", marginTop: 3 },
   coverStatSep:   { width: 0.5, height: 22, backgroundColor: "rgba(255,255,255,0.13)" },
 
   coverBranding: { position: "absolute", bottom: 24, left: 0, right: 0, fontSize: 7, color: "rgba(255,255,255,0.25)", letterSpacing: 2.5, textTransform: "uppercase", textAlign: "center" },
@@ -97,8 +97,8 @@ const S = StyleSheet.create({
 
   // ── Photo ──────────────────────────────────────────────
   photoWrap:   { marginHorizontal: 28, marginTop: 8, borderWidth: 1 },
-  photoImgFirst: { width: "100%", height: 570, objectFit: "cover" },
-  photoImgRest:  { width: "100%", height: 628, objectFit: "cover" },
+  photoImgFirst: { width: "100%", height: 570, objectFit: "contain" },
+  photoImgRest:  { width: "100%", height: 628, objectFit: "contain" },
   photoPlaceholder: { width: "100%", alignItems: "center", justifyContent: "center" },
   photoCap:    { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 12, paddingVertical: 9, borderTopWidth: 0.5 },
   photoName:   { fontSize: 8, fontWeight: "bold", letterSpacing: 0.4 },
@@ -155,11 +155,10 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
   const bg  = v.renk;
   const bg2 = darken(v.renk, 0.18);
 
-  // Use baslik as the short title to avoid overflow,
-  // show full kisi names as smaller subtitle only when they differ
-  const shortTitle = v.baslik;
-  const fullNames  = [v.kisi1, v.kisi2].filter(Boolean).join(" & ");
-  const showSub    = fullNames && fullNames !== shortTitle;
+  // Use kisi names if both exist; fallback to baslik
+  const displayTitle = (v.kisi1 && v.kisi2)
+    ? `${v.kisi1} & ${v.kisi2}`
+    : v.baslik;
 
   const statlar = [
     v.fotolar.length > 0    && { n: v.fotolar.length,     l: "Fotoğraf"  },
@@ -183,10 +182,7 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
         <Text style={S.coverEyebrow}>Anı Kitabı</Text>
         <View style={S.coverRule} />
 
-        <Text style={S.coverTitle}>{shortTitle}</Text>
-        {showSub && (
-          <Text style={S.coverSubNames}>{fullNames}</Text>
-        )}
+        <Text style={S.coverTitle}>{displayTitle}</Text>
 
         <View style={S.coverRule} />
 
@@ -196,9 +192,9 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
         {statlar.length > 0 && (
           <View style={S.coverStats}>
             {statlar.map((st, i) => (
-              <View key={i} style={{ flexDirection: "row", alignItems: "center", flex: i === 0 ? undefined : 1 }}>
+              <View key={i} style={{ flexDirection: "row", alignItems: "center" }}>
                 {i > 0 && <View style={S.coverStatSep} />}
-                <View style={[S.coverStatBlock]}>
+                <View style={S.coverStatBlock}>
                   <Text style={S.coverStatNum}>{st.n}</Text>
                   <Text style={S.coverStatLbl}>{st.l}</Text>
                 </View>

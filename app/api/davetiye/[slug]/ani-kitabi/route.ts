@@ -39,7 +39,7 @@ function toDataUri(url: string): Promise<string | null> {
           const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0].trim();
           // react-pdf desteklemediği için webp/avif → jpeg dönüştür
           if (mime === "image/webp" || mime === "image/avif" || mime === "image/gif") {
-            const jpeg = await sharp(buf).jpeg({ quality: 85 }).toBuffer();
+            const jpeg = await sharp(buf).jpeg({ quality: 92 }).toBuffer();
             resolve(`data:image/jpeg;base64,${jpeg.toString("base64")}`);
           } else {
             resolve(`data:${mime};base64,${buf.toString("base64")}`);
