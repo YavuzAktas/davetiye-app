@@ -66,12 +66,14 @@ const S = StyleSheet.create({
   coverBorder:  { position: "absolute", top: 18, left: 18, right: 18, bottom: 18, borderWidth: 0.5, borderColor: "rgba(255,255,255,0.14)" },
   coverTopLine: { position: "absolute", top: 0, left: 0, right: 0, height: 3 },
 
-  coverBody:     { paddingTop: 96, paddingHorizontal: 50, alignItems: "center" },
-  coverEyebrow:  { fontSize: 7, letterSpacing: 5, color: "rgba(255,255,255,0.42)", textTransform: "uppercase", marginBottom: 22 },
-  coverTitle:    { fontSize: 30, fontWeight: "bold", color: "#ffffff", textAlign: "center", lineHeight: 1.22 },
-  coverSubNames: { fontSize: 11, color: "rgba(255,255,255,0.52)", textAlign: "center", marginTop: 7, lineHeight: 1.45 },
-  coverRule:     { width: 28, height: 1, backgroundColor: "rgba(255,255,255,0.25)", marginVertical: 18 },
-  coverMeta:     { fontSize: 9, color: "rgba(255,255,255,0.50)", textAlign: "center", marginBottom: 4, letterSpacing: 0.4 },
+  coverBody:      { paddingTop: 96, paddingHorizontal: 50, alignItems: "center" },
+  coverEyebrow:   { fontSize: 7, letterSpacing: 4, color: "rgba(255,255,255,0.42)", textTransform: "uppercase", marginBottom: 22 },
+  coverKisi1:     { fontSize: 22, fontWeight: "bold", color: "#ffffff", textAlign: "center" },
+  coverAmpersand: { fontSize: 13, color: "rgba(255,255,255,0.45)", textAlign: "center", marginVertical: 4 },
+  coverKisi2:     { fontSize: 22, fontWeight: "bold", color: "#ffffff", textAlign: "center" },
+  coverTitleOnly: { fontSize: 26, fontWeight: "bold", color: "#ffffff", textAlign: "center", lineHeight: 1.22 },
+  coverRule:      { width: 28, height: 1, backgroundColor: "rgba(255,255,255,0.25)", marginVertical: 18 },
+  coverMeta:      { fontSize: 9, color: "rgba(255,255,255,0.50)", textAlign: "center", marginBottom: 4 },
 
   coverStats:     { flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 44, paddingTop: 24, borderTopWidth: 0.5, borderTopColor: "rgba(255,255,255,0.12)" },
   coverStatBlock: { alignItems: "center", paddingHorizontal: 28 },
@@ -85,13 +87,13 @@ const S = StyleSheet.create({
   page: { fontFamily: F, backgroundColor: "#ffffff" },
 
   phRow:  { paddingHorizontal: 36, paddingTop: 20, paddingBottom: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  phSec:  { fontSize: 6.5, letterSpacing: 2.5, textTransform: "uppercase" },
+  phSec:  { fontSize: 6.5, textTransform: "uppercase" },
   phNum:  { fontSize: 7, color: "#c8c8d8" },
   phLine: { marginHorizontal: 36, height: 0.5, backgroundColor: "#eeeff4" },
 
   // Section badge — replaces full SectionIntro page
   badge:       { marginHorizontal: 28, marginTop: 11, marginBottom: 6, paddingHorizontal: 12, paddingVertical: 8, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  badgeLbl:    { fontSize: 7.5, fontWeight: "bold", letterSpacing: 1.5, textTransform: "uppercase" },
+  badgeLbl:    { fontSize: 7.5, fontWeight: "bold", textTransform: "uppercase" },
   badgeCount:  { fontSize: 7, opacity: 0.48 },
   badgeAccent: { position: "absolute", top: 0, left: 0, bottom: 0, width: 3 },
 
@@ -112,7 +114,7 @@ const S = StyleSheet.create({
   aniText:        { fontSize: 10.5, color: "#242436", lineHeight: 1.72 },
   aniFooter:      { flexDirection: "row", alignItems: "center", marginTop: 10 },
   aniLine:        { flex: 1, height: 0.5, marginRight: 8 },
-  aniAuthor:      { fontSize: 7.5, fontWeight: "bold", letterSpacing: 1.5, textTransform: "uppercase" },
+  aniAuthor:      { fontSize: 7.5, fontWeight: "bold", textTransform: "uppercase" },
   aniDate:        { fontSize: 7, color: "#b8b8cc", textAlign: "right", marginTop: 2 },
 
   // ── Voice ──────────────────────────────────────────────
@@ -155,10 +157,7 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
   const bg  = v.renk;
   const bg2 = darken(v.renk, 0.18);
 
-  // Use kisi names if both exist; fallback to baslik
-  const displayTitle = (v.kisi1 && v.kisi2)
-    ? `${v.kisi1} & ${v.kisi2}`
-    : v.baslik;
+  const hasBothKisi = v.kisi1 && v.kisi2;
 
   const statlar = [
     v.fotolar.length > 0    && { n: v.fotolar.length,     l: "Fotoğraf"  },
@@ -182,7 +181,15 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
         <Text style={S.coverEyebrow}>Anı Kitabı</Text>
         <View style={S.coverRule} />
 
-        <Text style={S.coverTitle}>{displayTitle}</Text>
+        {hasBothKisi ? (
+          <>
+            <Text style={S.coverKisi1}>{v.kisi1}</Text>
+            <Text style={S.coverAmpersand}>&amp;</Text>
+            <Text style={S.coverKisi2}>{v.kisi2}</Text>
+          </>
+        ) : (
+          <Text style={S.coverTitleOnly}>{v.baslik}</Text>
+        )}
 
         <View style={S.coverRule} />
 
