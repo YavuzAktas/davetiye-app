@@ -22,6 +22,7 @@ const TIP_ICON: Record<string, string> = {
 export default function BildirimButonu({ mediaQuery }: { mediaQuery?: string }) {
   const [okunmamis, setOkunmamis] = useState(0);
   const [bildirimler, setBildirimler] = useState<Bildirim[]>([]);
+  const [yukleniyor, setYukleniyor] = useState(false);
   const [acik, setAcik] = useState(false);
   const [aktifGorunum, setAktifGorunum] = useState(!mediaQuery);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,12 @@ export default function BildirimButonu({ mediaQuery }: { mediaQuery?: string }) 
     setAcik(yeniAcik);
     if (!yeniAcik) return;
 
+    // Önceki veri yoksa skeleton göster, varsa anında göster (stale-while-revalidate)
+    if (bildirimler.length === 0) setYukleniyor(true);
+
     const guncelOkunmamis = await listeCek();
+    setYukleniyor(false);
+
     if (guncelOkunmamis > 0) {
       setOkunmamis(0);
       setBildirimler(prev => prev.map(b => ({ ...b, okundu: true })));
@@ -111,7 +117,7 @@ export default function BildirimButonu({ mediaQuery }: { mediaQuery?: string }) 
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         {okunmamis > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+          <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
             {okunmamis > 99 ? "99+" : okunmamis}
           </span>
         )}
@@ -139,7 +145,19 @@ export default function BildirimButonu({ mediaQuery }: { mediaQuery?: string }) 
 
           {/* Liste */}
           <div className="max-h-80 overflow-y-auto">
-            {bildirimler.length === 0 ? (
+            {yukleniyor ? (
+              <div className="p-3 space-y-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="flex items-start gap-3 px-1 py-2 animate-pulse">
+                    <div className="w-8 h-8 rounded-xl bg-gray-100 shrink-0" />
+                    <div className="flex-1 space-y-2 pt-0.5">
+                      <div className="h-3 bg-gray-100 rounded-full w-3/4" />
+                      <div className="h-2.5 bg-gray-100 rounded-full w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : bildirimler.length === 0 ? (
               <div className="text-center py-10">
                 <p className="text-2xl mb-2">🔔</p>
                 <p className="text-sm text-gray-400">Henüz bildirim yok</p>
