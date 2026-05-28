@@ -1,3 +1,5 @@
+import https from "https";
+import http  from "http";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -11,20 +13,35 @@ export const maxDuration = 60;
 
 interface Props { params: Promise<{ slug: string }> }
 
-/* Fotoğrafı base64 data URI'ye çevirir — PDF render ederken network yoktur */
-async function toDataUri(url: string): Promise<string | null> {
-  try {
-    const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(t);
-    if (!res.ok) return null;
-    const buf = Buffer.from(await res.arrayBuffer());
-    const mime = res.headers.get("content-type") ?? "image/jpeg";
-    return `data:${mime};base64,${buf.toString("base64")}`;
-  } catch {
-    return null;
-  }
+/* Node.js https/http ile fotoğrafı base64 data URI'ye çevirir.
+   Native fetch yerine bu modül Vercel serverless'ta daha güvenilir. */
+function toDataUri(url: string): Promise<string | null> {
+  return new Promise((resolve) => {
+    const client = url.startsWith("https") ? https : http;
+    const req = client.get(url, (res) => {
+      // 3xx redirect'i takip et
+      if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        resolve(toDataUri(res.headers.location));
+        return;
+      }
+      if (res.statusCode !== 200) {
+        console.error("[ani-kitabi] image HTTP", res.statusCode, url.slice(0, 80));
+        res.resume();
+        resolve(null);
+        return;
+      }
+      const chunks: Buffer[] = [];
+      res.on("data", (c: Buffer) => chunks.push(c));
+      res.on("end", () => {
+        const buf  = Buffer.concat(chunks);
+        const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0];
+        resolve(`data:${mime};base64,${buf.toString("base64")}`);
+      });
+      res.on("error", (e) => { console.error("[ani-kitabi] image stream", e.message); resolve(null); });
+    });
+    req.setTimeout(10_000, () => { req.destroy(); console.error("[ani-kitabi] image timeout", url.slice(0,80)); resolve(null); });
+    req.on("error", (e) => { console.error("[ani-kitabi] image req error", e.message); resolve(null); });
+  });
 }
 
 export async function GET(req: NextRequest, { params }: Props) {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { ModerasyonIcerik } from "@/components/ModerasyonListe";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
+import AniKitabiButon from "@/components/AniKitabiButon";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -262,17 +263,7 @@ export default async function AlbumModerasyon({ params }: Props) {
                   )}
                 </div>
               </div>
-              <a
-                href={`/api/davetiye/${slug}/ani-kitabi`}
-                download={`ani-kitabi-${slug}.pdf`}
-                className="shrink-0 flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 active:scale-[0.98]"
-                style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)`, color: "#fff", boxShadow: `0 4px 20px rgba(${rgb}, 0.3)` }}
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                PDF İndir
-              </a>
+              <AniKitabiButon slug={slug} renk={renk} rgb={rgb} />
             </div>
           </div>
         )}
