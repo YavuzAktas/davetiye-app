@@ -1,15 +1,8 @@
 import path from "path";
 import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Font,
+  Document, Page, Text, View, Image, StyleSheet, Font,
 } from "@react-pdf/renderer";
 
-/* ── Türkçe karakter desteği — dosyadan okur, network gerekmez ── */
 Font.register({
   family: "NotoSans",
   fonts: [
@@ -18,230 +11,275 @@ Font.register({
   ],
 });
 
+/* ─── Types ─── */
 export type AniKitabiVeri = {
-  baslik: string;
-  kisi1: string | null;
-  kisi2: string | null;
-  tarih: string | null;
-  mekan: string | null;
+  baslik:      string;
+  kisi1:       string | null;
+  kisi2:       string | null;
+  tarih:       string | null;
+  mekan:       string | null;
   etkinlikTur: string;
-  renk: string;
-  fotolar: { id: string; yukleyenAd: string; dosyaUrl: string; createdAt: string }[];
+  renk:        string;
+  fotolar: {
+    id: string; yukleyenAd: string;
+    dosyaUrl: string; imageData: string | null; createdAt: string;
+  }[];
   anilar: { id: string; yazarAd: string; icerik: string; createdAt: string }[];
   sesliAnilar: { id: string; adSoyad: string; sure: number; createdAt: string }[];
 };
 
-const CHUNK = 6; // photos per page (2 cols × 3 rows)
-const ANILER_PER_PAGE = 3;
-
+/* ─── Helpers ─── */
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
-  return [
-    parseInt(h.substring(0, 2), 16),
-    parseInt(h.substring(2, 4), 16),
-    parseInt(h.substring(4, 6), 16),
-  ];
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
 }
-
-function lightBg(hex: string): string {
-  const [r, g, b] = hexToRgb(hex);
-  const mix = (c: number) => Math.round(c * 0.15 + 255 * 0.85);
-  const toHex = (c: number) => c.toString(16).padStart(2, "0");
-  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;
+function darken(hex: string, t: number): string {
+  const [r,g,b] = hexToRgb(hex);
+  const d = (c: number) => Math.max(0, Math.round(c * (1-t)));
+  const x = (c: number) => d(c).toString(16).padStart(2,"0");
+  return `#${x(r)}${x(g)}${x(b)}`;
 }
-
-function sureyiMetne(sn: number): string {
-  const d = Math.floor(sn / 60);
-  const s = sn % 60;
-  return d > 0 ? `${d}d ${s}s` : `${s}s`;
+function lighten(hex: string, t: number): string {
+  const [r,g,b] = hexToRgb(hex);
+  const l = (c: number) => Math.min(255, Math.round(c + (255-c)*t));
+  const x = (c: number) => l(c).toString(16).padStart(2,"0");
+  return `#${x(r)}${x(g)}${x(b)}`;
 }
-
-function tarihFormatla(iso: string): string {
-  return new Date(iso).toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+function tarih(iso: string) {
+  return new Date(iso).toLocaleDateString("tr-TR", { day:"numeric", month:"long", year:"numeric" });
 }
-
-function chunk<T>(arr: T[], size: number): T[][] {
+function sure(sn: number) {
+  const m = Math.floor(sn/60), s = sn%60;
+  return m > 0 ? `${m}d ${s}s` : `${s}s`;
+}
+function chunks<T>(arr: T[], n: number): T[][] {
   const out: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i+n));
   return out;
 }
 
+/* ─── Styles ─── */
+const F = "NotoSans";
+
 const S = StyleSheet.create({
-  /* Layout */
-  page: { fontFamily: "NotoSans", padding: 0 },
-  pageContent: { fontFamily: "NotoSans", padding: 40, backgroundColor: "#ffffff" },
+  /* shared */
+  page:    { fontFamily: F, backgroundColor: "#ffffff" },
+  flex:    { display:"flex", flexDirection:"row", alignItems:"center" },
 
-  /* Cover */
-  coverPage: { fontFamily: "NotoSans", padding: 0 },
-  coverTop: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 48 },
-  coverBottom: { paddingHorizontal: 48, paddingBottom: 32, alignItems: "center" },
+  /* page header bar */
+  pageHeader: {
+    paddingHorizontal: 40, paddingTop: 28, paddingBottom: 14,
+    display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"space-between",
+  },
+  pageHeaderTitle: { fontSize: 7, color: "#c4c4cc", letterSpacing: 1.5, textTransform:"uppercase" },
+  pageHeaderPage:  { fontSize: 7, color: "#c4c4cc", letterSpacing: 1 },
+  pageHeaderLine:  { marginHorizontal: 40, height: 0.5, backgroundColor: "#ebebf0" },
 
-  coverLabel: {
-    fontSize: 8,
-    letterSpacing: 3,
-    textTransform: "uppercase",
-    marginBottom: 32,
-    opacity: 0.65,
+  /* cover */
+  cover: { fontFamily: F, backgroundColor: "#ffffff" },
+  coverColorStrip: { position:"absolute", top:0, left:0, right:0, height:440 },
+  coverInnerBorder: {
+    position:"absolute", top:20, left:20, right:20, bottom:20,
+    borderWidth:0.5, borderColor:"rgba(255,255,255,0.22)",
   },
-  coverTitle: {
-    fontSize: 34,
-    fontWeight: "bold",
-    textAlign: "center",
-    lineHeight: 1.2,
-    marginBottom: 8,
+  coverBody: { paddingTop: 80, alignItems:"center" },
+  coverEyebrow: { fontSize:7, letterSpacing:4, color:"rgba(255,255,255,0.55)", textTransform:"uppercase", marginBottom:16 },
+  coverNames: { fontSize:38, fontWeight:"bold", color:"#ffffff", textAlign:"center", lineHeight:1.15 },
+  coverTitle: { fontSize:22, color:"rgba(255,255,255,0.8)", textAlign:"center", marginTop:6, lineHeight:1.3 },
+  coverOrnament: { width:40, height:1.5, marginVertical:20, backgroundColor:"rgba(255,255,255,0.4)" },
+  coverMeta: { fontSize:9, color:"rgba(255,255,255,0.65)", textAlign:"center", marginBottom:4, letterSpacing:0.5 },
+  coverStatsRow: {
+    flexDirection:"row", gap:32, marginTop:32, marginBottom:0,
+    paddingHorizontal:40, alignItems:"center", justifyContent:"center",
   },
-  coverNames: {
-    fontSize: 22,
-    textAlign: "center",
-    marginBottom: 24,
-    opacity: 0.85,
-  },
-  coverDivider: { width: 60, height: 2, marginVertical: 20, opacity: 0.4 },
-  coverDetail: {
-    fontSize: 10,
-    textAlign: "center",
-    marginBottom: 4,
-    opacity: 0.7,
-    letterSpacing: 0.5,
-  },
-  coverBranding: { fontSize: 8, opacity: 0.35, letterSpacing: 2, textTransform: "uppercase" },
+  coverStatBox: { alignItems:"center" },
+  coverStatNum: { fontSize:28, fontWeight:"bold", color:"#ffffff", lineHeight:1 },
+  coverStatLabel: { fontSize:6.5, letterSpacing:2.5, color:"rgba(255,255,255,0.45)", textTransform:"uppercase", marginTop:4 },
+  coverStatDivider: { width:0.5, height:32, backgroundColor:"rgba(255,255,255,0.2)" },
+  coverWhiteStrip: { paddingVertical:18, paddingHorizontal:40, alignItems:"center" },
+  coverBranding: { fontSize:7, color:"#c4c4cc", letterSpacing:2, textTransform:"uppercase" },
 
-  /* Section header */
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-    paddingBottom: 12,
-  },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", color: "#111827" },
-  sectionCount: { fontSize: 10, color: "#9ca3af", marginLeft: 8, marginTop: 3 },
-  sectionLine: { flex: 1, height: 1, marginLeft: 12, backgroundColor: "#f3f4f6" },
+  /* section intro */
+  sectionPage: { fontFamily:F, backgroundColor:"#ffffff", position:"relative" },
+  sectionAccentStrip: { position:"absolute", top:0, left:0, bottom:0, width:5 },
+  sectionGhostNum: { fontSize:120, fontWeight:"bold", color:"#f5f5f7", position:"absolute", bottom:48, right:48 },
+  sectionContent: { paddingTop:180, paddingHorizontal:60 },
+  sectionLabel: { fontSize:7, letterSpacing:3.5, textTransform:"uppercase", marginBottom:12 },
+  sectionHeading: { fontSize:32, fontWeight:"bold", color:"#1a1a2e", lineHeight:1.2, marginBottom:12 },
+  sectionSub: { fontSize:10, color:"#8888a0", lineHeight:1.6 },
 
-  /* Photos */
-  photoGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  photoCell: { width: "47.5%", marginBottom: 4 },
-  photoImg: { width: "100%", height: 140, objectFit: "cover", borderRadius: 6 },
-  photoCaption: { fontSize: 8, color: "#6b7280", marginTop: 4 },
-  photoDate: { fontSize: 7, color: "#9ca3af", marginTop: 1 },
+  /* photo */
+  photoBody: { paddingHorizontal:40, paddingTop:12 },
+  photoFrame: { borderWidth:1, padding:8, backgroundColor:"#fff" },
+  photoImage: { width:"100%", height:380, objectFit:"cover" },
+  photoCaption: { paddingTop:10, paddingBottom:4, flexDirection:"row", alignItems:"center", justifyContent:"space-between" },
+  photoName: { fontSize:9, fontWeight:"bold", color:"#1a1a2e", letterSpacing:0.8 },
+  photoDate: { fontSize:8, color:"#a0a0b0" },
 
-  /* Memories */
-  memoryCard: {
-    backgroundColor: "#fafafa",
-    borderRadius: 8,
-    padding: 14,
-    marginBottom: 12,
-    borderLeft: "3px solid #e5e7eb",
-  },
-  memoryAuthor: { fontSize: 9, fontWeight: "bold", color: "#374151", marginBottom: 6 },
-  memoryText: { fontSize: 10, color: "#4b5563", lineHeight: 1.55 },
-  memoryDate: { fontSize: 7, color: "#9ca3af", marginTop: 6 },
+  /* memories */
+  aniBody: { paddingHorizontal:48, paddingTop:12 },
+  aniCard: { marginBottom:28, paddingBottom:28 },
+  aniCardBorder: { marginBottom:28, paddingBottom:28, borderBottomWidth:0.5, borderBottomColor:"#ebebf0" },
+  aniQuote: { fontSize:48, lineHeight:1, marginBottom:-8, fontWeight:"bold" },
+  aniText: { fontSize:10.5, color:"#2a2a3e", lineHeight:1.65 },
+  aniAuthorRow: { flexDirection:"row", alignItems:"center", marginTop:12 },
+  aniAuthorLine: { flex:1, height:0.5, marginRight:10 },
+  aniAuthorName: { fontSize:8, fontWeight:"bold", letterSpacing:1.2, textTransform:"uppercase" },
+  aniDate: { fontSize:7.5, color:"#b0b0c0", marginTop:3, textAlign:"right" },
 
-  /* Voice */
+  /* voice */
+  voiceBody: { paddingHorizontal:48, paddingTop:12 },
+  voiceNote: { fontSize:9, color:"#a0a0b0", marginBottom:24, lineHeight:1.5 },
   voiceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottom: "1px solid #f3f4f6",
+    flexDirection:"row", alignItems:"center",
+    paddingVertical:12, borderBottomWidth:0.5, borderBottomColor:"#f0f0f5",
   },
-  voiceDot: { width: 8, height: 8, borderRadius: 4, marginRight: 10 },
-  voiceName: { flex: 1, fontSize: 10, color: "#374151", fontWeight: "bold" },
-  voiceDur: { fontSize: 9, color: "#9ca3af" },
-  voiceDate: { fontSize: 8, color: "#d1d5db", marginLeft: 10 },
+  voiceIndex: { fontSize:9, color:"#c0c0d0", width:24 },
+  voiceName: { flex:1, fontSize:10, fontWeight:"bold", color:"#1a1a2e" },
+  voiceDur: { fontSize:9, color:"#8888a0", marginRight:16 },
+  voiceDate: { fontSize:8, color:"#c0c0d0" },
+  voiceDot: { width:6, height:6, borderRadius:3, marginRight:10 },
 });
 
-/* ── Kapak Sayfası ── */
+/* ─── Shared Page Header ─── */
+function PageHdr({ title, n }: { title: string; n: number }) {
+  return (
+    <>
+      <View style={S.pageHeader}>
+        <Text style={S.pageHeaderTitle}>{title}</Text>
+        <Text style={S.pageHeaderPage}>{n}</Text>
+      </View>
+      <View style={S.pageHeaderLine} />
+    </>
+  );
+}
+
+/* ─── Cover Page ─── */
 function Kapak({ v }: { v: AniKitabiVeri }) {
-  const bg = v.renk;
-  const light = lightBg(v.renk);
+  const bg  = v.renk;
+  const bg2 = darken(v.renk, 0.15);
+  const hasNames = v.kisi1 || v.kisi2;
+  const names = [v.kisi1, v.kisi2].filter(Boolean).join(" & ");
+
+  const statlar = [
+    v.fotolar.length > 0   && { n: v.fotolar.length,    l: "Fotoğraf"  },
+    v.anilar.length > 0    && { n: v.anilar.length,      l: "Anı"       },
+    v.sesliAnilar.length>0 && { n: v.sesliAnilar.length, l: "Ses Kaydı" },
+  ].filter(Boolean) as { n: number; l: string }[];
 
   return (
-    <Page size="A4" style={S.coverPage}>
+    <Page size="A4" style={S.cover}>
       {/* Renkli üst alan */}
-      <View style={{ backgroundColor: bg, flex: 1, alignItems: "center", justifyContent: "center", padding: 48 }}>
-        {/* Dekoratif iç çerçeve */}
-        <View style={{ position: "absolute", top: 20, left: 20, right: 20, bottom: 20, border: "1px solid rgba(255,255,255,0.25)", borderRadius: 4 }} />
+      <View style={[S.coverColorStrip, { backgroundColor: bg }]} />
+      {/* İkinci ton şerit (üst 120px) */}
+      <View style={{ position:"absolute", top:0, left:0, right:0, height:120, backgroundColor: bg2 }} />
+      {/* İnce iç çerçeve */}
+      <View style={S.coverInnerBorder} />
 
-        <Text style={[S.coverLabel, { color: "#ffffff" }]}>Anı Kitabı</Text>
+      {/* İçerik */}
+      <View style={S.coverBody}>
+        <Text style={S.coverEyebrow}>Anı Kitabı</Text>
+        <View style={S.coverOrnament} />
 
-        <Text style={[S.coverTitle, { color: "#ffffff" }]}>{v.baslik}</Text>
-
-        {(v.kisi1 || v.kisi2) && (
-          <Text style={[S.coverNames, { color: "#ffffff" }]}>
-            {[v.kisi1, v.kisi2].filter(Boolean).join(" & ")}
-          </Text>
+        {hasNames
+          ? <Text style={S.coverNames}>{names}</Text>
+          : <Text style={S.coverNames}>{v.baslik}</Text>
+        }
+        {hasNames && (
+          <Text style={S.coverTitle}>{v.baslik}</Text>
         )}
 
-        <View style={[S.coverDivider, { backgroundColor: "#ffffff" }]} />
+        <View style={S.coverOrnament} />
 
-        {v.tarih && (
-          <Text style={[S.coverDetail, { color: "#ffffff" }]}>
-            {tarihFormatla(v.tarih)}
-          </Text>
-        )}
-        {v.mekan && (
-          <Text style={[S.coverDetail, { color: "#ffffff" }]}>{v.mekan}</Text>
-        )}
+        {v.tarih && <Text style={S.coverMeta}>{tarih(v.tarih)}</Text>}
+        {v.mekan  && <Text style={S.coverMeta}>{v.mekan}</Text>}
 
-        {/* İstatistikler */}
-        <View style={{ flexDirection: "row", gap: 24, marginTop: 32 }}>
-          {v.fotolar.length > 0 && (
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff" }}>{v.fotolar.length}</Text>
-              <Text style={{ fontSize: 7, color: "rgba(255,255,255,0.65)", letterSpacing: 1 }}>FOTOĞRAF</Text>
-            </View>
-          )}
-          {v.anilar.length > 0 && (
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff" }}>{v.anilar.length}</Text>
-              <Text style={{ fontSize: 7, color: "rgba(255,255,255,0.65)", letterSpacing: 1 }}>ANI</Text>
-            </View>
-          )}
-          {v.sesliAnilar.length > 0 && (
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff" }}>{v.sesliAnilar.length}</Text>
-              <Text style={{ fontSize: 7, color: "rgba(255,255,255,0.65)", letterSpacing: 1 }}>SESLİ ANI</Text>
-            </View>
-          )}
-        </View>
+        {/* Stats */}
+        {statlar.length > 0 && (
+          <View style={S.coverStatsRow}>
+            {statlar.map((st, i) => (
+              <View key={i} style={{ flexDirection:"row", alignItems:"center" }}>
+                {i > 0 && <View style={S.coverStatDivider} />}
+                <View style={[S.coverStatBox, i > 0 ? { marginLeft:32 } : {}]}>
+                  <Text style={S.coverStatNum}>{st.n}</Text>
+                  <Text style={S.coverStatLabel}>{st.l}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
       </View>
 
-      {/* Beyaz alt şerit */}
-      <View style={{ backgroundColor: "#ffffff", paddingVertical: 16, paddingHorizontal: 48, alignItems: "center" }}>
-        <Text style={[S.coverBranding, { color: "#9ca3af" }]}>bekleriz.com</Text>
+      {/* Alt beyaz şerit */}
+      <View style={{ position:"absolute", bottom:0, left:0, right:0, height:60, backgroundColor:"#ffffff" }}>
+        <View style={{ flex:1, justifyContent:"center", alignItems:"center" }}>
+          <Text style={S.coverBranding}>bekleriz.com</Text>
+        </View>
       </View>
     </Page>
   );
 }
 
-/* ── Fotoğraf Sayfaları ── */
-function FotografSayfasi({ fotolar, renk, sayfa, toplam }: {
-  fotolar: AniKitabiVeri["fotolar"];
-  renk: string;
-  sayfa: number;
-  toplam: number;
+/* ─── Section Intro Page ─── */
+function SectionIntro({ renk, num, label, heading, sub }: {
+  renk: string; num: string; label: string; heading: string; sub: string;
 }) {
   return (
-    <Page size="A4" style={S.pageContent}>
-      {/* Header */}
-      <View style={S.sectionHeader}>
-        <View style={{ width: 3, height: 20, backgroundColor: renk, borderRadius: 2, marginRight: 10 }} />
-        <Text style={S.sectionTitle}>Fotoğraflar</Text>
-        <Text style={S.sectionCount}>{toplam} fotoğraf</Text>
-        <View style={S.sectionLine} />
-        <Text style={{ fontSize: 8, color: "#d1d5db" }}>{sayfa}</Text>
+    <Page size="A4" style={S.sectionPage}>
+      <View style={[S.sectionAccentStrip, { backgroundColor: renk }]} />
+      <Text style={[S.sectionGhostNum, { color: lighten(renk, 0.92) }]}>{num}</Text>
+      <View style={S.sectionContent}>
+        <Text style={[S.sectionLabel, { color: renk }]}>{label}</Text>
+        <Text style={S.sectionHeading}>{heading}</Text>
+        <Text style={S.sectionSub}>{sub}</Text>
       </View>
+    </Page>
+  );
+}
 
-      {/* Grid */}
-      <View style={S.photoGrid}>
-        {fotolar.map((f) => (
-          <View key={f.id} style={S.photoCell}>
-            <Image src={f.dosyaUrl} style={S.photoImg} />
-            <Text style={S.photoCaption}>{f.yukleyenAd}</Text>
-            <Text style={S.photoDate}>{tarihFormatla(f.createdAt)}</Text>
+/* ─── Single Photo Page ─── */
+function FotoSayfasi({ foto, renk, pageN }: {
+  foto: AniKitabiVeri["fotolar"][0]; renk: string; pageN: number;
+}) {
+  return (
+    <Page size="A4" style={S.page}>
+      <PageHdr title={foto.yukleyenAd.toUpperCase()} n={pageN} />
+      <View style={S.photoBody}>
+        <View style={[S.photoFrame, { borderColor: renk + "30" }]}>
+          {foto.imageData ? (
+            <Image src={foto.imageData} style={S.photoImage} />
+          ) : (
+            <View style={[S.photoImage, { backgroundColor: lighten(renk, 0.9), alignItems:"center", justifyContent:"center" }]}>
+              <Text style={{ fontSize:10, color: renk + "80" }}>Fotoğraf yüklenemedi</Text>
+            </View>
+          )}
+          <View style={[S.photoCaption, { borderTopWidth:0.5, borderTopColor: renk + "20" }]}>
+            <Text style={[S.photoName, { color: renk }]}>{foto.yukleyenAd}</Text>
+            <Text style={S.photoDate}>{tarih(foto.createdAt)}</Text>
+          </View>
+        </View>
+      </View>
+    </Page>
+  );
+}
+
+/* ─── Memories Page ─── */
+function AnilarSayfasi({ anilar, renk, pageN, totalAnilar }: {
+  anilar: AniKitabiVeri["anilar"]; renk: string; pageN: number; totalAnilar: number;
+}) {
+  return (
+    <Page size="A4" style={S.page}>
+      <PageHdr title={`YAZILI ANILAR — ${totalAnilar} ANI`} n={pageN} />
+      <View style={S.aniBody}>
+        {anilar.map((a, i) => (
+          <View key={a.id} style={i < anilar.length-1 ? S.aniCardBorder : S.aniCard}>
+            <Text style={[S.aniQuote, { color: renk + "60" }]}>&ldquo;</Text>
+            <Text style={S.aniText}>{a.icerik}</Text>
+            <View style={S.aniAuthorRow}>
+              <View style={[S.aniAuthorLine, { backgroundColor: renk + "40" }]} />
+              <Text style={[S.aniAuthorName, { color: renk }]}>{a.yazarAd}</Text>
+            </View>
+            <Text style={S.aniDate}>{tarih(a.createdAt)}</Text>
           </View>
         ))}
       </View>
@@ -249,97 +287,88 @@ function FotografSayfasi({ fotolar, renk, sayfa, toplam }: {
   );
 }
 
-/* ── Anı Sayfası ── */
-function AniSayfasi({ anilar, renk, sayfa, toplam }: {
-  anilar: AniKitabiVeri["anilar"];
-  renk: string;
-  sayfa: number;
-  toplam: number;
+/* ─── Voice Memories Page ─── */
+function SesliAnilarSayfasi({ sesliAnilar, renk, pageN }: {
+  sesliAnilar: AniKitabiVeri["sesliAnilar"]; renk: string; pageN: number;
 }) {
   return (
-    <Page size="A4" style={S.pageContent}>
-      <View style={S.sectionHeader}>
-        <View style={{ width: 3, height: 20, backgroundColor: renk, borderRadius: 2, marginRight: 10 }} />
-        <Text style={S.sectionTitle}>Yazılı Anılar</Text>
-        <Text style={S.sectionCount}>{toplam} anı</Text>
-        <View style={S.sectionLine} />
-        <Text style={{ fontSize: 8, color: "#d1d5db" }}>{sayfa}</Text>
+    <Page size="A4" style={S.page}>
+      <PageHdr title={`SESLİ ANILAR — ${sesliAnilar.length} KAYIT`} n={pageN} />
+      <View style={S.voiceBody}>
+        <Text style={S.voiceNote}>
+          Sesli anıları dinlemek için davetiye sayfanızı ziyaret edin.
+        </Text>
+        {sesliAnilar.map((s, i) => (
+          <View key={s.id} style={S.voiceRow}>
+            <Text style={S.voiceIndex}>{String(i+1).padStart(2,"0")}</Text>
+            <View style={[S.voiceDot, { backgroundColor: renk }]} />
+            <Text style={S.voiceName}>{s.adSoyad}</Text>
+            <Text style={S.voiceDur}>{sure(s.sure)}</Text>
+            <Text style={S.voiceDate}>{tarih(s.createdAt)}</Text>
+          </View>
+        ))}
       </View>
-
-      {anilar.map((a) => (
-        <View key={a.id} style={[S.memoryCard, { borderLeftColor: renk }]}>
-          <Text style={[S.memoryAuthor, { color: renk }]}>{a.yazarAd}</Text>
-          <Text style={S.memoryText}>{a.icerik}</Text>
-          <Text style={S.memoryDate}>{tarihFormatla(a.createdAt)}</Text>
-        </View>
-      ))}
     </Page>
   );
 }
 
-/* ── Sesli Anı Sayfası ── */
-function SesliAniSayfasi({ sesliAnilar, renk }: { sesliAnilar: AniKitabiVeri["sesliAnilar"]; renk: string }) {
-  return (
-    <Page size="A4" style={S.pageContent}>
-      <View style={S.sectionHeader}>
-        <View style={{ width: 3, height: 20, backgroundColor: renk, borderRadius: 2, marginRight: 10 }} />
-        <Text style={S.sectionTitle}>Sesli Anılar</Text>
-        <Text style={S.sectionCount}>{sesliAnilar.length} ses kaydı</Text>
-        <View style={S.sectionLine} />
-      </View>
-
-      <Text style={{ fontSize: 9, color: "#9ca3af", marginBottom: 16 }}>
-        Sesli anıları dinlemek için davetiye sayfanızı ziyaret edin.
-      </Text>
-
-      {sesliAnilar.map((s, i) => (
-        <View key={s.id} style={S.voiceRow}>
-          <View style={[S.voiceDot, { backgroundColor: renk }]} />
-          <Text style={{ fontSize: 9, color: "#9ca3af", marginRight: 10 }}>{i + 1}.</Text>
-          <Text style={S.voiceName}>{s.adSoyad}</Text>
-          <Text style={S.voiceDur}>{sureyiMetne(s.sure)}</Text>
-          <Text style={S.voiceDate}>{tarihFormatla(s.createdAt)}</Text>
-        </View>
-      ))}
-    </Page>
-  );
-}
-
-/* ── Ana Döküman ── */
+/* ─── Main Document ─── */
 export function AniKitabiPDF({ v }: { v: AniKitabiVeri }) {
-  const fotografChunks = chunk(v.fotolar, CHUNK);
-  const aniChunks = chunk(v.anilar, ANILER_PER_PAGE);
+  const fotoChunks = v.fotolar; // 1 per page
+  const aniChunks  = chunks(v.anilar, 3);
+
+  let pageCounter = 1;
+  const pn = () => pageCounter++;
 
   return (
-    <Document
-      title={`${v.baslik} — Anı Kitabı`}
-      author="Bekleriz"
-      subject="Etkinlik Anı Kitabı"
-    >
+    <Document title={`${v.baslik} — Anı Kitabı`} author="Bekleriz" subject="Etkinlik Anı Kitabı">
+      {/* 1. Kapak */}
       <Kapak v={v} />
 
-      {fotografChunks.map((grp, i) => (
-        <FotografSayfasi
-          key={`foto-${i}`}
-          fotolar={grp}
-          renk={v.renk}
-          sayfa={i + 1}
-          toplam={v.fotolar.length}
-        />
-      ))}
+      {/* 2. Fotoğraflar */}
+      {v.fotolar.length > 0 && (
+        <>
+          <SectionIntro
+            renk={v.renk}
+            num="01"
+            label="Bölüm 01"
+            heading="Fotoğraflar"
+            sub={`Misafirlerinizin paylaştığı ${v.fotolar.length} fotoğraf.`}
+          />
+          {fotoChunks.map((f) => (
+            <FotoSayfasi key={f.id} foto={f} renk={v.renk} pageN={pn()} />
+          ))}
+        </>
+      )}
 
-      {aniChunks.map((grp, i) => (
-        <AniSayfasi
-          key={`ani-${i}`}
-          anilar={grp}
-          renk={v.renk}
-          sayfa={i + 1}
-          toplam={v.anilar.length}
-        />
-      ))}
+      {/* 3. Yazılı Anılar */}
+      {v.anilar.length > 0 && (
+        <>
+          <SectionIntro
+            renk={v.renk}
+            num="02"
+            label="Bölüm 02"
+            heading="Yazılı Anılar"
+            sub={`Misafirlerinizin bıraktığı ${v.anilar.length} anı.`}
+          />
+          {aniChunks.map((grp, i) => (
+            <AnilarSayfasi key={i} anilar={grp} renk={v.renk} pageN={pn()} totalAnilar={v.anilar.length} />
+          ))}
+        </>
+      )}
 
+      {/* 4. Sesli Anılar */}
       {v.sesliAnilar.length > 0 && (
-        <SesliAniSayfasi sesliAnilar={v.sesliAnilar} renk={v.renk} />
+        <>
+          <SectionIntro
+            renk={v.renk}
+            num="03"
+            label="Bölüm 03"
+            heading="Sesli Anılar"
+            sub={`Misafirlerinizin kaydettiği ${v.sesliAnilar.length} ses mesajı.`}
+          />
+          <SesliAnilarSayfasi sesliAnilar={v.sesliAnilar} renk={v.renk} pageN={pn()} />
+        </>
       )}
     </Document>
   );
