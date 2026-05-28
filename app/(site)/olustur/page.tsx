@@ -719,17 +719,30 @@ function OlusturIcerigi() {
                       <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
                     </OzellikKarti>
 
-                    {/* 📖 Fotoğraf & Anı Albümü */}
+                    {/* 📸 Misafir Albümü (foto + anı + opsiyonel canlı duvar modu) */}
                     <OzellikKarti
-                      icon="📖" baslik="Fotoğraf & Anı Albümü"
-                      aciklama="Misafirler etkinlik boyunca fotoğraf yükleyebilir ve anı yazabilir"
-                      misafirGorur="Davetiyede bir albüm butonu belirir; yükledikleri fotoğraflar dashboard'da sana gelir"
+                      icon="📸" baslik="Misafir Albümü"
+                      aciklama="Misafirler etkinlik boyunca fotoğraf yükler ve yazılı anı bırakır"
+                      misafirGorur="Davetiyede 📸 Fotoğraflar ve 💌 Anı Defteri sekmeleri belirir"
                       planEtiketi="Ek ücret"
-                      acik={aniAcik} onToggle={() => setAniAcik(!aniAcik)}
+                      acik={aniAcik} onToggle={() => {
+                        if (aniAcik) { setAniAcik(false); setCanliDuvarAcik(false); }
+                        else setAniAcik(true);
+                      }}
                     >
-                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
-                        <span className="text-base shrink-0">✅</span>
-                        <p className="text-xs text-gray-600 leading-relaxed">Albüm aktif. Misafirler fotoğraf yükleyip anı yazabilir. Yüklenenler Dashboard → Albüm&apos;den onaylanabilir.</p>
+                      <div className="space-y-2.5">
+                        <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                          <span className="text-base shrink-0">✅</span>
+                          <p className="text-xs text-gray-600 leading-relaxed">Albüm aktif. Misafirler fotoğraf yükleyip anı yazabilir. Yüklenenler Dashboard → Albüm&apos;den onaylanabilir.</p>
+                        </div>
+                        {/* Canlı Duvar Modu — albüm açıkken görünür, ücretsiz */}
+                        <div className="rounded-xl border border-gray-200 p-3.5 flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold text-gray-700">📺 Canlı Duvar Modu</p>
+                            <p className="text-xs text-gray-400 mt-0.5">Salonunuzdaki ekrana yansıtmak için fotoğrafları canlı akış olarak gösterir</p>
+                          </div>
+                          <Toggle acik={canliDuvarAcik} onChange={() => setCanliDuvarAcik(!canliDuvarAcik)} />
+                        </div>
                       </div>
                     </OzellikKarti>
 
@@ -745,22 +758,6 @@ function OlusturIcerigi() {
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
                           <span className="text-base shrink-0">✅</span>
                           <p className="text-xs text-gray-600 leading-relaxed">Sesli Anı aktif. Dashboard → Sesli Anılar'dan kayıtları dinleyip onaylayabilirsiniz.</p>
-                        </div>
-                      </OzellikKarti>
-                    )}
-
-                    {/* 📸 Canlı Fotoğraf Duvarı */}
-                    {hasSesliOzellikler && (
-                      <OzellikKarti
-                        icon="📸" baslik="Canlı Fotoğraf Duvarı"
-                        aciklama="Misafirlerin yüklediği fotoğraflar onayınızdan sonra duvarda yayınlanır"
-                        misafirGorur="Salonunuzdaki ekrana davetiye.link/duvar açılırsa onaylanan fotoğraflar canlı akar"
-                        planEtiketi="Ek ücret"
-                        acik={canliDuvarAcik} onToggle={() => setCanliDuvarAcik(!canliDuvarAcik)}
-                      >
-                        <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
-                          <span className="text-base shrink-0">✅</span>
-                          <p className="text-xs text-gray-600 leading-relaxed">Canlı Duvar aktif. Misafir fotoğrafları dashboard üzerinden onayladıktan sonra duvarda görünür.</p>
                         </div>
                       </OzellikKarti>
                     )}

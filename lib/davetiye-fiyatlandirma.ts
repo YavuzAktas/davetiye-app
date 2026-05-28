@@ -26,9 +26,8 @@ export const DAVETIYE_FIYAT_KALEMLERI = {
   temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 299 },
   luksSablon: { kod: "luks-sablon", ad: "Lüks şablon", tutar: 100 },
   muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 69 },
-  album: { kod: "album-ani", ad: "Albüm ve anı alanı", tutar: 129 },
+  album: { kod: "album-ani", ad: "Misafir albümü & canlı duvar", tutar: 129 },
   sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 149 },
-  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 169 },
   oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
 } as const;
 
@@ -43,7 +42,6 @@ export function davetiyeFiyatiHesapla(girdi: DavetiyeFiyatGirdisi): DavetiyeFiya
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.muzik }, !!girdi.muzik);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.album }, girdi.albumAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.sesliAni }, girdi.sesliAniAktif === true);
-  kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.canliDuvar }, girdi.canliDuvarAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan }, girdi.oturmaPlanAktif === true);
 
   const toplamTutar = kalemler.reduce((toplam, kalem) => toplam + kalem.tutar, 0);
@@ -63,7 +61,6 @@ export const ASIL_FIYAT_KODU: Record<string, number> = {
   "muzik":          99,
   "album-ani":      179,
   "sesli-ani":      199,
-  "canli-duvar":    229,
   "oturma-plani":   269,
 };
 
