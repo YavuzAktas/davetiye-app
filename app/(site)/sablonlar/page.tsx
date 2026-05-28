@@ -391,71 +391,89 @@ const V = {
 };
 
 function VintageKapak() {
+  const [sealFailed, setSealFailed] = useState(false);
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden select-none"
       style={{ background:`radial-gradient(ellipse 80% 70% at 50% 50%, #FFFDF9 0%, #F2EAE0 100%)` }}>
-      {/* Soluk altın / petal renk akcentleri */}
       <div style={{ position:"absolute", top:0, left:0, width:120, height:120, borderRadius:"50%", background:`radial-gradient(${V.GOLD}12, transparent 70%)`, pointerEvents:"none" }} />
       <div style={{ position:"absolute", bottom:0, right:0, width:100, height:100, borderRadius:"50%", background:`radial-gradient(${V.PETAL}0C, transparent 65%)`, pointerEvents:"none" }} />
 
       {/* "Nişan Davetiyesi" — çizgili başlık */}
-      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:18, zIndex:1 }}>
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, zIndex:1 }}>
         <div style={{ width:36, height:"0.5px", background:`linear-gradient(to left,${V.GOLD}55,transparent)` }}/>
         <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.42em", color:V.GOLD, textTransform:"uppercase" }}>Nişan Davetiyesi</p>
         <div style={{ width:36, height:"0.5px", background:`linear-gradient(to right,${V.GOLD}55,transparent)` }}/>
       </div>
 
       {/* İsimler */}
-      <div style={{ textAlign:"center", zIndex:1, marginBottom:16 }}>
-        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1 }}>Selin</p>
-        <p style={{ fontFamily:"var(--font-lora),serif", fontStyle:"italic", fontSize:"clamp(0.8rem,3vw,1.1rem)", color:`${V.GOLD}CC`, lineHeight:1, margin:"4px 0" }}>&amp;</p>
-        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.6rem,5.5vw,2.2rem)", color:V.WARM, lineHeight:1.1 }}>Emre</p>
-        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.20em", color:`${V.WARM_MD}80`, textTransform:"uppercase", marginTop:8 }}>Kaya &amp; Demir Aileleri</p>
+      <div style={{ textAlign:"center", zIndex:1, marginBottom:12 }}>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.4rem,5vw,1.9rem)", color:V.WARM, lineHeight:1.1 }}>Selin</p>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontStyle:"italic", fontSize:"clamp(0.75rem,2.8vw,1rem)", color:`${V.GOLD}CC`, lineHeight:1, margin:"3px 0" }}>&amp;</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1.4rem,5vw,1.9rem)", color:V.WARM, lineHeight:1.1 }}>Emre</p>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, letterSpacing:"0.20em", color:`${V.WARM_MD}80`, textTransform:"uppercase", marginTop:7 }}>Kaya &amp; Demir Aileleri</p>
       </div>
 
-      {/* Mühür */}
-      <div style={{ width:80, height:80, borderRadius:"50%", zIndex:1,
-        background:`radial-gradient(circle at 38% 35%, ${V.GOLD_LT}cc, ${V.GOLD})`,
-        boxShadow:`0 6px 24px rgba(42,24,8,0.18), 0 2px 6px rgba(42,24,8,0.09)`,
-        display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ width:"78%", height:"78%", borderRadius:"50%", border:"1px solid rgba(255,253,249,0.35)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:2 }}>
-          <svg width="18" height="16" viewBox="0 0 32 28" fill="none">
-            <path d="M16 24 C16 18 10 12 6 8 C10 6 16 10 16 16 C16 10 22 6 26 8 C22 12 16 18 16 24Z" fill="rgba(255,253,249,0.9)"/>
-          </svg>
-          <p style={{ fontFamily:"var(--font-lora),serif", fontSize:7, color:"rgba(255,253,249,0.82)", letterSpacing:2 }}>Nişan</p>
-        </div>
+      {/* Gerçek wax-seal.png */}
+      <div style={{ width:90, height:90, zIndex:1, filter:"drop-shadow(0 6px 20px rgba(42,24,8,0.18))" }}>
+        {!sealFailed ? (
+          <img src="/wax-seal.png" alt="" style={{ width:"100%", height:"100%", objectFit:"contain" }}
+            onError={() => setSealFailed(true)} />
+        ) : (
+          <div style={{ width:"100%", height:"100%", borderRadius:"50%",
+            background:`radial-gradient(circle at 38% 35%, ${V.GOLD_LT}cc, ${V.GOLD})`,
+            display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <svg width="20" height="18" viewBox="0 0 32 28" fill="none">
+              <path d="M16 24 C16 18 10 12 6 8 C10 6 16 10 16 16 C16 10 22 6 26 8 C22 12 16 18 16 24Z" fill="rgba(255,253,249,0.9)"/>
+            </svg>
+          </div>
+        )}
       </div>
 
-      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, fontStyle:"italic", letterSpacing:"0.22em", color:`${V.GOLD}70`, marginTop:14, zIndex:1 }}>Mühüre dokun</p>
-      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, letterSpacing:"0.16em", color:`${V.WARM}45`, marginTop:10, zIndex:1 }}>12 TEMMUZ 2026</p>
+      {/* Mühüre Dokun — line flanked */}
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:12, zIndex:1 }}>
+        <div style={{ width:28, height:"0.5px", background:`linear-gradient(to left,${V.GOLD}70,transparent)` }}/>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, fontStyle:"italic", fontWeight:700, color:V.GOLD, letterSpacing:"0.22em" }}>Mühüre Dokun</p>
+        <div style={{ width:28, height:"0.5px", background:`linear-gradient(to right,${V.GOLD}70,transparent)` }}/>
+      </div>
+
+      <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.16em", color:`${V.WARM}45`, marginTop:8, zIndex:1 }}>12 TEMMUZ 2026</p>
     </div>
   );
 }
 
 function VintageHero() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden select-none"
-      style={{ background:V.DUSK }}>
-      {/* Gradient overlay */}
-      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.32) 55%, transparent 100%)", pointerEvents:"none" }}/>
-      {/* Mor parıltı */}
-      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 65% 55% at 50% 55%, rgba(80,40,130,0.18) 0%, transparent 70%)", pointerEvents:"none" }}/>
+    <div className="w-full h-full relative overflow-hidden select-none" style={{ background:"#060010" }}>
+      {/* Video placeholder — koyu degrade arka plan */}
+      <div style={{ position:"absolute", inset:0, background:"linear-gradient(160deg,#0d0020 0%,#1a0535 40%,#0a0018 100%)", pointerEvents:"none" }}/>
+      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 40%, transparent 100%)", pointerEvents:"none" }}/>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse 65% 55% at 50% 48%, rgba(80,30,120,0.22) 0%, transparent 70%)", pointerEvents:"none" }}/>
 
-      <div style={{ position:"relative", zIndex:1, textAlign:"center", padding:"0 16px" }}>
-        {/* Pill label */}
-        <div style={{ display:"inline-block", background:"rgba(0,0,0,0.38)", backdropFilter:"blur(6px)", padding:"4px 14px 4px 16px", borderRadius:20, marginBottom:16 }}>
+      {/* İsimler + tarih — video üstünde, ortada */}
+      <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center", padding:"0 20px", zIndex:1 }}>
+        <div style={{ display:"inline-block", background:"rgba(0,0,0,0.38)", backdropFilter:"blur(6px)", padding:"4px 14px 4px 16px", borderRadius:20, marginBottom:14 }}>
           <p style={{ fontFamily:"var(--font-lora),serif", fontSize:8, letterSpacing:"0.42em", color:"rgba(255,255,255,0.95)", textTransform:"uppercase" }}>Nişan Davetiyesi</p>
         </div>
-        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.95, textShadow:"0 2px 20px rgba(0,0,0,0.9)" }}>Selin</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.92, textShadow:"0 2px 30px rgba(0,0,0,0.95)" }}>Selin</p>
         <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(1rem,3.5vw,1.4rem)", color:V.PETAL_LT, lineHeight:1.2, textShadow:"0 1px 12px rgba(0,0,0,0.9)" }}>&amp;</p>
-        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.95, marginBottom:14, textShadow:"0 2px 20px rgba(0,0,0,0.9)" }}>Emre</p>
+        <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:"clamp(2rem,7vw,2.8rem)", color:"#FFFFFF", lineHeight:0.92, marginBottom:12, textShadow:"0 2px 30px rgba(0,0,0,0.95)" }}>Emre</p>
         {/* Divider */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8, margin:"10px 0" }}>
-          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to right,transparent,${V.PETAL_LT}60)` }}/>
-          <div style={{ width:6, height:6, borderRadius:"50%", background:V.PETAL_LT, opacity:0.7 }}/>
-          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to left,transparent,${V.PETAL_LT}60)` }}/>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8, margin:"8px 0", width:"80%" }}>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to right,transparent,${V.PETAL_LT}55)` }}/>
+          <div style={{ width:5, height:5, borderRadius:"50%", background:V.PETAL_LT, opacity:0.65 }}/>
+          <div style={{ flex:1, height:"0.5px", background:`linear-gradient(to left,transparent,${V.PETAL_LT}55)` }}/>
         </div>
-        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, color:"rgba(255,255,255,0.7)", letterSpacing:"0.1em" }}>12 Temmuz 2026 · Swissôtel</p>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontSize:9, color:"rgba(255,255,255,0.72)", letterSpacing:"0.1em" }}>12 Temmuz 2026 · Swissôtel</p>
+      </div>
+
+      {/* Scroll chevronları — alt kısımda */}
+      <div style={{ position:"absolute", bottom:16, left:0, right:0, display:"flex", flexDirection:"column", alignItems:"center", gap:0, zIndex:1 }}>
+        <p style={{ fontFamily:"var(--font-lora),serif", fontStyle:"italic", fontWeight:700, fontSize:9, letterSpacing:"0.28em", color:V.GOLD, marginBottom:4, textShadow:"0 1px 10px rgba(0,0,0,0.9)" }}>kaydır</p>
+        {[0,1,2].map(i=>(
+          <svg key={i} width="20" height="12" viewBox="0 0 28 16" fill="none" style={{ display:"block", opacity: 1 - i*0.25 }}>
+            <path d="M2 2L14 13L26 2" stroke={V.GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ))}
       </div>
     </div>
   );
