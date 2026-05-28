@@ -30,7 +30,7 @@ export const DAVETIYE_FIYAT_KALEMLERI = {
   album: { kod: "album-foto", ad: "Fotoğraf albümü", tutar: 99 },
   aniDefteri: { kod: "ani-defteri", ad: "Anı defteri", tutar: 99 },
   canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 99 },
-  sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 149 },
+  sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 99 },
   oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
 } as const;
 
