@@ -702,58 +702,21 @@ const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklam
    PREMIUM KART — Showcase (yeniden tasarım)
 ══════════════════════════════════════════════ */
 function PremiumKart({ sablon }: { sablon: Sablon }) {
-  const router = useRouter();
-  const demoUrl = DEMO_URLS[sablon.id];
+  const router   = useRouter();
+  const demoUrl  = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
 
-  const bolumler = useMemo((): Bolum[] => {
-    if (sablon.id === "vintage-nisan")  return [...VINTAGE_BOLUMLER];
-    if (sablon.id === "nisan-luks")     return [...NISAN_BOLUMLER];
-    if (sablon.id === "dugun-luks")     return [...DUGUN_BOLUMLER];
-    if (sablon.id === "dogumgunu-luks") return [...DOGUMGUNU_BOLUMLER];
-    return [];
-  }, [sablon.id]);
-
-  const [aktifId, setAktifId] = useState(bolumler[0]?.id ?? "");
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const aktif = bolumler.find(b => b.id === aktifId) ?? bolumler[0];
-
-  const handleTab = (id: string) => {
-    const idx = bolumler.findIndex(b => b.id === id);
-    setAktifId(id);
-    scrollRef.current?.scrollTo({ top: idx * 500, behavior: "smooth" });
-  };
-
-  /* Scroll: aktif bölümü güncelle */
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const handler = () => {
-      const b = bolumler[Math.min(Math.round(el.scrollTop / 500), bolumler.length - 1)];
-      if (b) setAktifId(b.id);
-    };
-    el.addEventListener("scroll", handler, { passive: true });
-    return () => el.removeEventListener("scroll", handler);
-  }, [bolumler]);
-
-  /* Açılışta kısa nudge: içeriğin kaydırılabilir olduğunu gösterir */
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const t = setTimeout(() => {
-      el.scrollTo({ top: 72, behavior: "smooth" });
-      setTimeout(() => el.scrollTo({ top: 0, behavior: "smooth" }), 750);
-    }, 1200);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (bolumler.length === 0) return null;
-
-  const darkBg  = sablon.id === "vintage-nisan" ? "#110820" : sablon.id === "nisan-luks" ? "#120308" : sablon.id === "dugun-luks" ? "#050d1a" : "#080315";
-  const accent  = sablon.id === "vintage-nisan" ? "#C9A840" : sablon.id === "nisan-luks" ? "#C4A05A" : sablon.id === "dugun-luks" ? "#D4AA70" : "#D4A84B";
-  const glowRgb = sablon.id === "vintage-nisan" ? "201,168,64"  : sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
+  const darkBg       = sablon.id === "vintage-nisan" ? "#110820" : sablon.id === "nisan-luks" ? "#120308" : sablon.id === "dugun-luks" ? "#050d1a" : "#080315";
+  const accent       = sablon.id === "vintage-nisan" ? "#C9A840" : sablon.id === "nisan-luks" ? "#C4A05A" : sablon.id === "dugun-luks" ? "#D4AA70" : "#D4A84B";
+  const glowRgb      = sablon.id === "vintage-nisan" ? "201,168,64" : sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
+
+  /* iframe ölçekleme: telefon ekranı 204×420px, render 390×803px */
+  const PHONE_W = 204;
+  const RENDER_W = 390;
+  const scale = PHONE_W / RENDER_W;
+  const iframeH = Math.round(420 / scale);
 
   return (
     <motion.div
@@ -766,16 +729,13 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
           `0 0 0 1px rgba(${glowRgb},0.12), 0 24px 80px rgba(0,0,0,0.6)`,
         ],
       }}
-      transition={{
-        opacity: { duration: 0.4 }, y: { duration: 0.4 },
-        boxShadow: { duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
-      }}
+      transition={{ opacity: { duration: 0.4 }, y: { duration: 0.4 }, boxShadow: { duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 } }}
       style={{ background: darkBg, borderRadius: 28, overflow: "hidden" }}
     >
-      {/* ─── Altın üst şerit ─── */}
+      {/* Altın üst şerit */}
       <div style={{ height: 2, background: goldGradient }} />
 
-      {/* ─── Header ─── */}
+      {/* Header */}
       <div className="flex items-start justify-between gap-4 px-5 sm:px-8 pt-6 pb-5"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="flex-1 min-w-0">
@@ -801,7 +761,6 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
             <p className="mt-1 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.32)" }}>{sablon.aciklama}</p>
           )}
         </div>
-        {/* Fiyat — sağ üst */}
         <div className="text-right shrink-0">
           <p className="text-2xl font-bold tabular-nums"
             style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -811,98 +770,37 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
         </div>
       </div>
 
-      {/* ─── Gövde ─── */}
+      {/* Gövde */}
       <div className="flex flex-col lg:flex-row gap-6 p-5 sm:p-8">
 
-        {/* Sol: Bölüm tab'ları + Telefon — 260px sabit genişlik, mobilde ortalı */}
-        <div className="shrink-0 flex flex-col gap-3 mx-auto lg:mx-0" style={{ width: 260 }}>
-          {/* Pill tab'lar — tam okunabilir, yatay kaydırılabilir */}
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide" style={{ height: 34 }}>
-            {bolumler.map(b => (
-              <button
-                key={b.id}
-                onClick={() => handleTab(b.id)}
-                className="flex items-center gap-1.5 px-3 rounded-full font-semibold whitespace-nowrap shrink-0 transition-all duration-200"
-                style={{
-                  fontSize: 10,
-                  height: 30,
-                  background: aktifId === b.id ? `rgba(${glowRgb},0.16)` : "rgba(255,255,255,0.05)",
-                  color: aktifId === b.id ? accent : "rgba(255,255,255,0.4)",
-                  border: aktifId === b.id ? `1px solid rgba(${glowRgb},0.38)` : "1px solid rgba(255,255,255,0.07)",
-                }}
-              >
-                {b.icon} {b.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Telefon + kaydır göstergesi */}
-          <div className="relative">
-            <TelefonMockup>
-              <div ref={scrollRef} className="phone-scroll" style={{ height: "100%", overflowY: "auto" }}>
-                {bolumler.map(b => (
-                  <div key={b.id} style={{ height: 500, flexShrink: 0 }}>{b.node}</div>
-                ))}
+        {/* Sol: Telefon mockup — gerçek iframe */}
+        <div className="shrink-0 mx-auto lg:mx-0">
+          <TelefonMockup>
+            {demoUrl ? (
+              <div style={{ width: PHONE_W, height: 420, overflow: "hidden", position: "relative" }}>
+                <iframe
+                  src={demoUrl}
+                  title={sablon.isim}
+                  style={{
+                    width: RENDER_W,
+                    height: iframeH,
+                    border: "none",
+                    transform: `scale(${scale})`,
+                    transformOrigin: "top left",
+                    pointerEvents: "auto",
+                  }}
+                />
               </div>
-            </TelefonMockup>
-
-            {/* Kaydır göstergesi — telefon ekranının altına sabit overlay */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                bottom: 14,
-                left: 10,
-                right: 10,
-                height: 110,
-                borderRadius: "0 0 24px 24px",
-                zIndex: 20,
-                background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%)",
-              }}
-            >
-              <div className="flex flex-col items-center justify-end h-full pb-4 gap-1.5">
-                <motion.div
-                  animate={{ y: [0, 6, 0] }}
-                  transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 5v14M5 12l7 7 7-7" />
-                  </svg>
-                </motion.div>
-                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 9, letterSpacing: "0.18em", fontWeight: 700 }}>
-                  KAYDIR
-                </p>
+            ) : (
+              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: darkBg }}>
+                <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>Önizleme yok</p>
               </div>
-            </div>
-          </div>
+            )}
+          </TelefonMockup>
         </div>
 
-        {/* Sağ: İçerik paneli */}
+        {/* Sağ: Özellikler + CTA */}
         <div className="flex-1 flex flex-col gap-4 min-w-0">
-
-          {/* Aktif bölüm detay kartı */}
-          {aktif && (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={aktif.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2 }}
-                className="rounded-2xl p-4"
-                style={{ background: `rgba(${glowRgb},0.05)`, border: `1px solid rgba(${glowRgb},0.13)` }}
-              >
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full mb-2"
-                  style={{ background: `rgba(${glowRgb},0.14)`, color: accent }}>
-                  {aktif.icon} {aktif.etiket}
-                </span>
-                <h3 className="text-sm font-bold text-white mb-1">{aktif.baslik}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>{aktif.aciklama}</p>
-              </motion.div>
-            </AnimatePresence>
-          )}
-
-          {/* Premium neler dahil — satır listesi */}
           {ozellikler.length > 0 && (
             <div>
               <p className="text-[10px] font-bold tracking-[0.22em] uppercase mb-3"
@@ -924,7 +822,6 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
                       <p className="text-xs font-semibold text-white leading-tight">{oz.baslik}</p>
                       <p className="text-[10px] leading-snug mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.3)" }}>{oz.aciklama}</p>
                     </div>
-                    {/* Onay işareti */}
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.65 }}>
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
