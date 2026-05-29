@@ -184,6 +184,23 @@ export default async function FiyatlarSayfasi({
         </div>
       </section>
 
+      {/* ══ § 1.5  GÜVENCE ŞERİDİ ══ */}
+      <div className="border-b border-gray-100 bg-linear-to-r from-purple-50/50 via-white to-pink-50/40 px-4 sm:px-6 py-3.5">
+        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:gap-x-10">
+          {[
+            { icon: "👁️", text: "Ödeme öncesi tam önizleme" },
+            { icon: "🔒", text: "Kart bilgileri bizde saklanmaz" },
+            { icon: "🎯", text: "Tek seferlik ödeme, abonelik yok" },
+            { icon: "⚡", text: "Ödeme sonrası anında yayın" },
+          ].map(item => (
+            <div key={item.text} className="flex items-center gap-2">
+              <span className="text-sm">{item.icon}</span>
+              <span className="text-xs font-semibold text-gray-600">{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ══ § 2  PAKET ANKRAJI ══ */}
       <section className="relative px-4 sm:px-6 py-10 sm:py-14 overflow-hidden">
         <div className="max-w-5xl mx-auto">
@@ -485,6 +502,28 @@ export default async function FiyatlarSayfasi({
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Kalite Checklist */}
+          <div className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5 sm:p-6">
+            <p className="text-xs font-bold tracking-[0.18em] uppercase text-emerald-700/70 mb-4">Her Davetiyeyle Birlikte Geliyor</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { icon: "📱", text: "Mobil uyumlu" },
+                { icon: "💬", text: "WhatsApp paylaşım hazır" },
+                { icon: "📲", text: "QR kod hazır" },
+                { icon: "✅", text: "RSVP paneli hazır" },
+              ].map(item => (
+                <div key={item.text} className="flex items-center gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
+                    <svg className="w-3 h-3 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-xs font-medium text-gray-700">{item.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

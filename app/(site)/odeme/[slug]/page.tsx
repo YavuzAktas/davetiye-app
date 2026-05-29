@@ -312,6 +312,39 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               {/* Upsell */}
               <OdemeUpsell davetiyeId={davetiye.id} ozellikler={upsellOzellikler} />
 
+              {/* Kalite Checklist */}
+              <div style={{
+                marginTop: 16, padding: "16px 18px", borderRadius: 16,
+                background: "rgba(16,185,129,0.06)",
+                border: "1px solid rgba(16,185,129,0.18)",
+              }}>
+                <p style={{
+                  fontSize: 9.5, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase",
+                  color: "rgba(52,211,153,0.65)", marginBottom: 12,
+                }}>Her Davetiyeyle Birlikte Geliyor</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 12px" }}>
+                  {[
+                    "📱 Mobil uyumlu",
+                    "💬 WhatsApp paylaşım hazır",
+                    "📲 QR kod hazır",
+                    "✅ RSVP paneli hazır",
+                  ].map(item => (
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{
+                        width: 16, height: 16, borderRadius: 999, flexShrink: 0,
+                        background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.28)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="rgba(52,211,153,0.9)" strokeWidth={3.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span style={{ fontSize: 11.5, color: "rgba(255,255,255,0.58)", lineHeight: 1.3 }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Total */}
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -349,12 +382,27 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               <OdemeCheckoutForm davetiyeId={davetiye.id} />
 
               {/* Trust signals */}
-              <div style={{
-                display: "flex", justifyContent: "center", gap: 20,
-                flexWrap: "wrap", marginTop: 22,
-              }}>
-                {["🔒 SSL Şifreli", "✅ iyzico", "💳 3D Secure"].map(r => (
-                  <span key={r} style={{ fontSize: 11, color: "rgba(255,255,255,0.2)" }}>{r}</span>
+              <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {[
+                  { icon: "👁️", text: "Önce gör, sonra öde" },
+                  { icon: "🔒", text: "Kart bilgin saklanmaz" },
+                  { icon: "🎯", text: "Tek seferlik ödeme" },
+                  { icon: "⚡", text: "Ödeme sonrası anında yayın" },
+                ].map(item => (
+                  <div key={item.text} style={{
+                    display: "flex", alignItems: "center", gap: 8,
+                    padding: "9px 12px", borderRadius: 12,
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                  }}>
+                    <span style={{ fontSize: 13, flexShrink: 0 }}>{item.icon}</span>
+                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.32)", lineHeight: 1.35 }}>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 14, flexWrap: "wrap" }}>
+                {["🔒 SSL", "✅ iyzico", "💳 3D Secure"].map(r => (
+                  <span key={r} style={{ fontSize: 10, color: "rgba(255,255,255,0.15)" }}>{r}</span>
                 ))}
               </div>
             </div>
