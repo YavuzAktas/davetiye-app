@@ -221,7 +221,7 @@ export default function ProgramSayfasi() {
             type="date"
             value={form.tarih}
             onChange={e => setForm({ ...form, tarih: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
           />
         </div>
         <div>
@@ -230,7 +230,7 @@ export default function ProgramSayfasi() {
             type="time"
             value={form.saat}
             onChange={e => setForm({ ...form, saat: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
           />
         </div>
       </div>

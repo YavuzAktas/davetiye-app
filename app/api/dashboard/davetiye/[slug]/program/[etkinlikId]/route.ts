@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { davetiyeCacheTag } from "@/lib/cache-tags";
 
 interface Props { params: Promise<{ slug: string; etkinlikId: string }> }
 
@@ -39,6 +41,7 @@ export async function PATCH(req: NextRequest, { params }: Props) {
     include: { _count: { select: { rsvplar: true } } },
   });
 
+  revalidateTag(davetiyeCacheTag(slug));
   return NextResponse.json({ etkinlik: guncellenmis });
 }
 
@@ -64,5 +67,6 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     )
   );
 
+  revalidateTag(davetiyeCacheTag(slug));
   return NextResponse.json({ basarili: true });
 }
