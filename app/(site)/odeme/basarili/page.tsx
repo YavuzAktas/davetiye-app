@@ -138,6 +138,11 @@ function BasariliIcerigi() {
           33%      { transform: translate(40px, -30px) scale(1.1); }
           66%      { transform: translate(-20px, 20px) scale(0.95); }
         }
+        @media (max-width: 480px) {
+          .ref-copy-row { flex-direction: column !important; gap: 8px !important; }
+          .ref-copy-btn { width: 100% !important; padding: 13px 18px !important; font-size: 14px !important; justify-content: center; }
+          .ref-link-box { min-width: 0 !important; }
+        }
       `}</style>
 
       {/* ── Confetti ── */}
@@ -380,12 +385,12 @@ function BasariliIcerigi() {
               </div>
             </div>
             {referralKod && (
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div style={{
+              <div className="ref-copy-row" style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div className="ref-link-box" style={{
                   flex: 1, minWidth: 0,
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 12, padding: "9px 14px",
+                  borderRadius: 12, padding: "11px 14px",
                 }}>
                   <p style={{
                     fontSize: 11, color: "rgba(255,255,255,0.55)",
@@ -397,10 +402,11 @@ function BasariliIcerigi() {
                   </p>
                 </div>
                 <button
+                  className="ref-copy-btn"
                   onClick={kopyalaReferral}
                   style={{
                     flexShrink: 0,
-                    fontSize: 12, fontWeight: 700, padding: "9px 18px", borderRadius: 12,
+                    fontSize: 12, fontWeight: 700, padding: "11px 18px", borderRadius: 12,
                     background: referralKopyalandi
                       ? "linear-gradient(135deg,#10b981,#059669)"
                       : "linear-gradient(135deg,#7C3AED,#DB2777)",

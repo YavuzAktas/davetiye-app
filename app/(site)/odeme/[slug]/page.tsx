@@ -149,6 +149,10 @@ export default async function OdemeCheckoutPage({ params }: Props) {
           from { opacity: 0; transform: translateY(22px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @media (max-width: 640px) {
+          .co-ref-strip { padding: 16px 18px !important; gap: 12px !important; }
+          .co-ref-strip .co-ref-icon { width: 36px !important; height: 36px !important; font-size: 18px !important; }
+        }
       `}</style>
 
       <div style={{
@@ -424,7 +428,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
           </div>
 
           {/* ── Referral teaser strip ── */}
-          <div style={{
+          <div className="co-ref-strip" style={{
             maxWidth: 1040, margin: "20px auto 0",
             background: "linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(219,39,119,0.06) 100%)",
             border: "1px solid rgba(168,85,247,0.22)",
@@ -432,7 +436,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
             display: "flex", alignItems: "center", gap: 18,
             animation: "co-up 0.55s 0.35s both",
           }}>
-            <div style={{
+            <div className="co-ref-icon" style={{
               width: 44, height: 44, borderRadius: 14, flexShrink: 0,
               background: "linear-gradient(135deg,rgba(124,58,237,0.2),rgba(219,39,119,0.2))",
               display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
