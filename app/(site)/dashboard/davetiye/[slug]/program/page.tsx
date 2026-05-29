@@ -172,7 +172,7 @@ export default function ProgramSayfasi() {
   // ── Form UI ──────────────────────────────────────────
 
   const EtkinlikFormu = ({
-    form, setForm, onKaydet, onIptal, yukleniyor: yuk, baslangic,
+    form, setForm, onKaydet, onIptal, yukleniyor: yuk, baslangic, kartYok,
   }: {
     form: typeof BOSH_FORM;
     setForm: (f: typeof BOSH_FORM) => void;
@@ -180,8 +180,9 @@ export default function ProgramSayfasi() {
     onIptal: () => void;
     yukleniyor: boolean;
     baslangic?: boolean;
+    kartYok?: boolean;
   }) => (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+    <div className={kartYok ? "space-y-4" : "bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4"}>
       {/* İkon seçici */}
       <div>
         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">İkon</p>
@@ -474,13 +475,14 @@ export default function ProgramSayfasi() {
 
                   {/* Düzenleme formu */}
                   {duzenleniyor && (
-                    <div className="px-5 pb-5 pt-1 border-t border-gray-50">
+                    <div className="px-5 pb-5 pt-3 border-t border-gray-100">
                       <EtkinlikFormu
                         form={duzenleForm}
                         setForm={setDuzenleForm}
                         onKaydet={kaydet}
                         onIptal={() => setDuzenleId(null)}
                         yukleniyor={kaydediyor}
+                        kartYok
                       />
                     </div>
                   )}
