@@ -167,12 +167,20 @@ export default function GizlilikSayfasi() {
         {
           baslik: "Çocukların Gizliliği",
           icerik: (
-            <p>
-              Hizmetlerimiz <strong>18 yaş altı</strong> bireylere yönelik değildir. 18 yaşından
-              küçük bir kullanıcının verilerinin sistemimizde bulunduğunu fark edersek, ilgili
-              veriler derhal silinir. Ebeveyn veya vasiler bu konuda{" "}
-              <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine başvurabilir.
-            </p>
+            <>
+              <p>
+                Platformda hesap oluşturmak ve davetiye yönetmek için kullanıcının <strong>18 yaşında
+                veya daha büyük</strong> olması gerekir. Hizmetimiz doğrudan çocukların hesap açmasına
+                veya kendi başına platformu kullanmasına yönelik değildir.
+              </p>
+              <p>
+                Doğum günü, aile etkinliği veya benzeri davetiyelerde çocuklara ait ad, fotoğraf,
+                yaş, ses kaydı veya benzeri bilgiler ancak ebeveyn/veli ya da bu paylaşım için
+                yetkili kişi tarafından girilmelidir. Yetkisiz çocuk verisi işlendiğini fark edersek
+                ilgili içeriği kaldırabiliriz. Ebeveyn veya vasiler bu konuda{" "}
+                <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine başvurabilir.
+              </p>
+            </>
           ),
         },
         {
