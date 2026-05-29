@@ -394,7 +394,7 @@ export default function AkisDemosu() {
           </div>
 
           {/* Sağ: Telefon mockup */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div className="demo-phone-wrap" style={{ display: "flex", justifyContent: "center" }}>
             <div style={{ position: "relative", width: 240 }}>
               {/* Telefon çerçevesi */}
               <div style={{
@@ -469,7 +469,17 @@ export default function AkisDemosu() {
       {/* Mobil için grid düzeni */}
       <style>{`
         @media (max-width: 768px) {
-          .demo-grid { grid-template-columns: 1fr !important; }
+          .demo-grid {
+            grid-template-columns: 1fr !important;
+            gap: 32px !important;
+          }
+          .demo-phone-wrap {
+            order: -1;
+          }
+          .demo-phone-wrap > div {
+            max-width: 220px;
+            margin: 0 auto;
+          }
         }
       `}</style>
     </section>

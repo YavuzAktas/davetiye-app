@@ -763,7 +763,7 @@ export default function Anasayfa() {
                 <div className="absolute top-0 right-0 w-2/5 h-full flex items-center justify-end pr-8 opacity-[0.03] select-none group-hover:opacity-[0.06] transition-opacity pointer-events-none">
                   <span className="text-[90px] text-rose-100 leading-none">♪</span>
                 </div>
-                <div className="relative z-10 flex items-start gap-6">
+                <div className="relative z-10 flex flex-col md:flex-row items-start gap-5 md:gap-6">
                   <div className="flex-1">
                     <div className="w-10 h-10 bg-rose-500/10 border border-rose-500/18 rounded-xl flex items-center justify-center mb-4">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb7185" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -773,7 +773,7 @@ export default function Anasayfa() {
                     <h3 className="text-white text-xl font-bold mb-2">Şarkı dilekleri</h3>
                     <p className="text-gray-600 text-xs leading-relaxed max-w-[200px]">Misafirler RSVP'den şarkı diler, hepsi panelinizde toplanır.</p>
                   </div>
-                  <div className="flex-shrink-0 space-y-2 w-44 mt-1">
+                  <div className="flex-shrink-0 space-y-2 w-full md:w-44 md:mt-1">
                     {[
                       { isim: "Hepsi Geçer", sanatci: "Sezen Aksu" },
                       { isim: "Yüksek Kalite", sanatci: "Teoman" },
@@ -1284,7 +1284,8 @@ export default function Anasayfa() {
           </Section>
 
           <Section>
-            <div className="rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="rounded-3xl overflow-hidden border border-gray-100 shadow-sm min-w-[540px]">
               {/* Başlık satırı */}
               <div className="grid grid-cols-[2fr_1fr_1fr]">
                 <div className="bg-gray-50 px-6 py-4 border-b border-r border-gray-100" />
@@ -1362,6 +1363,7 @@ export default function Anasayfa() {
                 </div>
               ))}
             </div>
+            </div>{/* overflow-x-auto */}
 
             <p className="text-center text-xs text-gray-400 mt-4">
               Kağıt davetiye güzel bir gelenek — dijital davetiye onu tamamlar, yerine geçmeye zorlamaz.
@@ -1390,7 +1392,7 @@ export default function Anasayfa() {
               { plan: "Organizasyon", fiyat: "+₺199", alt: "isteğe bağlı", ozellikler: ["Oturma planı", "Lüks şablon", "Sesli anı"], populer: false },
             ].map((item, i) => (
               <Section key={i}>
-                <div className={`relative rounded-3xl p-7 h-full flex flex-col transition-all duration-300 ${item.populer ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-2xl shadow-purple-200 scale-105" : "bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1"}`}>
+                <div className={`relative rounded-3xl p-7 h-full flex flex-col transition-all duration-300 ${item.populer ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-2xl shadow-purple-200 sm:scale-105" : "bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1"}`}>
                   {item.populer && (
                     <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-[10px] font-bold px-4 py-1.5 rounded-full tracking-wide shadow-lg">
                       ✦ EN POPÜLER
