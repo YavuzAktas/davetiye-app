@@ -29,27 +29,55 @@ type RsvpItem = {
 type YuklenenAlan = { id: string; alan: "katilim" | "kisi" } | null;
 type Parlayan = { id: string; tur: "yesil" | "kirmizi" } | null;
 
-function CevapBadgeleri({ cevaplar }: { cevaplar: RsvpCevaplar | null }) {
+/* ── Mesaj bloğu: 3 satır klamp + genişlet ── */
+function MesajBloku({ metin, renk }: { metin: string; renk: string }) {
+  const [acik, setAcik] = useState(false);
+  const uzun = metin.length > 120;
+  return (
+    <div className="mt-2 rounded-xl px-3 py-2 border-l-2" style={{ background: "#f9fafb", borderLeftColor: renk + "60" }}>
+      <p className={`text-xs text-gray-600 italic leading-relaxed whitespace-pre-wrap ${!acik && uzun ? "line-clamp-3" : ""}`}>
+        &ldquo;{metin}&rdquo;
+      </p>
+      {uzun && (
+        <button
+          onClick={() => setAcik(a => !a)}
+          className="text-[11px] font-semibold mt-1 transition-colors"
+          style={{ color: renk }}
+        >
+          {acik ? "Küçült ↑" : "Devamını gör ↓"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ── Özel cevaplar ── */
+function CevapSatiri({ cevaplar }: { cevaplar: RsvpCevaplar | null }) {
   if (!cevaplar) return null;
-  const items: { icon: string; text: string }[] = [];
+  const items: { icon: string; label: string; text: string }[] = [];
   if (cevaplar.ulasim != null)
-    items.push({ icon: "🚌", text: `Servis: ${cevaplar.ulasim ? "Evet" : "Hayır"}` });
+    items.push({ icon: "🚌", label: "Servis", text: cevaplar.ulasim ? "Evet" : "Hayır" });
   if (cevaplar.cocuk != null && cevaplar.cocuk > 0)
-    items.push({ icon: "👶", text: `${cevaplar.cocuk} çocuk` });
+    items.push({ icon: "👶", label: "Çocuk", text: `${cevaplar.cocuk} kişi` });
   if (cevaplar.alerji)
-    items.push({ icon: "⚠️", text: cevaplar.alerji });
-  if (cevaplar.ozelCevap)
-    items.push({ icon: "💬", text: cevaplar.ozelCevap });
+    items.push({ icon: "⚠️", label: "Alerji", text: cevaplar.alerji });
+  if (cevaplar.ozelSoru && cevaplar.ozelCevap)
+    items.push({ icon: "💬", label: cevaplar.ozelSoru, text: cevaplar.ozelCevap });
+  else if (cevaplar.ozelCevap)
+    items.push({ icon: "💬", label: "Cevap", text: cevaplar.ozelCevap });
   if (items.length === 0) return null;
   return (
-    <>
+    <div className="mt-2 flex flex-col gap-1.5">
       {items.map((item, i) => (
-        <span key={i} className="text-xs text-gray-500 flex items-center gap-1 min-w-0">
-          <span className="shrink-0">{item.icon}</span>
-          <span className="truncate max-w-36">{item.text}</span>
-        </span>
+        <div key={i} className="flex items-start gap-2 text-xs">
+          <span className="shrink-0 text-sm leading-tight mt-0.5">{item.icon}</span>
+          <div className="min-w-0">
+            <span className="text-gray-400 font-medium">{item.label}: </span>
+            <span className="text-gray-700">{item.text}</span>
+          </div>
+        </div>
       ))}
-    </>
+    </div>
   );
 }
 
@@ -62,13 +90,13 @@ export default function RsvpListesi({
   slug: string;
   renk: string;
 }) {
-  const [rsvplar, setRsvplar] = useState<RsvpItem[]>(baslangicRsvplar);
+  const [rsvplar, setRsvplar]     = useState<RsvpItem[]>(baslangicRsvplar);
   const [yukleniyor, setYukleniyor] = useState<YuklenenAlan>(null);
-  const [parlayan, setParlayan] = useState<Parlayan>(null);
+  const [parlayan, setParlayan]   = useState<Parlayan>(null);
 
-  const katilimlar = rsvplar.filter(r => r.katilim);
+  const katilimlar    = rsvplar.filter(r => r.katilim);
   const katilmayanlar = rsvplar.filter(r => !r.katilim);
-  const katilimYuzde = rsvplar.length ? Math.round((katilimlar.length / rsvplar.length) * 100) : 0;
+  const katilimYuzde  = rsvplar.length ? Math.round((katilimlar.length / rsvplar.length) * 100) : 0;
 
   const guncelle = async (
     id: string,
@@ -146,12 +174,14 @@ export default function RsvpListesi({
         <div className="divide-y divide-gray-50">
           {rsvplar.map((rsvp) => {
             const satirYukleniyor = yukleniyor?.id === rsvp.id;
-            const parlayanDurum = parlayan?.id === rsvp.id ? parlayan.tur : null;
+            const parlayanDurum   = parlayan?.id === rsvp.id ? parlayan.tur : null;
+            const hasBilgi = rsvp.mesaj || rsvp.email || rsvp.sarkiOnerisi ||
+              (rsvp.katilim && rsvp.cevaplar && Object.values(rsvp.cevaplar).some(Boolean));
 
             return (
               <div
                 key={rsvp.id}
-                className="px-4 sm:px-6 py-3.5 flex gap-3 transition-colors duration-500"
+                className="px-4 sm:px-6 py-4 flex gap-3 transition-colors duration-500"
                 style={{
                   backgroundColor: parlayanDurum === "yesil"
                     ? "#f0fdf4"
@@ -173,9 +203,10 @@ export default function RsvpListesi({
 
                 {/* İçerik */}
                 <div className="flex-1 min-w-0">
-                  {/* Üst: isim + katılım badge */}
+
+                  {/* Satır 1: İsim + katılım badge */}
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-gray-800 text-sm truncate">{rsvp.ad}</p>
+                    <p className="font-semibold text-gray-800 text-sm leading-tight">{rsvp.ad}</p>
                     <button
                       onClick={() => !satirYukleniyor && toggleKatilim(rsvp)}
                       disabled={satirYukleniyor}
@@ -192,49 +223,58 @@ export default function RsvpListesi({
                     </button>
                   </div>
 
-                  {/* Alt: ikincil bilgiler */}
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
-                    {rsvp.katilim && (
+                  {/* Satır 2: Kişi sayısı + diyet (yalnızca katılıyorsa) */}
+                  {rsvp.katilim && (
+                    <div className="flex flex-wrap items-center gap-2 mt-1.5">
                       <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => !satirYukleniyor && kisiDegistir(rsvp, -1)}
                           disabled={satirYukleniyor || rsvp.kisiSayisi <= 1}
                           className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 text-xs font-bold flex items-center justify-center transition-colors disabled:opacity-30"
-                        >
-                          −
-                        </button>
-                        <span className="text-xs text-gray-500 font-medium tabular-nums w-11 text-center">
-                          {satirYukleniyor && yukleniyor?.alan === "kisi"
-                            ? "..."
-                            : `${rsvp.kisiSayisi} kişi`}
+                        >−</button>
+                        <span className="text-xs text-gray-600 font-semibold tabular-nums w-11 text-center">
+                          {satirYukleniyor && yukleniyor?.alan === "kisi" ? "..." : `${rsvp.kisiSayisi} kişi`}
                         </span>
                         <button
                           onClick={() => !satirYukleniyor && kisiDegistir(rsvp, 1)}
                           disabled={satirYukleniyor || rsvp.kisiSayisi >= 20}
                           className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 text-xs font-bold flex items-center justify-center transition-colors disabled:opacity-30"
-                        >
-                          +
-                        </button>
+                        >+</button>
                       </div>
-                    )}
-                    {rsvp.katilim && rsvp.diyet && rsvp.diyet.split(",").map(d => (
-                      <span key={d} className="text-[11px] bg-amber-50 border border-amber-100 text-amber-700 px-1.5 py-0.5 rounded-md font-medium">
-                        {DIYET_EMOJI[d] ?? "🍽️"} {d}
-                      </span>
-                    ))}
-                    {rsvp.email && (
-                      <span className="text-xs text-gray-400 truncate max-w-45">{rsvp.email}</span>
-                    )}
-                    {rsvp.mesaj && (
-                      <span className="text-xs text-gray-400 italic truncate max-w-45">"{rsvp.mesaj}"</span>
-                    )}
-                    {rsvp.katilim && <CevapBadgeleri cevaplar={rsvp.cevaplar} />}
-                  </div>
+
+                      {rsvp.diyet && rsvp.diyet.split(",").map(d => (
+                        <span key={d} className="text-[11px] bg-amber-50 border border-amber-100 text-amber-700 px-1.5 py-0.5 rounded-md font-medium">
+                          {DIYET_EMOJI[d.trim()] ?? "🍽️"} {d.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Satır 3: Email */}
+                  {rsvp.email && (
+                    <p className="flex items-center gap-1.5 mt-1.5 text-[11px] text-gray-400">
+                      <span>✉️</span>
+                      <span>{rsvp.email}</span>
+                    </p>
+                  )}
+
+                  {/* Satır 4: Not / Mesaj — tam metin, klaplı */}
+                  {rsvp.mesaj && <MesajBloku metin={rsvp.mesaj} renk={renk} />}
+
+                  {/* Satır 5: Özel cevaplar */}
+                  {rsvp.katilim && <CevapSatiri cevaplar={rsvp.cevaplar} />}
+
+                  {/* Satır 6: Şarkı önerisi */}
                   {rsvp.sarkiOnerisi && (
                     <div className="mt-1.5 flex items-center gap-1.5">
-                      <span className="text-xs">🎵</span>
-                      <span className="text-xs text-gray-500 italic truncate">{rsvp.sarkiOnerisi}</span>
+                      <span className="text-sm">🎵</span>
+                      <span className="text-xs text-gray-500 italic">{rsvp.sarkiOnerisi}</span>
                     </div>
+                  )}
+
+                  {/* Separator: bilgi yoksa hafif ayraç */}
+                  {!hasBilgi && !rsvp.katilim && (
+                    <p className="text-[11px] text-gray-300 mt-1">Not bırakmadı</p>
                   )}
                 </div>
               </div>
