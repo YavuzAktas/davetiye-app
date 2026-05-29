@@ -13,9 +13,42 @@ export async function GET() {
   return NextResponse.json(yorumlar);
 }
 
-// POST — yeni yorum gönder (kullanıcı başına günlük 1 limit)
+// POST — yeni yorum gönder (IP başına saatlik 3 limit)
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
+
+  // IP bazlı rate limit: saatte 3 yorum
+  const ip = (req.headers.get("x-forwarded-for")?.split(",")[0] ?? "").trim()
+    || req.headers.get("x-real-ip")
+    || "unknown";
+  const now = new Date();
+  const pencereSonu = new Date(now.getTime() + 60 * 60 * 1000);
+
+  const rl = await prisma.rateLimitKaydi.findUnique({
+    where: { ad_anahtar: { ad: "yorum-gonder", anahtar: ip } },
+  });
+
+  if (rl && rl.sifirAt > now && rl.sayi >= 3) {
+    const kalan = Math.ceil((rl.sifirAt.getTime() - now.getTime()) / 60000);
+    return NextResponse.json(
+      { hata: `Çok fazla deneme. ${kalan} dakika sonra tekrar deneyin.` },
+      { status: 429 }
+    );
+  }
+
+  if (!rl || rl.sifirAt <= now) {
+    await prisma.rateLimitKaydi.upsert({
+      where: { ad_anahtar: { ad: "yorum-gonder", anahtar: ip } },
+      create: { ad: "yorum-gonder", anahtar: ip, sayi: 1, sifirAt: pencereSonu },
+      update: { sayi: 1, sifirAt: pencereSonu },
+    });
+  } else {
+    await prisma.rateLimitKaydi.update({
+      where: { ad_anahtar: { ad: "yorum-gonder", anahtar: ip } },
+      data: { sayi: { increment: 1 } },
+    });
+  }
+
   const body = await req.json();
 
   const { ad, sehir, etkinlikTuru, yorum, puan } = body as {

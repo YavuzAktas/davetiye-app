@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 300;
+
 export async function GET() {
   const davetiyeSayisi = await prisma.davetiye.count({
     where: { odemeDurumu: "odendi" },

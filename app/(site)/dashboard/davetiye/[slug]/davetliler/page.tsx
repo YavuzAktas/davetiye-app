@@ -268,6 +268,24 @@ export default function DavetlilerSayfasi() {
     setKapasiteKayit(false);
   };
 
+  // Kaldır butonu için ayrı fonksiyon — setState + fetch aynı anda çağrılırsa
+  // React state anlık güncellenmediğinden eski değer gönderilirdi.
+  const kapasiteKaldir = async () => {
+    if (!davetiye) return;
+    setKapasiteKayit(true);
+    const res = await fetch(`/api/dashboard/davetiye/${slug}/kapasite`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kapasiteLimiti: null }),
+    });
+    if (res.ok) {
+      setKapasiteGir("");
+      setDavetiye(prev => prev ? { ...prev, kapasiteLimiti: null } : prev);
+      setKapasiteAcik(false);
+    }
+    setKapasiteKayit(false);
+  };
+
   // ── Import ────────────────────────────────────────────────
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,6 +339,13 @@ export default function DavetlilerSayfasi() {
   };
 
   // ── WhatsApp helpers ──────────────────────────────────────
+
+  const waPhone = (tel: string) => {
+    const digits = tel.replace(/\D/g, "");
+    if (digits.startsWith("90")) return digits;
+    if (digits.startsWith("0")) return "9" + digits;
+    return "90" + digits;
+  };
 
   const whatsappMesaj = (ad: string) => {
     const link = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye?.slug}`;
@@ -525,7 +550,7 @@ export default function DavetlilerSayfasi() {
                     </button>
                     {kapasite && (
                       <button
-                        onClick={() => { setKapasiteGir(""); kapasiteKaydet(); }}
+                        onClick={kapasiteKaldir}
                         className="text-xs text-red-400 hover:text-red-600 font-medium"
                       >
                         Kaldır
@@ -735,7 +760,7 @@ export default function DavetlilerSayfasi() {
                             <div className="flex items-center gap-1 shrink-0 mt-0.5">
                               {davetli.telefon && (
                                 <a
-                                  href={`https://wa.me/${davetli.telefon.replace(/\D/g, "")}?text=${whatsappDavetMesaj(davetli.ad)}`}
+                                  href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli.ad)}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
@@ -904,7 +929,7 @@ export default function DavetlilerSayfasi() {
                           </div>
                           {davetli.telefon ? (
                             <a
-                              href={`https://wa.me/${davetli.telefon.replace(/\D/g, "")}?text=${whatsappMesaj(davetli.ad)}`}
+                              href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappMesaj(davetli.ad)}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-1.5 bg-[#25D366] text-white text-xs px-3.5 py-2 rounded-xl hover:opacity-90 transition-opacity font-semibold shrink-0"

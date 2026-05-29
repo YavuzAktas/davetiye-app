@@ -7,11 +7,12 @@ import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 import { revalidatePath } from "next/cache";
 
 const DB_ALANI: Record<string, string> = {
-  "album-foto":    "albumAktif",
-  "ani-defteri":   "aniDefteriAktif",
-  "sesli-ani":     "sesliAniAktif",
-  "canli-duvar":   "canliDuvarAktif",
-  "oturma-plani":  "oturmaPlanAktif",
+  "album-foto":      "albumAktif",
+  "ani-defteri":     "aniDefteriAktif",
+  "ani-kitabi-pdf":  "aniKitabiAktif",
+  "sesli-ani":       "sesliAniAktif",
+  "canli-duvar":     "canliDuvarAktif",
+  "oturma-plani":    "oturmaPlanAktif",
 };
 
 export async function upsellOzellikEkle(davetiyeId: string, ozellikKod: string) {
@@ -32,7 +33,7 @@ export async function upsellOzellikEkle(davetiyeId: string, ozellikKod: string) 
     data: { [alan]: true },
     select: {
       sablon: true, muzik: true,
-      albumAktif: true, aniDefteriAktif: true,
+      albumAktif: true, aniDefteriAktif: true, aniKitabiAktif: true,
       sesliAniAktif: true, canliDuvarAktif: true, oturmaPlanAktif: true,
     },
   });
@@ -42,6 +43,7 @@ export async function upsellOzellikEkle(davetiyeId: string, ozellikKod: string) 
     muzik:            guncellendi.muzik,
     albumAktif:       guncellendi.albumAktif,
     aniDefteriAktif:  guncellendi.aniDefteriAktif,
+    aniKitabiAktif:   guncellendi.aniKitabiAktif,
     sesliAniAktif:    guncellendi.sesliAniAktif,
     canliDuvarAktif:  guncellendi.canliDuvarAktif,
     oturmaPlanAktif:  guncellendi.oturmaPlanAktif,
