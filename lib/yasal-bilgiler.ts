@@ -7,6 +7,7 @@ export const YASAL_BILGILER = {
   adres: "DOLDURULACAK - Açık adres",
   telefon: "DOLDURULACAK - Telefon numarası",
   destekEposta: "destek@bekleriz.com",
+  whatsappDestek: "905XXXXXXXXX", // Gerçek numara ile değiştir (başında 90, boşluksuz)
   kvkkEposta: "kvkk@bekleriz.com",
   hukukEposta: "hukuk@bekleriz.com",
   mersisVergi: "DOLDURULACAK - MERSİS / vergi bilgisi",
