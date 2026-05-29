@@ -120,6 +120,7 @@ model Davetiye {
   dressKodRenkler  String?
   albumAktif       Boolean      @default(true)
   aniKitabiAktif   Boolean      @default(false)
+  kapasiteLimiti   Int?
   odemeDurumu          String       @default("ucretsiz")
   fiyatSnapshot        Json?
   hatirlatiMail30dk    Boolean      @default(false)
@@ -371,12 +372,15 @@ model Davetli {
   ad         String
   telefon    String?
   email      String?
+  grup       String   @default("diger")
+  notlar     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   davetiyeId String
   davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId, createdAt])
+  @@index([davetiyeId, grup])
 }
 
 model Referral {

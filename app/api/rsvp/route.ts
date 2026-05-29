@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
       baslik: true,
       slug: true,
       aktif: true,
+      kapasiteLimiti: true,
       user: {
         select: {
           name: true,
@@ -65,6 +66,21 @@ export async function POST(req: NextRequest) {
 
   if (!davetiye || !davetiye.aktif) {
     return NextResponse.json({ hata: "Davetiye bulunamadı." }, { status: 404 });
+  }
+
+  /* Kapasite limiti kontrolü */
+  if (davetiye.kapasiteLimiti && katilim) {
+    const mevcutKisi = await prisma.rSVP.aggregate({
+      where: { davetiyeId, katilim: true },
+      _sum: { kisiSayisi: true },
+    });
+    const mevcutToplam = mevcutKisi._sum.kisiSayisi ?? 0;
+    if (mevcutToplam + kisiSayisi > davetiye.kapasiteLimiti) {
+      return NextResponse.json(
+        { hata: `Davetiye kontenjanı doldu. Maksimum ${davetiye.kapasiteLimiti} kişilik yer mevcuttu.` },
+        { status: 409 }
+      );
+    }
   }
 
   /* 4. DB tabanlı per-davetiye rate limit */

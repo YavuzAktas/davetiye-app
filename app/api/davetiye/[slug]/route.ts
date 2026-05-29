@@ -20,6 +20,7 @@ export async function GET(
       baslik: true,
       slug: true,
       sablon: true,
+      kapasiteLimiti: true,
     },
   });
 

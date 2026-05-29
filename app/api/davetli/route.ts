@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 
-/* ── Yardımcı: davetiyenin mevcut kullanıcıya ait olup olmadığını doğrula */
 async function sahiplikDogrula(davetiyeId: string, userId: string) {
   const davetiye = await prisma.davetiye.findUnique({
     where: { id: davetiyeId },
@@ -26,13 +25,8 @@ export async function GET(req: NextRequest) {
 
   const davetliler = await prisma.davetli.findMany({
     where: { davetiyeId, davetiye: { userId: session.user.id } },
-    select: {
-      id: true,
-      ad: true,
-      telefon: true,
-      email: true,
-    },
-    orderBy: { createdAt: "desc" },
+    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true },
+    orderBy: [{ grup: "asc" }, { ad: "asc" }],
   });
 
   return NextResponse.json({ davetliler });
@@ -54,16 +48,49 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
   }
 
+  type DavetliGirdisi = { ad: string; telefon?: string; email?: string; grup?: string; notlar?: string };
   const yeniDavetliler = await prisma.davetli.createMany({
-    data: davetliler.map((d: { ad: string; telefon?: string; email?: string }) => ({
+    data: davetliler.map((d: DavetliGirdisi) => ({
       davetiyeId,
       ad:      d.ad,
       telefon: d.telefon || null,
       email:   d.email   || null,
+      grup:    d.grup    || "diger",
+      notlar:  d.notlar  || null,
     })),
   });
 
   return NextResponse.json({ basarili: true, count: yeniDavetliler.count });
+}
+
+export async function PATCH(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
+  }
+
+  const { id, grup, notlar } = await req.json();
+  if (!id) return NextResponse.json({ hata: "id gerekli." }, { status: 400 });
+
+  const davetli = await prisma.davetli.findUnique({
+    where: { id },
+    select: { davetiye: { select: { userId: true } } },
+  });
+
+  if (!davetli || davetli.davetiye.userId !== session.user.id) {
+    return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
+  }
+
+  const guncellenmis = await prisma.davetli.update({
+    where: { id },
+    data: {
+      ...(grup    !== undefined && { grup }),
+      ...(notlar  !== undefined && { notlar: notlar || null }),
+    },
+    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true },
+  });
+
+  return NextResponse.json({ basarili: true, davetli: guncellenmis });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -75,8 +102,6 @@ export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
   if (!id) return NextResponse.json({ hata: "id gerekli." }, { status: 400 });
 
-  // Davetlinin hangi davetiyeye ait olduğunu ve o davetiyenin
-  // session kullanıcısına ait olduğunu tek sorguda doğrula
   const davetli = await prisma.davetli.findUnique({
     where: { id },
     select: { davetiye: { select: { userId: true } } },
