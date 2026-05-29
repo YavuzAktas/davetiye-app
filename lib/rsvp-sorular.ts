@@ -27,8 +27,12 @@ export const SORU_META: Record<RsvpSoruId, { label: string; icon: string; acikla
 };
 
 export function rsvpSorularCoz(json: unknown): RsvpSorular {
-  if (!Array.isArray(json) || json.length === 0) return VARSAYILAN_RSVP_SORULAR;
-  return json as RsvpSorular;
+  let parsed = json;
+  if (typeof json === "string") {
+    try { parsed = JSON.parse(json); } catch { return VARSAYILAN_RSVP_SORULAR; }
+  }
+  if (!Array.isArray(parsed) || parsed.length === 0) return VARSAYILAN_RSVP_SORULAR;
+  return parsed as RsvpSorular;
 }
 
 export function soruAktifMi(sorular: RsvpSorular | null | undefined, id: RsvpSoruId): boolean {

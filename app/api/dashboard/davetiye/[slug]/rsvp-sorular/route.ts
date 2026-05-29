@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
-import { VARSAYILAN_RSVP_SORULAR } from "@/lib/rsvp-sorular";
+import { VARSAYILAN_RSVP_SORULAR, rsvpSorularCoz } from "@/lib/rsvp-sorular";
+import { davetiyeCacheTag } from "@/lib/cache-tags";
 
 interface Params { params: Promise<{ slug: string }> }
 
@@ -18,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
   if (!davetiye) return NextResponse.json({ hata: "Bulunamadı" }, { status: 404 });
 
   return NextResponse.json({
-    rsvpSorular: davetiye.rsvpSorular ?? VARSAYILAN_RSVP_SORULAR,
+    rsvpSorular: rsvpSorularCoz(davetiye.rsvpSorular ?? null),
   });
 }
 
@@ -43,5 +45,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     data: { rsvpSorular: body.rsvpSorular },
   });
 
+  revalidateTag(davetiyeCacheTag(slug));
   return NextResponse.json({ basarili: true });
 }

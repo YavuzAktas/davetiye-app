@@ -186,7 +186,7 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
 /* ═══════════════════════════════════════════
    ANA BİLEŞEN
 ═══════════════════════════════════════════ */
-export default function VintageNisanSablon({ davetiye, previewModu }: SablonProps) {
+export default function VintageNisanSablon({ davetiye, rsvpBileseni, previewModu }: SablonProps) {
   const [sealVar, setSealVar]       = useState(() => {
     if (previewModu) return false;
     if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("panel")) return false;
@@ -657,7 +657,7 @@ export default function VintageNisanSablon({ davetiye, previewModu }: SablonProp
                 <p style={{ fontFamily: "var(--font-playfair),serif", fontStyle: "italic", fontSize: "clamp(2rem,7vw,3rem)", color: WARM, lineHeight: 1.1, marginBottom: 8 }}>Gelecek misiniz?</p>
                 <LuxuryDivider />
                 <div style={{ marginTop: 12 }}>
-                  <RsvpFormGarden davetiyeId={davetiye.id} />
+                  {previewModu ? <RsvpFormGarden davetiyeId={davetiye.id} /> : rsvpBileseni}
                 </div>
               </div>
             </div>
