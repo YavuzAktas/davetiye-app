@@ -11,7 +11,7 @@ const PAKETLER = [
     id: "baslangic",
     icon: "✉️",
     ad: "Başlangıç",
-    slogan: "Hızlı, sade ve etkili",
+    slogan: "Davetiye + RSVP — hepsi hazır",
     renk: "#6366f1",
     populer: false,
     kalemler: [K.temel],
@@ -22,7 +22,7 @@ const PAKETLER = [
     id: "populer",
     icon: "🎵",
     ad: "Popüler",
-    slogan: "En çok tercih edilen",
+    slogan: "Misafirler anı bıraksın, siz PDF indirin",
     renk: "#9333EA",
     populer: true,
     kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.aniKitabi],
@@ -33,7 +33,7 @@ const PAKETLER = [
     id: "tam-paket",
     icon: "💒",
     ad: "Tam Paket",
-    slogan: "Düğün & nişan için tam paket",
+    slogan: "Hiçbir an kaybolmasın",
     renk: "#DB2777",
     populer: false,
     kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.canliDuvar, K.sesliAni, K.aniKitabi],
@@ -44,10 +44,10 @@ const PAKETLER = [
 
 
 const NASIL_CALISIR = [
-  { n: "1", baslik: "Şablonu seç", aciklama: "30+ şablon arasından beğendiğini seç.", icon: "🎨" },
-  { n: "2", baslik: "Özellikleri ekle", aciklama: "Müzik, albüm, sesli anı gibi istediklerin ekle.", icon: "⚙️" },
-  { n: "3", baslik: "Tutarı canlı gör", aciklama: "Her seçimde toplam tutar anında güncellenir.", icon: "💰" },
-  { n: "4", baslik: "Öde, yayına al", aciklama: "Ödeme sonrası davetiye anında aktif ve hazır.", icon: "🚀" },
+  { n: "1", baslik: "Şablonu seç, önizle", aciklama: "34+ şablon arasından beğendiğini seç. Ödeme yapmadan önce tam önizlemeyi gör.", icon: "🎨" },
+  { n: "2", baslik: "İstediğini ekle", aciklama: "Müzik, fotoğraf albümü, anı defteri — hangisini istersen sadece onu seç.", icon: "⚙️" },
+  { n: "3", baslik: "Fiyatı canlı gör", aciklama: "Her seçimde toplam tutar anında güncellenir. Sürpriz çıkmaz.", icon: "💰" },
+  { n: "4", baslik: "Öde — anında yayın", aciklama: "Ödeme onaylanır onaylanmaz davetiyeni paylaşabilirsin. Bekleme yok.", icon: "🚀" },
 ];
 
 const GUVEN_BADGELERI = [
@@ -128,7 +128,7 @@ export default async function FiyatlarSayfasi({
           <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-full px-3.5 py-1.5 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shrink-0" />
             <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-purple-600">
-              Davetiye Bazlı Fiyatlandırma
+              Aylık abonelik yok · Davetiye başına tek ödeme
             </span>
           </div>
 
@@ -143,8 +143,8 @@ export default async function FiyatlarSayfasi({
           </h1>
 
           <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
-            Plan, abonelik veya otomatik yenileme yok. Toplam tutarı canlı görürsün,
-            ödeme sonrası yalnızca seçtiğin özellikler aktif olur.
+            Her davetiye için tek seferlik ödeme — aylık otomatik ücretlendirme yok.
+            Toplam tutarı satın almadan önce canlı görürsün; ödeme tamamlanır tamamlanmaz davetiyeni paylaşabilirsin.
           </p>
 
           <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -566,7 +566,7 @@ export default async function FiyatlarSayfasi({
             <div className="text-4xl mb-4">🎉</div>
             <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3">Davetiyeni bugün oluştur</h2>
             <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
-              30+ şablon, dakikalar içinde hazır, anında paylaşılabilir.
+              34+ şablon, dakikalar içinde hazır. Bir kez öde — aylık ücret yok, ömür boyu linkin senindir.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
