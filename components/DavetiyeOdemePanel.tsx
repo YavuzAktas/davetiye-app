@@ -298,7 +298,7 @@ export default function DavetiyeOdemePanel({
                 <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="underline">Mesafeli Satış Sözleşmesi</Link>
                 {" ve "}
                 <Link href="/kullanim-sartlari" target="_blank" className="underline">Kullanım Şartları</Link>
-                {"'nı okudum; dijital hizmetin ödeme sonrası başlamasını kabul ediyorum."}
+                {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
               </span>
             </label>
             {hatalar.onay && <p className="mt-1.5 text-xs font-medium text-red-500">{hatalar.onay}</p>}
