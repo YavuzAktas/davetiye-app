@@ -7,10 +7,11 @@ const CAT: Record<string, { bg: string; color: string }> = {
   "İlham":  { bg: "rgba(245,158,11,0.12)", color: "#d97706" },
 };
 const KONU_LINKLERI = [
-  { href: "/blog/online-davetiye-nasil-hazirlanir", label: "Online davetiye hazırlama" },
-  { href: "/blog/whatsapp-davetiye-nasil-hazirlanir", label: "WhatsApp davetiye gönderimi" },
-  { href: "/blog/dijital-davetiye-fiyatlari", label: "Dijital davetiye fiyatları" },
+  { href: "/blog/dugun-davetiyesi-ne-zaman-gonderilir", label: "Davetiye ne zaman gönderilir?" },
+  { href: "/blog/rsvp-nedir-nasil-kullanilir", label: "RSVP nedir, nasıl kullanılır?" },
+  { href: "/blog/nisan-organizasyonu-kontrol-listesi", label: "Nişan organizasyonu listesi" },
   { href: "/blog/dugun-davetiye-sozleri", label: "Düğün davetiye sözleri" },
+  { href: "/blog/dijital-davetiye-fiyatlari", label: "Dijital davetiye fiyatları" },
   { href: "/sablonlar", label: "Davetiye şablonları" },
 ];
 
