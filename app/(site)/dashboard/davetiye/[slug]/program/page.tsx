@@ -181,7 +181,7 @@ export default function ProgramSayfasi() {
     yukleniyor: boolean;
     baslangic?: boolean;
   }) => (
-    <div className="bg-gray-50 rounded-2xl border border-gray-100 p-5 space-y-4">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
       {/* İkon seçici */}
       <div>
         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">İkon</p>
@@ -208,7 +208,7 @@ export default function ProgramSayfasi() {
         placeholder="Etkinlik adı *  (örn: Kına Gecesi, Nikah, After Party)"
         value={form.isim}
         onChange={e => setForm({ ...form, isim: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white"
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
         style={{ ["--tw-ring-color" as string]: renk + "44" }}
         autoFocus={baslangic}
       />
@@ -220,7 +220,8 @@ export default function ProgramSayfasi() {
             type="date"
             value={form.tarih}
             onChange={e => setForm({ ...form, tarih: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white"
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+            style={{ ["--tw-ring-color" as string]: renk + "44" }}
           />
         </div>
         <div>
@@ -230,7 +231,8 @@ export default function ProgramSayfasi() {
             placeholder="örn: 19:00"
             value={form.saat}
             onChange={e => setForm({ ...form, saat: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white"
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+            style={{ ["--tw-ring-color" as string]: renk + "44" }}
           />
         </div>
       </div>
@@ -240,7 +242,8 @@ export default function ProgramSayfasi() {
         placeholder="Mekan (opsiyonel)"
         value={form.mekan}
         onChange={e => setForm({ ...form, mekan: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white"
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+        style={{ ["--tw-ring-color" as string]: renk + "44" }}
       />
 
       <input
@@ -248,7 +251,8 @@ export default function ProgramSayfasi() {
         placeholder="Açıklama (opsiyonel)"
         value={form.aciklama}
         onChange={e => setForm({ ...form, aciklama: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-white"
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+        style={{ ["--tw-ring-color" as string]: renk + "44" }}
       />
 
       <div className="flex gap-2 pt-1">
