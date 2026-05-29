@@ -7,6 +7,7 @@ import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
 import { davetiyeAlbumCacheTag } from "@/lib/cache-tags";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
+import { YASAL_METIN_SURUMU } from "@/lib/yasal-bilgiler";
 
 const PUBLIC_LISTE_CACHE_SN = 60;
 
@@ -122,6 +123,8 @@ export async function POST(
       yukleyenAd: ad,
       dosyaUrl: blobUrl,
       onaylandi: false,
+      yayinIzniOnaylandiAt: new Date(),
+      yayinIzniMetinSurumu: YASAL_METIN_SURUMU,
     },
   });
 

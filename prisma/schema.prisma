@@ -139,30 +139,36 @@ model Davetiye {
 }
 
 model SesliAni {
-  id         String   @id @default(cuid())
-  davetiyeId String
-  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  adSoyad    String
-  dosyaUrl   String
-  sure       Int
-  onaylandi  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id                    String    @id @default(cuid())
+  davetiyeId            String
+  davetiye              Davetiye  @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  adSoyad               String
+  dosyaUrl              String
+  sure                  Int
+  onaylandi             Boolean   @default(false)
+  yayinIzniOnaylandiAt  DateTime?
+  yayinIzniMetinSurumu  String?
+  createdAt             DateTime  @default(now())
 
   @@index([davetiyeId])
   @@index([davetiyeId, onaylandi, createdAt])
+  @@index([yayinIzniOnaylandiAt])
 }
 
 model AlbumFoto {
-  id         String   @id @default(cuid())
-  davetiyeId String
-  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  yukleyenAd String
-  dosyaUrl   String
-  onaylandi  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id                    String    @id @default(cuid())
+  davetiyeId            String
+  davetiye              Davetiye  @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  yukleyenAd            String
+  dosyaUrl              String
+  onaylandi             Boolean   @default(false)
+  yayinIzniOnaylandiAt  DateTime?
+  yayinIzniMetinSurumu  String?
+  createdAt             DateTime  @default(now())
 
   @@index([davetiyeId])
   @@index([davetiyeId, onaylandi, createdAt])
+  @@index([yayinIzniOnaylandiAt])
 }
 
 model AniDefteri {
