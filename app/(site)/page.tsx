@@ -35,6 +35,11 @@ function useCounter(target: number, active: boolean, duration = 1800) {
   return value;
 }
 
+function HeroSayac({ hedef, hazir }: { hedef: number; hazir: boolean }) {
+  const value = useCounter(hedef, hazir);
+  return <span className="text-white font-semibold">{value}+</span>;
+}
+
 function StatCard({ hedef, suffix, tur, inView }: { hedef: number; suffix: string; tur: string; inView: boolean }) {
   const value = useCounter(hedef, inView);
   return (
@@ -374,6 +379,17 @@ const STARS = [
 
 export default function Anasayfa() {
   const [statsRef, statsInView] = useInView(0.3);
+  const [heroSayi, setHeroSayi] = useState(500);
+  const [heroHazir, setHeroHazir] = useState(false);
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => r.json())
+      .then((d) => {
+        setHeroSayi(d.davetiyeSayisi > 0 ? d.davetiyeSayisi : 500);
+        setHeroHazir(true);
+      })
+      .catch(() => setHeroHazir(true));
+  }, []);
 
   return (
     <div className="overflow-x-hidden">
@@ -460,7 +476,7 @@ export default function Anasayfa() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-500">
-                  <span className="text-white font-semibold">500+</span> online davetiye oluşturuldu
+                  <HeroSayac hedef={heroSayi} hazir={heroHazir} /> online davetiye oluşturuldu
                 </p>
               </div>
             </div>
