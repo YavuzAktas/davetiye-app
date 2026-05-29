@@ -11,6 +11,7 @@ import { SABLONLAR } from "@/lib/sablonlar";
 import DavetiyeOdemePanel from "@/components/DavetiyeOdemePanel";
 import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
+import AniKitabiButon from "@/components/AniKitabiButon";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -58,7 +59,15 @@ export default async function DavetiyeDetay({ params }: Props) {
       sesliAniAktif: true,
       canliDuvarAktif: true,
       oturmaPlanAktif: true,
+      aniKitabiAktif: true,
       goruntulenme: true,
+      _count: {
+        select: {
+          albumFotolar: true,
+          aniDefterleri: true,
+          sesliAnilar: true,
+        },
+      },
       createdAt: true,
       rsvplar: {
         orderBy: { createdAt: "desc" },
@@ -107,6 +116,12 @@ export default async function DavetiyeDetay({ params }: Props) {
   const oturmaPlanAktif  = davetiyeOzelligiAktif(davetiye, "oturmaPlan");
   const canliDuvarOdendi = davetiyeOzelligiAktif(davetiye, "canliDuvar");
   const canliDuvarUrl    = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}/canli-duvar`;
+  const albumAktif       = davetiyeOzelligiAktif(davetiye, "album");
+  const aniDefAktif      = davetiyeOzelligiAktif(davetiye, "aniDefteri");
+  const sesliAniAktif    = davetiyeOzelligiAktif(davetiye, "sesliAni");
+  const aniKitabiAktif   = davetiyeOzelligiAktif(davetiye, "aniKitabi");
+  const herhangiAniAktif = albumAktif || aniDefAktif || sesliAniAktif;
+  const toplamIcerik     = davetiye._count.albumFotolar + davetiye._count.aniDefterleri + davetiye._count.sesliAnilar;
 
   const tarihStr = davetiye.tarih
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
@@ -258,6 +273,124 @@ export default async function DavetiyeDetay({ params }: Props) {
               />
             </div>
           ))}
+        </div>
+
+        {/* ── Anı & Arşiv Showcase ── */}
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-[#080112]" />
+          <div className="absolute -top-16 right-12 w-72 h-72 rounded-full blur-[90px] opacity-20 pointer-events-none" style={{ backgroundColor: renk }} />
+          <div className="absolute bottom-0 left-6 w-48 h-48 rounded-full blur-[60px] opacity-10 pointer-events-none" style={{ backgroundColor: renk }} />
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+
+          <div className="relative px-6 sm:px-8 py-7">
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+
+              {/* Sol: Başlık + açıklama + feature pills */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
+                    style={{ background: renk + "22", border: `1px solid ${renk}40` }}
+                  >
+                    📖
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold tracking-widest uppercase" style={{ color: renk + "99" }}>
+                      Anı & Arşiv
+                    </p>
+                    <p className="text-xs text-white/25 mt-0.5">
+                      {herhangiAniAktif ? "Aktif özellik" : "Premium özellik"}
+                    </p>
+                  </div>
+                </div>
+
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-snug mb-2">
+                  {herhangiAniAktif
+                    ? toplamIcerik > 0
+                      ? `Misafirleriniz ${toplamIcerik} anı bıraktı`
+                      : "Anı arşiviniz hazır — QR kodu masalara koyun"
+                    : "Sadece davet değil, anı arşivi"}
+                </h2>
+                <p className="text-sm text-white/35 leading-relaxed max-w-xl">
+                  {herhangiAniAktif
+                    ? "Fotoğraf, anı yazısı ve sesli mesajları yönetin. Etkinlik sonrası tek tıkla PDF kitap indirin."
+                    : "Misafirler QR kodu tarayarak fotoğraf yükler, anı yazar, sesli mesaj bırakır. Etkinlik sonrası tek PDF kitap olur."}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {[
+                    { icon: "📸", label: "Fotoğraf Albümü", aktif: albumAktif, count: davetiye._count.albumFotolar },
+                    { icon: "💌", label: "Anı Defteri",     aktif: aniDefAktif,  count: davetiye._count.aniDefterleri },
+                    { icon: "🎙", label: "Sesli Mesaj",     aktif: sesliAniAktif, count: davetiye._count.sesliAnilar },
+                    { icon: "📖", label: "PDF Kitap",       aktif: aniKitabiAktif, count: null },
+                    { icon: "📺", label: "Canlı Duvar",     aktif: canliDuvarOdendi, count: null },
+                  ].map(f => (
+                    <span
+                      key={f.label}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-full border"
+                      style={f.aktif
+                        ? { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)", borderColor: "rgba(255,255,255,0.12)" }
+                        : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.2)",  borderColor: "rgba(255,255,255,0.06)" }
+                      }
+                    >
+                      {f.icon} {f.label}
+                      {f.aktif && f.count != null && f.count > 0 && (
+                        <span className="font-bold ml-0.5" style={{ color: renk }}>{f.count}</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sağ: CTA butonları */}
+              <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-auto sm:items-end">
+                {herhangiAniAktif ? (
+                  <>
+                    <Link
+                      href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                      className="flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-2xl transition-all hover:opacity-90 whitespace-nowrap"
+                      style={{
+                        background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
+                        color: "#fff",
+                        boxShadow: `0 4px 20px rgba(${rgb}, 0.35)`,
+                      }}
+                    >
+                      Albüm & Anıları Yönet →
+                    </Link>
+                    {aniKitabiAktif && (
+                      <AniKitabiButon slug={davetiye.slug} renk={renk} rgb={rgb} />
+                    )}
+                    {canliDuvarOdendi && (
+                      <a
+                        href={canliDuvarUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8 whitespace-nowrap"
+                        style={{ borderColor: renk + "45", color: renk }}
+                      >
+                        📺 Canlı Duvarı Aç ↗
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-2 sm:items-end">
+                    <p className="text-xs text-white/25 leading-relaxed sm:text-right">
+                      Bu özellikler yeni davetiyede<br className="hidden sm:block" />
+                      oluşturma sırasında seçilebilir.
+                    </p>
+                    <Link
+                      href="/olustur"
+                      className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8"
+                      style={{ borderColor: renk + "45", color: renk }}
+                    >
+                      Yeni Davetiye Oluştur →
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
         </div>
 
         {/* ── Main grid ── */}
