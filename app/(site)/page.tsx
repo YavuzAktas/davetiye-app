@@ -1120,6 +1120,94 @@ export default function Anasayfa() {
       </section>
 
       {/* ══════════════════════════════════════════
+          ANI & ARŞİV
+      ══════════════════════════════════════════ */}
+      <section className="py-28 px-4 bg-[#080112] relative overflow-hidden">
+        {/* Blobs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ background: "radial-gradient(ellipse, #7c3aed 0%, transparent 70%)" }} />
+        <div className="absolute bottom-0 right-1/4 w-72 h-72 rounded-full blur-[90px] opacity-15 pointer-events-none" style={{ background: "radial-gradient(ellipse, #db2777 0%, transparent 70%)" }} />
+        <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Sol: Metin */}
+            <Section>
+              <div>
+                <span className="inline-block text-[11px] font-bold tracking-[0.28em] uppercase mb-5"
+                  style={{ background: "linear-gradient(90deg,#a78bfa,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Anı &amp; Arşiv
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+                  Etkinlik bitti,{" "}
+                  <span className="block" style={{ fontFamily: "var(--font-dancing), cursive", background: "linear-gradient(90deg,#c084fc,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    anılar kaldı
+                  </span>
+                </h2>
+                <p className="text-white/40 text-base leading-relaxed mb-8 max-w-md">
+                  Misafirler masadaki QR kodu tarıyor — fotoğraf yüklüyor, anı yazıyor,
+                  sesli mesaj bırakıyor. Sen onaylıyorsun. Etkinlik bittikten sonra
+                  hepsini tek bir PDF anı kitabına derliyorsun.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link
+                    href="/fiyatlar"
+                    className="inline-flex items-center gap-2 text-sm font-bold px-6 py-3.5 rounded-2xl transition-all hover:opacity-90"
+                    style={{ background: "linear-gradient(135deg,#7c3aed,#db2777)", color: "#fff", boxShadow: "0 8px 32px rgba(124,58,237,0.4)" }}
+                  >
+                    Anı Özelliklerine Bak →
+                  </Link>
+                </div>
+
+                {/* Stat */}
+                <div className="flex items-center gap-3 mt-10">
+                  <div className="w-px h-10 bg-gradient-to-b from-transparent via-purple-500/40 to-transparent" />
+                  <p className="text-white/25 text-xs leading-relaxed">
+                    Rakip platformların çoğu davetiye + RSVP&apos;de kalır.<br />
+                    Bekleriz etkinlik sonrasında da devam eder.
+                  </p>
+                </div>
+              </div>
+            </Section>
+
+            {/* Sağ: Özellik kartları */}
+            <Section>
+              <div className="grid grid-cols-1 gap-3">
+                {[
+                  { icon: "📸", baslik: "Fotoğraf Albümü", aciklama: "Misafirler QR ile fotoğraf yükler, siz onaylarsınız — herkes görür." },
+                  { icon: "💌", baslik: "Anı Defteri",     aciklama: "Yazılı dilekler ve anılar toplanır, moderasyon sonrası yayınlanır." },
+                  { icon: "🎙", baslik: "Sesli Mesaj",     aciklama: "Tebrik sesini kaydet, PDF kitapta listele." },
+                  { icon: "📺", baslik: "Canlı Fotoğraf Duvarı", aciklama: "Salonunuzun ekranında yüklenen fotoğraflar anlık akar." },
+                  { icon: "📖", baslik: "PDF Anı Kitabı",  aciklama: "Tüm içerikleri tek tıkla premium PDF'e derle, ömür boyu sakla." },
+                ].map((f, i) => (
+                  <div
+                    key={f.baslik}
+                    className="flex items-start gap-4 rounded-2xl px-5 py-4 transition-all group"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      animationDelay: `${i * 80}ms`,
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
+                      style={{ background: "rgba(124,58,237,0.18)", border: "1px solid rgba(124,58,237,0.3)" }}>
+                      {f.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-white/85 text-sm font-semibold mb-0.5">{f.baslik}</p>
+                      <p className="text-white/30 text-xs leading-relaxed">{f.aciklama}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           PRICING
       ══════════════════════════════════════════ */}
       <section className="py-28 px-4" style={{ background: "linear-gradient(180deg, #faf8ff 0%, #fff 100%)" }}>
@@ -1195,19 +1283,19 @@ export default function Anasayfa() {
           <Section>
             <div className="text-6xl mb-8">🎉</div>
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              İlk davetiyeni{" "}
+              Davetiyeni linke{" "}
               <span style={{ fontFamily: "var(--font-dancing), cursive" }} className="text-pink-200">
-                hemen oluştur
+                dönüştür
               </span>
             </h2>
             <p className="text-purple-200/80 text-lg mb-12">
-              2 dakikada başla. Ücretsiz. Kredi kartı gerekmez.
+              Şablon seç, bilgilerini gir, WhatsApp&apos;a yapıştır — davetiye hazır.
             </p>
             <Link
               href="/sablonlar"
               className="group inline-flex items-center gap-3 bg-white text-purple-700 px-10 py-5 rounded-2xl text-lg font-bold hover:bg-purple-50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-900/30 hover:-translate-y-1"
             >
-              Hemen Dene
+              Davetiyeni Oluştur
               <span className="text-xl group-hover:translate-x-1.5 transition-transform inline-block">→</span>
             </Link>
           </Section>
