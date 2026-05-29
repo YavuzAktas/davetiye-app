@@ -80,13 +80,31 @@ function BasariliIcerigi() {
 
   const [visible, setVisible] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
+  const [referralKod, setReferralKod] = useState<string | null>(null);
+  const [referralKopyalandi, setReferralKopyalandi] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
     const t2 = setTimeout(() => setShowConfetti(false), 4000);
+    fetch("/api/referral/kredi")
+      .then(r => r.json())
+      .then(d => { if (d.referralKod) setReferralKod(d.referralKod); })
+      .catch(() => {});
     return () => { clearTimeout(t); clearTimeout(t2); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const referralLinki = referralKod
+    ? `${typeof window !== "undefined" ? window.location.origin : ""}/r/${referralKod}`
+    : null;
+
+  const kopyalaReferral = () => {
+    if (!referralLinki) return;
+    navigator.clipboard.writeText(referralLinki).then(() => {
+      setReferralKopyalandi(true);
+      setTimeout(() => setReferralKopyalandi(false), 2500);
+    }).catch(() => {});
+  };
 
   return (
     <>
@@ -338,36 +356,62 @@ function BasariliIcerigi() {
 
           {/* Referral CTA */}
           <div style={{
-            background:   "rgba(255,255,255,0.04)",
-            border:       "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 24, padding: "18px 24px", marginTop: 12,
-            display: "flex", alignItems: "center", gap: 14,
+            background:   "rgba(255,255,255,0.05)",
+            border:       "1px solid rgba(168,85,247,0.25)",
+            borderRadius: 24, padding: "20px 24px", marginTop: 12,
             animation: "float-up 0.6s 2.8s both",
           }}>
-            <div style={{
-              width: 42, height: 42, borderRadius: 14, flexShrink: 0,
-              background: "linear-gradient(135deg,rgba(168,85,247,0.3),rgba(244,114,182,0.3))",
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
-            }}>🎁</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>
-                Arkadaşını getir,{" "}
-                <span style={{ background: "linear-gradient(135deg,#c084fc,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  50₺ kazan
-                </span>
-              </p>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.32)", lineHeight: 1.4 }}>
-                Referral linkinle davet ettiğin her kişi ödeme yapınca hesabına 50₺ eklenir
-              </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: referralKod ? 16 : 0 }}>
+              <div style={{
+                width: 42, height: 42, borderRadius: 14, flexShrink: 0,
+                background: "linear-gradient(135deg,rgba(168,85,247,0.3),rgba(244,114,182,0.3))",
+                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+              }}>🎁</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>
+                  Arkadaşını getir,{" "}
+                  <span style={{ background: "linear-gradient(135deg,#c084fc,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    her ikine 50₺ kredi
+                  </span>
+                </p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.32)", lineHeight: 1.4 }}>
+                  Linkinle kaydolup ödeme yapan her arkadaşın için ikisine de 50₺ yüklenir
+                </p>
+              </div>
             </div>
-            <Link href="/dashboard/ayarlar" style={{
-              flexShrink: 0, textDecoration: "none",
-              fontSize: 11, fontWeight: 700, padding: "8px 16px", borderRadius: 12,
-              background: "linear-gradient(135deg,#7C3AED,#DB2777)", color: "#fff",
-              whiteSpace: "nowrap",
-            }}>
-              Linki Kopyala →
-            </Link>
+            {referralKod && (
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div style={{
+                  flex: 1, minWidth: 0,
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 12, padding: "9px 14px",
+                }}>
+                  <p style={{
+                    fontSize: 11, color: "rgba(255,255,255,0.55)",
+                    fontFamily: "monospace", overflow: "hidden",
+                    textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    margin: 0,
+                  }}>
+                    {referralLinki}
+                  </p>
+                </div>
+                <button
+                  onClick={kopyalaReferral}
+                  style={{
+                    flexShrink: 0,
+                    fontSize: 12, fontWeight: 700, padding: "9px 18px", borderRadius: 12,
+                    background: referralKopyalandi
+                      ? "linear-gradient(135deg,#10b981,#059669)"
+                      : "linear-gradient(135deg,#7C3AED,#DB2777)",
+                    color: "#fff", border: "none", cursor: "pointer",
+                    whiteSpace: "nowrap", transition: "background 0.3s",
+                  }}
+                >
+                  {referralKopyalandi ? "✓ Kopyalandı!" : "Linki Kopyala"}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Alt rozet */}

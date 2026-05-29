@@ -422,6 +422,37 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               </div>
             </div>
           </div>
+
+          {/* ── Referral teaser strip ── */}
+          <div style={{
+            maxWidth: 1040, margin: "20px auto 0",
+            background: "linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(219,39,119,0.06) 100%)",
+            border: "1px solid rgba(168,85,247,0.22)",
+            borderRadius: 20, padding: "18px 26px",
+            display: "flex", alignItems: "center", gap: 18,
+            animation: "co-up 0.55s 0.35s both",
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 14, flexShrink: 0,
+              background: "linear-gradient(135deg,rgba(124,58,237,0.2),rgba(219,39,119,0.2))",
+              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
+            }}>🎁</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", marginBottom: 3 }}>
+                Arkadaşını getir, her ikine{" "}
+                <span style={{
+                  background: "linear-gradient(135deg,#7c3aed,#db2777)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                }}>
+                  50₺ kredi
+                </span>{" "}
+                kazan
+              </p>
+              <p style={{ fontSize: 12, color: "#9ca3af", lineHeight: 1.5 }}>
+                Ödeme sonrası referral linkin panelinde belirecek — arkadaşın ödeme yaparsa ikisine de 50₺ yüklenir.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </>
