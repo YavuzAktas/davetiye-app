@@ -16,6 +16,7 @@ const rsvpSemasi = z.object({
   mesaj:        z.string().max(500).optional(),
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
+  etkinlikler:  z.array(z.string().min(1).max(50)).max(20).optional(),
 });
 
 /* ── DB tabanlı per-davetiye limitler ───────────────────── */
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler } = sonuc.data;
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
@@ -136,7 +137,21 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  /* 6. In-app bildirim */
+  /* 6. Etkinlik RSVP kayıtları */
+  if (etkinlikler && etkinlikler.length > 0) {
+    const gecerliEtkinlikler = await prisma.etkinlikProgrami.findMany({
+      where: { id: { in: etkinlikler }, davetiyeId },
+      select: { id: true },
+    });
+    if (gecerliEtkinlikler.length > 0) {
+      await prisma.etkinlikRSVP.createMany({
+        data: gecerliEtkinlikler.map(e => ({ etkinlikId: e.id, rsvpId: rsvp.id })),
+        skipDuplicates: true,
+      });
+    }
+  }
+
+  /* 7. In-app bildirim */
   bildirimOlustur({
     userId: davetiye.userId,
     tip: "rsvp",
@@ -145,7 +160,7 @@ export async function POST(req: NextRequest) {
     davetiyeSlug: davetiye.slug,
   });
 
-  /* 7. Bildirim e-postası (beklemeden gönder) */
+  /* 8. Bildirim e-postası (beklemeden gönder) */
   if (davetiye.user?.email) {
     rsvpBildirimiGonder({
       sahipEmail:     davetiye.user.email,

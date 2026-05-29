@@ -52,6 +52,10 @@ function publicDavetiyeGetir(slug: string) {
             email: true,
           },
         },
+        etkinlikProgrami: {
+          orderBy: { sira: "asc" },
+          select: { id: true, isim: true, tarih: true, saat: true, mekan: true, aciklama: true, ikon: true, sira: true },
+        },
       },
     }),
     ["public-davetiye", slug],
@@ -158,10 +162,22 @@ export default async function DavetiyeSayfasi({ params }: Props) {
     dressKodRenkler: davetiye.dressKodRenkler ?? null,
   };
 
+  const programEtkinlikleri = (davetiye.etkinlikProgrami ?? []).map(e => ({
+    id:       e.id,
+    isim:     e.isim,
+    tarih:    e.tarih?.toISOString() ?? null,
+    saat:     e.saat,
+    mekan:    e.mekan,
+    aciklama: e.aciklama,
+    ikon:     e.ikon,
+    sira:     e.sira,
+  }));
+
   const rsvpBileseni = (
     <RsvpForm
       davetiyeId={davetiye.id}
       renk={temaRenk}
+      etkinlikler={programEtkinlikleri}
     />
   );
 

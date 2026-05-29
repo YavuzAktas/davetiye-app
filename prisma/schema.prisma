@@ -121,6 +121,7 @@ model Davetiye {
   albumAktif       Boolean      @default(true)
   aniKitabiAktif   Boolean      @default(false)
   kapasiteLimiti   Int?
+  etkinlikProgrami EtkinlikProgrami[]
   odemeDurumu          String       @default("ucretsiz")
   fiyatSnapshot        Json?
   hatirlatiMail30dk    Boolean      @default(false)
@@ -190,7 +191,8 @@ model RSVP {
   updatedAt    DateTime   @updatedAt
   davetiyeId   String
   davetiye     Davetiye   @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  masaAtamasi  MasaAtama?
+  masaAtamasi      MasaAtama?
+  etkinlikRsvplar  EtkinlikRSVP[]
 
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, katilim, createdAt])
@@ -219,6 +221,37 @@ model MasaAtama {
   rsvp      RSVP     @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
 
   @@index([masaId])
+}
+
+model EtkinlikProgrami {
+  id          String         @id @default(cuid())
+  davetiyeId  String
+  davetiye    Davetiye       @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  isim        String
+  tarih       DateTime?
+  saat        String?
+  mekan       String?
+  aciklama    String?
+  ikon        String         @default("🎉")
+  sira        Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  rsvplar     EtkinlikRSVP[]
+
+  @@index([davetiyeId, sira])
+}
+
+model EtkinlikRSVP {
+  id         String           @id @default(cuid())
+  etkinlikId String
+  etkinlik   EtkinlikProgrami @relation(fields: [etkinlikId], references: [id], onDelete: Cascade)
+  rsvpId     String
+  rsvp       RSVP             @relation(fields: [rsvpId], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+
+  @@unique([etkinlikId, rsvpId])
+  @@index([etkinlikId])
+  @@index([rsvpId])
 }
 
 model OdemeToken {
