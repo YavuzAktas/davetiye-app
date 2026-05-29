@@ -54,6 +54,7 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Ödeme</strong></td><td>Davetiye ve ek özellik bilgisi, ödeme doğrulama tokenı, işlem durumu, ödeme tutarı ve ödeme sağlayıcısına aktarılan alıcı/fatura bilgileri (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
                   <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
                   <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
+                  <tr><td><strong>Özel nitelikli veri</strong></td><td>Misafirin isteğe bağlı olarak paylaştığı alerji, diyet veya özel beslenme bilgileri</td><td>RSVP formunda ayrı açık rıza ile</td></tr>
                   <tr><td><strong>Misafir listesi</strong></td><td>Davet sahibi tarafından girilen ad, telefon ve e-posta</td><td>Davet sahibi girişi</td></tr>
                   <tr><td><strong>Bilgilendirme kayıtları</strong></td><td>KVKK aydınlatma/kullanım şartları kayıt tarihi</td><td>Üyelik ve onay ekranları</td></tr>
                 </tbody>
@@ -90,6 +91,7 @@ export default function KvkkSayfasi() {
                 <tbody>
                   <tr><td>Üyelik ve hizmet sunumu</td><td>Sözleşmenin kurulması/ifası (m.5/2-c)</td></tr>
                   <tr><td>Davetiye, RSVP, misafir listesi ve anı özellikleri</td><td>Sözleşmenin ifası (m.5/2-c), ilgili kişinin kendisi tarafından alenileştirme şartları varsa m.5/2-d ve meşru menfaat (m.5/2-f)</td></tr>
+                  <tr><td>RSVP'de isteğe bağlı alerji, diyet veya özel beslenme bilgileri</td><td>İlgili kişinin açık rızası</td></tr>
                   <tr><td>İsteğe bağlı medya, Canlı Duvar, sesli anı ve şarkı önerisi özellikleri</td><td>Özelliğin talep edilmesi halinde sözleşmenin ifası (m.5/2-c) ve gerektiğinde açık rıza</td></tr>
                   <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c), kanuni yükümlülük (m.5/2-ç)</td></tr>
                   <tr><td>Güvenlik, log kayıtları</td><td>Meşru menfaat (m.5/2-f)</td></tr>

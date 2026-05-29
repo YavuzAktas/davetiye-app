@@ -129,6 +129,15 @@ export default function RsvpSorularPage({ params }: Props) {
                     <p className="text-xs text-gray-400 mt-1.5">Misafirler bu soruyu görecek ve serbest metin olarak yanıtlayacak.</p>
                   </div>
                 )}
+
+                {(id === "yemek" || id === "alerji") && soru.aktif && (
+                  <div className="mt-3 ml-14 rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-2.5">
+                    <p className="text-xs leading-relaxed text-amber-800">
+                      Bu cevaplar özel nitelikli veri sayılabilecek beslenme/sağlık bilgisi içerebilir.
+                      Misafir yanıt verirse RSVP formunda ayrıca açık rıza onayı gösterilir.
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}

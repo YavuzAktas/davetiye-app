@@ -64,8 +64,13 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
   const [cocukSayisi, setCocukSayisi] = useState(0);
   const [alerji,     setAlerji]     = useState("");
   const [ozelCevap,  setOzelCevap]  = useState("");
+  const [ozelNitelikliVeriOnayi, setOzelNitelikliVeriOnayi] = useState(false);
 
   const programVar = etkinlikler.length >= 2;
+  const hassasBeslenmeBilgisiVar = katilim === true && (
+    (yemekAktif && yemekSecim.size > 0) ||
+    (alerjiAktif && alerji.trim().length > 0)
+  );
 
   const handleSecim = (karar: boolean) => {
     setKatilim(karar);
@@ -101,6 +106,10 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
       setHata("Mesajınız çok uzun (Maks. 500 karakter).");
       return;
     }
+    if (hassasBeslenmeBilgisiVar && !ozelNitelikliVeriOnayi) {
+      setHata("Yemek, alerji veya özel beslenme bilginizi iletmek için açık rıza onayını işaretleyin.");
+      return;
+    }
 
     /* cevaplar JSON: sadece dolu alanlar */
     const cevaplar: Record<string, unknown> = {};
@@ -129,6 +138,7 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
           diyet:        yemekAktif && yemekSecim.size > 0 ? Array.from(yemekSecim).join(",") : undefined,
           cevaplar:     Object.keys(cevaplar).length > 0 ? cevaplar : undefined,
           etkinlikler:  katilim && programVar ? Array.from(seciliEtkinlikler) : undefined,
+          ozelNitelikliVeriOnayi: hassasBeslenmeBilgisiVar ? true : undefined,
         }),
       });
       const json = await res.json().catch(() => ({}));
@@ -332,7 +342,7 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
           {katilim && yemekAktif && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                🍽️ Yemek tercihi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                🍽️ Yemek / özel beslenme tercihi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {YEMEK_SECENEKLER.map(s => (
@@ -406,17 +416,32 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
           {alerjiAktif && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                ⚠️ Alerji veya diyet kısıtlaması <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                ⚠️ Alerji veya özel beslenme notu <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
               </label>
               <input
                 type="text"
-                placeholder="Varsa alerji veya özel diyet bilginizi yazın"
+                placeholder="Paylaşmak isterseniz kısa not yazın"
                 value={alerji}
                 onChange={e => setAlerji(e.target.value)}
                 maxLength={200}
                 className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
               />
             </div>
+          )}
+
+          {hassasBeslenmeBilgisiVar && (
+            <label className="flex items-start gap-3 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={ozelNitelikliVeriOnayi}
+                onChange={e => setOzelNitelikliVeriOnayi(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+              />
+              <span className="text-[11px] leading-relaxed text-amber-800">
+                Yemek, alerji veya özel beslenme bilgilerimin davet sahibine etkinlik organizasyonu amacıyla
+                iletilmesine açık rıza veriyorum. Bu alanları boş bırakırsanız bu onay gerekmez.
+              </span>
+            </label>
           )}
 
           {/* Özel soru */}

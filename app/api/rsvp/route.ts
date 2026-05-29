@@ -17,6 +17,7 @@ const rsvpSemasi = z.object({
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
   etkinlikler:  z.array(z.string().min(1).max(50)).max(20).optional(),
+  ozelNitelikliVeriOnayi: z.boolean().optional(),
   cevaplar:     z.object({
     ulasim:    z.boolean().optional(),
     cocuk:     z.number().int().min(0).max(20).optional(),
@@ -51,7 +52,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler, cevaplar } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler, cevaplar, ozelNitelikliVeriOnayi } = sonuc.data;
+  const hassasBeslenmeBilgisiVar = Boolean(diyet?.trim() || cevaplar?.alerji?.trim());
+
+  if (hassasBeslenmeBilgisiVar && ozelNitelikliVeriOnayi !== true) {
+    return NextResponse.json(
+      { hata: "Yemek, alerji veya özel beslenme bilgisini iletmek için açık rıza onayı gereklidir." },
+      { status: 400 },
+    );
+  }
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({

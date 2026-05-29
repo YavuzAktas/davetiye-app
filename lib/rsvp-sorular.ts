@@ -19,10 +19,10 @@ export const VARSAYILAN_RSVP_SORULAR: RsvpSorular = [
 
 export const SORU_META: Record<RsvpSoruId, { label: string; icon: string; aciklama: string }> = {
   sarki:  { label: "Şarkı İsteği",    icon: "🎵", aciklama: "Dans pistindeki favori şarkınız?" },
-  yemek:  { label: "Yemek Tercihi",   icon: "🍽️", aciklama: "Vejeteryen, vegan, glutensiz, laktozsuz seçenekler" },
+  yemek:  { label: "Yemek / Özel Beslenme", icon: "🍽️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
   ulasim: { label: "Servis / Ulaşım", icon: "🚌", aciklama: "Servis kullanıp kullanmayacağını seçer" },
   cocuk:  { label: "Çocuk Katılımı",  icon: "👶", aciklama: "Yanında getireceği çocuk sayısını girer" },
-  alerji: { label: "Alerji / Diyet",  icon: "⚠️", aciklama: "Alerji veya özel diyet kısıtlaması serbest metin" },
+  alerji: { label: "Alerji / Özel Beslenme Notu", icon: "⚠️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
   ozel:   { label: "Özel Soru",       icon: "💬", aciklama: "Kendi oluşturduğunuz soruya serbest metin yanıt" },
 };
 
