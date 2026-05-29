@@ -7,6 +7,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Timer, Music, ClipboardCheck } from "lucide-react";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
+import { SABLON_ETIKETLER, ETIKET_STILI } from "@/lib/sablon-meta";
 
 /* ─── Sabitler ─── */
 const DEMO_URLS: Record<string, string> = {
@@ -759,6 +760,15 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
               style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.3)" }}>
               {KAT_EMOJI[sablon.kategori]} {sablon.kategori.charAt(0).toUpperCase() + sablon.kategori.slice(1)}
             </span>
+            {(SABLON_ETIKETLER[sablon.id] ?? []).filter(t => t !== "Lüks").map(etiket => {
+              const s = ETIKET_STILI[etiket];
+              return (
+                <span key={etiket} className="text-[11px] px-2.5 py-0.5 rounded-full"
+                  style={{ background: `${s.bg}20`, color: s.color, border: `1px solid ${s.border}55` }}>
+                  {etiket}
+                </span>
+              );
+            })}
           </div>
           <h2 className="font-bold text-white leading-tight"
             style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(1.7rem,3.5vw,2.4rem)", letterSpacing: "-0.01em" }}>
@@ -918,13 +928,24 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
       </div>
 
       {/* ── Bilgi Paneli ── */}
-      <div className="flex flex-col px-5 pt-3 pb-5 gap-4">
+      <div className="flex flex-col px-5 pt-3 pb-5 gap-3.5">
 
-        {/* Kategori rozeti */}
-        <span className="self-start text-[9px] font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full"
-          style={{ background: `${r}12`, color: r, border: `1px solid ${r}28` }}>
-          {emoji} {sablon.kategori}
-        </span>
+        {/* Kategori + Etiketler */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[9px] font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full"
+            style={{ background: `${r}12`, color: r, border: `1px solid ${r}28` }}>
+            {emoji} {sablon.kategori}
+          </span>
+          {(SABLON_ETIKETLER[sablon.id] ?? []).slice(0, 2).map(etiket => {
+            const s = ETIKET_STILI[etiket];
+            return (
+              <span key={etiket} className="text-[9px] font-bold tracking-wide px-2 py-1 rounded-full"
+                style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}` }}>
+                {etiket}
+              </span>
+            );
+          })}
+        </div>
 
         {/* İsim */}
         <div>
@@ -955,20 +976,30 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}35` }}
-          whileTap={{ scale: 0.97 }}
-          onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
-          className="w-full py-3 rounded-2xl text-xs font-bold text-white"
-          style={{
-            background: `linear-gradient(135deg, ${r} 0%, ${r}cc 100%)`,
-            boxShadow: `0 4px 16px ${r}25`,
-            letterSpacing: "0.01em",
-          }}
-        >
-          Bu Şablonla Başla →
-        </motion.button>
+        {/* CTA — Önizle + Oluştur */}
+        <div className="flex gap-2">
+          <Link
+            href={`/sablonlar/${sablon.id}`}
+            onClick={e => e.stopPropagation()}
+            className="flex items-center justify-center px-4 py-3 rounded-2xl text-xs font-semibold transition-colors shrink-0"
+            style={{ border: `1.5px solid ${r}35`, color: r, background: `${r}06` }}
+          >
+            Önizle
+          </Link>
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}35` }}
+            whileTap={{ scale: 0.97 }}
+            onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
+            className="flex-1 py-3 rounded-2xl text-xs font-bold text-white"
+            style={{
+              background: `linear-gradient(135deg, ${r} 0%, ${r}cc 100%)`,
+              boxShadow: `0 4px 16px ${r}25`,
+              letterSpacing: "0.01em",
+            }}
+          >
+            Bu Şablonla Oluştur →
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

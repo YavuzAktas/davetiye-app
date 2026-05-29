@@ -42,6 +42,114 @@ function tarihFormatla(tarihStr: string | null, saat: string | null): string {
 
 const BOSH_FORM = { isim: "", tarih: "", saat: "", mekan: "", aciklama: "", ikon: "🎉" };
 
+function EtkinlikFormu({
+  form, setForm, onKaydet, onIptal, yukleniyor: yuk, baslangic, kartYok, renk,
+}: {
+  form: typeof BOSH_FORM;
+  setForm: (f: typeof BOSH_FORM) => void;
+  onKaydet: () => void;
+  onIptal: () => void;
+  yukleniyor: boolean;
+  baslangic?: boolean;
+  kartYok?: boolean;
+  renk: string;
+}) {
+  return (
+    <div className={kartYok ? "space-y-4" : "bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4"}>
+      {/* İkon seçici */}
+      <div>
+        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">İkon</p>
+        <div className="flex flex-wrap gap-1.5">
+          {HAZIR_IKONLAR.map(ikon => (
+            <button
+              key={ikon}
+              type="button"
+              onClick={() => setForm({ ...form, ikon })}
+              className={`w-9 h-9 rounded-xl text-lg flex items-center justify-center transition-all ${
+                form.ikon === ikon ? "shadow-sm scale-110" : "hover:bg-gray-100"
+              }`}
+              style={form.ikon === ikon ? { backgroundColor: renk + "20", outline: `2px solid ${renk}40` } : {}}
+            >
+              {ikon}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Etkinlik adı */}
+      <input
+        type="text"
+        placeholder="Etkinlik adı *  (örn: Kına Gecesi, Nikah, After Party)"
+        value={form.isim}
+        onChange={e => setForm({ ...form, isim: e.target.value })}
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+        style={{ ["--tw-ring-color" as string]: renk + "44" }}
+        autoFocus={baslangic}
+      />
+
+      <div className="grid grid-cols-2 gap-2.5">
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tarih</label>
+          <input
+            type="date"
+            value={form.tarih}
+            onChange={e => setForm({ ...form, tarih: e.target.value })}
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Saat</label>
+          <input
+            type="time"
+            value={form.saat}
+            onChange={e => setForm({ ...form, saat: e.target.value })}
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
+          />
+        </div>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Mekan (opsiyonel)"
+        value={form.mekan}
+        onChange={e => setForm({ ...form, mekan: e.target.value })}
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+        style={{ ["--tw-ring-color" as string]: renk + "44" }}
+      />
+
+      <input
+        type="text"
+        placeholder="Açıklama (opsiyonel)"
+        value={form.aciklama}
+        onChange={e => setForm({ ...form, aciklama: e.target.value })}
+        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
+        style={{ ["--tw-ring-color" as string]: renk + "44" }}
+      />
+
+      <div className="flex gap-2 pt-1">
+        <button
+          onClick={onKaydet}
+          disabled={!form.isim.trim() || yuk}
+          className="flex items-center gap-2 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:opacity-90 disabled:opacity-40 transition-all"
+          style={{ backgroundColor: renk }}
+        >
+          {yuk
+            ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            : <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+          }
+          Kaydet
+        </button>
+        <button
+          onClick={onIptal}
+          className="text-sm font-medium text-gray-500 hover:text-gray-700 px-4 py-2.5 rounded-xl hover:bg-gray-100 transition-all"
+        >
+          İptal
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ProgramSayfasi() {
   const params = useParams();
   const slug = params.slug as string;
@@ -169,113 +277,6 @@ export default function ProgramSayfasi() {
     });
   };
 
-  // ── Form UI ──────────────────────────────────────────
-
-  const EtkinlikFormu = ({
-    form, setForm, onKaydet, onIptal, yukleniyor: yuk, baslangic, kartYok,
-  }: {
-    form: typeof BOSH_FORM;
-    setForm: (f: typeof BOSH_FORM) => void;
-    onKaydet: () => void;
-    onIptal: () => void;
-    yukleniyor: boolean;
-    baslangic?: boolean;
-    kartYok?: boolean;
-  }) => (
-    <div className={kartYok ? "space-y-4" : "bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4"}>
-      {/* İkon seçici */}
-      <div>
-        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">İkon</p>
-        <div className="flex flex-wrap gap-1.5">
-          {HAZIR_IKONLAR.map(ikon => (
-            <button
-              key={ikon}
-              type="button"
-              onClick={() => setForm({ ...form, ikon })}
-              className={`w-9 h-9 rounded-xl text-lg flex items-center justify-center transition-all ${
-                form.ikon === ikon ? "shadow-sm scale-110" : "hover:bg-gray-100"
-              }`}
-              style={form.ikon === ikon ? { backgroundColor: renk + "20", outline: `2px solid ${renk}40` } : {}}
-            >
-              {ikon}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Etkinlik adı */}
-      <input
-        type="text"
-        placeholder="Etkinlik adı *  (örn: Kına Gecesi, Nikah, After Party)"
-        value={form.isim}
-        onChange={e => setForm({ ...form, isim: e.target.value })}
-        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
-        style={{ ["--tw-ring-color" as string]: renk + "44" }}
-        autoFocus={baslangic}
-      />
-
-      <div className="grid grid-cols-2 gap-2.5">
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tarih</label>
-          <input
-            type="date"
-            value={form.tarih}
-            onChange={e => setForm({ ...form, tarih: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Saat</label>
-          <input
-            type="time"
-            value={form.saat}
-            onChange={e => setForm({ ...form, saat: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
-          />
-        </div>
-      </div>
-
-      <input
-        type="text"
-        placeholder="Mekan (opsiyonel)"
-        value={form.mekan}
-        onChange={e => setForm({ ...form, mekan: e.target.value })}
-        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
-        style={{ ["--tw-ring-color" as string]: renk + "44" }}
-      />
-
-      <input
-        type="text"
-        placeholder="Açıklama (opsiyonel)"
-        value={form.aciklama}
-        onChange={e => setForm({ ...form, aciklama: e.target.value })}
-        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
-        style={{ ["--tw-ring-color" as string]: renk + "44" }}
-      />
-
-      <div className="flex gap-2 pt-1">
-        <button
-          onClick={onKaydet}
-          disabled={!form.isim.trim() || yuk}
-          className="flex items-center gap-2 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:opacity-90 disabled:opacity-40 transition-all"
-          style={{ backgroundColor: renk }}
-        >
-          {yuk
-            ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-            : <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-          }
-          Kaydet
-        </button>
-        <button
-          onClick={onIptal}
-          className="text-sm font-medium text-gray-500 hover:text-gray-700 px-4 py-2.5 rounded-xl hover:bg-gray-100 transition-all"
-        >
-          İptal
-        </button>
-      </div>
-    </div>
-  );
-
   // ── Render ───────────────────────────────────────────
 
   if (yukleniyor) {
@@ -348,6 +349,7 @@ export default function ProgramSayfasi() {
             onIptal={() => { setEkleAcik(false); setEkleForm(BOSH_FORM); }}
             yukleniyor={ekleniyor}
             baslangic
+            renk={renk}
           />
         )}
 
@@ -483,6 +485,7 @@ export default function ProgramSayfasi() {
                         onIptal={() => setDuzenleId(null)}
                         yukleniyor={kaydediyor}
                         kartYok
+                        renk={renk}
                       />
                     </div>
                   )}
