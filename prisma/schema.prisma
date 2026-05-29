@@ -136,6 +136,8 @@ model Davetiye {
   @@index([userId, odemeDurumu])
   @@index([tarih])
   @@index([createdAt])
+  @@index([hatirlatiMail30dk, createdAt])
+  @@index([hatirlatiMail24saat, createdAt])
 }
 
 model SesliAni {
@@ -428,7 +430,7 @@ model Davetli {
   davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
 
   @@index([davetiyeId, createdAt])
-  @@index([davetiyeId, grup])
+  @@index([davetiyeId, grup, ad])
 }
 
 model Referral {
