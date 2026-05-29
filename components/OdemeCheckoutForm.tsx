@@ -351,13 +351,16 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
           disabled={yukleniyor}
           style={{
             width: "100%", marginTop: 20,
-            padding: "16px 24px", borderRadius: 16, border: "none",
+            padding: "16px 24px", borderRadius: 16,
             cursor: yukleniyor ? "not-allowed" : "pointer",
-            background: "linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #DB2777 100%)",
-            color: "#fff", fontWeight: 700, fontSize: 15,
-            boxShadow: "0 8px 32px rgba(124,58,237,0.35)",
-            opacity: yukleniyor ? 0.65 : 1,
-            transition: "opacity 0.2s, transform 0.2s",
+            background: yukleniyor
+              ? "#f9fafb"
+              : "linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #DB2777 100%)",
+            border: yukleniyor ? "1px solid #e5e7eb" : "none",
+            color: yukleniyor ? "#6b7280" : "#fff",
+            fontWeight: 700, fontSize: 15,
+            boxShadow: yukleniyor ? "none" : "0 8px 32px rgba(124,58,237,0.35)",
+            transition: "all 0.2s",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
           }}
         >
@@ -365,7 +368,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
             <>
               <span style={{
                 width: 16, height: 16, borderRadius: "50%", display: "inline-block",
-                border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff",
+                border: "2px solid #e5e7eb", borderTop: "2px solid #7c3aed",
                 animation: "co-spin 0.75s linear infinite",
               }}/>
               Ödeme hazırlanıyor...
