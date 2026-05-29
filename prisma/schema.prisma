@@ -389,6 +389,8 @@ model ImhaKaydi {
 model YasalOnayKaydi {
   id             String    @id @default(cuid())
   userId         String?
+  davetiyeId     String?
+  siparisId      String?
   emailHash      String?
   onayTipi       String
   metinSurumu    String
@@ -397,6 +399,8 @@ model YasalOnayKaydi {
   createdAt      DateTime  @default(now())
 
   @@index([userId])
+  @@index([davetiyeId])
+  @@index([siparisId])
   @@index([emailHash])
   @@index([hesapSilindiAt])
   @@index([createdAt])

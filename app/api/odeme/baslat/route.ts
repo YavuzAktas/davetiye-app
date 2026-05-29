@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
+import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
 type FaturaBilgileri = {
   faturaTipi: "bireysel" | "kurumsal";
@@ -174,6 +175,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       paraBirimi: fiyat.paraBirimi,
       fiyatKirilimi: fiyat as any,
     },
+  });
+
+  await yasalOnayKaydiOlustur({
+    userId: user.id,
+    davetiyeId: davetiye.id,
+    siparisId: siparis.id,
+    email: user.email,
+    onayTipi: "odeme-on-bilgilendirme-mesafeli-satis-ve-cayma-istisnasi",
+    kaynak: "odeme-baslat",
   });
 
   await prisma.davetiye.update({

@@ -11,11 +11,15 @@ function emailHashOlustur(email?: string | null) {
 
 export async function yasalOnayKaydiOlustur({
   userId,
+  davetiyeId,
+  siparisId,
   email,
   onayTipi,
   kaynak,
 }: {
   userId?: string | null;
+  davetiyeId?: string | null;
+  siparisId?: string | null;
   email?: string | null;
   onayTipi: string;
   kaynak: string;
@@ -23,6 +27,8 @@ export async function yasalOnayKaydiOlustur({
   await prisma.yasalOnayKaydi.create({
     data: {
       userId,
+      davetiyeId,
+      siparisId,
       emailHash: emailHashOlustur(email),
       onayTipi,
       metinSurumu: YASAL_METIN_SURUMU,
