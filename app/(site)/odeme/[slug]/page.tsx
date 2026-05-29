@@ -67,28 +67,28 @@ export default async function OdemeCheckoutPage({ params }: Props) {
     return (
       <div style={{
         minHeight: "100vh",
-        background: "linear-gradient(148deg, #05000d 0%, #0c0120 55%, #07000f 100%)",
+        background: "linear-gradient(148deg, #faf7ff 0%, #fdf4ff 55%, #f7f3ff 100%)",
         display: "flex", alignItems: "center", justifyContent: "center",
         padding: "24px",
       }}>
         <div style={{
           maxWidth: 440, width: "100%", textAlign: "center",
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.1)",
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
           borderRadius: 28, padding: "52px 40px",
-          boxShadow: "0 28px 72px rgba(0,0,0,0.45)",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
         }}>
           <div style={{ fontSize: 52, marginBottom: 20 }}>⏳</div>
           <p style={{
             fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
-            textTransform: "uppercase", color: "rgba(168,85,247,0.65)", marginBottom: 12,
+            textTransform: "uppercase", color: "rgba(124,58,237,0.65)", marginBottom: 12,
           }}>
             Çok Yakında
           </p>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 12 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111827", marginBottom: 12 }}>
             Ödeme sistemi yakında aktif olacak
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.65, marginBottom: 32 }}>
+          <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.65, marginBottom: 32 }}>
             Davetiyeniz hazır ve taslak olarak kaydedildi. Ödeme özelliği çok yakında devreye girecek, o güne kadar davetiyenizi düzenleyebilirsiniz.
           </p>
           <Link href={`/dashboard/davetiye/${slug}`} style={{
@@ -97,7 +97,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
             color: "#fff", textDecoration: "none",
             padding: "12px 28px", borderRadius: 16,
             fontSize: 14, fontWeight: 700,
-            boxShadow: "0 8px 24px rgba(124,58,237,0.4)",
+            boxShadow: "0 8px 24px rgba(124,58,237,0.3)",
           }}>
             ← Davetiyeye Dön
           </Link>
@@ -153,14 +153,14 @@ export default async function OdemeCheckoutPage({ params }: Props) {
 
       <div style={{
         minHeight: "100vh",
-        background: "linear-gradient(148deg, #05000d 0%, #0c0120 55%, #07000f 100%)",
+        background: "linear-gradient(148deg, #faf7ff 0%, #fdf4ff 55%, #f7f3ff 100%)",
         position: "relative", overflow: "hidden",
       }}>
         {/* Glowing orbs */}
         <div style={{
           position: "absolute", top: "-5%", left: "-8%",
           width: 700, height: 700, borderRadius: "50%",
-          background: `radial-gradient(circle, ${renk}2e 0%, transparent 62%)`,
+          background: `radial-gradient(circle, ${renk}18 0%, transparent 62%)`,
           filter: "blur(90px)",
           animation: "co-orb 16s ease-in-out infinite",
           pointerEvents: "none",
@@ -168,14 +168,14 @@ export default async function OdemeCheckoutPage({ params }: Props) {
         <div style={{
           position: "absolute", bottom: "-8%", right: "-5%",
           width: 550, height: 550, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(219,39,119,0.16) 0%, transparent 62%)",
+          background: "radial-gradient(circle, rgba(219,39,119,0.09) 0%, transparent 62%)",
           filter: "blur(80px)",
           animation: "co-orb 20s ease-in-out infinite reverse",
           pointerEvents: "none",
         }} />
         <div style={{
           position: "absolute", inset: 0, opacity: 0.025, pointerEvents: "none",
-          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.6) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
         }} />
 
@@ -194,10 +194,10 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               }}>
                 <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>D</span>
               </div>
-              <span style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 24, color: "#fff" }}>Bekleriz</span>
+              <span style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 24, color: "#1f2937" }}>Bekleriz</span>
             </Link>
             <Link href={`/dashboard/davetiye/${slug}`} style={{
-              fontSize: 13, color: "rgba(255,255,255,0.35)",
+              fontSize: 13, color: "#9ca3af",
               textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
             }}>
               ← Davetiyeye Dön
@@ -214,11 +214,11 @@ export default async function OdemeCheckoutPage({ params }: Props) {
 
             {/* ── LEFT: Invitation summary ── */}
             <div style={{
-              background: "rgba(255,255,255,0.035)",
-              border: "1px solid rgba(255,255,255,0.09)",
-              borderRadius: 28, backdropFilter: "blur(28px)",
+              background: "#ffffff",
+              border: "1px solid #ede9f6",
+              borderRadius: 28,
               padding: "36px 32px",
-              boxShadow: "0 28px 72px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)",
+              boxShadow: "0 4px 32px rgba(124,58,237,0.07), 0 1px 4px rgba(0,0,0,0.04)",
               animation: "co-up 0.55s 0.08s both",
             }}>
 
@@ -226,7 +226,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "6px 14px", borderRadius: 999, marginBottom: 26,
-                background: `${renk}20`, border: `1px solid ${renk}40`,
+                background: `${renk}15`, border: `1px solid ${renk}35`,
               }}>
                 <span style={{ fontSize: 15 }}>{emoji}</span>
                 <span style={{
@@ -240,11 +240,11 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               {/* Title */}
               <h1 style={{
                 fontFamily: "var(--font-dancing),cursive",
-                fontSize: 44, color: "#fff", lineHeight: 1.12, marginBottom: 8,
+                fontSize: 44, color: "#1f2937", lineHeight: 1.12, marginBottom: 8,
               }}>
                 {davetiye.baslik}
               </h1>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.32)", marginBottom: 30, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 30, lineHeight: 1.6 }}>
                 Davetiyeniz hazır — ödeme sonrası anında yayına alınacak.
               </p>
 
@@ -252,20 +252,20 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               {(tarihStr || davetiye.mekan) && (
                 <div style={{
                   padding: "18px 20px", borderRadius: 18, marginBottom: 26,
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.07)",
+                  background: "#f9fafb",
+                  border: "1px solid #f3f4f6",
                   display: "flex", flexDirection: "column", gap: 14,
                 }}>
                   {tarihStr && (
                     <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                       <span style={{
                         width: 36, height: 36, borderRadius: 10, flexShrink: 0, fontSize: 16,
-                        background: `${renk}18`, border: `1px solid ${renk}28`,
+                        background: `${renk}12`, border: `1px solid ${renk}22`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>📅</span>
                       <div>
-                        <p style={{ fontSize: 10, color: "rgba(255,255,255,0.28)", marginBottom: 3 }}>Tarih</p>
-                        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.88)", fontWeight: 600 }}>{tarihStr}</p>
+                        <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3 }}>Tarih</p>
+                        <p style={{ fontSize: 14, color: "#1f2937", fontWeight: 600 }}>{tarihStr}</p>
                       </div>
                     </div>
                   )}
@@ -273,12 +273,12 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                     <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                       <span style={{
                         width: 36, height: 36, borderRadius: 10, flexShrink: 0, fontSize: 16,
-                        background: `${renk}18`, border: `1px solid ${renk}28`,
+                        background: `${renk}12`, border: `1px solid ${renk}22`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>📍</span>
                       <div>
-                        <p style={{ fontSize: 10, color: "rgba(255,255,255,0.28)", marginBottom: 3 }}>Mekan</p>
-                        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.88)", fontWeight: 600 }}>{davetiye.mekan}</p>
+                        <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3 }}>Mekan</p>
+                        <p style={{ fontSize: 14, color: "#1f2937", fontWeight: 600 }}>{davetiye.mekan}</p>
                       </div>
                     </div>
                   )}
@@ -288,7 +288,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               {/* Price breakdown */}
               <p style={{
                 fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
-                textTransform: "uppercase", color: "rgba(255,255,255,0.28)", marginBottom: 12,
+                textTransform: "uppercase", color: "#9ca3af", marginBottom: 12,
               }}>
                 Sipariş Özeti
               </p>
@@ -297,14 +297,14 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                   <div key={kalem.kod} style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "11px 16px", borderRadius: 13,
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "#f9fafb",
+                    border: "1px solid #f3f4f6",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <span style={{ fontSize: 14 }}>{KALEM_IKONU[kalem.kod] ?? "✦"}</span>
-                      <span style={{ fontSize: 13, color: "rgba(255,255,255,0.68)" }}>{kalem.ad}</span>
+                      <span style={{ fontSize: 13, color: "#374151" }}>{kalem.ad}</span>
                     </div>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>{tutarMetni(kalem.tutar)}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#111827" }}>{tutarMetni(kalem.tutar)}</span>
                   </div>
                 ))}
               </div>
@@ -316,11 +316,11 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               <div style={{
                 marginTop: 16, padding: "16px 18px", borderRadius: 16,
                 background: "rgba(16,185,129,0.06)",
-                border: "1px solid rgba(16,185,129,0.18)",
+                border: "1px solid rgba(16,185,129,0.2)",
               }}>
                 <p style={{
                   fontSize: 9.5, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase",
-                  color: "rgba(52,211,153,0.65)", marginBottom: 12,
+                  color: "#10b981", marginBottom: 12,
                 }}>Her Davetiyeyle Birlikte Geliyor</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 12px" }}>
                   {[
@@ -332,14 +332,14 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                     <div key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <div style={{
                         width: 16, height: 16, borderRadius: 999, flexShrink: 0,
-                        background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.28)",
+                        background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
-                        <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="rgba(52,211,153,0.9)" strokeWidth={3.5}>
+                        <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="rgba(5,150,105,0.9)" strokeWidth={3.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span style={{ fontSize: 11.5, color: "rgba(255,255,255,0.58)", lineHeight: 1.3 }}>{item}</span>
+                      <span style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.3 }}>{item}</span>
                     </div>
                   ))}
                 </div>
@@ -349,11 +349,11 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "18px 20px", marginTop: 12, borderRadius: 18,
-                background: `linear-gradient(135deg, ${renk}1a 0%, rgba(109,40,217,0.14) 100%)`,
-                border: `1px solid ${renk}35`,
+                background: `linear-gradient(135deg, ${renk}12 0%, rgba(109,40,217,0.08) 100%)`,
+                border: `1px solid ${renk}28`,
               }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.65)" }}>Toplam</span>
-                <span style={{ fontSize: 28, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "#6b7280" }}>Toplam</span>
+                <span style={{ fontSize: 28, fontWeight: 800, color: "#1f2937", letterSpacing: "-0.5px" }}>
                   {tutarMetni(fiyat.toplamTutar)}
                 </span>
               </div>
@@ -361,21 +361,21 @@ export default async function OdemeCheckoutPage({ params }: Props) {
 
             {/* ── RIGHT: Billing form ── */}
             <div style={{
-              background: "rgba(255,255,255,0.035)",
-              border: "1px solid rgba(255,255,255,0.09)",
-              borderRadius: 28, backdropFilter: "blur(28px)",
+              background: "#ffffff",
+              border: "1px solid #ede9f6",
+              borderRadius: 28,
               padding: "36px 32px",
-              boxShadow: "0 28px 72px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)",
+              boxShadow: "0 4px 32px rgba(124,58,237,0.07), 0 1px 4px rgba(0,0,0,0.04)",
               animation: "co-up 0.55s 0.22s both",
             }}>
               <p style={{
                 fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
-                textTransform: "uppercase", color: "rgba(168,85,247,0.65)", marginBottom: 8,
+                textTransform: "uppercase", color: "#7c3aed", marginBottom: 8,
               }}>
                 Güvenli Ödeme
               </p>
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 6 }}>Fatura Bilgileri</h2>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.32)", marginBottom: 26, lineHeight: 1.6 }}>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: "#1f2937", marginBottom: 6 }}>Fatura Bilgileri</h2>
+              <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 26, lineHeight: 1.6 }}>
                 Faturanız kayıtlı e-posta adresinize gönderilecektir.
               </p>
 
@@ -392,17 +392,17 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                   <div key={item.text} style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 12px", borderRadius: 12,
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.07)",
+                    background: "#f9fafb",
+                    border: "1px solid #f3f4f6",
                   }}>
                     <span style={{ fontSize: 13, flexShrink: 0 }}>{item.icon}</span>
-                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.32)", lineHeight: 1.35 }}>{item.text}</span>
+                    <span style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.35 }}>{item.text}</span>
                   </div>
                 ))}
               </div>
               <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 14, flexWrap: "wrap" }}>
                 {["🔒 SSL", "✅ iyzico", "💳 3D Secure"].map(r => (
-                  <span key={r} style={{ fontSize: 10, color: "rgba(255,255,255,0.15)" }}>{r}</span>
+                  <span key={r} style={{ fontSize: 10, color: "#c4b5fd" }}>{r}</span>
                 ))}
               </div>
             </div>

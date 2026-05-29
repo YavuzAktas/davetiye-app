@@ -124,7 +124,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
     borderRadius: 12,
     padding: "11px 14px",
     fontSize: 14,
-    color: "#fff",
+    color: "#111827",
     outline: "none",
     transition: "border-color 0.2s, box-shadow 0.2s",
     boxSizing: "border-box",
@@ -132,15 +132,15 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
 
   const inputStyle = (alan: keyof FaturaBilgileri): React.CSSProperties => ({
     ...inputBase,
-    border: `1px solid ${hatalar[alan] ? "rgba(248,113,113,0.5)" : "rgba(255,255,255,0.12)"}`,
-    background: hatalar[alan] ? "rgba(248,113,113,0.08)" : "rgba(255,255,255,0.07)",
+    border: `1px solid ${hatalar[alan] ? "rgba(239,68,68,0.5)" : "#d1d5db"}`,
+    background: hatalar[alan] ? "rgba(239,68,68,0.05)" : "#ffffff",
   });
 
   return (
     <>
       <style>{`
-        .co-input::placeholder { color: rgba(255,255,255,0.25); }
-        .co-input:focus { border-color: rgba(124,58,237,0.7) !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.15) !important; }
+        .co-input::placeholder { color: #9ca3af; }
+        .co-input:focus { border-color: rgba(124,58,237,0.6) !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.1) !important; }
         @keyframes co-spin { to { transform: rotate(360deg); } }
       `}</style>
 
@@ -150,13 +150,13 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
           style={{
             position: "fixed", inset: 0, zIndex: 50,
             display: "flex", alignItems: "center", justifyContent: "center",
-            background: "rgba(0,0,0,0.78)", backdropFilter: "blur(8px)", padding: 16,
+            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", padding: 16,
           }}
           onClick={e => { if (e.currentTarget === e.target) setOdeModal(null); }}
         >
           <div style={{
             width: "100%", maxWidth: 440, borderRadius: 24, overflow: "hidden",
-            background: "#fff", boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
+            background: "#fff", boxShadow: "0 32px 80px rgba(0,0,0,0.25)",
           }}>
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -187,8 +187,8 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
         {/* Bireysel / Kurumsal */}
         <div style={{
           display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5,
-          borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(255,255,255,0.04)", padding: 4, marginBottom: 22,
+          borderRadius: 14, border: "1px solid #e5e7eb",
+          background: "#f3f4f6", padding: 4, marginBottom: 22,
         }}>
           {(["bireysel", "kurumsal"] as const).map(tip => (
             <button
@@ -198,9 +198,9 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
               style={{
                 borderRadius: 10, padding: "10px 12px", fontSize: 13, fontWeight: 600,
                 border: "none", cursor: "pointer", transition: "all 0.2s",
-                background: fatura.faturaTipi === tip ? "rgba(255,255,255,0.12)" : "transparent",
-                color: fatura.faturaTipi === tip ? "#fff" : "rgba(255,255,255,0.38)",
-                boxShadow: fatura.faturaTipi === tip ? "0 1px 8px rgba(0,0,0,0.25)" : "none",
+                background: fatura.faturaTipi === tip ? "#ffffff" : "transparent",
+                color: fatura.faturaTipi === tip ? "#1f2937" : "#9ca3af",
+                boxShadow: fatura.faturaTipi === tip ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
               }}
             >
               {tip === "bireysel" ? "Bireysel" : "Kurumsal"}
@@ -210,8 +210,8 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
 
         {hatalar.genel && (
           <div style={{
-            background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.3)",
-            borderRadius: 12, padding: "10px 14px", fontSize: 13, color: "#fca5a5", marginBottom: 16,
+            background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)",
+            borderRadius: 12, padding: "10px 14px", fontSize: 13, color: "#dc2626", marginBottom: 16,
           }}>
             {hatalar.genel}
           </div>
@@ -219,7 +219,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <label style={{ display: "block" }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.45)", display: "block", marginBottom: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6 }}>
               {fatura.faturaTipi === "kurumsal" ? "Unvan / Yetkili" : "Ad Soyad"}
             </span>
             <input
@@ -228,11 +228,11 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
               onChange={e => alanGuncelle("adSoyad", e.target.value)}
               style={inputStyle("adSoyad")}
             />
-            {hatalar.adSoyad && <span style={{ fontSize: 11, color: "#fca5a5", marginTop: 5, display: "block" }}>{hatalar.adSoyad}</span>}
+            {hatalar.adSoyad && <span style={{ fontSize: 11, color: "#dc2626", marginTop: 5, display: "block" }}>{hatalar.adSoyad}</span>}
           </label>
 
           <label style={{ display: "block" }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.45)", display: "block", marginBottom: 6 }}>Telefon</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6 }}>Telefon</span>
             <input
               className="co-input"
               value={fatura.telefon}
@@ -240,34 +240,34 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
               placeholder="05xxxxxxxxx"
               style={inputStyle("telefon")}
             />
-            {hatalar.telefon && <span style={{ fontSize: 11, color: "#fca5a5", marginTop: 5, display: "block" }}>{hatalar.telefon}</span>}
+            {hatalar.telefon && <span style={{ fontSize: 11, color: "#dc2626", marginTop: 5, display: "block" }}>{hatalar.telefon}</span>}
           </label>
 
           <label style={{ display: "block" }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.45)", display: "block", marginBottom: 6 }}>Şehir</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6 }}>Şehir</span>
             <input
               className="co-input"
               value={fatura.sehir}
               onChange={e => alanGuncelle("sehir", e.target.value)}
               style={inputStyle("sehir")}
             />
-            {hatalar.sehir && <span style={{ fontSize: 11, color: "#fca5a5", marginTop: 5, display: "block" }}>{hatalar.sehir}</span>}
+            {hatalar.sehir && <span style={{ fontSize: 11, color: "#dc2626", marginTop: 5, display: "block" }}>{hatalar.sehir}</span>}
           </label>
 
           {fatura.faturaTipi === "kurumsal" && (
             <>
               <label style={{ display: "block" }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.45)", display: "block", marginBottom: 6 }}>Vergi No / TCKN</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6 }}>Vergi No / TCKN</span>
                 <input
                   className="co-input"
                   value={fatura.kimlikVergiNo}
                   onChange={e => alanGuncelle("kimlikVergiNo", e.target.value)}
                   style={inputStyle("kimlikVergiNo")}
                 />
-                {hatalar.kimlikVergiNo && <span style={{ fontSize: 11, color: "#fca5a5", marginTop: 5, display: "block" }}>{hatalar.kimlikVergiNo}</span>}
+                {hatalar.kimlikVergiNo && <span style={{ fontSize: 11, color: "#dc2626", marginTop: 5, display: "block" }}>{hatalar.kimlikVergiNo}</span>}
               </label>
               <label style={{ display: "block" }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.45)", display: "block", marginBottom: 6 }}>Fatura Adresi</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6 }}>Fatura Adresi</span>
                 <textarea
                   className="co-input"
                   value={fatura.adres}
@@ -275,7 +275,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
                   rows={2}
                   style={{ ...inputStyle("adres"), resize: "none" }}
                 />
-                {hatalar.adres && <span style={{ fontSize: 11, color: "#fca5a5", marginTop: 5, display: "block" }}>{hatalar.adres}</span>}
+                {hatalar.adres && <span style={{ fontSize: 11, color: "#dc2626", marginTop: 5, display: "block" }}>{hatalar.adres}</span>}
               </label>
             </>
           )}
@@ -288,8 +288,8 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
               marginTop: 20,
               borderRadius: 14,
               padding: "14px 16px",
-              background: krediUygula ? "rgba(139,92,246,0.12)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${krediUygula ? "rgba(139,92,246,0.4)" : "rgba(255,255,255,0.08)"}`,
+              background: krediUygula ? "rgba(139,92,246,0.08)" : "#f9fafb",
+              border: `1px solid ${krediUygula ? "rgba(139,92,246,0.35)" : "#e5e7eb"}`,
               display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
               cursor: "pointer", transition: "all 0.2s",
             }}
@@ -302,14 +302,14 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
                 display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
               }}>🎁</div>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", margin: 0 }}>{kredi}₺ Bekleriz krediniz var</p>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: 0, marginTop: 2 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", margin: 0 }}>{kredi}₺ Bekleriz krediniz var</p>
+                <p style={{ fontSize: 11, color: "#6b7280", margin: 0, marginTop: 2 }}>
                   {krediUygula ? "Ödemeye uygulandı ✓" : "Uygulamak için tıklayın"}
                 </p>
               </div>
             </div>
             <div style={{
-              width: 20, height: 20, borderRadius: 6, border: `2px solid ${krediUygula ? "#a855f7" : "rgba(255,255,255,0.2)"}`,
+              width: 20, height: 20, borderRadius: 6, border: `2px solid ${krediUygula ? "#a855f7" : "#d1d5db"}`,
               background: krediUygula ? "#7c3aed" : "transparent",
               display: "flex", alignItems: "center", justifyContent: "center",
               flexShrink: 0, transition: "all 0.2s",
@@ -323,8 +323,8 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
         <label style={{
           display: "flex", gap: 12, cursor: "pointer", marginTop: 20,
           borderRadius: 14, padding: "14px 16px",
-          background: hatalar.onay ? "rgba(248,113,113,0.08)" : "rgba(255,255,255,0.04)",
-          border: `1px solid ${hatalar.onay ? "rgba(248,113,113,0.3)" : "rgba(255,255,255,0.08)"}`,
+          background: hatalar.onay ? "rgba(239,68,68,0.05)" : "#f9fafb",
+          border: `1px solid ${hatalar.onay ? "rgba(239,68,68,0.25)" : "#e5e7eb"}`,
         }}>
           <input
             type="checkbox"
@@ -335,16 +335,16 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
             }}
             style={{ marginTop: 2, width: 16, height: 16, accentColor: "#7c3aed", cursor: "pointer", flexShrink: 0 }}
           />
-          <span style={{ fontSize: 11, lineHeight: 1.75, color: "rgba(255,255,255,0.38)" }}>
-            <Link href="/on-bilgilendirme" target="_blank" style={{ color: "rgba(196,132,252,0.7)", textDecoration: "underline" }}>Ön Bilgilendirme</Link>
+          <span style={{ fontSize: 11, lineHeight: 1.75, color: "#6b7280" }}>
+            <Link href="/on-bilgilendirme" target="_blank" style={{ color: "#7c3aed", textDecoration: "underline" }}>Ön Bilgilendirme</Link>
             {", "}
-            <Link href="/mesafeli-satis-sozlesmesi" target="_blank" style={{ color: "rgba(196,132,252,0.7)", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</Link>
+            <Link href="/mesafeli-satis-sozlesmesi" target="_blank" style={{ color: "#7c3aed", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</Link>
             {" ve "}
-            <Link href="/kullanim-sartlari" target="_blank" style={{ color: "rgba(196,132,252,0.7)", textDecoration: "underline" }}>Kullanım Şartları</Link>
+            <Link href="/kullanim-sartlari" target="_blank" style={{ color: "#7c3aed", textDecoration: "underline" }}>Kullanım Şartları</Link>
             {"'nı okudum; dijital hizmetin ödeme sonrası başlamasını kabul ediyorum."}
           </span>
         </label>
-        {hatalar.onay && <p style={{ fontSize: 11, color: "#fca5a5", marginTop: 8 }}>{hatalar.onay}</p>}
+        {hatalar.onay && <p style={{ fontSize: 11, color: "#dc2626", marginTop: 8 }}>{hatalar.onay}</p>}
 
         <button
           type="submit"
@@ -355,7 +355,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
             cursor: yukleniyor ? "not-allowed" : "pointer",
             background: "linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #DB2777 100%)",
             color: "#fff", fontWeight: 700, fontSize: 15,
-            boxShadow: "0 8px 32px rgba(124,58,237,0.4)",
+            boxShadow: "0 8px 32px rgba(124,58,237,0.35)",
             opacity: yukleniyor ? 0.65 : 1,
             transition: "opacity 0.2s, transform 0.2s",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
