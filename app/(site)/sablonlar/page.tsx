@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Timer, Music, ClipboardCheck } from "lucide-react";
 import { SABLONLAR, KATEGORILER, Sablon } from "@/lib/sablonlar";
 import { SABLON_ETIKETLER, ETIKET_STILI } from "@/lib/sablon-meta";
+import SablonGeriDonusBanner, { saveSablonSecimi } from "@/components/SablonGeriDonusBanner";
 
 /* ─── Sabitler ─── */
 const DEMO_URLS: Record<string, string> = {
@@ -854,7 +855,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
             <motion.button
               whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
+              onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
               className="flex-1 py-4 rounded-2xl text-sm font-bold"
               style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
             >
@@ -905,7 +906,7 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
         y: -4,
         boxShadow: `0 16px 40px rgba(0,0,0,0.1), 0 0 0 1px ${r}30`,
       }}
-      onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
+      onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
       className="flex flex-col cursor-pointer"
       style={{
         background: "#ffffff",
@@ -989,7 +990,7 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}35` }}
             whileTap={{ scale: 0.97 }}
-            onClick={e => { e.stopPropagation(); router.push(`/olustur?sablon=${sablon.id}`); }}
+            onClick={e => { e.stopPropagation(); saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
             className="flex-1 py-3 rounded-2xl text-xs font-bold text-white"
             style={{
               background: `linear-gradient(135deg, ${r} 0%, ${r}cc 100%)`,
@@ -1078,6 +1079,9 @@ export default function SablonlarSayfasi() {
           </motion.div>
         </div>
       </div>
+
+      {/* ════════════ GERİ DÖNÜŞ BANNER ════════════ */}
+      <SablonGeriDonusBanner />
 
       {/* ════════════ FİLTRE BAR — sticky ════════════ */}
       <div className="sticky top-16 z-30 bg-white/90 backdrop-blur border-b border-gray-200">

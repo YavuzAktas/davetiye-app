@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { SABLONLAR } from "@/lib/sablonlar";
+import { clearSablonSecimi } from "@/components/SablonGeriDonusBanner";
 import Link from "next/link";
 import Image from "next/image";
 import PageLoader from "@/components/PageLoader";
@@ -393,6 +394,7 @@ function OlusturIcerigi() {
         setHata(data.hata || "Bir hata oluştu.");
         return;
       }
+      clearSablonSecimi();
       router.push(`/odeme/${data.slug}`);
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }

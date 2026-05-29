@@ -10,6 +10,7 @@ import {
   SABLON_ETIKETLER, ETIKET_STILI,
   PREMIUM_OZELLIKLER, STD_OZELLIK_LISTESI,
 } from "@/lib/sablon-meta";
+import { saveSablonSecimi } from "@/components/SablonGeriDonusBanner";
 
 /* ── Telefon Mockup ── */
 function TelefonMockup({ children }: { children: React.ReactNode }) {
@@ -269,7 +270,7 @@ export default function SablonDetaySayfasi() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => router.push(`/olustur?sablon=${sablon.id}`)}
+                onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
                 className="flex-1 py-4 rounded-2xl text-sm font-bold"
                 style={{
                   background:  isPremium ? goldGradient : `linear-gradient(135deg,${r} 0%,${r}cc 100%)`,

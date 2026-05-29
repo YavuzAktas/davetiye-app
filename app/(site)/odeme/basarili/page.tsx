@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import OnboardingChecklist from "@/components/OnboardingChecklist";
 
 /* ─── Confetti parçacıkları ─────────────────────────────── */
 const COLORS = ["#a855f7","#ec4899","#f59e0b","#34d399","#60a5fa","#f97316","#e879f9","#fb923c"];
@@ -332,11 +333,48 @@ function BasariliIcerigi() {
             </p>
           </div>
 
+          {/* Onboarding checklist */}
+          <OnboardingChecklist slug={davetiyeSlug} />
+
+          {/* Referral CTA */}
+          <div style={{
+            background:   "rgba(255,255,255,0.04)",
+            border:       "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 24, padding: "18px 24px", marginTop: 12,
+            display: "flex", alignItems: "center", gap: 14,
+            animation: "float-up 0.6s 2.8s both",
+          }}>
+            <div style={{
+              width: 42, height: 42, borderRadius: 14, flexShrink: 0,
+              background: "linear-gradient(135deg,rgba(168,85,247,0.3),rgba(244,114,182,0.3))",
+              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+            }}>🎁</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>
+                Arkadaşını getir,{" "}
+                <span style={{ background: "linear-gradient(135deg,#c084fc,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  50₺ kazan
+                </span>
+              </p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.32)", lineHeight: 1.4 }}>
+                Referral linkinle davet ettiğin her kişi ödeme yapınca hesabına 50₺ eklenir
+              </p>
+            </div>
+            <Link href="/dashboard/ayarlar" style={{
+              flexShrink: 0, textDecoration: "none",
+              fontSize: 11, fontWeight: 700, padding: "8px 16px", borderRadius: 12,
+              background: "linear-gradient(135deg,#7C3AED,#DB2777)", color: "#fff",
+              whiteSpace: "nowrap",
+            }}>
+              Linki Kopyala →
+            </Link>
+          </div>
+
           {/* Alt rozet */}
           <div style={{
-            textAlign:"center", marginTop:24,
+            textAlign:"center", marginTop:20,
             display:"flex", justifyContent:"center", gap:20,
-            animation:"float-up 0.6s 2.1s both",
+            animation:"float-up 0.6s 3s both",
           }}>
             {["🔒 SSL Şifreli","✅ iyzico","💳 Güvenli Ödeme"].map(r => (
               <span key={r} style={{ fontSize:11, color:"rgba(255,255,255,0.25)" }}>{r}</span>
