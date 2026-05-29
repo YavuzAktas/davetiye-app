@@ -67,6 +67,8 @@ export async function GET(): Promise<NextResponse> {
               mesaj: true,
               diyet: true,
               sarkiOnerisi: true,
+              ozelNitelikliVeriOnaylandiAt: true,
+              ozelNitelikliVeriMetinSurumu: true,
               createdAt: true,
               updatedAt: true,
               masaAtamasi: {
@@ -199,6 +201,8 @@ export async function GET(): Promise<NextResponse> {
         mesaj:      r.mesaj,
         diyet:      r.diyet,
         sarkiOnerisi: r.sarkiOnerisi,
+        ozelNitelikliVeriOnaylandiAt: r.ozelNitelikliVeriOnaylandiAt,
+        ozelNitelikliVeriMetinSurumu: r.ozelNitelikliVeriMetinSurumu,
         masa:       r.masaAtamasi?.masa
           ? {
               isim: r.masaAtamasi.masa.isim,

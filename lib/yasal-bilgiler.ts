@@ -22,9 +22,9 @@ export const ODEME_ALICI_VERILERI = [
   "ad soyad",
   "e-posta adresi",
   "IP adresi",
-  "alıcı/fatura adresi",
   "şehir",
   "telefon numarası",
-  "kimlik/vergi numarası",
+  "kurumsal fatura seçilirse alıcı/fatura adresi",
+  "kurumsal fatura seçilirse vergi numarası veya TCKN",
   "seçilen davetiye/ek özellikler ve ödeme tutarı",
 ];

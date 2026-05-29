@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { rsvpBildirimiGonder } from "@/lib/email";
 import { bildirimOlustur } from "@/lib/bildirim";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
+import { YASAL_METIN_SURUMU } from "@/lib/yasal-bilgiler";
 
 /* ── Zod şeması ─────────────────────────────────────────── */
 const rsvpSemasi = z.object({
@@ -151,6 +152,8 @@ export async function POST(req: NextRequest) {
       diyet:        diyet?.trim()        || null,
       sarkiOnerisi: sarkiOnerisi?.trim() || null,
       cevaplar:     cevaplar ?? undefined,
+      ozelNitelikliVeriOnaylandiAt: hassasBeslenmeBilgisiVar ? new Date() : null,
+      ozelNitelikliVeriMetinSurumu: hassasBeslenmeBilgisiVar ? YASAL_METIN_SURUMU : null,
     },
   });
 

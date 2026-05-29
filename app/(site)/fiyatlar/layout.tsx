@@ -53,7 +53,7 @@ const faqSchema = {
       name: "Fatura alabilir miyim?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ödeme belgesi için destek@bekleriz.com adresine e-posta atmanız yeterlidir; en geç 2 iş günü içinde iletilir.",
+        text: "Ödeme belgesi veya fatura talebi için destek@bekleriz.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
       },
     },
   ],

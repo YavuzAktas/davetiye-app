@@ -380,7 +380,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               </p>
               <h2 style={{ fontSize: 22, fontWeight: 800, color: "#1f2937", marginBottom: 6 }}>Fatura Bilgileri</h2>
               <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 26, lineHeight: 1.6 }}>
-                Ad-soyad ve e-posta adresiniz yalnızca fatura düzenlenmesi için gerekli — ödeme işlemi dışında kullanılmaz.
+                Ad, telefon ve şehir bilgisi ödeme güvenliği için alınır; kurumsal fatura isterseniz vergi ve adres bilgisi ayrıca istenir.
               </p>
 
               <OdemeCheckoutForm davetiyeId={davetiye.id} />

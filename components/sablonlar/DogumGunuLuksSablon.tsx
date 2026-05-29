@@ -592,6 +592,7 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
   const [adim, setAdim] = useState<"form"|"tamam">("form");
   const [form, setForm] = useState({ ad:"", kisiSayisi:"1", katilim:"", sarkiDilegi:"" });
   const [secilenDiyet, setSecilenDiyet] = useState<string[]>([]);
+  const [diyetOnayi, setDiyetOnayi] = useState(false);
   const toggleDiyet = (k: string) => setSecilenDiyet(p => p.includes(k) ? p.filter(d => d !== k) : [...p, k]);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
@@ -615,6 +616,7 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
   const gonder = async () => {
     if (!form.ad.trim()) { setHata("Lütfen adınızı girin."); return; }
     if (!form.katilim)   { setHata("Lütfen katılım durumunu seçin."); return; }
+    if (secilenDiyet.length > 0 && !diyetOnayi) { setHata("Yemek veya özel beslenme bilginizi iletmek için açık rıza onayını işaretleyin."); return; }
     setYukleniyor(true); setHata("");
     try {
       const res = await fetch("/api/rsvp", {
@@ -626,6 +628,7 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
           katilim: form.katilim === "evet",
           kisiSayisi: Number(form.kisiSayisi),
           diyet: secilenDiyet.length > 0 ? secilenDiyet.join(",") : undefined,
+          ozelNitelikliVeriOnayi: secilenDiyet.length > 0 ? true : undefined,
           sarkiOnerisi: form.sarkiDilegi.trim() || undefined,
         }),
       });
@@ -712,6 +715,12 @@ function RsvpFormKrem({ davetiyeId }: { davetiyeId: string }) {
                     }}>{opt.l}</button>
                   ))}
                 </div>
+                {secilenDiyet.length > 0 && (
+                  <label style={{ display:"flex", gap:8, alignItems:"flex-start", marginTop:12, fontFamily:"var(--font-cormorant),serif", fontSize:11, lineHeight:1.5, color:"#7A5A28", cursor:"pointer" }}>
+                    <input type="checkbox" checked={diyetOnayi} onChange={e => setDiyetOnayi(e.target.checked)} style={{ marginTop:2, accentColor:GOLD }} />
+                    <span>Yemek veya özel beslenme bilgilerimin davet sahibine etkinlik organizasyonu amacıyla iletilmesine açık rıza veriyorum.</span>
+                  </label>
+                )}
               </div>
             )}
 

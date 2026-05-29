@@ -195,6 +195,8 @@ model RSVP {
   diyet        String?
   sarkiOnerisi String?
   cevaplar     Json?
+  ozelNitelikliVeriOnaylandiAt DateTime?
+  ozelNitelikliVeriMetinSurumu String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   davetiyeId   String
@@ -205,6 +207,7 @@ model RSVP {
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, katilim, createdAt])
   @@index([davetiyeId, ad, createdAt])
+  @@index([ozelNitelikliVeriOnaylandiAt])
 }
 
 model Masa {

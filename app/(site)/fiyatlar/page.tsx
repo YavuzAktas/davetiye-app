@@ -56,7 +56,7 @@ const GUVEN_BADGELERI = [
   { icon: "🚫", baslik: "Abonelik Yok",       aciklama: "Otomatik yenileme yok" },
   { icon: "🎯", baslik: "Tek Seferlik",       aciklama: "Sadece o davetiye için" },
   { icon: "💳", baslik: "3D Secure",          aciklama: "Kart bilgin bizde saklanmaz" },
-  { icon: "📄", baslik: "Fatura",             aciklama: "2 iş günü içinde" },
+  { icon: "📄", baslik: "Ödeme Belgesi",      aciklama: "Destek üzerinden talep edilir" },
 ];
 
 const SORU_CEVAP = [
@@ -74,7 +74,7 @@ const SORU_CEVAP = [
   },
   {
     soru: "Fatura alabilir miyim?",
-    cevap: "Evet. Bireysel veya kurumsal fatura için destek@bekleriz.com adresine yazmanız yeterli; en geç 2 iş günü içinde iletilir.",
+    cevap: "Ödeme belgesi veya fatura talebi için destek@bekleriz.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
   },
   {
     soru: "Ödeme sonrasında özellik ekleyebilir miyim?",
