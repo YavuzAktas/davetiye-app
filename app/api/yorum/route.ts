@@ -8,6 +8,7 @@ export async function GET() {
   const yorumlar = await prisma.yorum.findMany({
     where: { onaylandi: true },
     orderBy: { createdAt: "desc" },
+    take: 20,
     select: { id: true, ad: true, sehir: true, etkinlikTuru: true, yorum: true, puan: true, createdAt: true },
   });
   return NextResponse.json(yorumlar);

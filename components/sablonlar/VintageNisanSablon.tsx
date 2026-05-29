@@ -3,6 +3,7 @@
 // Vintage Nişan Şablonu
 import { SablonProps } from "@/lib/sablon-tipleri";
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import MuzikCalar from "@/components/MuzikCalar";
 
 /* ════════════════ PALET ════════════════ */
@@ -108,7 +109,7 @@ function WaxSeal({ size = 190, onClick }: { size?: number; onClick?: () => void 
       animation: tapped ? "sealTap 0.4s ease forwards" : "sealFloat 5s ease-in-out infinite",
       filter: "drop-shadow(0 8px 28px rgba(42,24,8,0.18)) drop-shadow(0 2px 6px rgba(42,24,8,0.09))",
     }}>
-      <img src="/wax-seal.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} draggable={false} />
+      <Image src="/wax-seal.png" alt="" width={size} height={size} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
     </div>
   );
 }
@@ -136,8 +137,8 @@ function Polaroid({ rotate = 0, isActive = false, src }: { rotate?: number; isAc
       transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease",
       cursor: "pointer",
     }}>
-      <div style={{ width: "100%", height: 220, borderRadius: 2, overflow: "hidden" }}>
-        {valid && !imgErr ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={() => setImgErr(true)} /> : <PhotoPlaceholder />}
+      <div style={{ position: "relative", width: "100%", height: 220, borderRadius: 2, overflow: "hidden" }}>
+        {valid && !imgErr ? <Image src={src!} alt="" fill style={{ objectFit: "cover" }} onError={() => setImgErr(true)} /> : <PhotoPlaceholder />}
       </div>
     </div>
   );

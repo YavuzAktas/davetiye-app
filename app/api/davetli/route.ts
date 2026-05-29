@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
     where: { davetiyeId, davetiye: { userId: session.user.id } },
     select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true },
     orderBy: [{ grup: "asc" }, { ad: "asc" }],
+    take: 500,
   });
 
   return NextResponse.json({ davetliler });

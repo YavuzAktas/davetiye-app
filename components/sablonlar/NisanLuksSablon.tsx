@@ -78,7 +78,8 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
       position: "relative"
     }}>
       <div style={{
-        width:"100%", height:240, /* Yükseklik artırıldı */
+        position: "relative",
+        width:"100%", height:240,
         background:`linear-gradient(135deg, #6B1828 0%, #470D1A 100%)`,
         borderRadius:2,
         display:"flex", alignItems:"center", justifyContent:"center",
@@ -86,9 +87,7 @@ function Polaroid({ rotate=0, isActive=false, src }: { rotate?:number; isActive?
         WebkitTransform: "translateZ(0)",
       }}>
         {gecerli && !imgHata ? (
-          <img src={src} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt=""
-            loading="eager" crossOrigin="anonymous"
-            onError={() => setImgHata(true)} />
+          <Image src={src!} alt="" fill style={{ objectFit: "cover" }} priority onError={() => setImgHata(true)} />
         ) : (
           <svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.12)">
             <path d="M4 6h3.5l1.5-2h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>

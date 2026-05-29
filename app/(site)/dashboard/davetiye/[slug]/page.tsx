@@ -69,24 +69,30 @@ export default async function DavetiyeDetay({ params }: Props) {
         },
       },
       createdAt: true,
-      rsvplar: {
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          ad: true,
-          email: true,
-          mesaj: true,
-          katilim: true,
-          kisiSayisi: true,
-          diyet: true,
-          sarkiOnerisi: true,
-          cevaplar: true,
-        },
-      },
     },
   });
 
   if (!davetiye) notFound();
+
+  // İstatistikler DB'de hesaplanıyor; ilk 50 RSVP RsvpListesi için ayrı çekiliyor.
+  const [rsvpGruplari, baslangicRsvplar] = await Promise.all([
+    prisma.rSVP.groupBy({
+      by: ["katilim"],
+      where: { davetiyeId: davetiye.id },
+      _count: { id: true },
+      _sum: { kisiSayisi: true },
+    }),
+    prisma.rSVP.findMany({
+      where: { davetiyeId: davetiye.id },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      select: {
+        id: true, ad: true, email: true, mesaj: true,
+        katilim: true, kisiSayisi: true, diyet: true,
+        sarkiOnerisi: true, cevaplar: true,
+      },
+    }),
+  ]);
 
   const sablon = SABLONLAR.find(s => s.id === davetiye.sablon) ?? SABLONLAR[0];
   const renk = sablon.renk;
@@ -94,12 +100,13 @@ export default async function DavetiyeDetay({ params }: Props) {
   const emoji = EMOJILER[davetiye.etkinlikTur] ?? "🎉";
   const etiket = ETIKETLER[davetiye.etkinlikTur] ?? "Etkinlik";
 
-  const katilimlar = davetiye.rsvplar.filter(r => r.katilim);
-  const katilmayanlar = davetiye.rsvplar.filter(r => !r.katilim);
-  const toplamKisi = katilimlar.reduce((a, r) => a + r.kisiSayisi, 0);
-  const katilimYuzde = davetiye.rsvplar.length
-    ? Math.round((katilimlar.length / davetiye.rsvplar.length) * 100)
-    : 0;
+  const katilimSatiri    = rsvpGruplari.find(r => r.katilim);
+  const katilmayanSatiri = rsvpGruplari.find(r => !r.katilim);
+  const katilimCount    = katilimSatiri?._count.id ?? 0;
+  const katilmayanCount = katilmayanSatiri?._count.id ?? 0;
+  const toplamRsvp      = katilimCount + katilmayanCount;
+  const toplamKisi      = katilimSatiri?._sum.kisiSayisi ?? 0;
+  const katilimYuzde    = toplamRsvp ? Math.round((katilimCount / toplamRsvp) * 100) : 0;
 
   const davetiyeUrl = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}`;
   const odemeBekliyor = davetiye.odemeDurumu === "odeme_bekliyor";
@@ -251,9 +258,9 @@ export default async function DavetiyeDetay({ params }: Props) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: "Görüntülenme", value: davetiye.goruntulenme, icon: "👁️", sub: "toplam ziyaret" },
-            { label: "Katılıyor", value: katilimlar.length, icon: "✅", sub: `${toplamKisi} kişi toplam` },
-            { label: "Katılmıyor", value: katilmayanlar.length, icon: "❌", sub: "bildirim aldı" },
-            { label: "Yanıt Oranı", value: `%${katilimYuzde}`, icon: "📊", sub: `${davetiye.rsvplar.length} yanıt` },
+            { label: "Katılıyor", value: katilimCount, icon: "✅", sub: `${toplamKisi} kişi toplam` },
+            { label: "Katılmıyor", value: katilmayanCount, icon: "❌", sub: "bildirim aldı" },
+            { label: "Yanıt Oranı", value: `%${katilimYuzde}`, icon: "📊", sub: `${toplamRsvp} yanıt` },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -509,7 +516,7 @@ export default async function DavetiyeDetay({ params }: Props) {
 
             {/* RSVP List */}
             <RsvpListesi
-              baslangicRsvplar={davetiye.rsvplar.map(r => ({
+              baslangicRsvplar={baslangicRsvplar.map(r => ({
                 id: r.id,
                 ad: r.ad,
                 email: r.email,
@@ -686,14 +693,14 @@ export default async function DavetiyeDetay({ params }: Props) {
             </div>
 
             {/* RSVP Summary donut-style */}
-            {davetiye.rsvplar.length > 0 && (
+            {toplamRsvp > 0 && (
               <div className="bg-white border border-gray-100 rounded-3xl p-5">
                 <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Katılım Özeti</p>
                 <div className="space-y-3">
                   <div>
                     <div className="flex justify-between text-xs mb-1.5">
                       <span className="text-gray-500 font-medium">Katılıyor</span>
-                      <span className="font-bold" style={{ color: renk }}>{katilimlar.length}</span>
+                      <span className="font-bold" style={{ color: renk }}>{katilimCount}</span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
@@ -705,7 +712,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <div>
                     <div className="flex justify-between text-xs mb-1.5">
                       <span className="text-gray-500 font-medium">Katılmıyor</span>
-                      <span className="font-bold text-red-400">{katilmayanlar.length}</span>
+                      <span className="font-bold text-red-400">{katilmayanCount}</span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div

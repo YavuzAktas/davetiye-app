@@ -20,6 +20,7 @@ export async function GET(req: NextRequest, { params }: Props) {
     where: { davetiyeId: davetiye.id },
     select: { id: true, ad: true, telefon: true, katilim: true, kisiSayisi: true },
     orderBy: { createdAt: "desc" },
+    take: 200,
   });
 
   return NextResponse.json({ rsvplar });
