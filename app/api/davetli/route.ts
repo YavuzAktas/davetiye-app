@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
+import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
 async function sahiplikDogrula(davetiyeId: string, userId: string) {
   const davetiye = await prisma.davetiye.findUnique({
@@ -38,10 +39,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  const { davetiyeId, davetliler } = await req.json();
+  const { davetiyeId, davetliler, kvkkSorumlulukOnayi } = await req.json();
 
   if (!davetiyeId || !Array.isArray(davetliler) || davetliler.length === 0) {
     return NextResponse.json({ hata: "Geçersiz istek." }, { status: 400 });
+  }
+  if (kvkkSorumlulukOnayi !== true) {
+    return NextResponse.json({ hata: "Misafir verileri için KVKK sorumluluk onayı gereklidir." }, { status: 400 });
   }
 
   if (!await sahiplikDogrula(davetiyeId, session.user.id)) {
@@ -58,6 +62,13 @@ export async function POST(req: NextRequest) {
       grup:    d.grup    || "diger",
       notlar:  d.notlar  || null,
     })),
+  });
+
+  await yasalOnayKaydiOlustur({
+    userId: session.user.id,
+    email: session.user.email,
+    onayTipi: "davetli-listesi-ucuncu-kisi-verisi-sorumluluk",
+    kaynak: "davetli-listesi",
   });
 
   return NextResponse.json({ basarili: true, count: yeniDavetliler.count });

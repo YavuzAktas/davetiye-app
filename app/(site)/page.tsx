@@ -5,6 +5,7 @@ import Link from "next/link";
 import NasilCalisir from "@/components/NasilCalisir";
 import MiniHesapMakinesi from "@/components/MiniHesapMakinesi";
 import AkisDemosu from "@/components/AkisDemosu";
+import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 /* ── Hooks ── */
 function useInView(threshold = 0.15) {
@@ -1387,7 +1388,7 @@ export default function Anasayfa() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
             {[
-              { plan: "Temel", fiyat: "₺199", alt: "davetiye başına", ozellikler: ["Dijital davetiye", "Paylaşım linki", "RSVP takibi"], populer: false },
+              { plan: "Temel", fiyat: tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar), alt: "davetiye başına", ozellikler: ["Dijital davetiye", "Paylaşım linki", "RSVP takibi"], populer: false },
               { plan: "Popüler ekler", fiyat: "+₺149", alt: "özelliğe göre", ozellikler: ["Müzik", "Albüm & Anı", "Canlı duvar"], populer: true },
               { plan: "Organizasyon", fiyat: "+₺199", alt: "isteğe bağlı", ozellikler: ["Oturma planı", "Lüks şablon", "Sesli anı"], populer: false },
             ].map((item, i) => (

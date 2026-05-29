@@ -39,6 +39,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
   const [onizleme, setOnizleme] = useState<string | null>(null);
   const [fotoBasari, setFotoBasari] = useState(false);
   const [fotoHata, setFotoHata] = useState("");
+  const [fotoKvkkOnay, setFotoKvkkOnay] = useState(false);
   const dosyaInputRef = useRef<HTMLInputElement>(null);
 
   /* Anı state */
@@ -49,6 +50,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
   const [aniIcerik, setAniIcerik] = useState("");
   const [aniBasari, setAniBasari] = useState(false);
   const [aniHata, setAniHata] = useState("");
+  const [aniKvkkOnay, setAniKvkkOnay] = useState(false);
 
   /* Veri çek */
   useEffect(() => {
@@ -90,6 +92,10 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
   async function fotoYukle(e: React.FormEvent) {
     e.preventDefault();
     if (!seciliDosya || !fotoAd.trim()) return;
+    if (!fotoKvkkOnay) {
+      setFotoHata("Fotoğraf paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
+      return;
+    }
     setFotoYukleniyor(true);
     setFotoHata("");
     try {
@@ -102,6 +108,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
       const form = new FormData();
       form.append("ad", fotoAd.trim());
       form.append("dosya", sikistirilmis, seciliDosya.name);
+      form.append("kvkkOnay", "true");
 
       const res = await fetch(`/api/davetiye/${slug}/album`, { method: "POST", body: form });
       const json = await res.json();
@@ -111,6 +118,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
       setFotoAd("");
       setSeciliDosya(null);
       setOnizleme(null);
+      setFotoKvkkOnay(false);
       if (dosyaInputRef.current) dosyaInputRef.current.value = "";
       setTimeout(() => setFotoBasari(false), 4000);
     } catch {
@@ -124,13 +132,17 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
   async function aniGonder(e: React.FormEvent) {
     e.preventDefault();
     if (!aniAd.trim() || !aniIcerik.trim()) return;
+    if (!aniKvkkOnay) {
+      setAniHata("Anı paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
+      return;
+    }
     setAniYukleniyor(true);
     setAniHata("");
     try {
       const res = await fetch(`/api/davetiye/${slug}/ani`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim() }),
+        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim(), kvkkOnay: true }),
       });
       const json = await res.json();
       if (!res.ok) { setAniHata(json.hata); return; }
@@ -138,6 +150,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
       setAniBasari(true);
       setAniAd("");
       setAniIcerik("");
+      setAniKvkkOnay(false);
       setTimeout(() => setAniBasari(false), 4000);
     } catch {
       setAniHata("Gönderilemedi, tekrar dene.");
@@ -317,11 +330,24 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                         'ni inceleyebilirsiniz.
                       </p>
                     </div>
+                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={fotoKvkkOnay}
+                        onChange={e => setFotoKvkkOnay(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        style={{ accentColor: renk }}
+                      />
+                      <span className="text-[11px] leading-relaxed text-gray-500">
+                        Kişisel veri bildirimini okudum; adımın ve fotoğrafımın davet sahibine iletilmesini,
+                        onaylanırsa davetiye albümünde yayınlanmasını kabul ediyorum.
+                      </span>
+                    </label>
 
                     {fotoHata && <p className="text-xs text-red-500">{fotoHata}</p>}
                     <button
                       type="submit"
-                      disabled={fotoYukleniyor || !seciliDosya || !fotoAd.trim()}
+                      disabled={fotoYukleniyor || !seciliDosya || !fotoAd.trim() || !fotoKvkkOnay}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}
                     >
@@ -418,10 +444,23 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                         adresine yazabilirsiniz.
                       </p>
                     </div>
+                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={aniKvkkOnay}
+                        onChange={e => setAniKvkkOnay(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        style={{ accentColor: renk }}
+                      />
+                      <span className="text-[11px] leading-relaxed text-gray-500">
+                        Kişisel veri bildirimini okudum; adımın ve yazdığım anının davet sahibine iletilmesini,
+                        onaylanırsa anı defterinde yayınlanmasını kabul ediyorum.
+                      </span>
+                    </label>
                     {aniHata && <p className="text-xs text-red-500">{aniHata}</p>}
                     <button
                       type="submit"
-                      disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim()}
+                      disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim() || !aniKvkkOnay}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}
                     >

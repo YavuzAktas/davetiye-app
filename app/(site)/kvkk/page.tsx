@@ -1,5 +1,5 @@
 import YasalSayfa from "@/components/YasalSayfa";
-import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "KVKK Aydınlatma Metni",
@@ -11,7 +11,7 @@ export default function KvkkSayfasi() {
     <YasalSayfa
       etiket="Yasal"
       baslik="KVKK Aydınlatma Metni"
-      sonGuncelleme="2 Mayıs 2026"
+      sonGuncelleme={YASAL_SON_GUNCELLEME}
       bolumler={[
         {
           baslik: "Veri Sorumlusu",

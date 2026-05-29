@@ -1,7 +1,6 @@
 import { createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
-
-const YASAL_METIN_SURUMU = "2026-05-12";
+import { YASAL_METIN_SURUMU } from "@/lib/yasal-bilgiler";
 
 function emailHashOlustur(email?: string | null) {
   if (!email) return null;

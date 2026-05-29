@@ -1,5 +1,5 @@
 import YasalSayfa from "@/components/YasalSayfa";
-import { ODEME_ALICI_VERILERI } from "@/lib/yasal-bilgiler";
+import { ODEME_ALICI_VERILERI, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Gizlilik Politikası",
@@ -11,7 +11,7 @@ export default function GizlilikSayfasi() {
     <YasalSayfa
       etiket="Yasal"
       baslik="Gizlilik Politikası"
-      sonGuncelleme="29 Nisan 2026"
+      sonGuncelleme={YASAL_SON_GUNCELLEME}
       bolumler={[
         {
           baslik: "Genel Bakış",
@@ -140,7 +140,7 @@ export default function GizlilikSayfasi() {
               <li>Oturum bilgileri imzalı JWT token ile yönetilir</li>
               <li>Veritabanı erişimleri yetkilendirme ve sağlayıcı güvenlik kontrolleriyle sınırlandırılır</li>
               <li>Ödeme bilgileri tarafımızca saklanmaz; PCI DSS uyumlu iyzico altyapısı kullanılır</li>
-              <li>Veri ihlali durumunda KVKK m.12/5 ve Kurul kararları uyarınca, ihlalin öğrenilmesinden itibaren en kısa sürede ve en geç 72 saat içinde Kurul'a bildirim yapılması hedeflenir</li>
+              <li>Veri ihlali durumunda KVKK m.12/5 ve Kurul kararları uyarınca, ihlalin öğrenilmesinden itibaren mevzuata uygun şekilde ve gerekli hallerde en geç 72 saat içinde Kurul'a bildirim yapılır</li>
             </ul>
           ),
         },

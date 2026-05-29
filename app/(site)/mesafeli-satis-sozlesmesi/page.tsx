@@ -1,5 +1,6 @@
 import YasalSayfa from "@/components/YasalSayfa";
-import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
+import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 export const metadata = {
   title: "Mesafeli Satış Sözleşmesi",
@@ -11,7 +12,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
     <YasalSayfa
       etiket="Satış"
       baslik="Mesafeli Satış Sözleşmesi"
-      sonGuncelleme="17 Mayıs 2026"
+      sonGuncelleme={YASAL_SON_GUNCELLEME}
       bolumler={[
         {
           baslik: "Taraflar",
@@ -47,7 +48,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Temel dijital davetiye</th><td>₺199, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Temel dijital davetiye</th><td>{tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)}, KDV dahil, tek seferlik ödeme</td></tr>
                 <tr><th>Ek özellikler</th><td>Seçilen özelliklere göre ödeme öncesinde ayrıca gösterilir.</td></tr>
                 <tr><th>Toplam bedel</th><td>Davetiye oluşturma ve ödeme ekranında seçilen özelliklere göre hesaplanır.</td></tr>
                 <tr><th>Ödeme yöntemi</th><td>iyzico ödeme altyapısı üzerinden kredi/banka kartı ve desteklenen diğer ödeme yöntemleri.</td></tr>

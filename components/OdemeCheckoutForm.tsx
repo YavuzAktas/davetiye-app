@@ -341,7 +341,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
             <Link href="/mesafeli-satis-sozlesmesi" target="_blank" style={{ color: "#7c3aed", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</Link>
             {" ve "}
             <Link href="/kullanim-sartlari" target="_blank" style={{ color: "#7c3aed", textDecoration: "underline" }}>Kullanım Şartları</Link>
-            {"'nı okudum; dijital hizmetin ödeme sonrası başlamasını kabul ediyorum."}
+            {"'nı okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
           </span>
         </label>
         {hatalar.onay && <p style={{ fontSize: 11, color: "#dc2626", marginTop: 8 }}>{hatalar.onay}</p>}

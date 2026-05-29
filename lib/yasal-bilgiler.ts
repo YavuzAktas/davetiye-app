@@ -15,6 +15,9 @@ export const YASAL_BILGILER = {
   webKisa: new URL(siteUrl).host,
 };
 
+export const YASAL_METIN_SURUMU = "2026-05-29";
+export const YASAL_SON_GUNCELLEME = "29 Mayıs 2026";
+
 export const ODEME_ALICI_VERILERI = [
   "ad soyad",
   "e-posta adresi",

@@ -1,4 +1,5 @@
 import YasalSayfa from "@/components/YasalSayfa";
+import { YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Kullanım Şartları",
@@ -10,7 +11,7 @@ export default function KullanimSartlariSayfasi() {
     <YasalSayfa
       etiket="Yasal"
       baslik="Kullanım Şartları"
-      sonGuncelleme="29 Nisan 2026"
+      sonGuncelleme={YASAL_SON_GUNCELLEME}
       bolumler={[
         {
           baslik: "Taraflar ve Kapsam",

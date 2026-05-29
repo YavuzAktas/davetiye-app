@@ -188,12 +188,14 @@ export default function DavetlilerSayfasi() {
 
   const davetliEkle = async () => {
     if (!yeniAd.trim() || !davetiye) return;
+    if (!kvkkGoruldu) return;
     setEkleniyor(true);
     await fetch("/api/davetli", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         davetiyeId: davetiye.id,
+        kvkkSorumlulukOnayi: true,
         davetliler: [{
           ad:      yeniAd.trim(),
           telefon: yeniTelefon,
@@ -308,6 +310,10 @@ export default function DavetlilerSayfasi() {
 
   const topluImport = async () => {
     if (!topluMetin.trim() || !davetiye) return;
+    if (!kvkkGoruldu) {
+      setImportHata("İçe aktarma için misafir verileri KVKK sorumluluk onayını tamamlayın.");
+      return;
+    }
     setImportYukleniyor(true);
     setImportHata("");
     const davetlilerListesi = topluMetin.trim().split("\n")
@@ -324,7 +330,7 @@ export default function DavetlilerSayfasi() {
     const res = await fetch("/api/davetli", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ davetiyeId: davetiye.id, davetliler: davetlilerListesi }),
+      body: JSON.stringify({ davetiyeId: davetiye.id, davetliler: davetlilerListesi, kvkkSorumlulukOnayi: true }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -434,7 +440,8 @@ export default function DavetlilerSayfasi() {
                 <p className="text-sm font-semibold text-amber-900 mb-1">Misafir verilerini girerken KVKK sorumluluğunuz</p>
                 <p className="text-xs text-amber-800 leading-relaxed mb-3">
                   Sisteme girdiğiniz ad, telefon ve e-posta bilgileri üçüncü kişilere aittir.
-                  Bu verileri yalnızca davetiye gönderimi amacıyla ekleyin.
+                  Bu verileri yalnızca davetiye gönderimi amacıyla ekleyin; misafirleri uygun şekilde
+                  bilgilendirdiğinizi ve ekleme yetkiniz olduğunu kabul ettiğinizde bu kayıt saklanır.
                 </p>
                 <button
                   onClick={() => { localStorage.setItem(KVKK_KEY, "1"); setKvkkGoruldu(true); }}
@@ -635,9 +642,9 @@ export default function DavetlilerSayfasi() {
                 </div>
               </div>
 
-              <button
-                onClick={davetliEkle}
-                disabled={!yeniAd.trim() || ekleniyor}
+                <button
+                  onClick={davetliEkle}
+                disabled={!yeniAd.trim() || ekleniyor || !kvkkGoruldu}
                 className="flex items-center gap-2 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ backgroundColor: renk }}
               >
@@ -1018,7 +1025,7 @@ export default function DavetlilerSayfasi() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={topluImport}
-                  disabled={!topluMetin.trim() || importYukleniyor}
+                  disabled={!topluMetin.trim() || importYukleniyor || !kvkkGoruldu}
                   className="flex items-center gap-2 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ backgroundColor: renk }}
                 >

@@ -1,5 +1,6 @@
 import YasalSayfa from "@/components/YasalSayfa";
-import { ODEME_ALICI_VERILERI, YASAL_BILGILER } from "@/lib/yasal-bilgiler";
+import { ODEME_ALICI_VERILERI, YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
+import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 export const metadata = {
   title: "Ön Bilgilendirme Formu",
@@ -11,7 +12,7 @@ export default function OnBilgilendirmeSayfasi() {
     <YasalSayfa
       etiket="Satış"
       baslik="Ön Bilgilendirme Formu"
-      sonGuncelleme="17 Mayıs 2026"
+      sonGuncelleme={YASAL_SON_GUNCELLEME}
       bolumler={[
         {
           baslik: "Satıcı / Sağlayıcı Bilgileri",
@@ -48,7 +49,7 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Temel dijital davetiye</th><td>₺199, KDV dahil, tek seferlik ödeme</td></tr>
+                <tr><th>Temel dijital davetiye</th><td>{tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)}, KDV dahil, tek seferlik ödeme</td></tr>
                 <tr><th>Ek özellikler</th><td>Seçilen özelliklere göre ödeme ekranı öncesinde ayrıca gösterilir.</td></tr>
                 <tr><th>Toplam fiyat</th><td>Davetiye oluşturma ekranında ve ödeme öncesinde seçilen özelliklere göre hesaplanır.</td></tr>
                 <tr><th>Ek masraf</th><td>Platform tarafından ayrıca kargo, teslimat veya kurulum bedeli alınmaz.</td></tr>

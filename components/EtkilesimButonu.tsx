@@ -54,6 +54,7 @@ export default function EtkilesimButonu({
   const [yuklenenSayisi,    setYuklenenSayisi]    = useState(0);
   const [fotoBasari,        setFotoBasari]        = useState(false);
   const [fotoHata,          setFotoHata]          = useState("");
+  const [fotoKvkkOnay,      setFotoKvkkOnay]      = useState(false);
   const dosyaInputRef = useRef<HTMLInputElement>(null);
 
   /* ─ Anı state ─ */
@@ -65,6 +66,7 @@ export default function EtkilesimButonu({
   const [aniYukleniyor,   setAniYukleniyor]   = useState(false);
   const [aniBasari,       setAniBasari]       = useState(false);
   const [aniHata,         setAniHata]         = useState("");
+  const [aniKvkkOnay,     setAniKvkkOnay]     = useState(false);
 
   /* ─ Sesli anı state ─ */
   const [sesliAnilar,     setSesliAnilar]     = useState<SesliAni[]>([]);
@@ -78,6 +80,7 @@ export default function EtkilesimButonu({
   const [sesBlobUrl,      setSesBlobUrl]      = useState<string | null>(null);
   const [sesHata,         setSesHata]         = useState("");
   const [izinReddedildi,  setIzinReddedildi]  = useState(false);
+  const [sesKvkkOnay,     setSesKvkkOnay]     = useState(false);
   const recorderRef   = useRef<MediaRecorder | null>(null);
   const chunksRef     = useRef<Blob[]>([]);
   const timerRef      = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -162,6 +165,10 @@ export default function EtkilesimButonu({
   async function fotoYukle(e: React.FormEvent) {
     e.preventDefault();
     if (!seciliDosyalar.length || !fotoAd.trim()) return;
+    if (!fotoKvkkOnay) {
+      setFotoHata("Fotoğraf paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
+      return;
+    }
     setFotoYukleniyor(true); setFotoHata(""); setYuklenenSayisi(0);
     setFotoDurumlar(seciliDosyalar.map(() => "bekliyor"));
 
@@ -176,6 +183,7 @@ export default function EtkilesimButonu({
         const form = new FormData();
         form.append("ad", fotoAd.trim());
         form.append("dosya", sikis, dosya.name);
+        form.append("kvkkOnay", "true");
         const res  = await fetch(`/api/davetiye/${slug}/album`, { method: "POST", body: form });
         const json = await res.json();
         if (!res.ok) throw new Error(json.hata ?? "Yükleme başarısız");
@@ -199,6 +207,7 @@ export default function EtkilesimButonu({
     if (hataSayisi === 0) {
       setFotoBasari(true);
       setFotoAd(""); setSeciliDosyalar([]); setOnizlemeler([]); setFotoDurumlar([]);
+      setFotoKvkkOnay(false);
       if (dosyaInputRef.current) dosyaInputRef.current.value = "";
       fetchFotolar(true);
       setTimeout(() => setFotoBasari(false), 4000);
@@ -216,16 +225,20 @@ export default function EtkilesimButonu({
   async function aniGonder(e: React.FormEvent) {
     e.preventDefault();
     if (!aniAd.trim() || !aniIcerik.trim()) return;
+    if (!aniKvkkOnay) {
+      setAniHata("Anı paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
+      return;
+    }
     setAniYukleniyor(true); setAniHata("");
     try {
       const res  = await fetch(`/api/davetiye/${slug}/ani`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim() }),
+        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim(), kvkkOnay: true }),
       });
       const json = await res.json();
       if (!res.ok) { setAniHata(json.hata); return; }
-      setAniBasari(true); setAniAd(""); setAniIcerik("");
+      setAniBasari(true); setAniAd(""); setAniIcerik(""); setAniKvkkOnay(false);
       fetchAnilar(true);
       setTimeout(() => setAniBasari(false), 4000);
     } catch { setAniHata("Gönderilemedi, tekrar dene."); }
@@ -236,6 +249,9 @@ export default function EtkilesimButonu({
   async function kaydiBaslat() {
     if (!sesliAd.trim() || sesliAd.trim().length < 2) {
       setSesHata("Lütfen adınızı girin (en az 2 karakter)."); return;
+    }
+    if (!sesKvkkOnay) {
+      setSesHata("Sesli anı için kişisel veri bildirimi onayını işaretleyin."); return;
     }
     setSesHata("");
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -327,9 +343,11 @@ export default function EtkilesimButonu({
     form.append("adSoyad", sesliAd.trim());
     form.append("dosya", sesBlob, "ani.webm");
     form.append("sure", String(sure));
+    form.append("kvkkOnay", "true");
     const res = await fetch(`/api/davetiye/${slug}/sesli-ani`, { method: "POST", body: form });
     if (res.ok) {
       setKayitDurum("tamam");
+      setSesKvkkOnay(false);
       fetchSesliAnilar(true);
     } else {
       const d = await res.json().catch(() => ({}));
@@ -548,12 +566,25 @@ export default function EtkilesimButonu({
                         adresine yazabilirsiniz.
                       </p>
                     </div>
+                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={fotoKvkkOnay}
+                        onChange={e => setFotoKvkkOnay(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        style={{ accentColor: renk }}
+                      />
+                      <span className="text-[11px] leading-relaxed text-gray-500">
+                        Kişisel veri bildirimini okudum; adımın ve fotoğrafımın davet sahibine iletilmesini,
+                        onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
+                      </span>
+                    </label>
                     {fotoHata && (
                       <p className={`text-xs ${fotoHata.includes("en fazla") ? "text-amber-600" : "text-red-500"}`}>
                         {fotoHata}
                       </p>
                     )}
-                    <button type="submit" disabled={fotoYukleniyor || !seciliDosyalar.length || !fotoAd.trim()}
+                    <button type="submit" disabled={fotoYukleniyor || !seciliDosyalar.length || !fotoAd.trim() || !fotoKvkkOnay}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
                       {fotoYukleniyor
@@ -634,8 +665,21 @@ export default function EtkilesimButonu({
                         adresine yazabilirsiniz.
                       </p>
                     </div>
+                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={aniKvkkOnay}
+                        onChange={e => setAniKvkkOnay(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        style={{ accentColor: renk }}
+                      />
+                      <span className="text-[11px] leading-relaxed text-gray-500">
+                        Kişisel veri bildirimini okudum; adımın ve yazdığım anının davet sahibine iletilmesini,
+                        onaylanırsa anı defterinde yayınlanmasını kabul ediyorum.
+                      </span>
+                    </label>
                     {aniHata && <p className="text-xs text-red-500">{aniHata}</p>}
-                    <button type="submit" disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim()}
+                    <button type="submit" disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim() || !aniKvkkOnay}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
                       {aniYukleniyor ? "Gönderiliyor..." : "Anımı Gönder"}
@@ -702,6 +746,19 @@ export default function EtkilesimButonu({
                         adresine yazabilirsiniz.
                       </p>
                     </div>
+                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={sesKvkkOnay}
+                        onChange={e => setSesKvkkOnay(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        style={{ accentColor: renk }}
+                      />
+                      <span className="text-[11px] leading-relaxed text-gray-500">
+                        Kişisel veri bildirimini okudum; adımın ve ses kaydımın davet sahibine iletilmesini,
+                        onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
+                      </span>
+                    </label>
                     {izinReddedildi ? (
                       <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 flex flex-col gap-2.5">
                         <p className="text-xs font-semibold text-amber-800">Mikrofon erişimi engellendi</p>
@@ -719,8 +776,8 @@ export default function EtkilesimButonu({
                     ) : (
                       <>
                         {sesHata && <p className="text-xs text-red-500">{sesHata}</p>}
-                        <button onClick={kaydiBaslat}
-                          className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
+                        <button onClick={kaydiBaslat} disabled={!sesKvkkOnay}
+                          className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                           style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
                           🎙️ Kayıt Başlat
                         </button>

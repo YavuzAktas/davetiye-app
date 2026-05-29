@@ -86,10 +86,13 @@ export async function POST(
   const adSoyad = (form.get("adSoyad") as string | null)?.trim();
   const dosya = form.get("dosya") as File | null;
   const sureStr = form.get("sure") as string | null;
+  const kvkkOnay = form.get("kvkkOnay") === "true";
   const sure = sureStr ? parseInt(sureStr, 10) : 0;
 
   if (!adSoyad || adSoyad.length < 2)
     return NextResponse.json({ hata: "Ad Soyad en az 2 karakter olmalı." }, { status: 400 });
+  if (!kvkkOnay)
+    return NextResponse.json({ hata: "Sesli anı paylaşımı için kişisel veri bildirimi onayı gereklidir." }, { status: 400 });
   if (!dosya)
     return NextResponse.json({ hata: "Ses dosyası gerekli." }, { status: 400 });
   if (dosya.size > 4_000_000)
