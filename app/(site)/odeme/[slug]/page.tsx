@@ -376,7 +376,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               </p>
               <h2 style={{ fontSize: 22, fontWeight: 800, color: "#1f2937", marginBottom: 6 }}>Fatura Bilgileri</h2>
               <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 26, lineHeight: 1.6 }}>
-                Faturanız kayıtlı e-posta adresinize gönderilecektir.
+                Ad-soyad ve e-posta adresiniz yalnızca fatura düzenlenmesi için gerekli — ödeme işlemi dışında kullanılmaz.
               </p>
 
               <OdemeCheckoutForm davetiyeId={davetiye.id} />
@@ -384,10 +384,10 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               {/* Trust signals */}
               <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                 {[
-                  { icon: "👁️", text: "Önce gör, sonra öde" },
-                  { icon: "🔒", text: "Kart bilgin saklanmaz" },
-                  { icon: "🎯", text: "Tek seferlik ödeme" },
+                  { icon: "🔒", text: "Kart bilgilerin saklanmaz" },
                   { icon: "⚡", text: "Ödeme sonrası anında yayın" },
+                  { icon: "💳", text: "Tek seferlik, abonelik yok" },
+                  { icon: "🔄", text: "Dilediğin zaman düzenle" },
                 ].map(item => (
                   <div key={item.text} style={{
                     display: "flex", alignItems: "center", gap: 8,
@@ -400,7 +400,22 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                   </div>
                 ))}
               </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 14, flexWrap: "wrap" }}>
+
+              {/* Cayma hakkı notu */}
+              <p style={{
+                marginTop: 14, fontSize: 10.5, color: "#d1d5db",
+                lineHeight: 1.65, textAlign: "center",
+              }}>
+                Bekleriz dijital bir hizmettir. Ödeme onaylanıp davetiye yayına alındıktan sonra
+                dijital içerik teslimi başlar; bu aşamada mesafeli satış mevzuatı kapsamındaki
+                cayma hakkı sona erer. Satın almadan önce{" "}
+                <Link href="/sablonlar" style={{ color: "#a78bfa", textDecoration: "none" }}>
+                  ücretsiz önizleme
+                </Link>{" "}
+                yapmanızı öneririz.
+              </p>
+
+              <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
                 {["🔒 SSL", "✅ iyzico", "💳 3D Secure"].map(r => (
                   <span key={r} style={{ fontSize: 10, color: "#c4b5fd" }}>{r}</span>
                 ))}
