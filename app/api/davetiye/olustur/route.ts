@@ -4,11 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { authOptions } from "@/lib/auth";
 import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
+import { ipIzinVer } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş yapmanız gerekiyor." }, { status: 401 });
+  }
+
+  // Kullanıcı başına günlük 10 davetiye oluşturma limiti.
+  if (!(await ipIzinVer("davetiye-olustur", session.user.id, 10, 24 * 60 * 60_000))) {
+    return NextResponse.json({ hata: "Günlük davetiye oluşturma limitine ulaştınız." }, { status: 429 });
   }
 
   const body = await req.json();

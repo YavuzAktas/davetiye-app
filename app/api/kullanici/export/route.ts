@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { ipIzinVer } from "@/lib/rate-limit";
 
 export async function GET(): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
+  }
+
+  // Günde en fazla 3 export.
+  if (!(await ipIzinVer("kullanici-export", session.user.id, 3, 24 * 60 * 60_000))) {
+    return NextResponse.json({ hata: "Günlük veri dışa aktarma limitine ulaştınız." }, { status: 429 });
   }
 
   const user = await prisma.user.findUnique({

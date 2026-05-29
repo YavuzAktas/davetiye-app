@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 
@@ -24,6 +25,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       status: 302,
       headers: { Location: BASARISIZ },
     });
+  }
+
+  // API yanıtının HMAC-SHA256 imzasını doğrula (varsa).
+  // Alanlar: paymentStatus:paymentId:currency:basketId:conversationId:paidPrice:price:token
+  if (result.signature) {
+    const expected = createHmac("sha256", process.env.IYZICO_SECRET_KEY ?? "")
+      .update([
+        result.paymentStatus,
+        result.paymentId,
+        result.currency,
+        result.basketId,
+        result.conversationId,
+        result.paidPrice,
+        result.price,
+        result.token,
+      ].join(":"))
+      .digest("hex");
+    if (expected !== result.signature) {
+      return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+    }
   }
 
   // Atomik: token kullanılmamışsa işaretle ve davetiyeyi güncelle.
