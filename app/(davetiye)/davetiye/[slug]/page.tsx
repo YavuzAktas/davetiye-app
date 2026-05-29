@@ -10,6 +10,7 @@ import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { davetiyeCacheTag } from "@/lib/cache-tags";
 import BeklerizWatermark from "@/components/BeklerizWatermark";
+import { type RsvpSorular } from "@/lib/rsvp-sorular";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -46,6 +47,7 @@ function publicDavetiyeGetir(slug: string) {
         albumAktif: true,
         aktif: true,
         odemeDurumu: true,
+        rsvpSorular: true,
         user: {
           select: {
             name: true,
@@ -178,6 +180,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
       davetiyeId={davetiye.id}
       renk={temaRenk}
       etkinlikler={programEtkinlikleri}
+      rsvpSorular={(davetiye.rsvpSorular as RsvpSorular | null) ?? null}
     />
   );
 

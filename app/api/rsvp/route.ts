@@ -17,6 +17,13 @@ const rsvpSemasi = z.object({
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
   etkinlikler:  z.array(z.string().min(1).max(50)).max(20).optional(),
+  cevaplar:     z.object({
+    ulasim:    z.boolean().optional(),
+    cocuk:     z.number().int().min(0).max(20).optional(),
+    alerji:    z.string().max(500).optional(),
+    ozelSoru:  z.string().max(200).optional(),
+    ozelCevap: z.string().max(500).optional(),
+  }).optional(),
 });
 
 /* ── DB tabanlı per-davetiye limitler ───────────────────── */
@@ -44,7 +51,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler, cevaplar } = sonuc.data;
 
   /* 3. Davetiye var mı? */
   const davetiye = await prisma.davetiye.findUnique({
@@ -134,6 +141,7 @@ export async function POST(req: NextRequest) {
       mesaj:        mesaj?.trim()        || null,
       diyet:        diyet?.trim()        || null,
       sarkiOnerisi: sarkiOnerisi?.trim() || null,
+      cevaplar:     cevaplar ?? undefined,
     },
   });
 

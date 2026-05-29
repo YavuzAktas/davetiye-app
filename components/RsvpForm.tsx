@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { type RsvpSorular, rsvpSorularCoz, soruAktifMi, soruGetir } from "@/lib/rsvp-sorular";
 
 export interface EtkinlikProp {
   id: string;
@@ -17,9 +18,12 @@ interface Props {
   davetiyeId: string;
   renk: string;
   etkinlikler?: EtkinlikProp[];
+  rsvpSorular?: RsvpSorular | null;
 }
 
 type Adim = "secim" | "etkinlikler" | "form" | "tamamlandi";
+
+const YEMEK_SECENEKLER = ["vejeteryen", "vegan", "glutensiz", "laktozsuz"];
 
 function tarihFormatla(isoStr: string | null, saat: string | null): string {
   const parcalar: string[] = [];
@@ -34,7 +38,16 @@ function tarihFormatla(isoStr: string | null, saat: string | null): string {
   return parcalar.join(" · ");
 }
 
-export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) {
+export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorular }: Props) {
+  const sorular = rsvpSorularCoz(rsvpSorular);
+  const sarkiAktif  = soruAktifMi(sorular, "sarki");
+  const yemekAktif  = soruAktifMi(sorular, "yemek");
+  const ulasimAktif = soruAktifMi(sorular, "ulasim");
+  const cocukAktif  = soruAktifMi(sorular, "cocuk");
+  const alerjiAktif = soruAktifMi(sorular, "alerji");
+  const ozelAktif   = soruAktifMi(sorular, "ozel");
+  const ozelSoru    = soruGetir(sorular, "ozel").soru ?? "";
+
   const [adim, setAdim] = useState<Adim>("secim");
   const [katilim, setKatilim] = useState<boolean | null>(null);
   const [seciliEtkinlikler, setSeciliEtkinlikler] = useState<Set<string>>(
@@ -43,13 +56,14 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
 
-  const [form, setForm] = useState({
-    ad: "",
-    email: "",
-    telefon: "",
-    mesaj: "",
-    sarkiDilegi: "",
-  });
+  const [ad,         setAd]         = useState("");
+  const [sarkiDilegi, setSarkiDilegi] = useState("");
+  const [mesaj,      setMesaj]      = useState("");
+  const [yemekSecim, setYemekSecim] = useState<Set<string>>(new Set());
+  const [ulasim,     setUlasim]     = useState<boolean | null>(null);
+  const [cocukSayisi, setCocukSayisi] = useState(0);
+  const [alerji,     setAlerji]     = useState("");
+  const [ozelCevap,  setOzelCevap]  = useState("");
 
   const programVar = etkinlikler.length >= 2;
 
@@ -70,15 +84,36 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
     });
   };
 
+  const toggleYemek = (secim: string) => {
+    setYemekSecim(prev => {
+      const s = new Set(prev);
+      s.has(secim) ? s.delete(secim) : s.add(secim);
+      return s;
+    });
+  };
+
   const handleGonder = async () => {
-    if (!form.ad.trim() || form.ad.length > 100) {
+    if (!ad.trim() || ad.length > 100) {
       setHata("Lütfen geçerli bir ad girin (Maks. 100 karakter).");
       return;
     }
-    if (form.mesaj.length > 500) {
+    if (mesaj.length > 500) {
       setHata("Mesajınız çok uzun (Maks. 500 karakter).");
       return;
     }
+
+    /* cevaplar JSON: sadece dolu alanlar */
+    const cevaplar: Record<string, unknown> = {};
+    if (katilim) {
+      if (ulasimAktif && ulasim !== null) cevaplar.ulasim = ulasim;
+      if (cocukAktif && cocukSayisi > 0)  cevaplar.cocuk  = cocukSayisi;
+      if (alerjiAktif && alerji.trim())   cevaplar.alerji = alerji.trim();
+      if (ozelAktif && ozelCevap.trim()) {
+        cevaplar.ozelSoru  = ozelSoru;
+        cevaplar.ozelCevap = ozelCevap.trim();
+      }
+    }
+
     setYukleniyor(true);
     setHata("");
     try {
@@ -87,15 +122,13 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           davetiyeId,
-          ad:           form.ad,
-          email:        form.email,
-          telefon:      form.telefon,
+          ad,
+          mesaj:        mesaj || undefined,
           katilim,
-          mesaj:        form.mesaj,
-          sarkiOnerisi: form.sarkiDilegi.trim() || undefined,
-          etkinlikler:  katilim && programVar
-            ? Array.from(seciliEtkinlikler)
-            : undefined,
+          sarkiOnerisi: sarkiAktif && sarkiDilegi.trim() ? sarkiDilegi.trim() : undefined,
+          diyet:        yemekAktif && yemekSecim.size > 0 ? Array.from(yemekSecim).join(",") : undefined,
+          cevaplar:     Object.keys(cevaplar).length > 0 ? cevaplar : undefined,
+          etkinlikler:  katilim && programVar ? Array.from(seciliEtkinlikler) : undefined,
         }),
       });
       const json = await res.json().catch(() => ({}));
@@ -265,32 +298,145 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
         )}
 
         <div className="space-y-4">
+          {/* Ad Soyad — zorunlu */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Adınız Soyadınız *</label>
             <input
               type="text"
               placeholder="Adınızı girin"
-              value={form.ad}
-              onChange={e => setForm({ ...form, ad: e.target.value })}
+              value={ad}
+              onChange={e => setAd(e.target.value)}
               maxLength={100}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              🎵 Şarkı dileğiniz <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Dans pistindeki favori şarkınız?"
-              value={form.sarkiDilegi}
-              onChange={e => setForm({ ...form, sarkiDilegi: e.target.value })}
-              maxLength={200}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
-            />
-          </div>
+          {/* Şarkı isteği */}
+          {sarkiAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                🎵 Şarkı dileğiniz <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Dans pistindeki favori şarkınız?"
+                value={sarkiDilegi}
+                onChange={e => setSarkiDilegi(e.target.value)}
+                maxLength={200}
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
+              />
+            </div>
+          )}
 
+          {/* Yemek tercihi */}
+          {katilim && yemekAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🍽️ Yemek tercihi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {YEMEK_SECENEKLER.map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => toggleYemek(s)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                      yemekSecim.has(s)
+                        ? "border-transparent text-white"
+                        : "border-gray-200 text-gray-600 bg-gray-50 hover:border-gray-300"
+                    }`}
+                    style={yemekSecim.has(s) ? { backgroundColor: renk } : {}}
+                  >
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Servis / Ulaşım */}
+          {katilim && ulasimAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🚌 Servis kullanacak mısınız?
+              </label>
+              <div className="flex gap-2">
+                {[{ val: true, label: "Evet" }, { val: false, label: "Hayır" }].map(({ val, label }) => (
+                  <button
+                    key={String(val)}
+                    type="button"
+                    onClick={() => setUlasim(val)}
+                    className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${
+                      ulasim === val
+                        ? "border-transparent text-white"
+                        : "border-gray-200 text-gray-600 bg-gray-50 hover:border-gray-300"
+                    }`}
+                    style={ulasim === val ? { backgroundColor: renk } : {}}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Çocuk katılımı */}
+          {katilim && cocukAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                👶 Kaç çocuk getiriyorsunuz?
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCocukSayisi(Math.max(0, cocukSayisi - 1))}
+                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg flex items-center justify-center transition-colors"
+                >−</button>
+                <span className="text-lg font-bold text-gray-800 w-8 text-center tabular-nums">{cocukSayisi}</span>
+                <button
+                  type="button"
+                  onClick={() => setCocukSayisi(Math.min(10, cocukSayisi + 1))}
+                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg flex items-center justify-center transition-colors"
+                >+</button>
+              </div>
+            </div>
+          )}
+
+          {/* Alerji / Diyet */}
+          {alerjiAktif && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ⚠️ Alerji veya diyet kısıtlaması <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Varsa alerji veya özel diyet bilginizi yazın"
+                value={alerji}
+                onChange={e => setAlerji(e.target.value)}
+                maxLength={200}
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
+              />
+            </div>
+          )}
+
+          {/* Özel soru */}
+          {ozelAktif && ozelSoru && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                💬 {ozelSoru} <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Yanıtınızı yazın"
+                value={ozelCevap}
+                onChange={e => setOzelCevap(e.target.value)}
+                maxLength={500}
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
+              />
+            </div>
+          )}
+
+          {/* Not */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               💬 Not <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
@@ -298,8 +444,8 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
             <textarea
               rows={2}
               placeholder="Bir şey eklemek ister misiniz?"
-              value={form.mesaj}
-              onChange={e => setForm({ ...form, mesaj: e.target.value })}
+              value={mesaj}
+              onChange={e => setMesaj(e.target.value)}
               maxLength={500}
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400 resize-none"
             />
@@ -345,10 +491,9 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [] }: Props) 
             Etkinlik Programı
           </p>
           <div className="relative">
-            {/* Dikey çizgi */}
             <div className="absolute left-4 top-3 bottom-3 w-px bg-gray-100" />
             <div className="space-y-4">
-              {etkinlikler.map((e, i) => (
+              {etkinlikler.map((e) => (
                 <div key={e.id} className="flex gap-4 relative">
                   <div
                     className="w-8 h-8 rounded-xl flex items-center justify-center text-base shrink-0 z-10"

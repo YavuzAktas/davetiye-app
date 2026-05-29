@@ -12,6 +12,7 @@ import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
 import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
+import { type RsvpSoru, type RsvpSoruId, VARSAYILAN_RSVP_SORULAR, SORU_META } from "@/lib/rsvp-sorular";
 
 const FONTLAR = [
   { id: "font-sans",  isim: "Modern",   ornek: "Aa" },
@@ -194,8 +195,10 @@ function OlusturIcerigi() {
       if (t.canliDuvarAcik  != null) setCanliDuvarAcik(t.canliDuvarAcik);
       if (t.oturmaPlanAcik  != null) setOturmaPlanAcik(t.oturmaPlanAcik);
       if (t.aniKitabiAcik   != null) setAniKitabiAcik(t.aniKitabiAcik);
-      if (t.dressKodAcik   != null) setDressKodAcik(t.dressKodAcik);
-      if (t.dressKodMetin)          setDressKodMetin(t.dressKodMetin);
+      if (t.dressKodAcik      != null) setDressKodAcik(t.dressKodAcik);
+      if (t.dressKodMetin)            setDressKodMetin(t.dressKodMetin);
+      if (t.rsvpSorularAcik   != null) setRsvpSorularAcik(t.rsvpSorularAcik);
+      if (t.rsvpSorularConfig)         setRsvpSorularConfig(t.rsvpSorularConfig);
     } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -221,6 +224,15 @@ function OlusturIcerigi() {
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
+  const [rsvpSorularAcik,   setRsvpSorularAcik]   = useState(false);
+  const [rsvpSorularConfig, setRsvpSorularConfig] = useState<RsvpSoru[]>(VARSAYILAN_RSVP_SORULAR);
+
+  function rsvpSoruToggle(id: RsvpSoruId) {
+    setRsvpSorularConfig(prev => prev.map(s => s.id === id ? { ...s, aktif: !s.aktif } : s));
+  }
+  function rsvpOzelSoruGuncelle(soru: string) {
+    setRsvpSorularConfig(prev => prev.map(s => s.id === "ozel" ? { ...s, soru } : s));
+  }
 
   const hasPolaroid        = isNisanLuks || isVintageNisan;
   const hasSesliOzellikler = isNisanLuks || isVintageNisan;
@@ -319,6 +331,7 @@ function OlusturIcerigi() {
           notAcik, muzikAcik, albumAcik, aniDefteriAcik,
           sesliAniAcik, canliDuvarAcik, oturmaPlanAcik, aniKitabiAcik,
           dressKodAcik, dressKodMetin,
+          rsvpSorularAcik, rsvpSorularConfig,
         }));
       } catch {}
       setGirisModalAcik(true);
@@ -372,6 +385,7 @@ function OlusturIcerigi() {
           aniKitabiAktif:    aniKitabiAcik,
           dressKod:          dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
           dressKodRenkler:   dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
+          rsvpSorular:       rsvpSorularAcik ? rsvpSorularConfig : null,
         }),
       });
       const data = await res.json();
@@ -764,6 +778,45 @@ function OlusturIcerigi() {
                         </div>
                       </OzellikKarti>
                     )}
+
+                    {/* 📋 RSVP Soruları */}
+                    <OzellikKarti
+                      icon="📋" baslik="Katılım Formu Soruları"
+                      aciklama="Misafirlerden ekstra bilgi toplayın: yemek tercihi, servis, çocuk sayısı ve daha fazlası"
+                      misafirGorur="Seçtiğiniz sorular RSVP formunda görünür"
+                      acik={rsvpSorularAcik} onToggle={() => setRsvpSorularAcik(!rsvpSorularAcik)}
+                    >
+                      <div className="space-y-2">
+                        {VARSAYILAN_RSVP_SORULAR.map(({ id }) => {
+                          const meta  = SORU_META[id];
+                          const soru  = rsvpSorularConfig.find(s => s.id === id)!;
+                          return (
+                            <div key={id}>
+                              <div className="flex items-center justify-between gap-3 py-2.5">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <span className="text-base shrink-0">{meta.icon}</span>
+                                  <div className="min-w-0">
+                                    <p className="text-sm font-semibold text-gray-700 leading-tight">{meta.label}</p>
+                                    <p className="text-xs text-gray-400 leading-snug">{meta.aciklama}</p>
+                                  </div>
+                                </div>
+                                <Toggle acik={soru.aktif} onChange={() => rsvpSoruToggle(id)} />
+                              </div>
+                              {id === "ozel" && soru.aktif && (
+                                <input
+                                  type="text"
+                                  placeholder="Soru metninizi yazın (örn. Masa tercihiniz?)"
+                                  value={soru.soru ?? ""}
+                                  maxLength={200}
+                                  onChange={e => rsvpOzelSoruGuncelle(e.target.value)}
+                                  className="w-full border-2 border-purple-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white mb-2"
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </OzellikKarti>
 
                     {/* 🎵 Arka Plan Müziği */}
                     <OzellikKarti

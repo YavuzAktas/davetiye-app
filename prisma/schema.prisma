@@ -126,6 +126,7 @@ model Davetiye {
   fiyatSnapshot        Json?
   hatirlatiMail30dk    Boolean      @default(false)
   hatirlatiMail24saat  Boolean      @default(false)
+  rsvpSorular          Json?
   siparisler      Siparis[]
   odemeTokenlar   OdemeToken[]
   odemeKayitlari  OdemeKaydi[]
@@ -187,6 +188,7 @@ model RSVP {
   mesaj        String?
   diyet        String?
   sarkiOnerisi String?
+  cevaplar     Json?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   davetiyeId   String

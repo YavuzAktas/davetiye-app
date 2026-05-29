@@ -6,6 +6,14 @@ const DIYET_EMOJI: Record<string, string> = {
   vegan: "🌱", vejetaryen: "🥗", glutensiz: "🌾", laktozsuz: "🥛",
 };
 
+type RsvpCevaplar = {
+  ulasim?: boolean;
+  cocuk?: number;
+  alerji?: string;
+  ozelSoru?: string;
+  ozelCevap?: string;
+};
+
 type RsvpItem = {
   id: string;
   ad: string;
@@ -15,10 +23,35 @@ type RsvpItem = {
   kisiSayisi: number;
   diyet: string | null;
   sarkiOnerisi: string | null;
+  cevaplar: RsvpCevaplar | null;
 };
 
 type YuklenenAlan = { id: string; alan: "katilim" | "kisi" } | null;
 type Parlayan = { id: string; tur: "yesil" | "kirmizi" } | null;
+
+function CevapBadgeleri({ cevaplar }: { cevaplar: RsvpCevaplar | null }) {
+  if (!cevaplar) return null;
+  const items: { icon: string; text: string }[] = [];
+  if (cevaplar.ulasim != null)
+    items.push({ icon: "🚌", text: `Servis: ${cevaplar.ulasim ? "Evet" : "Hayır"}` });
+  if (cevaplar.cocuk != null && cevaplar.cocuk > 0)
+    items.push({ icon: "👶", text: `${cevaplar.cocuk} çocuk` });
+  if (cevaplar.alerji)
+    items.push({ icon: "⚠️", text: cevaplar.alerji });
+  if (cevaplar.ozelCevap)
+    items.push({ icon: "💬", text: cevaplar.ozelCevap });
+  if (items.length === 0) return null;
+  return (
+    <>
+      {items.map((item, i) => (
+        <span key={i} className="text-xs text-gray-500 flex items-center gap-1 min-w-0">
+          <span className="shrink-0">{item.icon}</span>
+          <span className="truncate max-w-36">{item.text}</span>
+        </span>
+      ))}
+    </>
+  );
+}
 
 export default function RsvpListesi({
   baslangicRsvplar,
@@ -195,6 +228,7 @@ export default function RsvpListesi({
                     {rsvp.mesaj && (
                       <span className="text-xs text-gray-400 italic truncate max-w-45">"{rsvp.mesaj}"</span>
                     )}
+                    {rsvp.katilim && <CevapBadgeleri cevaplar={rsvp.cevaplar} />}
                   </div>
                   {rsvp.sarkiOnerisi && (
                     <div className="mt-1.5 flex items-center gap-1.5">

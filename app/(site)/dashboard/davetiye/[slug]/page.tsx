@@ -71,6 +71,7 @@ export default async function DavetiyeDetay({ params }: Props) {
           kisiSayisi: true,
           diyet: true,
           sarkiOnerisi: true,
+          cevaplar: true,
         },
       },
     },
@@ -384,6 +385,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                 kisiSayisi: r.kisiSayisi,
                 diyet: r.diyet,
                 sarkiOnerisi: r.sarkiOnerisi,
+                cevaplar: (r.cevaplar as { ulasim?: boolean; cocuk?: number; alerji?: string; ozelSoru?: string; ozelCevap?: string } | null) ?? null,
               }))}
               slug={slug}
               renk={renk}
@@ -455,6 +457,19 @@ export default async function DavetiyeDetay({ params }: Props) {
                       📅
                     </div>
                     <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                </Link>
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                      📋
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">RSVP Soruları</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
