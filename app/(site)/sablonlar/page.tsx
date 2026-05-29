@@ -1009,19 +1009,49 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
 /* ══════════════════════════════════════════════
    ANA SAYFA
 ══════════════════════════════════════════════ */
+/* ── Use-case presets ── */
+const USE_CASE_PRESETLER = [
+  { id: "buyuk-dugun",   label: "Büyük Düğün",     emoji: "💒", kat: "dugun",    etiket: "hepsi" },
+  { id: "kucuk-toren",   label: "Küçük & Özel",    emoji: "🏡", kat: "kina",     etiket: "hepsi" },
+  { id: "kurumsal",      label: "Kurumsal",         emoji: "💼", kat: "kurumsal", etiket: "hepsi" },
+  { id: "luks-premium",  label: "Lüks & Premium",  emoji: "✨", kat: "hepsi",    etiket: "Lüks"  },
+  { id: "eglenceli",     label: "Eğlenceli",        emoji: "🎉", kat: "hepsi",    etiket: "Eğlenceli" },
+] as const;
+
+const ETIKET_FILTRELER = ["hepsi", "En Çok Seçilen", "Lüks", "Minimal", "Romantik", "Eğlenceli"] as const;
+type EtiketFiltre = typeof ETIKET_FILTRELER[number];
+
 export default function SablonlarSayfasi() {
   const [aktifKat, setAktifKat] = useState("hepsi");
+  const [aktifEtiket, setAktifEtiket] = useState<EtiketFiltre>("hepsi");
 
-  const goruntulenenPremium = useMemo(() =>
-    aktifKat === "hepsi"
-      ? SABLONLAR.filter(s => PREMIUM.has(s.id))
-      : SABLONLAR.filter(s => PREMIUM.has(s.id) && s.kategori === aktifKat),
-    [aktifKat]);
+  function sablonEtiketEslesiyor(sablonId: string): boolean {
+    if (aktifEtiket === "hepsi") return true;
+    return (SABLON_ETIKETLER[sablonId] ?? []).includes(aktifEtiket);
+  }
+
+  function useCase(kat: string, etiket: string) {
+    setAktifKat(kat);
+    setAktifEtiket(etiket as EtiketFiltre);
+  }
+
+  const aktifPreset = USE_CASE_PRESETLER.find(p => p.kat === aktifKat && p.etiket === aktifEtiket)?.id ?? null;
+
+  const goruntulenenPremium = useMemo(() => {
+    let list = SABLONLAR.filter(s => PREMIUM.has(s.id));
+    if (aktifKat !== "hepsi") list = list.filter(s => s.kategori === aktifKat);
+    if (aktifEtiket !== "hepsi") list = list.filter(s => sablonEtiketEslesiyor(s.id));
+    return list;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aktifKat, aktifEtiket]);
 
   const goruntulenenStandart = useMemo(() => {
-    const std = SABLONLAR.filter(s => !PREMIUM.has(s.id));
-    return aktifKat === "hepsi" ? std : std.filter(s => s.kategori === aktifKat);
-  }, [aktifKat]);
+    let list = SABLONLAR.filter(s => !PREMIUM.has(s.id));
+    if (aktifKat !== "hepsi") list = list.filter(s => s.kategori === aktifKat);
+    if (aktifEtiket !== "hepsi") list = list.filter(s => sablonEtiketEslesiyor(s.id));
+    return list;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aktifKat, aktifEtiket]);
 
   const toplamSonuc = goruntulenenPremium.length + goruntulenenStandart.length;
 
@@ -1085,7 +1115,40 @@ export default function SablonlarSayfasi() {
 
       {/* ════════════ FİLTRE BAR — sticky ════════════ */}
       <div className="sticky top-16 z-30 bg-white/90 backdrop-blur border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
+
+        {/* ── Use-case preset hızlı linkler ── */}
+        <div className="max-w-5xl mx-auto px-4 pt-3 pb-0 flex gap-2 overflow-x-auto scrollbar-hide">
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300 self-center shrink-0 mr-1">Kullanım</span>
+          {USE_CASE_PRESETLER.map(preset => {
+            const isActive = aktifPreset === preset.id;
+            return (
+              <motion.button key={preset.id}
+                whileHover={{ scale:1.04 }} whileTap={{ scale:0.96 }}
+                onClick={() => useCase(preset.kat, preset.etiket)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0 transition-colors"
+                style={{
+                  background: isActive ? "#faf5ff" : "#f9fafb",
+                  color: isActive ? "#7c3aed" : "#9ca3af",
+                  border: isActive ? "1px solid #e9d5ff" : "1px solid #f3f4f6",
+                }}>
+                <span>{preset.emoji}</span>
+                {preset.label}
+              </motion.button>
+            );
+          })}
+          {(aktifKat !== "hepsi" || aktifEtiket !== "hepsi") && (
+            <motion.button
+              initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }}
+              onClick={() => { setAktifKat("hepsi"); setAktifEtiket("hepsi"); }}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0 text-gray-400 border border-dashed border-gray-200 hover:border-gray-300 transition-colors">
+              ✕ Temizle
+            </motion.button>
+          )}
+        </div>
+
+        {/* ── Kategori (event type) ── */}
+        <div className="max-w-5xl mx-auto px-4 pt-2 pb-1 flex gap-2 overflow-x-auto scrollbar-hide">
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300 self-center shrink-0 mr-1">Tür</span>
           {KATEGORILER.map(kat => {
             const sayi = kat.id === "hepsi" ? SABLONLAR.length : SABLONLAR.filter(s => s.kategori === kat.id).length;
             const isActive = aktifKat === kat.id;
@@ -1110,6 +1173,28 @@ export default function SablonlarSayfasi() {
             );
           })}
         </div>
+
+        {/* ── Stil / etiket filtresi ── */}
+        <div className="max-w-5xl mx-auto px-4 pt-1 pb-3 flex gap-2 overflow-x-auto scrollbar-hide">
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300 self-center shrink-0 mr-1">Stil</span>
+          {ETIKET_FILTRELER.map(etiket => {
+            const isActive = aktifEtiket === etiket;
+            const stil = etiket !== "hepsi" ? ETIKET_STILI[etiket] : null;
+            return (
+              <motion.button key={etiket}
+                whileHover={{ scale:1.04 }} whileTap={{ scale:0.96 }}
+                onClick={() => setAktifEtiket(etiket)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0 transition-all"
+                style={{
+                  background: isActive ? (stil?.bg ?? "#f3f4f6") : "#f9fafb",
+                  color: isActive ? (stil?.color ?? "#374151") : "#9ca3af",
+                  border: isActive ? `1px solid ${stil?.border ?? "#e5e7eb"}` : "1px solid #f3f4f6",
+                }}>
+                {etiket === "hepsi" ? "Tümü" : etiket}
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       {/* ════════════ İÇERİK ════════════ */}
@@ -1118,8 +1203,8 @@ export default function SablonlarSayfasi() {
         {toplamSonuc === 0 ? (
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} className="text-center py-28">
             <p className="text-5xl mb-4">🔍</p>
-            <p className="font-semibold mb-3 text-gray-500">Bu kategoride şablon bulunamadı.</p>
-            <button onClick={() => setAktifKat("hepsi")} className="text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
+            <p className="font-semibold mb-3 text-gray-500">Bu filtre kombinasyonunda şablon bulunamadı.</p>
+            <button onClick={() => { setAktifKat("hepsi"); setAktifEtiket("hepsi"); }} className="text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
               Tüm şablonlara bak →
             </button>
           </motion.div>
