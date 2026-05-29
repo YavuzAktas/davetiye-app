@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const AKTIVITELER = [
   { isim: "Ayşe K.",    sehir: "İstanbul",  eylem: "düğün davetiyesi oluşturdu",       emoji: "💒", g1: "#a855f7", g2: "#db2777" },
@@ -20,14 +21,29 @@ const AKTIVITELER = [
 type Aktivite = typeof AKTIVITELER[0];
 
 const SURE = 5000;
+const ILKGOSTERME_GECIKMESI = 15_000;
+const ARALIK = 30_000;
+
+const IZIN_VERILEN_YOLLAR = ["/", "/fiyatlar"];
+
+function izinliSayfa(pathname: string): boolean {
+  if (IZIN_VERILEN_YOLLAR.includes(pathname)) return true;
+  if (pathname.startsWith("/blog")) return true;
+  return false;
+}
 
 export default function AktiviteBildirimi() {
+  const pathname = usePathname();
   const [aktif,  setAktif]  = useState<Aktivite | null>(null);
   const [goster, setGoster] = useState(false);
   const [cikis,  setCikis]  = useState(false);
   const [anim,   setAnim]   = useState(false);
 
+  const sayfa = izinliSayfa(pathname);
+
   useEffect(() => {
+    if (!sayfa) return;
+
     let mountId:    ReturnType<typeof setTimeout>;
     let intervalId: ReturnType<typeof setInterval>;
     let kapatId:    ReturnType<typeof setTimeout>;
@@ -49,8 +65,8 @@ export default function AktiviteBildirimi() {
 
     mountId = setTimeout(() => {
       gosterBildirim();
-      intervalId = setInterval(gosterBildirim, 14000);
-    }, 8000);
+      intervalId = setInterval(gosterBildirim, ARALIK);
+    }, ILKGOSTERME_GECIKMESI);
 
     return () => {
       clearTimeout(mountId);
@@ -58,14 +74,14 @@ export default function AktiviteBildirimi() {
       clearTimeout(slideId);
       clearInterval(intervalId);
     };
-  }, []);
+  }, [sayfa]);
 
   const kapat = () => {
     setCikis(true);
     setTimeout(() => setGoster(false), 500);
   };
 
-  if (!goster || !aktif) return null;
+  if (!sayfa || !goster || !aktif) return null;
 
   return (
     <>
