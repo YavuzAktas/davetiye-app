@@ -1267,6 +1267,110 @@ export default function Anasayfa() {
       </section>
 
       {/* ══════════════════════════════════════════
+          KARŞILAŞTIRMA
+      ══════════════════════════════════════════ */}
+      <section className="py-28 px-4 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Section>
+            <div className="text-center mb-14">
+              <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Karşılaştırma</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-3">
+                Kağıt davetiye mi,<br className="hidden sm:block" /> dijital davetiye mi?
+              </h2>
+              <p className="text-gray-400 text-lg max-w-xl mx-auto">
+                Her ikisi de davet eder — ama biri 2025&apos;e uygun.
+              </p>
+            </div>
+          </Section>
+
+          <Section>
+            <div className="rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
+              {/* Başlık satırı */}
+              <div className="grid grid-cols-[2fr_1fr_1fr]">
+                <div className="bg-gray-50 px-6 py-4 border-b border-r border-gray-100" />
+                <div className="bg-gray-50 px-5 py-4 border-b border-r border-gray-100 text-center">
+                  <p className="text-xs font-bold text-gray-400 tracking-wider uppercase">Kağıt Davetiye</p>
+                </div>
+                <div className="bg-purple-600 px-5 py-4 border-b border-gray-100 text-center">
+                  <p className="text-xs font-bold text-white/80 tracking-wider uppercase">Bekleriz</p>
+                  <span className="inline-block mt-0.5 text-[10px] text-purple-200">✦ dijital</span>
+                </div>
+              </div>
+
+              {/* Satırlar */}
+              {[
+                {
+                  kriter: "Hazırlık süresi",
+                  aciklama: "İlk fikirden paylaşıma kadar",
+                  kagit: { ikon: "⏳", metin: "3–7 gün", renk: "text-gray-400" },
+                  dijital: { ikon: "⚡", metin: "10 dakika", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Maliyet",
+                  aciklama: "Tasarım + baskı + kargo dahil",
+                  kagit: { ikon: "💸", metin: "₺2.000+", renk: "text-gray-400" },
+                  dijital: { ikon: "💜", metin: "₺299'dan başlar", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Bilgi güncelleme",
+                  aciklama: "Mekan veya saat değişince",
+                  kagit: { ikon: "✗", metin: "Yeniden baskı gerekir", renk: "text-red-300" },
+                  dijital: { ikon: "✓", metin: "Link aynı kalır, içerik güncellenir", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Katılım takibi",
+                  aciklama: "Kim geliyor, kaç kişi?",
+                  kagit: { ikon: "📞", metin: "Her misafiri aramak gerekir", renk: "text-gray-400" },
+                  dijital: { ikon: "📊", metin: "Otomatik RSVP paneli", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Gönderim",
+                  aciklama: "Misafirlere ulaştırma",
+                  kagit: { ikon: "🚚", metin: "Fiziksel dağıtım, posta", renk: "text-gray-400" },
+                  dijital: { ikon: "💬", metin: "WhatsApp, SMS — anında", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Anı arşivi",
+                  aciklama: "Etkinlik sonrası hatıra",
+                  kagit: { ikon: "—", metin: "Yok", renk: "text-gray-300" },
+                  dijital: { ikon: "📸", metin: "Fotoğraf, anı, sesli mesaj + PDF", renk: "text-white font-semibold" },
+                },
+                {
+                  kriter: "Son dakika değişikliği",
+                  aciklama: "Mekan iptal, saat kayması",
+                  kagit: { ikon: "😰", metin: "Tüm misafirleri tek tek ara", renk: "text-gray-400" },
+                  dijital: { ikon: "✓", metin: "Panelden güncelle, herkes görür", renk: "text-white font-semibold" },
+                },
+              ].map((satir, i) => (
+                <div key={satir.kriter}
+                  className="grid grid-cols-[2fr_1fr_1fr] border-b border-gray-100 last:border-b-0"
+                  style={{ background: i % 2 === 0 ? "#fff" : "#fafafa" }}>
+                  <div className="px-6 py-4 border-r border-gray-100">
+                    <p className="text-sm font-semibold text-gray-800">{satir.kriter}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{satir.aciklama}</p>
+                  </div>
+                  <div className="px-5 py-4 border-r border-gray-100 flex items-center">
+                    <p className={`text-xs ${satir.kagit.renk}`}>
+                      {satir.kagit.ikon} {satir.kagit.metin}
+                    </p>
+                  </div>
+                  <div className="px-5 py-4 flex items-center bg-purple-600/[0.04]">
+                    <p className={`text-xs text-purple-700 ${satir.dijital.renk.replace("text-white", "text-purple-700")}`}>
+                      {satir.dijital.ikon} {satir.dijital.metin}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-center text-xs text-gray-400 mt-4">
+              Kağıt davetiye güzel bir gelenek — dijital davetiye onu tamamlar, yerine geçmeye zorlamaz.
+            </p>
+          </Section>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           PRICING
       ══════════════════════════════════════════ */}
       <section className="py-28 px-4" style={{ background: "linear-gradient(180deg, #faf8ff 0%, #fff 100%)" }}>
