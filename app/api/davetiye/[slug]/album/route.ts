@@ -90,7 +90,7 @@ export async function POST(
   if (!ad || ad.length < 2)
     return NextResponse.json({ hata: "Ad en az 2 karakter olmalı." }, { status: 400 });
   if (!kvkkOnay)
-    return NextResponse.json({ hata: "Fotoğraf paylaşımı için kişisel veri bildirimi onayı gereklidir." }, { status: 400 });
+    return NextResponse.json({ hata: "Fotoğraf paylaşımı için yayın izni gereklidir." }, { status: 400 });
   if (!dosya)
     return NextResponse.json({ hata: "Dosya gerekli." }, { status: 400 });
   if (dosya.size > 4_000_000)

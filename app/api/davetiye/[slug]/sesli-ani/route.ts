@@ -92,7 +92,7 @@ export async function POST(
   if (!adSoyad || adSoyad.length < 2)
     return NextResponse.json({ hata: "Ad Soyad en az 2 karakter olmalı." }, { status: 400 });
   if (!kvkkOnay)
-    return NextResponse.json({ hata: "Sesli anı paylaşımı için kişisel veri bildirimi onayı gereklidir." }, { status: 400 });
+    return NextResponse.json({ hata: "Sesli anı paylaşımı için yayın izni gereklidir." }, { status: 400 });
   if (!dosya)
     return NextResponse.json({ hata: "Ses dosyası gerekli." }, { status: 400 });
   if (dosya.size > 4_000_000)

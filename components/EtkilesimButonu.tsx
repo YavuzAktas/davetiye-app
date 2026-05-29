@@ -66,7 +66,6 @@ export default function EtkilesimButonu({
   const [aniYukleniyor,   setAniYukleniyor]   = useState(false);
   const [aniBasari,       setAniBasari]       = useState(false);
   const [aniHata,         setAniHata]         = useState("");
-  const [aniKvkkOnay,     setAniKvkkOnay]     = useState(false);
 
   /* ─ Sesli anı state ─ */
   const [sesliAnilar,     setSesliAnilar]     = useState<SesliAni[]>([]);
@@ -166,7 +165,7 @@ export default function EtkilesimButonu({
     e.preventDefault();
     if (!seciliDosyalar.length || !fotoAd.trim()) return;
     if (!fotoKvkkOnay) {
-      setFotoHata("Fotoğraf paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
+      setFotoHata("Fotoğraf paylaşımı için yayın iznini işaretleyin.");
       return;
     }
     setFotoYukleniyor(true); setFotoHata(""); setYuklenenSayisi(0);
@@ -225,20 +224,16 @@ export default function EtkilesimButonu({
   async function aniGonder(e: React.FormEvent) {
     e.preventDefault();
     if (!aniAd.trim() || !aniIcerik.trim()) return;
-    if (!aniKvkkOnay) {
-      setAniHata("Anı paylaşımı için kişisel veri bildirimi onayını işaretleyin.");
-      return;
-    }
     setAniYukleniyor(true); setAniHata("");
     try {
       const res  = await fetch(`/api/davetiye/${slug}/ani`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim(), kvkkOnay: true }),
+        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim() }),
       });
       const json = await res.json();
       if (!res.ok) { setAniHata(json.hata); return; }
-      setAniBasari(true); setAniAd(""); setAniIcerik(""); setAniKvkkOnay(false);
+      setAniBasari(true); setAniAd(""); setAniIcerik("");
       fetchAnilar(true);
       setTimeout(() => setAniBasari(false), 4000);
     } catch { setAniHata("Gönderilemedi, tekrar dene."); }
@@ -251,7 +246,7 @@ export default function EtkilesimButonu({
       setSesHata("Lütfen adınızı girin (en az 2 karakter)."); return;
     }
     if (!sesKvkkOnay) {
-      setSesHata("Sesli anı için kişisel veri bildirimi onayını işaretleyin."); return;
+      setSesHata("Sesli anı için yayın iznini işaretleyin."); return;
     }
     setSesHata("");
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -575,7 +570,7 @@ export default function EtkilesimButonu({
                         style={{ accentColor: renk }}
                       />
                       <span className="text-[11px] leading-relaxed text-gray-500">
-                        Kişisel veri bildirimini okudum; adımın ve fotoğrafımın davet sahibine iletilmesini,
+                        Yayın izni veriyorum; adımın ve fotoğrafımın davet sahibine iletilmesini,
                         onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
                       </span>
                     </label>
@@ -665,21 +660,12 @@ export default function EtkilesimButonu({
                         adresine yazabilirsiniz.
                       </p>
                     </div>
-                    <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={aniKvkkOnay}
-                        onChange={e => setAniKvkkOnay(e.target.checked)}
-                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
-                        style={{ accentColor: renk }}
-                      />
-                      <span className="text-[11px] leading-relaxed text-gray-500">
-                        Kişisel veri bildirimini okudum; adımın ve yazdığım anının davet sahibine iletilmesini,
-                        onaylanırsa anı defterinde yayınlanmasını kabul ediyorum.
-                      </span>
-                    </label>
+                    <p className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 text-[11px] leading-relaxed text-gray-500">
+                      Göndererek adınızın ve mesajınızın davet sahibine iletilmesini, davet sahibi onaylarsa
+                      anı defterinde yayınlanmasını kabul etmiş olursunuz.
+                    </p>
                     {aniHata && <p className="text-xs text-red-500">{aniHata}</p>}
-                    <button type="submit" disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim() || !aniKvkkOnay}
+                    <button type="submit" disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim()}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
                       style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}>
                       {aniYukleniyor ? "Gönderiliyor..." : "Anımı Gönder"}
@@ -755,7 +741,7 @@ export default function EtkilesimButonu({
                         style={{ accentColor: renk }}
                       />
                       <span className="text-[11px] leading-relaxed text-gray-500">
-                        Kişisel veri bildirimini okudum; adımın ve ses kaydımın davet sahibine iletilmesini,
+                        Yayın izni veriyorum; adımın ve ses kaydımın davet sahibine iletilmesini,
                         onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
                       </span>
                     </label>

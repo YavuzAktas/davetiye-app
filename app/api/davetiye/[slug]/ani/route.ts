@@ -74,12 +74,9 @@ export async function POST(
 
   const ad = (body.ad as string | undefined)?.trim();
   const icerik = (body.icerik as string | undefined)?.trim();
-  const kvkkOnay = body.kvkkOnay === true;
 
   if (!ad || ad.length < 2)
     return NextResponse.json({ hata: "Ad en az 2 karakter olmalı." }, { status: 400 });
-  if (!kvkkOnay)
-    return NextResponse.json({ hata: "Anı paylaşımı için kişisel veri bildirimi onayı gereklidir." }, { status: 400 });
   if (!icerik || icerik.length < 5)
     return NextResponse.json({ hata: "Mesaj en az 5 karakter olmalı." }, { status: 400 });
   if (icerik.length > 600)
