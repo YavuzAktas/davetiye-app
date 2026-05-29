@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import NasilCalisir from "@/components/NasilCalisir";
 import MiniHesapMakinesi from "@/components/MiniHesapMakinesi";
+import AkisDemosu from "@/components/AkisDemosu";
 
 /* ── Hooks ── */
 function useInView(threshold = 0.15) {
@@ -607,6 +608,7 @@ export default function Anasayfa() {
           HOW IT WORKS
       ══════════════════════════════════════════ */}
       <NasilCalisir />
+      <AkisDemosu />
 
       {/* ══════════════════════════════════════════
           BENTO FEATURES
