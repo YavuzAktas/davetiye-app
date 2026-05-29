@@ -123,24 +123,24 @@ const ADIMLAR = [
     num: "01",
     icon: "🎨",
     renk: "#7c3aed",
-    baslik: "Şablon Seç",
-    aciklama: "30+ hazır tasarım arasından etkinliğine uygun olanı bul. Dakikalar içinde başlarsın.",
+    baslik: "Şablonunu Seç",
+    aciklama: "34+ hazır tasarım arasından etkinliğine uygun olanı bul. Düğün, nişan, doğum günü — hepsi var.",
     Visual: Visual1,
   },
   {
     num: "02",
     icon: "✏️",
     renk: "#d97706",
-    baslik: "Özelleştir & Yayınla",
-    aciklama: "İsim, tarih ve mekanı gir. Ödeme sonrası davetiye anında yayına alınır.",
+    baslik: "Bilgilerini Gir, Yayına Al",
+    aciklama: "İsim, tarih ve mekanı gir. Ödeme tamamlanır tamamlanmaz davetiyeni anında paylaşabilirsin.",
     Visual: Visual2,
   },
   {
     num: "03",
     icon: "📨",
     renk: "#059669",
-    baslik: "Her Yerde Paylaş",
-    aciklama: "WhatsApp, QR kod veya link ile gönder. RSVP'leri tek panelden takip et.",
+    baslik: "Paylaş, Takip Et",
+    aciklama: "WhatsApp'tan link gönder, QR kodu yazdır. Kim geliyor, kim gelmez — tek panelden gör.",
     Visual: Visual3,
   },
 ];
@@ -201,8 +201,8 @@ export default function NasilCalisir() {
           }}>
             3 adımda davetiye hazır
           </h2>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.35)", maxWidth: 400, margin: "0 auto", lineHeight: 1.7 }}>
-            Seç, özelleştir, paylaş — karmaşık araçlara gerek yok.
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.35)", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
+            Uygulama indirme yok, tasarım bilgisi gerekmiyor — sadece seç, gir, paylaş.
           </p>
         </div>
 
@@ -302,7 +302,7 @@ export default function NasilCalisir() {
               boxShadow: "0 8px 40px rgba(124,58,237,0.4)",
             }}
           >
-            Hemen Dene
+            Davetiyeni Oluştur
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>

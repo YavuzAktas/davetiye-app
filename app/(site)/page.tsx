@@ -544,6 +544,11 @@ export default function Anasayfa() {
       </div>
 
       {/* ══════════════════════════════════════════
+          HOW IT WORKS
+      ══════════════════════════════════════════ */}
+      <NasilCalisir />
+
+      {/* ══════════════════════════════════════════
           BENTO FEATURES
       ══════════════════════════════════════════ */}
       <section className="py-28 px-4 bg-[#080112] relative overflow-hidden">
@@ -856,11 +861,6 @@ export default function Anasayfa() {
           </div>
         </div>
       </section>
-
-      {/* ══════════════════════════════════════════
-          HOW IT WORKS
-      ══════════════════════════════════════════ */}
-      <NasilCalisir />
 
       {/* ══════════════════════════════════════════
           WHATSAPP ÖNİZLEME
