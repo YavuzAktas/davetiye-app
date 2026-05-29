@@ -213,26 +213,23 @@ export default function ProgramSayfasi() {
         autoFocus={baslangic}
       />
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2.5">
         <div>
-          <label className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Tarih</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tarih</label>
           <input
             type="date"
             value={form.tarih}
             onChange={e => setForm({ ...form, tarih: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
-            style={{ ["--tw-ring-color" as string]: renk + "44" }}
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
           />
         </div>
         <div>
-          <label className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Saat</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Saat</label>
           <input
-            type="text"
-            placeholder="örn: 19:00"
+            type="time"
             value={form.saat}
             onChange={e => setForm({ ...form, saat: e.target.value })}
-            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent bg-white text-gray-900 transition-colors"
-            style={{ ["--tw-ring-color" as string]: renk + "44" }}
+            className="w-full border-2 border-gray-200 rounded-xl px-3 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-colors"
           />
         </div>
       </div>
