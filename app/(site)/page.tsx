@@ -378,6 +378,49 @@ const STARS = [
   { top: "80%", right: "22%" },
 ];
 
+/* ── Yorum verileri ── */
+type YorumVeri = { isim: string; sehir: string; etkinlik: string; yorum: string; renk: string; };
+
+const YORUMLAR_SATIR1: YorumVeri[] = [
+  { isim: "Ayşe K.", sehir: "İstanbul", etkinlik: "Düğün", yorum: "Davetiyemizi 10 dakikada hazırladık! Misafirlerimiz çok beğendi, hepsi WhatsApp'tan açtı.", renk: "from-purple-500 to-pink-500" },
+  { isim: "Mehmet T.", sehir: "Ankara", etkinlik: "Sünnet", yorum: "RSVP takibi inanılmaz kolaylık sağladı. Kaç kişinin geleceğini önceden bilmek çok güzeldi.", renk: "from-blue-500 to-indigo-500" },
+  { isim: "Zeynep A.", sehir: "İzmir", etkinlik: "Nişan", yorum: "Lüks şablon gerçekten çok şık oldu. Misafirlerimiz kağıt davetiye sanıp fotoğrafını çekmiş!", renk: "from-rose-500 to-pink-500" },
+  { isim: "Emre D.", sehir: "Bursa", etkinlik: "Doğum Günü", yorum: "Anı defteri özelliği muhteşem. Konukların bıraktığı mesajları okumak göz yaşarttı.", renk: "from-amber-500 to-orange-500" },
+  { isim: "Selin Y.", sehir: "Antalya", etkinlik: "Kına", yorum: "Arka plan müziğiyle davetiye çok romantik oldu. Herkes nereden yaptırdığımı sordu.", renk: "from-fuchsia-500 to-purple-500" },
+  { isim: "Hasan B.", sehir: "Konya", etkinlik: "Düğün", yorum: "Canlı fotoğraf duvarı geceye ayrı bir hava kattı. Misafirler fotoğraf çekip hemen görüyor!", renk: "from-teal-500 to-cyan-500" },
+];
+
+const YORUMLAR_SATIR2: YorumVeri[] = [
+  { isim: "Fatma Y.", sehir: "Gaziantep", etkinlik: "Düğün", yorum: "Kağıt davetiye bastırmak yerine bunu kullandım. Hem ucuz hem çok daha şık oldu.", renk: "from-violet-500 to-purple-500" },
+  { isim: "Cansu M.", sehir: "Adana", etkinlik: "Nişan", yorum: "Sesli anı defteri özelliği olmasaydı o kadar güzel anıyı kaçırırdık. Süper oldu!", renk: "from-pink-500 to-rose-500" },
+  { isim: "Barış K.", sehir: "Trabzon", etkinlik: "Mezuniyet", yorum: "Oturma planı modülü kalabalık ailede tartışmayı bitirdi. Herkes yerini önceden bildi.", renk: "from-emerald-500 to-teal-500" },
+  { isim: "Derya Ö.", sehir: "İstanbul", etkinlik: "Doğum Günü", yorum: "Anı Kitabı PDF'i indirip çerçeve yaptırdım. Çocuğuma 18'inde hediye edeceğim.", renk: "from-orange-500 to-amber-500" },
+  { isim: "Murat S.", sehir: "Eskişehir", etkinlik: "Sünnet", yorum: "Çok kolay kullanım. Şablonu seçtim, bilgileri girdim, WhatsApp'a yapıştırdım. Bitti.", renk: "from-indigo-500 to-blue-500" },
+  { isim: "Gül T.", sehir: "Kayseri", etkinlik: "Kına", yorum: "RSVP formunu dolduran misafir sayısı anlık görünüyor. Katerer için mükemmel!", renk: "from-red-500 to-pink-500" },
+];
+
+function YorumKarti({ yorum: y }: { yorum: YorumVeri }) {
+  return (
+    <div className="w-72 shrink-0 bg-white border border-gray-100 rounded-2xl p-5 shadow-xs">
+      <div className="flex gap-0.5 mb-3">
+        {Array.from({ length: 5 }).map((_, j) => (
+          <span key={j} className="text-amber-400 text-sm">★</span>
+        ))}
+      </div>
+      <p className="text-gray-600 text-sm leading-relaxed mb-4">&ldquo;{y.yorum}&rdquo;</p>
+      <div className="flex items-center gap-2.5">
+        <div className={`w-9 h-9 bg-gradient-to-br ${y.renk} rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+          {y.isim[0]}
+        </div>
+        <div>
+          <p className="font-semibold text-gray-800 text-xs">{y.isim}</p>
+          <p className="text-[11px] text-gray-400">{y.sehir} · {y.etkinlik}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Anasayfa() {
   const [statsRef, statsInView] = useInView(0.3);
   const [heroSayi, setHeroSayi] = useState(500);
@@ -1097,43 +1140,40 @@ export default function Anasayfa() {
       {/* ══════════════════════════════════════════
           TESTIMONIALS
       ══════════════════════════════════════════ */}
-      <section className="py-28 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <Section>
-            <div className="text-center mb-16">
-              <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Yorumlar</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3">Onlar çok sevdi</h2>
-            </div>
-          </Section>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { isim: "Ayşe K.", etkinlik: "Düğün", yorum: "Davetiyemizi 10 dakikada hazırladık! Misafirlerimiz çok beğendi, hepsi WhatsApp'tan açtı. Kesinlikle tavsiye ederim.", avatar: "A", renk: "from-purple-500 to-pink-500", offset: "" },
-              { isim: "Mehmet T.", etkinlik: "Sünnet", yorum: "RSVP takibi inanılmaz kolaylık sağladı. Kaç kişinin geleceğini önceden bilmek çok güzeldi.", avatar: "M", renk: "from-blue-500 to-indigo-500", offset: "md:mt-8" },
-              { isim: "Fatma Y.", etkinlik: "Doğum Günü", yorum: "Kağıt davetiye bastırmak yerine bunu kullandım. Hem ucuz hem çok şık oldu.", avatar: "F", renk: "from-amber-500 to-orange-500", offset: "" },
-            ].map((y, i) => (
-              <Section key={i} className={y.offset}>
-                <div className="group bg-gray-50 hover:bg-white border border-transparent hover:border-purple-100 rounded-3xl p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden cursor-default h-full">
-                  <div className="absolute top-4 right-5 text-8xl text-purple-100/60 font-serif leading-none select-none pointer-events-none">&ldquo;</div>
-                  <div className="flex gap-0.5 mb-5">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <span key={j} className="text-amber-400 text-lg">★</span>
-                    ))}
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-8 relative z-10">&ldquo;{y.yorum}&rdquo;</p>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-11 h-11 bg-gradient-to-br ${y.renk} rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md`}>
-                      {y.avatar}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{y.isim}</p>
-                      <p className="text-xs text-gray-400">{y.etkinlik} davetiyesi</p>
-                    </div>
-                  </div>
-                </div>
-              </Section>
+      <section className="py-28 overflow-hidden bg-white">
+        <Section>
+          <div className="text-center mb-14 px-4">
+            <span className="text-purple-500 text-xs font-bold tracking-[0.25em] uppercase">Müşteri Yorumları</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-3">Onlar çok sevdi</h2>
+            <p className="text-gray-400 text-lg">Gerçek kullanıcılardan gerçek deneyimler</p>
+          </div>
+        </Section>
+
+        {/* Satır 1 — sola kayan */}
+        <div className="relative mb-4">
+          <div className="flex gap-4 animate-marquee-left w-max">
+            {[...YORUMLAR_SATIR1, ...YORUMLAR_SATIR1].map((y, i) => (
+              <YorumKarti key={i} yorum={y} />
             ))}
           </div>
         </div>
+
+        {/* Satır 2 — sağa kayan */}
+        <div className="relative mb-14">
+          <div className="flex gap-4 animate-marquee-right w-max">
+            {[...YORUMLAR_SATIR2, ...YORUMLAR_SATIR2].map((y, i) => (
+              <YorumKarti key={i} yorum={y} />
+            ))}
+          </div>
+        </div>
+
+        <Section>
+          <div className="text-center px-4">
+            <a href="/yorum-birak" className="inline-flex items-center gap-2 text-sm text-purple-600 font-medium border border-purple-200 px-5 py-2.5 rounded-full hover:bg-purple-50 transition-colors">
+              ✍️ Siz de deneyiminizi paylaşın
+            </a>
+          </div>
+        </Section>
       </section>
 
       {/* ══════════════════════════════════════════

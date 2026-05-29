@@ -445,3 +445,17 @@ model Bildirim {
   @@index([userId, okundu])
   @@index([userId, createdAt])
 }
+
+model Yorum {
+  id           String   @id @default(cuid())
+  ad           String
+  sehir        String?
+  etkinlikTuru String
+  yorum        String
+  puan         Int      @default(5)
+  onaylandi    Boolean  @default(false)
+  userId       String?
+  createdAt    DateTime @default(now())
+
+  @@index([onaylandi, createdAt])
+}
