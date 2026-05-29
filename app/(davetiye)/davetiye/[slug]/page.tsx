@@ -167,7 +167,7 @@ export default async function DavetiyeSayfasi({ params }: Props) {
   const programEtkinlikleri = (davetiye.etkinlikProgrami ?? []).map(e => ({
     id:       e.id,
     isim:     e.isim,
-    tarih:    e.tarih?.toISOString() ?? null,
+    tarih:    e.tarih ? new Date(e.tarih).toISOString() : null,
     saat:     e.saat,
     mekan:    e.mekan,
     aciklama: e.aciklama,
