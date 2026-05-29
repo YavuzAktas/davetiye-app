@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import NasilCalisir from "@/components/NasilCalisir";
+import MiniHesapMakinesi from "@/components/MiniHesapMakinesi";
 
 /* ── Hooks ── */
 function useInView(threshold = 0.15) {
@@ -1275,9 +1276,13 @@ export default function Anasayfa() {
             ))}
           </div>
 
-          <div className="text-center">
+          <Section>
+            <MiniHesapMakinesi />
+          </Section>
+
+          <div className="text-center mt-6">
             <Link href="/fiyatlar" className="text-purple-500 text-sm font-medium hover:text-purple-700 transition-colors">
-              Detaylı fiyat karşılaştırması →
+              Tüm özellikler ve fiyatlar →
             </Link>
           </div>
         </div>
