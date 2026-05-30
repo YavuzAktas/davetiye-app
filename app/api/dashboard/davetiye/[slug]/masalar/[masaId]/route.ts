@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
+
+const masaGuncelleSemasi = z.object({
+  isim: z.string().trim().min(1).max(80).optional(),
+  kapasite: z.coerce.number().int().min(1).max(100).optional(),
+}).strict().refine((data) => data.isim !== undefined || data.kapasite !== undefined);
 
 async function masaYetki(slug: string, masaId: string, email: string) {
   return prisma.masa.findFirst({
@@ -21,12 +27,14 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const masa = await masaYetki(slug, masaId, session.user.email);
   if (!masa || !davetiyeOzelligiAktif(masa.davetiye, "oturmaPlan")) return NextResponse.json({ hata: "Bu davetiyede oturma planı aktif değil." }, { status: 403 });
 
-  const { isim, kapasite } = await req.json();
+  const sonuc = masaGuncelleSemasi.safeParse(await req.json().catch(() => null));
+  if (!sonuc.success) return NextResponse.json({ hata: "Geçersiz masa bilgisi." }, { status: 400 });
+  const { isim, kapasite } = sonuc.data;
   const updated = await prisma.masa.update({
     where: { id: masaId },
     data: {
-      ...(isim !== undefined && { isim: String(isim).trim() }),
-      ...(kapasite !== undefined && { kapasite: Number(kapasite) }),
+      ...(isim !== undefined && { isim }),
+      ...(kapasite !== undefined && { kapasite }),
     },
   });
 

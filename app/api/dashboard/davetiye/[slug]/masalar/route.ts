@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
+
+const masaSemasi = z.object({
+  isim: z.string().trim().min(1).max(80),
+  kapasite: z.coerce.number().int().min(1).max(100).default(8),
+}).strict();
 
 async function davetiyeYetki(slug: string, email: string) {
   const davetiye = await prisma.davetiye.findFirst({
@@ -59,12 +65,13 @@ export async function POST(req: NextRequest, { params }: Params) {
   const yetki = await davetiyeYetki(slug, session.user.email);
   if (!yetki) return NextResponse.json({ hata: "Bu davetiyede oturma planı aktif değil." }, { status: 403 });
 
-  const { isim, kapasite = 8 } = await req.json();
-  if (!isim?.trim()) return NextResponse.json({ hata: "Masa ismi gerekli" }, { status: 400 });
+  const sonuc = masaSemasi.safeParse(await req.json().catch(() => null));
+  if (!sonuc.success) return NextResponse.json({ hata: "Geçersiz masa bilgisi." }, { status: 400 });
+  const { isim, kapasite } = sonuc.data;
 
   const siraSon = await prisma.masa.count({ where: { davetiyeId: yetki.davetiyeId } });
   const masa = await prisma.masa.create({
-    data: { davetiyeId: yetki.davetiyeId, isim: isim.trim(), kapasite: Number(kapasite), sira: siraSon },
+    data: { davetiyeId: yetki.davetiyeId, isim, kapasite, sira: siraSon },
   });
 
   return NextResponse.json(masa, { status: 201 });
