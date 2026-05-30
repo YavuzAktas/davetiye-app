@@ -1,0 +1,99 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
+import PanelIcerik from "./PanelIcerik";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Partner Paneli | Bekleriz",
+  robots: { index: false },
+};
+
+export default async function PartnerPanelPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ odeme?: string }>;
+}) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) redirect("/giris?callbackUrl=/partner/panel");
+
+  const partner = await prisma.partner.findUnique({
+    where: { userId: session.user.id },
+    include: {
+      abonelikler: {
+        where: { aktif: true },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
+  });
+
+  if (!partner) redirect("/partner/basvuru");
+
+  const { odeme } = await searchParams;
+  const odemeBasarili = odeme === "basarili";
+
+  const abonelikHam = partner.abonelikler[0] ?? null;
+  const abonelik = abonelikHam
+    ? {
+        paketId: abonelikHam.paketId,
+        hakSayisi: abonelikHam.hakSayisi,
+        kullanilanHak: abonelikHam.kullanilanHak,
+        baslangicAt: abonelikHam.baslangicAt.toISOString(),
+        bitisAt: abonelikHam.bitisAt?.toISOString() ?? null,
+      }
+    : null;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 px-4 py-6">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-0.5">Partner Paneli</p>
+            <h1 className="text-xl font-black text-gray-900">{partner.firmaAdi}</h1>
+          </div>
+          <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
+            partner.durum === "aktif" ? "bg-green-100 text-green-700" :
+            partner.durum === "beklemede" ? "bg-yellow-100 text-yellow-700" :
+            "bg-red-100 text-red-600"
+          }`}>
+            {partner.durum}
+          </span>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        {partner.durum === "beklemede" && (
+          <div className="bg-white rounded-3xl border border-gray-100 p-10 text-center">
+            <div className="text-4xl mb-4">⏳</div>
+            <h2 className="text-xl font-black text-gray-900 mb-2">Başvurunuz İnceleniyor</h2>
+            <p className="text-sm text-gray-500">Ekibimiz en kısa sürede sizinle iletişime geçecek.</p>
+          </div>
+        )}
+
+        {partner.durum === "askida" && (
+          <div className="bg-white rounded-3xl border border-red-100 p-10 text-center">
+            <div className="text-4xl mb-4">⛔</div>
+            <h2 className="text-xl font-black text-gray-900 mb-2">Hesabınız Askıya Alındı</h2>
+            <p className="text-sm text-gray-500">
+              Detaylar için{" "}
+              <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:underline">destek@bekleriz.com</a>
+              {" "}adresine yazın.
+            </p>
+          </div>
+        )}
+
+        {partner.durum === "aktif" && (
+          <PanelIcerik
+            partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
+            abonelik={abonelik}
+            odemeBasarili={odemeBasarili}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
