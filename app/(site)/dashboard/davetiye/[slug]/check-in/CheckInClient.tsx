@@ -45,19 +45,9 @@ export default function CheckInClient({
   const kameraIleGeldi = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const sonucTemizle = useCallback(() => {
-    setSonuc(null);
-    setHata("");
-    if (kameraIleGeldi.current) {
-      setKameraAcik(true);
-    } else {
-      inputRef.current?.focus();
-    }
-  }, []);
-
-  const checkInYap = useCallback(async (deger = kod, kameradan = false) => {
+  const checkInYap = async (deger: string, kameradan = false) => {
     const temiz = deger.trim();
-    if (!temiz || yukleniyor) return;
+    if (!temiz) return;
     kameraIleGeldi.current = kameradan;
     setYukleniyor(true);
     setHata("");
@@ -71,7 +61,6 @@ export default function CheckInClient({
       const data = await res.json();
       if (!res.ok) throw new Error(data.hata || "Check-in yapılamadı.");
       setSonuc(data);
-      setKod("");
       if (data.durum === "giris_yapildi") setGirisYapan(prev => Math.min(toplam, prev + 1));
     } catch (err) {
       setHata(err instanceof Error ? err.message : "Check-in yapılamadı.");
@@ -79,7 +68,13 @@ export default function CheckInClient({
     } finally {
       setYukleniyor(false);
     }
-  }, [kod, slug, toplam, yukleniyor]);
+  };
+
+  // Kamera effect'in stale closure sorunu yaşamaması için ref kullan.
+  // Effect sadece kameraAcik değişince çalışır; checkInYap her render'da yeni
+  // referans alsa da ref hep güncel kalır.
+  const checkInYapRef = useRef(checkInYap);
+  useEffect(() => { checkInYapRef.current = checkInYap; });
 
   useEffect(() => {
     if (!kameraAcik) return;
@@ -107,7 +102,7 @@ export default function CheckInClient({
             const raw = codes[0]?.rawValue;
             if (raw) {
               setKameraAcik(false);
-              await checkInYap(raw, true);
+              await checkInYapRef.current(raw, true);
               return;
             }
           } catch {}
@@ -127,7 +122,17 @@ export default function CheckInClient({
       streamRef.current?.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     };
-  }, [kameraAcik, checkInYap]);
+  }, [kameraAcik]); // sadece kameraAcik — checkInYap ref üzerinden erişiliyor
+
+  const sonucTemizle = useCallback(() => {
+    setSonuc(null);
+    setHata("");
+    if (kameraIleGeldi.current) {
+      setKameraAcik(true);
+    } else {
+      inputRef.current?.focus();
+    }
+  }, []);
 
   const bekleyen = toplam - girisYapan;
   const oran = toplam ? Math.round((girisYapan / toplam) * 100) : 0;
@@ -177,12 +182,15 @@ export default function CheckInClient({
           }`}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h5v5H3V3zm0 13h5v5H3v-5zm13-13h5v5h-5V3zM3 8h2M3 16h2M8 3v2M8 19v2M16 3v2M21 8h-2M21 16h-2M19 21v-2M16 19h5v5h-5v-5z" />
+            <rect x="3" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="14" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="3" y="14" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 14h2v2h-2zm4 0h3v3h-3zm-4 4h3v3h-3zm4 2h3" />
           </svg>
           {kameraAcik ? "Kamerayı Kapat" : "QR Kodu Okut"}
         </button>
 
-        {/* Kamera önizleme + çerçeve */}
+        {/* Kamera önizleme + tarama çerçevesi */}
         {kameraAcik && (
           <div className="relative rounded-2xl overflow-hidden bg-gray-900">
             <video
@@ -191,7 +199,6 @@ export default function CheckInClient({
               muted
               playsInline
             />
-            {/* Tarama çerçevesi */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="w-52 h-52 relative">
                 <div className="absolute top-0 left-0 w-10 h-10 border-t-[3px] border-l-[3px] border-white rounded-tl-lg" />
@@ -206,18 +213,18 @@ export default function CheckInClient({
           </div>
         )}
 
-        {/* Elle giriş — ikincil aksiyon */}
+        {/* Elle giriş */}
         <div className="flex gap-2">
           <input
             ref={inputRef}
             value={kod}
             onChange={e => setKod(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && checkInYap()}
+            onKeyDown={e => e.key === "Enter" && checkInYap(kod)}
             placeholder="QR linkini veya /d/ kodunu yapıştır"
             className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100 transition-all"
           />
           <button
-            onClick={() => checkInYap()}
+            onClick={() => checkInYap(kod)}
             disabled={!kod.trim() || yukleniyor}
             className="px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 disabled:opacity-40 transition-all active:scale-95 whitespace-nowrap"
           >
@@ -252,8 +259,7 @@ export default function CheckInClient({
             basarili ? "bg-emerald-50 border-emerald-100" : "bg-amber-50 border-amber-100"
           }`}>
             <div className="flex items-start gap-4">
-              {/* İkon */}
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 ${
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
                 basarili ? "bg-emerald-100" : "bg-amber-100"
               }`}>
                 {basarili ? (
@@ -267,7 +273,6 @@ export default function CheckInClient({
                 )}
               </div>
 
-              {/* Bilgi */}
               <div className="flex-1 min-w-0">
                 <p className={`text-xs font-bold tracking-widest uppercase mb-1 ${
                   basarili ? "text-emerald-600" : "text-amber-600"
@@ -280,12 +285,9 @@ export default function CheckInClient({
                   <span className="text-xs font-semibold bg-white/80 border border-white px-3 py-1.5 rounded-xl text-gray-700">
                     {kisiSayisi} kişi
                   </span>
-
                   {sonuc.davetli.rsvp ? (
                     <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl ${
-                      sonuc.davetli.rsvp.katilim
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-600"
+                      sonuc.davetli.rsvp.katilim ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
                     }`}>
                       RSVP {sonuc.davetli.rsvp.katilim ? "✓ Katılıyor" : "✗ Katılamıyor"}
                     </span>
@@ -294,10 +296,9 @@ export default function CheckInClient({
                       RSVP yok
                     </span>
                   )}
-
                   {!basarili && girisSaati && (
                     <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-3 py-1.5 rounded-xl">
-                      {girisSaati}&apos;de giriş yapmıştı
+                      {girisSaati}&apos;de girdi
                     </span>
                   )}
                   {basarili && girisSaati && (
