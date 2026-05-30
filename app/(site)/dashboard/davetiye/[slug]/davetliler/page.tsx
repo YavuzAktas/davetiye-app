@@ -12,6 +12,7 @@ interface Davetli {
   email?: string;
   grup: string;
   notlar?: string;
+  kisiLimiti?: number | null;
   ozelKod?: string | null;
   linkGoruntulendiAt?: string | null;
   linkGoruntulenmeSayisi?: number;
@@ -66,7 +67,7 @@ const HIZLI_NOTLAR = ["VIP", "Çocuklu", "Ulaşım Lazım", "Vejeteryen", "Engel
 
 const KVKK_KEY = "davetli-kvkk-goruldu";
 
-function parseCSV(text: string): Array<{ ad: string; telefon: string; email: string; grup: string }> {
+function parseCSV(text: string): Array<{ ad: string; telefon: string; email: string; grup: string; kisiLimiti: string }> {
   return text.split("\n")
     .map(s => s.trim())
     .filter(s => s && !s.startsWith("#"))
@@ -87,6 +88,7 @@ function parseCSV(text: string): Array<{ ad: string; telefon: string; email: str
       telefon: p[1] ?? "",
       email:   p[2] ?? "",
       grup:    (p[3] && GRUPLAR.some(g => g.id === p[3].toLowerCase())) ? p[3].toLowerCase() : "diger",
+      kisiLimiti: p[4] ?? "",
     }))
     .filter(d => d.ad && !["ad", "isim", "name"].includes(d.ad.toLowerCase()));
 }
@@ -108,6 +110,7 @@ export default function DavetlilerSayfasi() {
   const [yeniTelefon, setYeniTelefon] = useState("");
   const [yeniEmail, setYeniEmail] = useState("");
   const [yeniGrup, setYeniGrup] = useState("diger");
+  const [yeniKisiLimiti, setYeniKisiLimiti] = useState("");
   const [yeniNotlar, setYeniNotlar] = useState<string[]>([]);
   const [ozelNot, setOzelNot] = useState("");
   const [ekleniyor, setEkleniyor] = useState(false);
@@ -117,6 +120,7 @@ export default function DavetlilerSayfasi() {
   const [siliniyor, setSiliniyor] = useState<string | null>(null);
   const [duzenleId, setDuzenleId] = useState<string | null>(null);
   const [duzenleGrup, setDuzenleGrup] = useState("diger");
+  const [duzenleKisiLimiti, setDuzenleKisiLimiti] = useState("");
   const [duzenleNotlar, setDuzenleNotlar] = useState<string[]>([]);
   const [duzenleOzelNot, setDuzenleOzelNot] = useState("");
   const [kaydediyor, setKaydediyor] = useState(false);
@@ -187,6 +191,12 @@ export default function DavetlilerSayfasi() {
   const notlarParse = (str?: string): string[] =>
     str ? str.split(",").map(s => s.trim()).filter(Boolean) : [];
 
+  const kisiLimitiDegeri = (value: string) => {
+    const temiz = value.trim();
+    if (!temiz) return null;
+    return Math.max(1, Math.min(20, Number(temiz) || 1));
+  };
+
   // ── CRUD ─────────────────────────────────────────────────
 
   const davetliEkle = async () => {
@@ -204,12 +214,13 @@ export default function DavetlilerSayfasi() {
           telefon: yeniTelefon,
           email:   yeniEmail,
           grup:    yeniGrup,
+          kisiLimiti: kisiLimitiDegeri(yeniKisiLimiti),
           notlar:  notlarString(yeniNotlar, ozelNot),
         }],
       }),
     });
     setYeniAd(""); setYeniTelefon(""); setYeniEmail("");
-    setYeniGrup("diger"); setYeniNotlar([]); setOzelNot("");
+    setYeniGrup("diger"); setYeniKisiLimiti(""); setYeniNotlar([]); setOzelNot("");
     await davetlileriYukle(davetiye.id);
     setEkleniyor(false);
   };
@@ -228,6 +239,7 @@ export default function DavetlilerSayfasi() {
   const duzenleAc = (davetli: Davetli) => {
     setDuzenleId(davetli.id);
     setDuzenleGrup(davetli.grup);
+    setDuzenleKisiLimiti(davetli.kisiLimiti?.toString() ?? "");
     const notDizisi = notlarParse(davetli.notlar);
     const hizlilar = notDizisi.filter(n => HIZLI_NOTLAR.includes(n));
     const ozelNotlar = notDizisi.filter(n => !HIZLI_NOTLAR.includes(n));
@@ -244,6 +256,7 @@ export default function DavetlilerSayfasi() {
       body: JSON.stringify({
         id:     duzenleId,
         grup:   duzenleGrup,
+        kisiLimiti: kisiLimitiDegeri(duzenleKisiLimiti),
         notlar: notlarString(duzenleNotlar, duzenleOzelNot),
       }),
     });
@@ -304,7 +317,7 @@ export default function DavetlilerSayfasi() {
         setImportHata("CSV dosyasında geçerli satır bulunamadı.");
         return;
       }
-      setTopluMetin(satirlar.map(s => [s.ad, s.telefon, s.email, s.grup !== "diger" ? s.grup : ""].join(",")).join("\n"));
+      setTopluMetin(satirlar.map(s => [s.ad, s.telefon, s.email, s.grup !== "diger" ? s.grup : "", s.kisiLimiti].join(",")).join("\n"));
       setImportHata("");
     };
     reader.readAsText(file, "UTF-8");
@@ -327,6 +340,7 @@ export default function DavetlilerSayfasi() {
           telefon: p[1] || "",
           email:   p[2] || "",
           grup:    (p[3] && GRUPLAR.some(g => g.id === p[3])) ? p[3] : "diger",
+          kisiLimiti: kisiLimitiDegeri(p[4] || ""),
         };
       }).filter(d => d.ad);
 
@@ -736,7 +750,7 @@ export default function DavetlilerSayfasi() {
               </div>
 
               {/* Tel + Email */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr,1fr,120px] gap-3 mb-3">
                 <input
                   type="tel"
                   placeholder="Telefon (opsiyonel)"
@@ -750,6 +764,16 @@ export default function DavetlilerSayfasi() {
                   value={yeniEmail}
                   onChange={e => setYeniEmail(e.target.value)}
                   className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  max={20}
+                  placeholder="Kişi"
+                  value={yeniKisiLimiti}
+                  onChange={e => setYeniKisiLimiti(e.target.value)}
+                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all"
+                  title="Bu davetlinin RSVP'de seçebileceği maksimum kişi sayısı"
                 />
               </div>
 
@@ -885,6 +909,13 @@ export default function DavetlilerSayfasi() {
                                       {n}
                                     </span>
                                   ))}
+                                </div>
+                              )}
+                              {davetli.kisiLimiti && (
+                                <div className="flex gap-1 flex-wrap mt-1">
+                                  <span className="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded-md font-medium">
+                                    En fazla {davetli.kisiLimiti} kişi
+                                  </span>
                                 </div>
                               )}
 
@@ -1057,6 +1088,21 @@ export default function DavetlilerSayfasi() {
                                   />
                                 </div>
                               </div>
+                              <div>
+                                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Kişi limiti</p>
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    max={20}
+                                    placeholder="Sınırsız"
+                                    value={duzenleKisiLimiti}
+                                    onChange={e => setDuzenleKisiLimiti(e.target.value)}
+                                    className="text-sm px-3 py-2 rounded-xl border border-gray-200 focus:outline-none w-28"
+                                  />
+                                  <span className="text-xs text-gray-400">boşsa genel RSVP limiti kullanılır</span>
+                                </div>
+                              </div>
                               <div className="flex gap-2">
                                 <button
                                   onClick={duzenleKaydet}
@@ -1182,9 +1228,9 @@ export default function DavetlilerSayfasi() {
               <p className="text-xs text-gray-400 mb-4">
                 Sütunlar:{" "}
                 <code className="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-600 text-[11px]">
-                  Ad Soyad, Telefon, Email, Grup
+                  Ad Soyad, Telefon, Email, Grup, Kişi Limiti
                 </code>{" "}
-                — Telefon, Email ve Grup opsiyonel. Grup:{" "}
+                — Telefon, Email, Grup ve Kişi Limiti opsiyonel. Grup:{" "}
                 <code className="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-600 text-[11px]">
                   aile | arkadas | is | protokol | diger
                 </code>
@@ -1213,7 +1259,7 @@ export default function DavetlilerSayfasi() {
               <p className="text-xs text-gray-400 mb-4">
                 Her satıra bir davetli:{" "}
                 <code className="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-600 text-[11px]">
-                  Ad Soyad, Telefon, Email, Grup
+                  Ad Soyad, Telefon, Email, Grup, Kişi Limiti
                 </code>
               </p>
               <textarea

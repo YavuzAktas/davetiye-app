@@ -14,6 +14,13 @@ async function sahiplikDogrula(davetiyeId: string, userId: string) {
   return davetiye?.userId === userId;
 }
 
+function kisiLimitiNormalize(value: unknown) {
+  if (value === undefined || value === null || value === "") return null;
+  const sayi = Number(value);
+  if (!Number.isInteger(sayi)) return null;
+  return Math.max(1, Math.min(20, sayi));
+}
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -34,6 +41,7 @@ export async function GET(req: NextRequest) {
       email: true,
       grup: true,
       notlar: true,
+      kisiLimiti: true,
       ozelKod: true,
       linkGoruntulendiAt: true,
       linkGoruntulenmeSayisi: true,
@@ -77,7 +85,7 @@ export async function POST(req: NextRequest) {
       email:      d.email      || null,
       grup:       d.grup       || "diger",
       notlar:     d.notlar     || null,
-      kisiLimiti: d.kisiLimiti || null,
+      kisiLimiti: kisiLimitiNormalize(d.kisiLimiti),
       ozelKod:    nanoid(10),
     })),
   });
@@ -98,7 +106,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  const { id, grup, notlar, whatsappAksiyon } = await req.json();
+  const { id, grup, notlar, kisiLimiti, whatsappAksiyon } = await req.json();
   if (!id) return NextResponse.json({ hata: "id gerekli." }, { status: 400 });
 
   const davetli = await prisma.davetli.findUnique({
@@ -119,6 +127,9 @@ export async function PATCH(req: NextRequest) {
     data: {
       ...(grup    !== undefined && { grup }),
       ...(notlar  !== undefined && { notlar: notlar || null }),
+      ...(kisiLimiti !== undefined && {
+        kisiLimiti: kisiLimitiNormalize(kisiLimiti),
+      }),
       ...(whatsappAksiyon === "davet" && { whatsappGonderildiAt: davetli.whatsappGonderildiAt ?? simdi }),
       ...(whatsappAksiyon === "hatirlatma" && {
         sonHatirlatmaAt: simdi,
@@ -133,6 +144,7 @@ export async function PATCH(req: NextRequest) {
       email: true,
       grup: true,
       notlar: true,
+      kisiLimiti: true,
       ozelKod: true,
       linkGoruntulendiAt: true,
       linkGoruntulenmeSayisi: true,
