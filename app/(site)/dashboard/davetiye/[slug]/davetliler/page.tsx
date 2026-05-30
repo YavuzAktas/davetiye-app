@@ -458,6 +458,23 @@ export default function DavetlilerSayfasi() {
     : davetliler;
 
   const cevaplamayanlar = davetliler.filter(d => !d.rsvpId);
+  const whatsappGonderilen = davetliler.filter(d => d.whatsappGonderildiAt);
+  const goruntulenenler = davetliler.filter(d => d.linkGoruntulendiAt);
+  const katilanDavetliler = davetliler.filter(d => {
+    if (!d.rsvpId) return false;
+    return rsvplar.find(r => r.id === d.rsvpId)?.katilim === true;
+  });
+  const katilmayanDavetliler = davetliler.filter(d => {
+    if (!d.rsvpId) return false;
+    return rsvplar.find(r => r.id === d.rsvpId)?.katilim === false;
+  });
+  const huniAdimlari = [
+    { label: "Davetli", value: davetliler.length, hint: "listeye eklendi", renk: "#6366f1" },
+    { label: "Gönderildi", value: whatsappGonderilen.length, hint: "WhatsApp açıldı", renk: "#10b981" },
+    { label: "Görüldü", value: goruntulenenler.length, hint: "özel link açıldı", renk },
+    { label: "RSVP", value: davetliler.length - cevaplamayanlar.length, hint: "yanıt verdi", renk: "#f59e0b" },
+    { label: "Katılıyor", value: katilanDavetliler.length, hint: `${katilmayanDavetliler.length} katılamıyor`, renk: "#22c55e" },
+  ];
 
   const katilimToplamKisi = rsvplar.filter(r => r.katilim).reduce((s, r) => s + r.kisiSayisi, 0);
   const kapasite = davetiye?.kapasiteLimiti;
@@ -536,6 +553,46 @@ export default function DavetlilerSayfasi() {
             </div>
           </div>
         )}
+
+        {/* ── Davetli hunisi ── */}
+        <div className="bg-white border border-gray-100 rounded-3xl p-5 overflow-hidden">
+          <div className="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-1">Davetli Hunisi</p>
+              <p className="text-sm text-gray-500">Gönderimden katılım yanıtına kadar takip özeti</p>
+            </div>
+            {cevaplamayanlar.length > 0 && (
+              <button
+                onClick={() => setAktifTab("cevaplamayanlar")}
+                className="text-xs font-bold px-3 py-2 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors shrink-0"
+              >
+                {cevaplamayanlar.length} yanıt bekliyor
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+            {huniAdimlari.map((adim) => {
+              const oran = davetliler.length ? Math.round((adim.value / davetliler.length) * 100) : 0;
+              return (
+                <div key={adim.label} className="rounded-2xl border border-gray-100 bg-gray-50/60 px-3 py-3">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-[11px] font-bold text-gray-500">{adim.label}</span>
+                    <span className="text-[10px] font-semibold text-gray-300 tabular-nums">%{oran}</span>
+                  </div>
+                  <p className="text-2xl font-black text-gray-900 tabular-nums leading-none">{adim.value}</p>
+                  <p className="text-[11px] text-gray-400 mt-1 truncate">{adim.hint}</p>
+                  <div className="h-1.5 rounded-full bg-white mt-3 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${oran}%`, backgroundColor: adim.renk }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* ── Tabs ── */}
         <div className="flex gap-1 bg-gray-100 p-1 rounded-2xl">
