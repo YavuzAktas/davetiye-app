@@ -43,7 +43,8 @@
       "postcss": "8.5.10"
     },
     "qs": "6.15.2",
-    "socks": "2.8.9"
+    "socks": "2.8.9",
+    "uuid": "11.1.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
