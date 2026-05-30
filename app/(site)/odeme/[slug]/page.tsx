@@ -8,6 +8,7 @@ import { SABLONLAR } from "@/lib/sablonlar";
 import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu, DAVETIYE_FIYAT_KALEMLERI } from "@/lib/davetiye-fiyatlandirma";
 import OdemeCheckoutForm from "@/components/OdemeCheckoutForm";
 import OdemeUpsell, { type UpsellOzellik } from "@/components/OdemeUpsell";
+import { isAdmin } from "@/lib/admin";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -62,7 +63,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
   if (!davetiye) notFound();
   if (davetiye.odemeDurumu === "odendi") redirect(`/dashboard/davetiye/${slug}`);
 
-  const adminMi = ["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "");
+  const adminMi = isAdmin(session.user.email);
   if (!adminMi) {
     return (
       <div style={{

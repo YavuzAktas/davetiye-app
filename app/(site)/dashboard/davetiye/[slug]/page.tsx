@@ -13,6 +13,7 @@ import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import AniKitabiButon from "@/components/AniKitabiButon";
 import EkOzellikSatinAlPanel from "@/components/EkOzellikSatinAlPanel";
+import { isAdmin } from "@/lib/admin";
 import {
   Armchair,
   BarChart3,
@@ -155,7 +156,7 @@ export default async function DavetiyeDetay({ params }: Props) {
   const herhangiAniAktif = albumAktif || aniDefAktif || sesliAniAktif;
   const toplamIcerik     = davetiye._count.albumFotolar + davetiye._count.aniDefterleri + davetiye._count.sesliAnilar;
 
-  const adminMi = ["aylinyavuz@gmail.com", "mehlikaalan@icloud.com"].includes(session.user.email ?? "");
+  const adminMi = isAdmin(session.user.email);
   const kilidliOzellikler = !odemeBekliyor ? [
     !checkInOdendi    && { alanAdi: "checkInAktif",    icon: "📲", ad: "QR Check-in",          aciklama: "Etkinlik girişinde QR ile hızlı check-in",   tutar: 99  },
     !oturmaPlanAktif  && { alanAdi: "oturmaPlanAktif", icon: "🪑", ad: "Oturma Planı",          aciklama: "Katılımcıları masalara atayın",               tutar: 199 },

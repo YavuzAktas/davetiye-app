@@ -6,6 +6,7 @@ import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
+import { isAdmin } from "@/lib/admin";
 
 type FaturaBilgileri = {
   faturaTipi: "bireysel" | "kurumsal";
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  if (!["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "")) {
+  if (!isAdmin(session.user.email)) {
     return NextResponse.json({ hata: "Ödeme sistemi henüz aktif değil. Çok yakında hizmetinize sunulacak." }, { status: 503 });
   }
 
