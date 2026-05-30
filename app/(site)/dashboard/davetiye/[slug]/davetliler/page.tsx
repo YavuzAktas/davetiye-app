@@ -63,10 +63,6 @@ const HIZLI_NOTLAR = ["VIP", "Çocuklu", "Ulaşım Lazım", "Vejeteryen", "Engel
 
 const KVKK_KEY = "davetli-kvkk-goruldu";
 
-function normalizAd(ad: string) {
-  return ad.toLowerCase().trim().replace(/\s+/g, " ");
-}
-
 function parseCSV(text: string): Array<{ ad: string; telefon: string; email: string; grup: string }> {
   return text.split("\n")
     .map(s => s.trim())
@@ -436,8 +432,7 @@ export default function DavetlilerSayfasi() {
     ? davetliler.filter(d => d.grup === seciliGrup)
     : davetliler;
 
-  const cevapVerenAdlar = new Set(rsvplar.map(r => normalizAd(r.ad)));
-  const cevaplamayanlar = davetliler.filter(d => !cevapVerenAdlar.has(normalizAd(d.ad)));
+  const cevaplamayanlar = davetliler.filter(d => !d.rsvpId);
 
   const katilimToplamKisi = rsvplar.filter(r => r.katilim).reduce((s, r) => s + r.kisiSayisi, 0);
   const kapasite = davetiye?.kapasiteLimiti;
