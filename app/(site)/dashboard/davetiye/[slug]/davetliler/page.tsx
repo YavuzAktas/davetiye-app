@@ -392,8 +392,15 @@ export default function DavetlilerSayfasi() {
 
   const [kopyalananId, setKopyalananId] = useState<string | null>(null);
 
+  const siteKoku = () => process.env.NEXT_PUBLIC_URL || window.location.origin;
+
+  const davetliLinki = (ozelKod?: string | null) => {
+    if (ozelKod) return `${siteKoku()}/d/${ozelKod}`;
+    return `${siteKoku()}/davetiye/${davetiye?.slug ?? slug}`;
+  };
+
   const ozelLinkKopyala = (ozelKod: string, id: string) => {
-    const url = `${process.env.NEXT_PUBLIC_URL}/d/${ozelKod}`;
+    const url = davetliLinki(ozelKod);
     navigator.clipboard.writeText(url).then(() => {
       setKopyalananId(id);
       setTimeout(() => setKopyalananId(null), 2000);
@@ -409,17 +416,17 @@ export default function DavetlilerSayfasi() {
     return "90" + digits;
   };
 
-  const whatsappMesaj = (ad: string) => {
-    const link = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye?.slug}`;
+  const whatsappMesaj = (davetli: Davetli) => {
+    const link = davetliLinki(davetli.ozelKod);
     return encodeURIComponent(
-      `Merhaba ${ad},\n\n${davetiye?.baslik} etkinliğimize davetlisiniz. Katılım bildiriminizi henüz almadık. 🙏\n\nDavetiyemiz: ${link}`
+      `Merhaba ${davetli.ad},\n\n${davetiye?.baslik} etkinliğimize davetlisiniz. Katılım bildiriminizi henüz almadık. 🙏\n\nDavetiyemiz: ${link}`
     );
   };
 
-  const whatsappDavetMesaj = (ad: string) => {
-    const link = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye?.slug}`;
+  const whatsappDavetMesaj = (davetli: Davetli) => {
+    const link = davetliLinki(davetli.ozelKod);
     return encodeURIComponent(
-      `Sayın ${ad},\n\n${davetiye?.baslik} etkinliğimize davetlisiniz.\n\nDavetiyeniz: ${link}`
+      `Sayın ${davetli.ad},\n\n${davetiye?.baslik} etkinliğimize davetlisiniz.\n\nDavetiyeniz: ${link}`
     );
   };
 
@@ -880,7 +887,7 @@ export default function DavetlilerSayfasi() {
                               )}
                               {davetli.telefon && (
                                 <a
-                                  href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli.ad)}`}
+                                  href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli)}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
@@ -1049,7 +1056,7 @@ export default function DavetlilerSayfasi() {
                           </div>
                           {davetli.telefon ? (
                             <a
-                              href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappMesaj(davetli.ad)}`}
+                              href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappMesaj(davetli)}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-1.5 bg-[#25D366] text-white text-xs px-3.5 py-2 rounded-xl hover:opacity-90 transition-opacity font-semibold shrink-0"
