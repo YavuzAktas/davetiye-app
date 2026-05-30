@@ -18,6 +18,7 @@ const rsvpSemasi = z.object({
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
   etkinlikler:  z.array(z.string().min(1).max(50)).max(20).optional(),
+  davetliKod:   z.string().max(20).optional(),
   ozelNitelikliVeriOnayi: z.boolean().optional(),
   cevaplar:     z.object({
     ulasim:    z.boolean().optional(),
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: ilkHata }, { status: 400 });
   }
 
-  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler, cevaplar, ozelNitelikliVeriOnayi } = sonuc.data;
+  const { davetiyeId, ad, email, telefon, katilim, kisiSayisi, mesaj, diyet, sarkiOnerisi, etkinlikler, cevaplar, ozelNitelikliVeriOnayi, davetliKod } = sonuc.data;
   const hassasBeslenmeBilgisiVar = Boolean(diyet?.trim() || cevaplar?.alerji?.trim());
 
   if (hassasBeslenmeBilgisiVar && ozelNitelikliVeriOnayi !== true) {
@@ -157,7 +158,15 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  /* 6. Etkinlik RSVP kayıtları */
+  /* 6. Kişisel link üzerinden gelindiyse Davetli kaydına RSVP bağla */
+  if (davetliKod) {
+    await prisma.davetli.updateMany({
+      where: { ozelKod: davetliKod, davetiyeId, rsvpId: null },
+      data:  { rsvpId: rsvp.id },
+    });
+  }
+
+  /* 7. Etkinlik RSVP kayıtları */
   if (etkinlikler && etkinlikler.length > 0) {
     const gecerliEtkinlikler = await prisma.etkinlikProgrami.findMany({
       where: { id: { in: etkinlikler }, davetiyeId },
@@ -171,7 +180,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  /* 7. In-app bildirim */
+  /* 8. In-app bildirim */
   bildirimOlustur({
     userId: davetiye.userId,
     tip: "rsvp",
@@ -180,7 +189,7 @@ export async function POST(req: NextRequest) {
     davetiyeSlug: davetiye.slug,
   });
 
-  /* 8. Bildirim e-postası (beklemeden gönder) */
+  /* 9. Bildirim e-postası (beklemeden gönder) */
   if (davetiye.user?.email) {
     rsvpBildirimiGonder({
       sahipEmail:     davetiye.user.email,

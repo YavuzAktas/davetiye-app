@@ -203,8 +203,9 @@ model RSVP {
   updatedAt    DateTime   @updatedAt
   davetiyeId   String
   davetiye     Davetiye   @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  masaAtamasi      MasaAtama?
-  etkinlikRsvplar  EtkinlikRSVP[]
+  masaAtamasi       MasaAtama?
+  etkinlikRsvplar   EtkinlikRSVP[]
+  davetliBaglantisi Davetli?
 
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, katilim, createdAt])
@@ -418,16 +419,23 @@ model YasalOnayKaydi {
 }
 
 model Davetli {
-  id         String   @id @default(cuid())
-  ad         String
-  telefon    String?
-  email      String?
-  grup       String   @default("diger")
-  notlar     String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  davetiyeId String
-  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  id                     String    @id @default(cuid())
+  ad                     String
+  telefon                String?
+  email                  String?
+  grup                   String    @default("diger")
+  notlar                 String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  davetiyeId             String
+  davetiye               Davetiye  @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  ozelKod                String?   @unique
+  kisiLimiti             Int?
+  linkGoruntulendiAt     DateTime?
+  linkGoruntulenmeSayisi Int       @default(0)
+  sonGoruntulenmeAt      DateTime?
+  rsvpId                 String?   @unique
+  rsvp                   RSVP?     @relation(fields: [rsvpId], references: [id], onDelete: SetNull)
 
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, grup, ad])

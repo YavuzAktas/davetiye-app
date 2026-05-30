@@ -14,6 +14,7 @@ import { type RsvpSorular } from "@/lib/rsvp-sorular";
 
 interface Props {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ dk?: string }>;
 }
 
 export const revalidate = 300;
@@ -111,12 +112,27 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function DavetiyeSayfasi({ params }: Props) {
+export default async function DavetiyeSayfasi({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { dk } = await searchParams;
 
   const davetiye = await publicDavetiyeGetir(slug);
 
   if (!davetiye || !davetiye.aktif) notFound();
+
+  /* Kişisel link varsa davetli verisini çek (önbelleksiz) */
+  let davetliOnAd: string | null = null;
+  let davetliMaxKisi: number | null = null;
+  if (dk) {
+    const davetli = await prisma.davetli.findUnique({
+      where: { ozelKod: dk },
+      select: { ad: true, kisiLimiti: true, davetiyeId: true },
+    });
+    if (davetli && davetli.davetiyeId === davetiye.id) {
+      davetliOnAd  = davetli.ad;
+      davetliMaxKisi = davetli.kisiLimiti;
+    }
+  }
 
   const sablonTipi = getSablonTipi(davetiye.sablon);
 
@@ -181,6 +197,9 @@ export default async function DavetiyeSayfasi({ params }: Props) {
       renk={temaRenk}
       etkinlikler={programEtkinlikleri}
       rsvpSorular={(davetiye.rsvpSorular as RsvpSorular | null) ?? null}
+      onAd={davetliOnAd}
+      maxKisiSayisi={davetliMaxKisi}
+      davetliKod={dk ?? null}
     />
   );
 

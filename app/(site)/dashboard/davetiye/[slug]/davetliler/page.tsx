@@ -12,6 +12,10 @@ interface Davetli {
   email?: string;
   grup: string;
   notlar?: string;
+  ozelKod?: string | null;
+  linkGoruntulendiAt?: string | null;
+  linkGoruntulenmeSayisi?: number;
+  rsvpId?: string | null;
 }
 
 interface RsvpItem {
@@ -342,6 +346,18 @@ export default function DavetlilerSayfasi() {
       setImportHata("İçe aktarma sırasında hata oluştu.");
     }
     setImportYukleniyor(false);
+  };
+
+  // ── Kişisel link ────────────────────────────────────────
+
+  const [kopyalananId, setKopyalananId] = useState<string | null>(null);
+
+  const ozelLinkKopyala = (ozelKod: string, id: string) => {
+    const url = `${process.env.NEXT_PUBLIC_URL}/r/${ozelKod}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setKopyalananId(id);
+      setTimeout(() => setKopyalananId(null), 2000);
+    });
   };
 
   // ── WhatsApp helpers ──────────────────────────────────────
@@ -761,10 +777,41 @@ export default function DavetlilerSayfasi() {
                                   </span>
                                 )}
                               </div>
+
+                              {/* Link durumu */}
+                              {davetli.ozelKod && (
+                                <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
+                                  {davetli.rsvpId ? (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+                                      ✓ RSVP verdi
+                                    </span>
+                                  ) : davetli.linkGoruntulendiAt ? (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                                      👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
+                                    </span>
+                                  ) : (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
+                                      Bekleniyor
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                             </div>
 
                             {/* Actions */}
                             <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                              {davetli.ozelKod && (
+                                <button
+                                  onClick={() => ozelLinkKopyala(davetli.ozelKod!, davetli.id)}
+                                  className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition-all"
+                                  title="Kişisel linki kopyala"
+                                >
+                                  {kopyalananId === davetli.id
+                                    ? <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                                    : <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                                  }
+                                </button>
+                              )}
                               {davetli.telefon && (
                                 <a
                                   href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli.ad)}`}

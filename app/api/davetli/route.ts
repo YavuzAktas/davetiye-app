@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { nanoid } from "nanoid";
 import { imhaKaydiOlustur } from "@/lib/imha-kaydi";
 import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
 
   const davetliler = await prisma.davetli.findMany({
     where: { davetiyeId, davetiye: { userId: session.user.id } },
-    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true },
+    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true, ozelKod: true, linkGoruntulendiAt: true, linkGoruntulenmeSayisi: true, rsvpId: true },
     orderBy: [{ grup: "asc" }, { ad: "asc" }],
     take: 500,
   });
@@ -53,15 +54,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
   }
 
-  type DavetliGirdisi = { ad: string; telefon?: string; email?: string; grup?: string; notlar?: string };
+  type DavetliGirdisi = { ad: string; telefon?: string; email?: string; grup?: string; notlar?: string; kisiLimiti?: number };
   const yeniDavetliler = await prisma.davetli.createMany({
     data: davetliler.map((d: DavetliGirdisi) => ({
       davetiyeId,
-      ad:      d.ad,
-      telefon: d.telefon || null,
-      email:   d.email   || null,
-      grup:    d.grup    || "diger",
-      notlar:  d.notlar  || null,
+      ad:         d.ad,
+      telefon:    d.telefon    || null,
+      email:      d.email      || null,
+      grup:       d.grup       || "diger",
+      notlar:     d.notlar     || null,
+      kisiLimiti: d.kisiLimiti || null,
+      ozelKod:    nanoid(10),
     })),
   });
 

@@ -19,6 +19,9 @@ interface Props {
   renk: string;
   etkinlikler?: EtkinlikProp[];
   rsvpSorular?: RsvpSorular | null;
+  onAd?: string | null;
+  maxKisiSayisi?: number | null;
+  davetliKod?: string | null;
 }
 
 type Adim = "secim" | "etkinlikler" | "form" | "tamamlandi";
@@ -38,7 +41,7 @@ function tarihFormatla(isoStr: string | null, saat: string | null): string {
   return parcalar.join(" · ");
 }
 
-export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorular }: Props) {
+export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorular, onAd, maxKisiSayisi, davetliKod }: Props) {
   const sorular = rsvpSorularCoz(rsvpSorular);
   const sarkiAktif  = soruAktifMi(sorular, "sarki");
   const yemekAktif  = soruAktifMi(sorular, "yemek");
@@ -56,7 +59,7 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
 
-  const [ad,         setAd]         = useState("");
+  const [ad,         setAd]         = useState(onAd ?? "");
   const [sarkiDilegi, setSarkiDilegi] = useState("");
   const [mesaj,      setMesaj]      = useState("");
   const [yemekSecim, setYemekSecim] = useState<Set<string>>(new Set());
@@ -65,6 +68,9 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
   const [alerji,     setAlerji]     = useState("");
   const [ozelCevap,  setOzelCevap]  = useState("");
   const [ozelNitelikliVeriOnayi, setOzelNitelikliVeriOnayi] = useState(false);
+  const [kisiSayisi, setKisiSayisi] = useState(1);
+
+  const maxKisi = maxKisiSayisi ?? 2;
 
   const programVar = etkinlikler.length >= 2;
   const hassasBeslenmeBilgisiVar = katilim === true && (
@@ -139,6 +145,8 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
           cevaplar:     Object.keys(cevaplar).length > 0 ? cevaplar : undefined,
           etkinlikler:  katilim && programVar ? Array.from(seciliEtkinlikler) : undefined,
           ozelNitelikliVeriOnayi: hassasBeslenmeBilgisiVar ? true : undefined,
+          kisiSayisi,
+          davetliKod:   davetliKod || undefined,
         }),
       });
       const json = await res.json().catch(() => ({}));
@@ -320,6 +328,28 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
               className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
+
+          {/* Kişi sayısı — sadece birden fazla kişi gelebiliyorsa göster */}
+          {katilim && maxKisi > 1 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                👥 Kaç kişi geliyorsunuz?
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setKisiSayisi(Math.max(1, kisiSayisi - 1))}
+                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg flex items-center justify-center transition-colors"
+                >−</button>
+                <span className="text-lg font-bold text-gray-800 w-8 text-center tabular-nums">{kisiSayisi}</span>
+                <button
+                  type="button"
+                  onClick={() => setKisiSayisi(Math.min(maxKisi, kisiSayisi + 1))}
+                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-lg flex items-center justify-center transition-colors"
+                >+</button>
+              </div>
+            </div>
+          )}
 
           {/* Şarkı isteği */}
           {sarkiAktif && (
