@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
   if (aktivasyonKoduKayit) {
     await prisma.aktivasyonKodu.update({
       where: { id: aktivasyonKoduKayit.id },
-      data: { davetiyeId: davetiye.id, durum: "davetiye_olusturuldu" },
+      data: { davetiyeId: davetiye.id, durum: "yayinda" },
     });
   }
 

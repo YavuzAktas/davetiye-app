@@ -10,6 +10,7 @@ type Kod = {
   createdAt: string;
   kullanilanAt: string | null;
   musteriUser: { name: string | null; email: string | null } | null;
+  davetiye: { slug: string; baslik: string } | null;
 };
 
 type Abonelik = {
@@ -106,6 +107,8 @@ export default function AktivasyonKodlari({
 
   const aktifKodlar = ilkKodlar.filter(k => k.durum !== "iptal");
   const iptalKodlar = ilkKodlar.filter(k => k.durum === "iptal");
+  const yayindaKodlar = ilkKodlar.filter(k => k.durum === "yayinda");
+  const kullanilmisKodlar = ilkKodlar.filter(k => ["kayit_oldu", "davetiye_olusturuldu", "yayinda"].includes(k.durum));
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
@@ -132,6 +135,24 @@ export default function AktivasyonKodlari({
           Yeni Kod
         </button>
       </div>
+
+      {/* İstatistikler */}
+      {ilkKodlar.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-gray-50 rounded-2xl px-4 py-3 text-center">
+            <p className="text-lg font-black text-gray-900">{aktifKodlar.length}</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">Aktif</p>
+          </div>
+          <div className="bg-gray-50 rounded-2xl px-4 py-3 text-center">
+            <p className="text-lg font-black text-gray-900">{kullanilmisKodlar.length}</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">Kullanılan</p>
+          </div>
+          <div className="bg-green-50 rounded-2xl px-4 py-3 text-center">
+            <p className="text-lg font-black text-green-700">{yayindaKodlar.length}</p>
+            <p className="text-[11px] text-green-600 mt-0.5">Yayında</p>
+          </div>
+        </div>
+      )}
 
       {!abonelik && (
         <p className="text-sm text-gray-400 text-center py-4">
@@ -168,6 +189,18 @@ export default function AktivasyonKodlari({
                       <span className="text-gray-400 font-normal"> · {k.musteriUser.email}</span>
                     )}
                   </p>
+                )}
+
+                {/* Oluşturulan davetiye */}
+                {k.davetiye && (
+                  <a
+                    href={`/davetiye/${k.davetiye.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs text-purple-600 font-medium hover:underline"
+                  >
+                    🎉 {k.davetiye.baslik}
+                  </a>
                 )}
 
                 {/* Link */}

@@ -37,6 +37,7 @@ export default async function PartnerPanelPage({
       take: 100,
       include: {
         musteriUser: { select: { name: true, email: true } },
+        davetiye: { select: { slug: true, baslik: true } },
       },
     }),
   ]);
@@ -65,6 +66,9 @@ export default async function PartnerPanelPage({
     kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
     musteriUser: k.musteriUser
       ? { name: k.musteriUser.name, email: k.musteriUser.email }
+      : null,
+    davetiye: k.davetiye
+      ? { slug: k.davetiye.slug, baslik: k.davetiye.baslik }
       : null,
   }));
 
