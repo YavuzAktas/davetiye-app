@@ -14,7 +14,7 @@ export default function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={kopyala}
-      className="text-xs px-3 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap"
+      className="inline-flex w-full sm:w-auto items-center justify-center text-xs px-3 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap"
     >
       {kopyalandi ? "Kopyalandı ✓" : "Kopyala"}
     </button>
