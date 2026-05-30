@@ -147,6 +147,16 @@ export default async function DavetiyeDetay({ params }: Props) {
     : null;
   const etkinlikYaklasti = etkinligeKalanGun !== null && etkinligeKalanGun <= 1;
   const etkinlikGecti = etkinligeKalanGun !== null && etkinligeKalanGun < 0;
+  const checkinDurumMetni = etkinligeKalanGun === null
+    ? "Etkinlik günü kullanılır"
+    : etkinlikGecti
+      ? "Etkinlik geçti"
+      : etkinligeKalanGun === 0
+        ? "Bugün kullan"
+        : etkinligeKalanGun === 1
+          ? "Yarın hazır olsun"
+          : "Etkinlik günü kullanılır";
+  const checkinVurgulu = etkinligeKalanGun !== null && etkinligeKalanGun >= 0 && etkinligeKalanGun <= 1;
   const bekleyenDavetliSayisi = bekleyenDavetliler.length;
   const anaAksiyon = odemeBekliyor
     ? {
@@ -655,11 +665,24 @@ export default async function DavetiyeDetay({ params }: Props) {
 
                 <Link
                   href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-emerald-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all group"
+                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
+                    checkinVurgulu
+                      ? "border-emerald-200 bg-emerald-50/70 hover:bg-emerald-50"
+                      : "border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/40"
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">✅</div>
-                    <span className="text-sm font-medium text-gray-700">QR Check-in</span>
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform ${
+                      checkinVurgulu ? "bg-emerald-100" : "bg-gray-50"
+                    }`}>✅</div>
+                    <div className="min-w-0">
+                      <span className="block text-sm font-medium text-gray-700">QR Check-in</span>
+                      <span className={`block text-[11px] font-semibold mt-0.5 ${
+                        checkinVurgulu ? "text-emerald-600" : "text-gray-400"
+                      }`}>
+                        {checkinDurumMetni}
+                      </span>
+                    </div>
                   </div>
                   <span className="text-gray-300 group-hover:text-emerald-500 transition-colors text-sm">→</span>
                 </Link>
