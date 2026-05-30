@@ -437,6 +437,9 @@ model Davetli {
   whatsappGonderildiAt   DateTime?
   sonHatirlatmaAt        DateTime?
   hatirlatmaSayisi       Int       @default(0)
+  checkinAt              DateTime?
+  checkinKisiSayisi      Int?
+  checkinBy              String?
   rsvpId                 String?   @unique
   rsvp                   RSVP?     @relation(fields: [rsvpId], references: [id], onDelete: SetNull)
 
@@ -444,6 +447,7 @@ model Davetli {
   @@index([davetiyeId, grup, ad])
   @@index([davetiyeId, whatsappGonderildiAt])
   @@index([davetiyeId, sonHatirlatmaAt])
+  @@index([davetiyeId, checkinAt])
 }
 
 model Referral {

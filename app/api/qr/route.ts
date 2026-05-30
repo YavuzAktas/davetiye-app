@@ -10,7 +10,8 @@ function davetiyeUrlMi(rawUrl: string, req: NextRequest): boolean {
     const hedef = new URL(rawUrl);
     const izinliOriginler = new Set([new URL(appUrl).origin, req.nextUrl.origin]);
 
-    return izinliOriginler.has(hedef.origin) && hedef.pathname.startsWith("/davetiye/");
+    return izinliOriginler.has(hedef.origin)
+      && (hedef.pathname.startsWith("/davetiye/") || hedef.pathname.startsWith("/d/"));
   } catch {
     return false;
   }
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ hata: "URL gerekli." }, { status: 400 });
   }
   if (!davetiyeUrlMi(url, req)) {
-    return NextResponse.json({ hata: "QR kod yalnızca davetiye bağlantıları için oluşturulabilir." }, { status: 400 });
+    return NextResponse.json({ hata: "QR kod yalnızca davetiye veya davetli bağlantıları için oluşturulabilir." }, { status: 400 });
   }
 
   const qrDataUrl = await QRCode.toDataURL(url, {

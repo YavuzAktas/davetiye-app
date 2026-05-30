@@ -19,6 +19,8 @@ interface Davetli {
   whatsappGonderildiAt?: string | null;
   sonHatirlatmaAt?: string | null;
   hatirlatmaSayisi?: number;
+  checkinAt?: string | null;
+  checkinKisiSayisi?: number | null;
   rsvpId?: string | null;
 }
 
@@ -934,8 +936,13 @@ export default function DavetlilerSayfasi() {
                               </div>
 
                               {/* Link durumu */}
-                              {((davetli.whatsappGonderildiAt || (davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId))) && (
+                              {((davetli.checkinAt || davetli.whatsappGonderildiAt || (davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId))) && (
                                 <div className="flex gap-1.5 mt-1.5 flex-wrap">
+                                  {davetli.checkinAt && (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                                      Giriş yapıldı · {davetli.checkinKisiSayisi ?? 1} kişi
+                                    </span>
+                                  )}
                                   {davetli.whatsappGonderildiAt && (
                                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
                                       WhatsApp gönderildi
@@ -1004,6 +1011,18 @@ export default function DavetlilerSayfasi() {
                                     : <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                                   }
                                 </button>
+                              )}
+                              {davetli.ozelKod && (
+                                <a
+                                  href={`/api/qr?url=${encodeURIComponent(davetliLinki(davetli.ozelKod))}`}
+                                  download={`checkin-qr-${davetli.ad.toLowerCase().replace(/\s+/g, "-")}.png`}
+                                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-violet-50 text-violet-500 hover:bg-violet-100 transition-all"
+                                  title="Check-in QR indir"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm12 2h2v2h-2v-2zm-2-2h2v2h-2v-2zm4 4h2v2h-2v-2z" />
+                                  </svg>
+                                </a>
                               )}
                               {davetli.telefon && (
                                 <a

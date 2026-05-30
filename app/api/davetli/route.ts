@@ -48,6 +48,8 @@ export async function GET(req: NextRequest) {
       whatsappGonderildiAt: true,
       sonHatirlatmaAt: true,
       hatirlatmaSayisi: true,
+      checkinAt: true,
+      checkinKisiSayisi: true,
       rsvpId: true,
     },
     orderBy: [{ grup: "asc" }, { ad: "asc" }],
@@ -151,6 +153,8 @@ export async function PATCH(req: NextRequest) {
       whatsappGonderildiAt: true,
       sonHatirlatmaAt: true,
       hatirlatmaSayisi: true,
+      checkinAt: true,
+      checkinKisiSayisi: true,
       rsvpId: true,
     },
   });
