@@ -440,8 +440,10 @@ export default async function DavetiyeDetay({ params }: Props) {
         </div>
 
         {/* ── Mobil hızlı erişim (sadece küçük ekran) ── */}
-        <div className="lg:hidden -mx-4 sm:-mx-6 px-4 sm:px-6">
-          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="lg:hidden relative -mx-4 sm:-mx-6">
+          {/* sağ fade: kullanıcıya daha fazla öğe olduğunu hissettir */}
+          <div className="absolute right-0 top-0 bottom-1 w-10 bg-linear-to-l from-gray-50 to-transparent pointer-events-none z-10" />
+          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar px-4 sm:px-6 pr-10 sm:pr-12">
             {[
               { href: `/dashboard/davetiye/${davetiye.slug}/davetliler`, icon: <Users className="w-4 h-4" />, label: "Davetliler", color: "text-gray-500 bg-gray-50" },
               { href: `/dashboard/davetiye/${davetiye.slug}/check-in`,   icon: <QrCode className="w-4 h-4" />, label: "Check-in",  color: "text-emerald-600 bg-emerald-50", border: "border-emerald-100" },
@@ -501,7 +503,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-gray-900">Genel davetiye linki</p>
                       <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Hızlı paylaşım için kullanılır. Kişi bazlı takip gerekiyorsa davetli linklerini tercih edin.</p>
-                      <div className="mt-3 flex items-center gap-2">
+                      <div className="mt-3 flex flex-col sm:flex-row gap-2">
                         <div
                           title={davetiyeUrl}
                           className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 font-mono truncate"
@@ -579,7 +581,10 @@ export default async function DavetiyeDetay({ params }: Props) {
                       <p className="text-sm font-bold text-gray-900">Canlı duvar linki</p>
                       <p className="text-xs text-gray-400 leading-relaxed mt-1">Salon TV&apos;sinde açılır; onaylı fotoğraflar etkinlikte akar.</p>
                       <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                        <div className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-gray-50 text-gray-500 font-mono overflow-x-auto whitespace-nowrap">
+                        <div
+                          title={canliDuvarUrl}
+                          className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-gray-50 text-gray-500 font-mono truncate"
+                        >
                           {canliDuvarUrl}
                         </div>
                         <CopyButton text={canliDuvarUrl} />
