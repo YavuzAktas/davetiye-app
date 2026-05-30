@@ -16,11 +16,15 @@ import EkOzellikSatinAlPanel from "@/components/EkOzellikSatinAlPanel";
 import {
   Armchair,
   BarChart3,
+  BookOpen,
   CalendarDays,
   CheckCircle2,
   ClipboardList,
   Eye,
   Images,
+  Mail,
+  Mic,
+  Monitor,
   QrCode,
   Users,
   XCircle,
@@ -646,9 +650,9 @@ export default async function DavetiyeDetay({ params }: Props) {
           {/* RIGHT — Quick actions sidebar (2/5) */}
           <div className="lg:col-span-2 space-y-4">
 
-            {/* Hızlı İşlemler */}
+            {/* Temel araçlar */}
             <div className="bg-white border border-gray-100 rounded-3xl p-5">
-              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Hızlı İşlemler</p>
+              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Araçlar</p>
               <div className="space-y-2">
 
                 <Link
@@ -703,6 +707,35 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/program`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <CalendarDays className="w-4 h-4 text-gray-500" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                </Link>
+
+              </div>
+            </div>
+
+            {/* Ek Özellikler — her zaman görünür, satın alınmamışlar kilitli */}
+            <div className="bg-white border border-gray-100 rounded-3xl p-5">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Ek Özellikler</p>
+                {kilidliOzellikler.length > 0 && !odemeBekliyor && (
+                  <a href="#ek-ozellikler" className="text-[10px] font-bold text-purple-500 hover:text-purple-700 transition-colors">
+                    Satın al →
+                  </a>
+                )}
+              </div>
+              <div className="space-y-2">
+
+                {/* QR Check-in */}
                 {checkInOdendi ? (
                   <Link
                     href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
@@ -720,9 +753,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                       </div>
                       <div className="min-w-0">
                         <span className="block text-sm font-medium text-gray-700">QR Check-in</span>
-                        <span className={`block text-[11px] font-semibold mt-0.5 ${
-                          checkinVurgulu ? "text-emerald-600" : "text-gray-400"
-                        }`}>
+                        <span className={`block text-[11px] font-semibold mt-0.5 ${checkinVurgulu ? "text-emerald-600" : "text-gray-400"}`}>
                           {checkinDurumMetni}
                         </span>
                       </div>
@@ -730,45 +761,25 @@ export default async function DavetiyeDetay({ params }: Props) {
                     <span className="text-gray-300 group-hover:text-emerald-500 transition-colors text-sm">→</span>
                   </Link>
                 ) : (
-                  <div className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-gray-50/60">
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
-                        <QrCode className="w-4 h-4 text-gray-400" />
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <QrCode className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
                       </div>
-                      <div>
-                        <span className="text-sm font-medium text-gray-400">QR Check-in</span>
-                        <span className="ml-2 text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">Ek özellik</span>
-                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">QR Check-in</span>
                     </div>
-                  </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺99</span>
+                  </a>
                 )}
 
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/program`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <CalendarDays className="w-4 h-4 text-gray-500" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
-                  </div>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
-                </Link>
-
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/album`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Images className="w-4 h-4 text-gray-500" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Albüm & Anı</span>
-                  </div>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
-                </Link>
-
+                {/* Oturma Planı */}
                 {oturmaPlanAktif ? (
                   <Link
                     href={`/dashboard/davetiye/${davetiye.slug}/oturma-plani`}
@@ -786,28 +797,199 @@ export default async function DavetiyeDetay({ params }: Props) {
                     <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
                   </Link>
                 ) : (
-                  <div className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-gray-50/60">
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
-                        <Armchair className="w-4 h-4 text-gray-400" />
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <Armchair className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
                       </div>
-                      <div>
-                        <span className="text-sm font-medium text-gray-400">Oturma Planı</span>
-                        <span className="ml-2 text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">Ek özellik</span>
-                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Oturma Planı</span>
                     </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺199</span>
+                  </a>
+                )}
+
+                {/* Fotoğraf Albümü */}
+                {albumAktif ? (
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Images className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Fotoğraf Albümü</span>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                  </Link>
+                ) : (
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <Images className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Fotoğraf Albümü</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺99</span>
+                  </a>
+                )}
+
+                {/* Anı Defteri */}
+                {aniDefAktif ? (
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Mail className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Anı Defteri</span>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                  </Link>
+                ) : (
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <Mail className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Anı Defteri</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺99</span>
+                  </a>
+                )}
+
+                {/* Sesli Anı */}
+                {sesliAniAktif ? (
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Mic className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Sesli Anı</span>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                  </Link>
+                ) : (
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <Mic className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Sesli Anı</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺99</span>
+                  </a>
+                )}
+
+                {/* Canlı Duvar */}
+                {canliDuvarOdendi ? (
+                  <a
+                    href={canliDuvarUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Monitor className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Canlı Duvar</span>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">↗</span>
+                  </a>
+                ) : (
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <Monitor className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Canlı Duvar</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺99</span>
+                  </a>
+                )}
+
+                {/* Anı Kitabı PDF */}
+                {aniKitabiAktif ? (
+                  <div className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-white">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center">
+                        <BookOpen className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Anı Kitabı PDF</span>
+                    </div>
+                    <AniKitabiButon slug={davetiye.slug} renk={renk} rgb={rgb} />
                   </div>
+                ) : (
+                  <a
+                    href={odemeBekliyor ? undefined : "#ek-ozellikler"}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border border-dashed transition-all group ${
+                      odemeBekliyor
+                        ? "border-gray-100 bg-gray-50/40 cursor-default"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 cursor-pointer"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-purple-50 transition-colors">
+                        <BookOpen className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 group-hover:text-gray-600 transition-colors">Anı Kitabı PDF</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-purple-500 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg">₺79</span>
+                  </a>
                 )}
 
               </div>
             </div>
 
-          {kilidliOzellikler.length > 0 && (
-            <EkOzellikSatinAlPanel
-              davetiyeId={davetiye.id}
-              kilidliOzellikler={kilidliOzellikler}
-              adminMi={adminMi}
-            />
+          {kilidliOzellikler.length > 0 && !odemeBekliyor && (
+            <div id="ek-ozellikler" className="scroll-mt-6">
+              <EkOzellikSatinAlPanel
+                davetiyeId={davetiye.id}
+                kilidliOzellikler={kilidliOzellikler}
+                adminMi={adminMi}
+              />
+            </div>
           )}
           </div>
         </div>
