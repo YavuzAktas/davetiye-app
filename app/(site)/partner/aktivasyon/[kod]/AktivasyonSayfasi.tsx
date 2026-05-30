@@ -6,12 +6,26 @@ import { useRouter } from "next/navigation";
 
 type Durum = "bekliyor" | "isleniyor" | "yonlendiriliyor" | "hata";
 
+const OZELLIK_ETIKETI: Record<string, { isim: string; emoji: string }> = {
+  "luks-sablon":    { isim: "Lüks şablon seçimi",  emoji: "✨" },
+  "muzik":          { isim: "Arka plan müziği",     emoji: "🎵" },
+  "album-foto":     { isim: "Fotoğraf albümü",      emoji: "📸" },
+  "ani-defteri":    { isim: "Anı defteri",           emoji: "📖" },
+  "canli-duvar":    { isim: "Canlı mesaj duvarı",   emoji: "💬" },
+  "sesli-ani":      { isim: "Sesli anı kaydı",      emoji: "🎙️" },
+  "oturma-plani":   { isim: "Oturma düzeni planı",  emoji: "🪑" },
+  "qr-check-in":    { isim: "QR kod check-in",      emoji: "📱" },
+  "ani-kitabi-pdf": { isim: "Anı kitabı (PDF)",      emoji: "📚" },
+};
+
 export default function AktivasyonSayfasi({
   kod,
   firmaAdi,
+  dahilKodlar = [],
 }: {
   kod: string;
   firmaAdi: string;
+  dahilKodlar?: string[];
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -46,10 +60,26 @@ export default function AktivasyonSayfasi({
         <div className="w-20 h-20 bg-purple-100 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6">🎁</div>
         <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-2">{firmaAdi} — Özel Davetiye Hakkı</p>
         <h1 className="text-2xl font-black text-gray-900 mb-3">Ücretsiz Dijital Davetiye</h1>
-        <p className="text-sm text-gray-500 max-w-sm mx-auto mb-8 leading-relaxed">
+        <p className="text-sm text-gray-500 max-w-sm mx-auto mb-6 leading-relaxed">
           Bu link sayesinde dijital davetiyenizi <strong>ücretsiz</strong> oluşturabilirsiniz.
           Devam etmek için bir hesap oluşturun veya giriş yapın.
         </p>
+        {dahilKodlar.filter(k => k !== "temel-davetiye" && OZELLIK_ETIKETI[k]).length > 0 && (
+          <div className="text-left bg-purple-50 rounded-2xl px-4 py-4 mb-6 max-w-xs mx-auto">
+            <p className="text-[11px] font-bold text-purple-700 mb-2.5 uppercase tracking-wide">Paketinize dahil özellikler</p>
+            <div className="space-y-2">
+              {dahilKodlar.filter(k => k !== "temel-davetiye" && OZELLIK_ETIKETI[k]).map(kod => {
+                const o = OZELLIK_ETIKETI[kod]!;
+                return (
+                  <div key={kod} className="flex items-center gap-2">
+                    <span className="text-sm leading-none">{o.emoji}</span>
+                    <span className="text-xs text-purple-700 font-medium">{o.isim}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <button
           onClick={() => signIn(undefined, { callbackUrl: `/partner/aktivasyon/${kod}` })}
           className="bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-8 py-3.5 rounded-2xl hover:opacity-90 transition-opacity text-sm"

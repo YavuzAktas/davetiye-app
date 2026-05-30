@@ -18,6 +18,7 @@ const DEMO_URLS: Record<string, string> = {
   "vintage-nisan":   "/davetiye/ornek-vintage-nisan",
 };
 const PREMIUM = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks", "vintage-nisan"]);
+const LUKS_SABLON_IDS = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
 const KAT_EMOJI: Record<string, string> = {
   dugun:"💍", nisan:"💌", dogumgunu:"🎂", sunnet:"⭐", kina:"🕯️", kurumsal:"💼", diger:"🎉",
 };
@@ -705,7 +706,7 @@ const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklam
 /* ══════════════════════════════════════════════
    PREMIUM KART — Showcase (yeniden tasarım)
 ══════════════════════════════════════════════ */
-function PremiumKart({ sablon, aktivasyon = "" }: { sablon: Sablon; aktivasyon?: string }) {
+function PremiumKart({ sablon, aktivasyon = "", dahilKodlar = [] }: { sablon: Sablon; aktivasyon?: string; dahilKodlar?: string[] }) {
   const router   = useRouter();
   const demoUrl  = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
@@ -780,11 +781,20 @@ function PremiumKart({ sablon, aktivasyon = "" }: { sablon: Sablon; aktivasyon?:
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-2xl font-bold tabular-nums"
-            style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            +₺100
-          </p>
-          <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>TEK SEFERLİK</p>
+          {aktivasyon && dahilKodlar.includes("luks-sablon") && LUKS_SABLON_IDS.has(sablon.id) ? (
+            <>
+              <p className="text-sm font-bold" style={{ color: "#4ade80" }}>✓ Dahil</p>
+              <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>PAKETTE</p>
+            </>
+          ) : (
+            <>
+              <p className="text-2xl font-bold tabular-nums"
+                style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                +₺100
+              </p>
+              <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>TEK SEFERLİK</p>
+            </>
+          )}
         </div>
       </div>
 
@@ -891,7 +901,7 @@ const STD_OZELLIKLER = [
   { Icon: Music,          label: "Müzik" },
 ] as const;
 
-function StdKompaktKart({ sablon, index, aktivasyon = "" }: { sablon: Sablon; index: number; aktivasyon?: string }) {
+function StdKompaktKart({ sablon, index, aktivasyon = "", dahilKodlar = [] }: { sablon: Sablon; index: number; aktivasyon?: string; dahilKodlar?: string[] }) {
   const router = useRouter();
   const r = sablon.renk;
   const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
@@ -977,6 +987,14 @@ function StdKompaktKart({ sablon, index, aktivasyon = "" }: { sablon: Sablon; in
           ))}
         </div>
 
+        {/* Aktivasyon kapsamı */}
+        {aktivasyon && dahilKodlar.includes("temel-davetiye") && (
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-green-50 border border-green-100">
+            <span className="text-[10px] text-green-600">✓</span>
+            <span className="text-[10px] font-semibold text-green-700">Partneriniz tarafından karşılanıyor</span>
+          </div>
+        )}
+
         {/* CTA — Önizle + Oluştur */}
         <div className="flex gap-2">
           <Link
@@ -1026,6 +1044,15 @@ export default function SablonlarSayfasi() {
   const aktivasyon = searchParams.get("aktivasyon") ?? "";
   const [aktifKat, setAktifKat] = useState("hepsi");
   const [aktifEtiket, setAktifEtiket] = useState<EtiketFiltre>("hepsi");
+  const [dahilKodlar, setDahilKodlar] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!aktivasyon) { setDahilKodlar([]); return; }
+    fetch(`/api/partner/aktivasyon/${aktivasyon}/kapsam`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d?.dahilKodlar) setDahilKodlar(d.dahilKodlar); })
+      .catch(() => {});
+  }, [aktivasyon]);
 
   function sablonEtiketEslesiyor(sablonId: string): boolean {
     if (aktifEtiket === "hepsi") return true;
@@ -1231,7 +1258,7 @@ export default function SablonlarSayfasi() {
                   </div>
 
                   <div className="space-y-5">
-                    {goruntulenenPremium.map(s => <PremiumKart key={s.id} sablon={s} aktivasyon={aktivasyon} />)}
+                    {goruntulenenPremium.map(s => <PremiumKart key={s.id} sablon={s} aktivasyon={aktivasyon} dahilKodlar={dahilKodlar} />)}
                   </div>
                 </motion.section>
               )}
@@ -1277,7 +1304,7 @@ export default function SablonlarSayfasi() {
                     transition={{ duration:0.2 }}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {goruntulenenStandart.map((s, i) => (
-                      <StdKompaktKart key={s.id} sablon={s} index={i} aktivasyon={aktivasyon} />
+                      <StdKompaktKart key={s.id} sablon={s} index={i} aktivasyon={aktivasyon} dahilKodlar={dahilKodlar} />
                     ))}
                   </motion.div>
                 </AnimatePresence>

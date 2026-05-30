@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import AktivasyonSayfasi from "./AktivasyonSayfasi";
+import { dahilKodlarGetir } from "@/lib/partner-paketler";
 
 export const metadata: Metadata = {
   title: "Aktivasyon | Bekleriz",
@@ -22,7 +23,7 @@ export default async function AktivasyonPage({
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
     include: {
-      abonelik: { select: { aktif: true, bitisAt: true } },
+      abonelik: { select: { aktif: true, bitisAt: true, paketId: true } },
       partner: { select: { firmaAdi: true, durum: true } },
     },
   });
@@ -81,9 +82,11 @@ export default async function AktivasyonPage({
   }
 
   /* ── Kullanılabilir ── */
+  const dahilKodlar = dahilKodlarGetir(aktivasyon.abonelik!.paketId);
+
   return (
     <PageShell>
-      <AktivasyonSayfasi kod={kod} firmaAdi={aktivasyon.partner.firmaAdi} />
+      <AktivasyonSayfasi kod={kod} firmaAdi={aktivasyon.partner.firmaAdi} dahilKodlar={dahilKodlar} />
     </PageShell>
   );
 }

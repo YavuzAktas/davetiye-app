@@ -42,6 +42,7 @@ export default async function PartnerPanelPage({
         durum: true,
         createdAt: true,
         kullanilanAt: true,
+        davetiye: { select: { slug: true, baslik: true } },
       },
     }),
     prisma.odemeKaydi.findMany({
@@ -85,6 +86,7 @@ export default async function PartnerPanelPage({
     durum: k.durum,
     createdAt: k.createdAt.toISOString(),
     kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
+    davetiye: k.davetiye ? { slug: k.davetiye.slug, baslik: k.davetiye.baslik } : null,
   }));
 
   return (

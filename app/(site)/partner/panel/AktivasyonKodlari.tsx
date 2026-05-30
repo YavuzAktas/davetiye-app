@@ -9,6 +9,7 @@ type Kod = {
   durum: string;
   createdAt: string;
   kullanilanAt: string | null;
+  davetiye: { slug: string; baslik: string } | null;
 };
 
 type Abonelik = {
@@ -20,6 +21,7 @@ const DURUM_ETIKET: Record<string, { label: string; cls: string }> = {
   olusturuldu:          { label: "Oluşturuldu",          cls: "bg-gray-100 text-gray-600" },
   gonderildi:           { label: "Gönderildi",           cls: "bg-blue-100 text-blue-700" },
   kayit_oldu:           { label: "Kayıt Oldu",           cls: "bg-yellow-100 text-yellow-700" },
+  odeme_bekliyor:       { label: "Ödeme Bekliyor",       cls: "bg-orange-100 text-orange-700" },
   davetiye_olusturuldu: { label: "Davetiye Oluşturuldu", cls: "bg-orange-100 text-orange-700" },
   yayinda:              { label: "Yayında",              cls: "bg-green-100 text-green-700" },
   iptal:                { label: "İptal",                cls: "bg-red-100 text-red-500" },
@@ -199,12 +201,30 @@ export default function AktivasyonKodlari({
                   </span>
                 </div>
 
-                {["kayit_oldu", "davetiye_olusturuldu", "yayinda"].includes(k.durum) && (
-                  <p className="text-xs text-gray-500">
-                    {k.durum === "yayinda"
-                      ? "Bu aktivasyon hakkıyla bir davetiye yayına alındı."
-                      : "Bu aktivasyon linki müşteri tarafından kullanıldı."}
+                {k.durum === "odeme_bekliyor" && (
+                  <p className="text-xs text-orange-600 bg-orange-50 rounded-xl px-3 py-2">
+                    Müşteri davetiyesini oluşturdu fakat ek özellikler için ödeme bekleniyor.
                   </p>
+                )}
+
+                {["kayit_oldu", "davetiye_olusturuldu"].includes(k.durum) && (
+                  <p className="text-xs text-gray-500">Bu aktivasyon linki müşteri tarafından kullanıldı.</p>
+                )}
+
+                {k.durum === "yayinda" && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-xs text-gray-500">Davetiye yayında.</p>
+                    {k.davetiye && (
+                      <a
+                        href={`/davetiye/${k.davetiye.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] font-bold text-purple-600 hover:underline"
+                      >
+                        {k.davetiye.baslik || "Daveti görüntüle"} →
+                      </a>
+                    )}
+                  </div>
                 )}
 
                 {/* Link */}
