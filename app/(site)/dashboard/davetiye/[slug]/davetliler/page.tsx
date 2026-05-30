@@ -353,7 +353,7 @@ export default function DavetlilerSayfasi() {
   const [kopyalananId, setKopyalananId] = useState<string | null>(null);
 
   const ozelLinkKopyala = (ozelKod: string, id: string) => {
-    const url = `${process.env.NEXT_PUBLIC_URL}/r/${ozelKod}`;
+    const url = `${process.env.NEXT_PUBLIC_URL}/d/${ozelKod}`;
     navigator.clipboard.writeText(url).then(() => {
       setKopyalananId(id);
       setTimeout(() => setKopyalananId(null), 2000);
