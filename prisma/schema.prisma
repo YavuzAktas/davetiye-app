@@ -31,6 +31,8 @@ model User {
   referralKredi    Int       @default(0)
   referrallar      Referral[] @relation("ReferralVeren")
   referralAlinan   Referral?  @relation("ReferralAlan")
+  partner          Partner?
+  aktivasyonKodlari AktivasyonKodu[] @relation("AktivasyonMusteriUser")
 }
 
 model Account {
@@ -131,6 +133,7 @@ model Davetiye {
   siparisler      Siparis[]
   odemeTokenlar   OdemeToken[]
   odemeKayitlari  OdemeKaydi[]
+  aktivasyonKodu  AktivasyonKodu?
 
   @@index([userId, aktif])
   @@index([userId, createdAt])
@@ -491,4 +494,49 @@ model Yorum {
   createdAt    DateTime @default(now())
 
   @@index([onaylandi, createdAt])
+}
+
+model Partner {
+  id                String           @id @default(cuid())
+  userId            String           @unique
+  firmaAdi          String
+  logoUrl           String?
+  durum             String           @default("beklemede")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  abonelikler       PartnerAbonelik[]
+  aktivasyonKodlari AktivasyonKodu[]
+}
+
+model PartnerAbonelik {
+  id            String   @id @default(cuid())
+  partnerId     String
+  paketId       String
+  hakSayisi     Int
+  kullanilanHak Int      @default(0)
+  baslangicAt   DateTime @default(now())
+  bitisAt       DateTime?
+  aktif         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  partner       Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@index([partnerId, aktif])
+}
+
+model AktivasyonKodu {
+  id            String    @id @default(cuid())
+  partnerId     String
+  kod           String    @unique
+  durum         String    @default("olusturuldu")
+  musteriUserId String?
+  davetiyeId    String?   @unique
+  createdAt     DateTime  @default(now())
+  kullanilanAt  DateTime?
+  partner       Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  musteriUser   User?     @relation("AktivasyonMusteriUser", fields: [musteriUserId], references: [id], onDelete: SetNull)
+  davetiye      Davetiye? @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
+
+  @@index([partnerId])
+  @@index([musteriUserId])
 }
