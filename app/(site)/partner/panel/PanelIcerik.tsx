@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { PARTNER_PAKET_LISTESI, type PartnerPaketId } from "@/lib/partner-paketler";
+import { PARTNER_PAKET_LISTESI, paketGetir, type PartnerPaketId } from "@/lib/partner-paketler";
 
 type Abonelik = {
   paketId: string;
@@ -144,7 +144,7 @@ export default function PanelIcerik({
             <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Mevcut Abonelik</p>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-lg font-black text-gray-900 capitalize">{abonelik.paketId} Paketi</p>
+                <p className="text-lg font-black text-gray-900">{paketGetir(abonelik.paketId)?.ad ?? abonelik.paketId} Paketi</p>
                 <p className="text-xs text-gray-400 mt-0.5">
                   {bitisDate
                     ? `Yenileme: ${bitisDate.toLocaleDateString("tr-TR")}`
@@ -210,7 +210,7 @@ export default function PanelIcerik({
           {abonelik ? "Paket Yenile / Yükselt" : "Paket Seç"}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {PARTNER_PAKET_LISTESI.map(paket => {
             const secili = secilenPaket === paket.id;
             return (
@@ -222,7 +222,7 @@ export default function PanelIcerik({
                   setCheckoutHtml(null);
                   setHatalar({});
                 }}
-                className={`relative text-left rounded-2xl border-2 p-5 transition-all ${
+                className={`relative text-left rounded-2xl border-2 p-4 transition-all ${
                   secili
                     ? "border-purple-400 bg-purple-50/50 shadow-sm"
                     : "border-gray-200 hover:border-purple-200 hover:bg-gray-50"
@@ -236,25 +236,14 @@ export default function PanelIcerik({
                 <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
                   {paket.ad}
                 </p>
-                <p className="text-2xl font-black text-gray-900 mb-0.5">₺{paket.aylikTutar}<span className="text-sm font-normal text-gray-400">/ay</span></p>
+                <p className="text-xl font-black text-gray-900 mb-0.5">
+                  ₺{paket.aylikTutar.toLocaleString("tr-TR")}
+                  <span className="text-xs font-normal text-gray-400">/ay</span>
+                </p>
                 <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
               </button>
             );
           })}
-
-          {/* Ajans — iletişim */}
-          <div className="sm:col-span-2 flex items-center justify-between bg-pink-50 border border-pink-100 rounded-2xl px-5 py-4">
-            <div>
-              <p className="text-[10px] font-bold tracking-widest uppercase text-pink-600 mb-0.5">Ajans</p>
-              <p className="text-sm font-bold text-gray-900">75+ hak/ay · Özel fiyat</p>
-            </div>
-            <a
-              href="mailto:destek@bekleriz.com?subject=Ajans Partner Paketi"
-              className="text-xs font-bold text-white bg-pink-600 hover:bg-pink-700 transition-colors px-4 py-2 rounded-xl"
-            >
-              Teklif Al
-            </a>
-          </div>
         </div>
 
         {/* Fatura formu */}

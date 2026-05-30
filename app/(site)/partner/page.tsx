@@ -12,7 +12,7 @@ const PAKETLER = [
   {
     id: "baslangic",
     ad: "Başlangıç",
-    fiyat: "₺399",
+    fiyat: "₺599",
     periyot: "/ay",
     renk: "#6366f1",
     bg: "bg-indigo-50",
@@ -20,19 +20,24 @@ const PAKETLER = [
     btnClass: "bg-indigo-600 hover:bg-indigo-700",
     hakSayisi: 10,
     populer: false,
+    aciklama: "Sektöre yeni giren küçük işletmeler için",
+    dahilOzellikler: [
+      "Dijital davetiye (299₺ değer)",
+      "Arka plan müziği (69₺ değer)",
+      "Anı defteri (99₺ değer)",
+    ],
     ozellikler: [
       "Ayda 10 davetiye aktivasyon hakkı",
       "Kişisel aktivasyon linki oluşturma",
-      "Temel partner paneli",
-      "Müşteri davetiye durumu takibi",
-      "WhatsApp ile link gönderme",
+      "Partner paneli & durum takibi",
+      "WhatsApp ile tek tıkla ilet",
     ],
-    dahilDegil: ["Partner logo/marka ibaresi", "Kullanım raporu", "Öncelikli destek"],
+    dahilDegil: ["Partner logo/marka ibaresi", "Lüks şablon dahil", "Fotoğraf albümü dahil"],
   },
   {
     id: "profesyonel",
     ad: "Profesyonel",
-    fiyat: "₺999",
+    fiyat: "₺1.499",
     periyot: "/ay",
     renk: "#9333ea",
     bg: "bg-purple-50",
@@ -40,34 +45,49 @@ const PAKETLER = [
     btnClass: "bg-purple-600 hover:bg-purple-700",
     hakSayisi: 30,
     populer: true,
+    aciklama: "Aktif düğün & etkinlik organizatörleri için",
+    dahilOzellikler: [
+      "Dijital davetiye (299₺ değer)",
+      "Lüks şablon (100₺ değer)",
+      "Arka plan müziği (69₺ değer)",
+      "Fotoğraf albümü (99₺ değer)",
+      "Anı defteri (99₺ değer)",
+      "Canlı fotoğraf duvarı (99₺ değer)",
+    ],
     ozellikler: [
       "Ayda 30 davetiye aktivasyon hakkı",
       "Kişisel aktivasyon linki oluşturma",
       "Partner logo / marka ibaresi",
       "Detaylı kullanım raporu",
-      "Müşteri davetiye durumu takibi",
+      "WhatsApp ile tek tıkla ilet",
       "Öncelikli destek",
     ],
-    dahilDegil: ["Özel onboarding", "Çoklu personel hesabı"],
+    dahilDegil: ["Sesli anı dahil", "Oturma planı dahil", "QR check-in dahil"],
   },
   {
-    id: "ajans",
-    ad: "Ajans",
-    fiyat: "Teklif alın",
-    periyot: "",
-    renk: "#db2777",
-    bg: "bg-pink-50",
-    border: "border-pink-100",
-    btnClass: "bg-pink-600 hover:bg-pink-700",
+    id: "kurumsal",
+    ad: "Kurumsal",
+    fiyat: "₺3.499",
+    periyot: "/ay",
+    renk: "#dc2626",
+    bg: "bg-red-50",
+    border: "border-red-100",
+    btnClass: "bg-red-600 hover:bg-red-700",
     hakSayisi: 75,
     populer: false,
+    aciklama: "Büyük ajanslar ve yüksek hacimli organizatörler için",
+    dahilOzellikler: [
+      "Tüm özellikler dahil (1.141₺ değer/davetiye)",
+      "Sesli anı, Oturma planı",
+      "QR check-in, Anı kitabı PDF",
+    ],
     ozellikler: [
-      "Ayda 75+ davetiye aktivasyon hakkı",
+      "Ayda 75 davetiye aktivasyon hakkı",
+      "Kişisel aktivasyon linki oluşturma",
       "Partner logo / marka ibaresi",
-      "Özel onboarding süreci",
-      "Özel kampanya linki",
-      "Detaylı kullanım raporu",
       "Öncelikli destek hattı",
+      "Özel onboarding süreci",
+      "Detaylı kullanım raporu",
     ],
     dahilDegil: [],
   },
@@ -267,22 +287,37 @@ export default function PartnerPage() {
                   </div>
                 )}
 
-                <div className="mb-6">
+                <div className="mb-5">
                   <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
                     {paket.ad}
                   </p>
                   <div className="flex items-end gap-1">
-                    <span className="text-4xl font-black text-gray-900">{paket.fiyat}</span>
+                    <span className="text-3xl font-black text-gray-900">{paket.fiyat}</span>
                     <span className="text-sm text-gray-400 mb-1">{paket.periyot}</span>
                   </div>
-                  {paket.hakSayisi && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Ayda <strong>{paket.hakSayisi}{paket.id === "ajans" ? "+" : ""}</strong> davetiye aktivasyonu
-                    </p>
-                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Ayda <strong>{paket.hakSayisi}</strong> davetiye aktivasyonu
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{paket.aciklama}</p>
                 </div>
 
-                <ul className="space-y-2.5 flex-1 mb-6">
+                {/* Müşteriye dahil davetiye içeriği */}
+                <div className="mb-4 rounded-2xl bg-white/60 border border-white p-3.5">
+                  <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: paket.renk }}>
+                    Müşterinizin aldığı davetiye
+                  </p>
+                  <ul className="space-y-1.5">
+                    {paket.dahilOzellikler.map(o => (
+                      <li key={o} className="flex items-start gap-1.5 text-xs text-gray-700">
+                        <span className="text-green-500 shrink-0 mt-px">✓</span>
+                        {o}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Panel özellikleri */}
+                <ul className="space-y-2 flex-1 mb-5">
                   {paket.ozellikler.map(o => (
                     <li key={o} className="flex items-start gap-2 text-xs text-gray-700">
                       <svg className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: paket.renk }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -292,8 +327,8 @@ export default function PartnerPage() {
                     </li>
                   ))}
                   {paket.dahilDegil.map(o => (
-                    <li key={o} className="flex items-start gap-2 text-xs text-gray-400 line-through">
-                      <svg className="w-3.5 h-3.5 shrink-0 mt-0.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <li key={o} className="flex items-start gap-2 text-xs text-gray-300">
+                      <svg className="w-3.5 h-3.5 shrink-0 mt-0.5 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                       {o}
@@ -305,7 +340,7 @@ export default function PartnerPage() {
                   href="/partner/basvuru"
                   className={`w-full text-center text-sm font-bold text-white py-3 rounded-2xl transition-colors ${paket.btnClass}`}
                 >
-                  {paket.id === "ajans" ? "Teklif Talep Et" : "Başvur"}
+                  Başvur
                 </Link>
               </div>
             ))}

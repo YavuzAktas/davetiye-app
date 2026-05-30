@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/admin";
 import PartnerEylemleri from "./PartnerEylemleri";
+import { paketGetir } from "@/lib/partner-paketler";
 
 export const dynamic = "force-dynamic";
 
@@ -80,7 +81,7 @@ export default async function AdminPartnerlerPage() {
                         : null;
                       return (
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 bg-green-50 rounded-xl px-3 py-2 mt-2">
-                          <span className="font-semibold text-green-700 capitalize">{ab.paketId} paketi</span>
+                          <span className="font-semibold text-green-700">{paketGetir(ab.paketId)?.ad ?? ab.paketId} Paketi</span>
                           <span>{ab.kullanilanHak}/{ab.hakSayisi} hak</span>
                           {kalanGun !== null && (
                             <span className={kalanGun <= 5 ? "text-red-500 font-semibold" : ""}>
