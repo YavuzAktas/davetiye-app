@@ -28,10 +28,6 @@ export async function POST(): Promise<NextResponse> {
     return NextResponse.json({ error: "Aktif abonelik bulunamadı." }, { status: 403 });
   }
 
-  if (abonelik.kullanilanHak >= abonelik.hakSayisi) {
-    return NextResponse.json({ error: "Bu ay için aktivasyon hakkınız tükendi." }, { status: 403 });
-  }
-
   // Atomik: nanoid çakışmasına karşı retry (ihtimali çok düşük ama önlem)
   let kod: string | null = null;
   for (let i = 0; i < 5; i++) {
@@ -43,19 +39,29 @@ export async function POST(): Promise<NextResponse> {
     return NextResponse.json({ error: "Kod üretilemedi, tekrar deneyin." }, { status: 500 });
   }
 
-  const [yeniKod] = await prisma.$transaction([
-    prisma.aktivasyonKodu.create({
+  const yeniKod = await prisma.$transaction(async (tx) => {
+    const hakGuncelleme = await tx.partnerAbonelik.updateMany({
+      where: {
+        id: abonelik.id,
+        kullanilanHak: { lt: abonelik.hakSayisi },
+      },
+      data: { kullanilanHak: { increment: 1 } },
+    });
+
+    if (hakGuncelleme.count !== 1) return null;
+
+    return tx.aktivasyonKodu.create({
       data: {
         partnerId: partner.id,
         kod,
         durum: "olusturuldu",
       },
-    }),
-    prisma.partnerAbonelik.update({
-      where: { id: abonelik.id },
-      data: { kullanilanHak: { increment: 1 } },
-    }),
-  ]);
+    });
+  });
+
+  if (!yeniKod) {
+    return NextResponse.json({ error: "Bu ay için aktivasyon hakkınız tükendi." }, { status: 403 });
+  }
 
   return NextResponse.json({ kod: yeniKod.kod, id: yeniKod.id });
 }
