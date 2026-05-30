@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import PanelIcerik from "./PanelIcerik";
+import AktivasyonKodlari from "./AktivasyonKodlari";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -19,16 +20,26 @@ export default async function PartnerPanelPage({
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/giris?callbackUrl=/partner/panel");
 
-  const partner = await prisma.partner.findUnique({
-    where: { userId: session.user.id },
-    include: {
-      abonelikler: {
-        where: { aktif: true },
-        orderBy: { createdAt: "desc" },
-        take: 1,
+  const [partner, aktivasyonKodlariHam] = await Promise.all([
+    prisma.partner.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        abonelikler: {
+          where: { aktif: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
-    },
-  });
+    }),
+    prisma.aktivasyonKodu.findMany({
+      where: { partner: { userId: session.user.id } },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+      include: {
+        musteriUser: { select: { name: true, email: true } },
+      },
+    }),
+  ]);
 
   if (!partner) redirect("/partner/basvuru");
 
@@ -45,6 +56,17 @@ export default async function PartnerPanelPage({
         bitisAt: abonelikHam.bitisAt?.toISOString() ?? null,
       }
     : null;
+
+  const kodlar = aktivasyonKodlariHam.map(k => ({
+    id: k.id,
+    kod: k.kod,
+    durum: k.durum,
+    createdAt: k.createdAt.toISOString(),
+    kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
+    musteriUser: k.musteriUser
+      ? { name: k.musteriUser.name, email: k.musteriUser.email }
+      : null,
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -87,11 +109,18 @@ export default async function PartnerPanelPage({
         )}
 
         {partner.durum === "aktif" && (
-          <PanelIcerik
-            partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
-            abonelik={abonelik}
-            odemeBasarili={odemeBasarili}
-          />
+          <div className="space-y-6">
+            <AktivasyonKodlari
+              firmaAdi={partner.firmaAdi}
+              abonelik={abonelik ? { hakSayisi: abonelik.hakSayisi, kullanilanHak: abonelik.kullanilanHak } : null}
+              kodlar={kodlar}
+            />
+            <PanelIcerik
+              partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
+              abonelik={abonelik}
+              odemeBasarili={odemeBasarili}
+            />
+          </div>
         )}
       </div>
     </div>
