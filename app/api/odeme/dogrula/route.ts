@@ -75,7 +75,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
-  if (odemeToken.urunTipi !== "davetiye" || !odemeToken.davetiyeId || !odemeToken.siparisId) {
+  if (!odemeToken.davetiyeId || !odemeToken.siparisId) {
+    return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+  }
+
+  if (odemeToken.urunTipi !== "davetiye" && odemeToken.urunTipi !== "ek-ozellik") {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
@@ -85,9 +89,67 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   if (guncellendi.count === 0) {
-    // Token zaten kullanılmış — race condition veya tekrar istek
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
+
+  // ── Ek özellik satın alma ──────────────────────────────────────────────────
+  if (odemeToken.urunTipi === "ek-ozellik") {
+    const GECERLI_ALANLAR = new Set([
+      "checkInAktif", "oturmaPlanAktif", "albumAktif",
+      "aniDefteriAktif", "sesliAniAktif", "canliDuvarAktif", "aniKitabiAktif",
+    ]);
+    const fk = odemeToken.fiyatKirilimi as { eklenecekOzellikler?: string[] } | null;
+    const eklenecek = (fk?.eklenecekOzellikler ?? []).filter(a => GECERLI_ALANLAR.has(a));
+    const guncellenecek = Object.fromEntries(eklenecek.map(alan => [alan, true]));
+
+    await prisma.$transaction([
+      prisma.siparis.update({
+        where: { id: odemeToken.siparisId },
+        data: {
+          durum: "odendi",
+          paymentId: result.paymentId ? String(result.paymentId) : null,
+          conversationId: result.conversationId ? String(result.conversationId) : null,
+          paidAt: new Date(),
+        },
+      }),
+      prisma.davetiye.update({
+        where: { id: odemeToken.davetiyeId },
+        data: guncellenecek,
+      }),
+    ]);
+
+    await prisma.odemeKaydi.create({
+      data: {
+        userId: odemeToken.userId,
+        userEmail: odemeToken.user.email,
+        planId: odemeToken.planId,
+        urunTipi: odemeToken.urunTipi,
+        davetiyeId: odemeToken.davetiyeId,
+        siparisId: odemeToken.siparisId,
+        fiyatKirilimi: odemeToken.fiyatKirilimi as any,
+        token,
+        paymentId: result.paymentId ? String(result.paymentId) : null,
+        conversationId: result.conversationId ? String(result.conversationId) : null,
+        price: result.price ? String(result.price) : null,
+        paidPrice: result.paidPrice ? String(result.paidPrice) : null,
+        currency: result.currency ? String(result.currency) : "TRY",
+        paymentStatus: result.paymentStatus ? String(result.paymentStatus) : null,
+        aliciAdSoyad: odemeToken.aliciAdSoyad,
+        aliciTelefon: odemeToken.aliciTelefon,
+        aliciKimlikVergiNo: odemeToken.aliciKimlikVergiNo,
+        aliciSehir: odemeToken.aliciSehir,
+        aliciAdres: odemeToken.aliciAdres,
+      },
+    });
+
+    return new NextResponse(null, {
+      status: 302,
+      headers: {
+        Location: `${process.env.NEXT_PUBLIC_URL}/dashboard/davetiye/${odemeToken.davetiye?.slug}?ozellik-eklendi=1`,
+      },
+    });
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   await prisma.$transaction([
     prisma.siparis.update({

@@ -12,6 +12,7 @@ import DavetiyeOdemePanel from "@/components/DavetiyeOdemePanel";
 import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import AniKitabiButon from "@/components/AniKitabiButon";
+import EkOzellikSatinAlPanel from "@/components/EkOzellikSatinAlPanel";
 import {
   Armchair,
   BarChart3,
@@ -148,6 +149,17 @@ export default async function DavetiyeDetay({ params }: Props) {
   const aniKitabiAktif   = davetiyeOzelligiAktif(davetiye, "aniKitabi");
   const herhangiAniAktif = albumAktif || aniDefAktif || sesliAniAktif;
   const toplamIcerik     = davetiye._count.albumFotolar + davetiye._count.aniDefterleri + davetiye._count.sesliAnilar;
+
+  const adminMi = ["aylinyavuz@gmail.com", "mehlikaalan@icloud.com"].includes(session.user.email ?? "");
+  const kilidliOzellikler = !odemeBekliyor ? [
+    !checkInOdendi    && { alanAdi: "checkInAktif",    icon: "📲", ad: "QR Check-in",          aciklama: "Etkinlik girişinde QR ile hızlı check-in",   tutar: 99  },
+    !oturmaPlanAktif  && { alanAdi: "oturmaPlanAktif", icon: "🪑", ad: "Oturma Planı",          aciklama: "Katılımcıları masalara atayın",               tutar: 199 },
+    !albumAktif       && { alanAdi: "albumAktif",      icon: "📸", ad: "Fotoğraf Albümü",       aciklama: "Misafirlerin fotoğraf yüklemesi",            tutar: 99  },
+    !aniDefAktif      && { alanAdi: "aniDefteriAktif", icon: "💌", ad: "Anı Defteri",           aciklama: "Yazılı anı ve iyi dilek",                    tutar: 99  },
+    !sesliAniAktif    && { alanAdi: "sesliAniAktif",   icon: "🎙️", ad: "Sesli Anı",            aciklama: "Misafirlerin sesli mesaj bırakması",         tutar: 99  },
+    !canliDuvarOdendi && { alanAdi: "canliDuvarAktif", icon: "📺", ad: "Canlı Duvar",           aciklama: "Salon ekranında canlı fotoğraf akışı",       tutar: 99  },
+    !aniKitabiAktif   && { alanAdi: "aniKitabiAktif",  icon: "📖", ad: "Anı Kitabı PDF",        aciklama: "Etkinlik sonrası tek tıkla PDF kitap",       tutar: 79  },
+  ].filter((x): x is { alanAdi: string; icon: string; ad: string; aciklama: string; tutar: number } => !!x) : [];
 
   const tarihStr = davetiye.tarih
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
@@ -348,7 +360,7 @@ export default async function DavetiyeDetay({ params }: Props) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {odemeBekliyor && (
           <div id="odeme-paneli" className="scroll-mt-6">
-            <DavetiyeOdemePanel davetiyeId={davetiye.id} baslik={davetiye.baslik} fiyat={fiyat} adminMi={["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "")} />
+            <DavetiyeOdemePanel davetiyeId={davetiye.id} baslik={davetiye.baslik} fiyat={fiyat} adminMi={adminMi} />
           </div>
         )}
 
@@ -790,6 +802,13 @@ export default async function DavetiyeDetay({ params }: Props) {
               </div>
             </div>
 
+          {kilidliOzellikler.length > 0 && (
+            <EkOzellikSatinAlPanel
+              davetiyeId={davetiye.id}
+              kilidliOzellikler={kilidliOzellikler}
+              adminMi={adminMi}
+            />
+          )}
           </div>
         </div>
 
