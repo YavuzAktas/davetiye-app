@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
+import LogoYukle from "./LogoYukle";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -48,7 +49,10 @@ export default async function PartnerPanelPage({
   const odemeBasarili = odeme === "basarili";
 
   const abonelikHam = partner.abonelikler[0] ?? null;
-  const abonelik = abonelikHam
+  // Süresi dolmuş abonelikleri geçersiz say (cron henüz çalışmamış olabilir)
+  const abonelikGecerli =
+    abonelikHam && (!abonelikHam.bitisAt || abonelikHam.bitisAt > new Date());
+  const abonelik = abonelikGecerli
     ? {
         paketId: abonelikHam.paketId,
         hakSayisi: abonelikHam.hakSayisi,
@@ -76,10 +80,13 @@ export default async function PartnerPanelPage({
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 py-6">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-0.5">Partner Paneli</p>
-            <h1 className="text-xl font-black text-gray-900">{partner.firmaAdi}</h1>
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4">
+            {partner.durum === "aktif" && <LogoYukle mevcutLogo={partner.logoUrl ?? null} />}
+            <div>
+              <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-0.5">Partner Paneli</p>
+              <h1 className="text-xl font-black text-gray-900">{partner.firmaAdi}</h1>
+            </div>
           </div>
           <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
             partner.durum === "aktif" ? "bg-green-100 text-green-700" :

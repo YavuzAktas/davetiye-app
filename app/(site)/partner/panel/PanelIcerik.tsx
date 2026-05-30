@@ -128,44 +128,81 @@ export default function PanelIcerik({
       )}
 
       {/* Mevcut abonelik */}
-      {abonelik && (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Mevcut Abonelik</p>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-lg font-black text-gray-900 capitalize">{abonelik.paketId} Paketi</p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {abonelik.bitisAt
-                  ? `Yenileme: ${new Date(abonelik.bitisAt).toLocaleDateString("tr-TR")}`
-                  : "Süresiz"}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-black text-gray-900">{abonelik.kullanilanHak}</p>
-              <p className="text-xs text-gray-400">/ {abonelik.hakSayisi} hak kullanıldı</p>
-            </div>
-          </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-linear-to-r from-purple-500 to-pink-500 rounded-full transition-all"
-              style={{ width: `${Math.min(100, (abonelik.kullanilanHak / abonelik.hakSayisi) * 100)}%` }}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">
-            {abonelik.hakSayisi - abonelik.kullanilanHak} hak kaldı
-          </p>
-        </div>
-      )}
+      {abonelik && (() => {
+        const kalanHak = abonelik.hakSayisi - abonelik.kullanilanHak;
+        const dolulukYuzde = Math.min(100, (abonelik.kullanilanHak / abonelik.hakSayisi) * 100);
+        const bitisDate = abonelik.bitisAt ? new Date(abonelik.bitisAt) : null;
+        const kalanGun = bitisDate
+          ? Math.ceil((bitisDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          : null;
+        const yakindaBitiyor = kalanGun !== null && kalanGun <= 5;
+        const hakDolmakUzere = kalanHak > 0 && kalanHak <= 3;
+        const hakTukendi = kalanHak <= 0;
 
-      {/* Aktivasyon kodları - placeholder Adım 5 için */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-        <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Aktivasyon Kodları</p>
-        <p className="text-sm text-gray-400">
-          {abonelik
-            ? "Aktivasyon kodu oluşturma yakında burada olacak."
-            : "Aktivasyon kodu oluşturmak için önce bir paket satın alın."}
-        </p>
-      </div>
+        return (
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
+            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Mevcut Abonelik</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-lg font-black text-gray-900 capitalize">{abonelik.paketId} Paketi</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {bitisDate
+                    ? `Yenileme: ${bitisDate.toLocaleDateString("tr-TR")}`
+                    : "Süresiz"}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-black text-gray-900">{abonelik.kullanilanHak}</p>
+                <p className="text-xs text-gray-400">/ {abonelik.hakSayisi} hak kullanıldı</p>
+              </div>
+            </div>
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  hakTukendi
+                    ? "bg-red-400"
+                    : hakDolmakUzere
+                    ? "bg-amber-400"
+                    : "bg-linear-to-r from-purple-500 to-pink-500"
+                }`}
+                style={{ width: `${dolulukYuzde}%` }}
+              />
+            </div>
+
+            {hakTukendi && (
+              <div className="flex items-center justify-between bg-red-50 border border-red-100 rounded-2xl px-4 py-3">
+                <div>
+                  <p className="text-xs font-bold text-red-600">Tüm haklarınız doldu</p>
+                  <p className="text-[11px] text-red-400">Yeni aktivasyon kodu oluşturmak için paketinizi yenileyin.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSecilenPaket(abonelik.paketId as any)}
+                  className="shrink-0 text-[11px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors px-3 py-1.5 rounded-xl ml-3"
+                >
+                  Yenile
+                </button>
+              </div>
+            )}
+
+            {hakDolmakUzere && (
+              <p className="text-[11px] text-amber-600 font-medium">
+                ⚠️ Yalnızca {kalanHak} hakkınız kaldı. Yakında yenilemeyi düşünün.
+              </p>
+            )}
+
+            {yakindaBitiyor && !hakTukendi && (
+              <p className="text-[11px] text-amber-600 font-medium">
+                ⚠️ Aboneliğiniz {kalanGun} gün içinde sona eriyor.
+              </p>
+            )}
+
+            {!hakTukendi && !hakDolmakUzere && (
+              <p className="text-xs text-gray-400">{kalanHak} hak kaldı</p>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Paket seçimi */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">

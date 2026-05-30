@@ -155,9 +155,17 @@ export default function AktivasyonKodlari({
       )}
 
       {!abonelik && (
-        <p className="text-sm text-gray-400 text-center py-4">
-          Aktivasyon kodu oluşturmak için önce bir paket satın alın.
-        </p>
+        <div className="bg-purple-50 border border-purple-100 rounded-2xl px-5 py-4 text-center">
+          <p className="text-sm font-bold text-purple-700 mb-1">Henüz aktif paketiniz yok</p>
+          <p className="text-xs text-purple-500">Aktivasyon kodu oluşturmak için aşağıdan bir paket satın alın.</p>
+        </div>
+      )}
+
+      {abonelik && kalanHak === 0 && (
+        <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 text-center">
+          <p className="text-sm font-bold text-red-600 mb-1">Tüm haklarınız kullanıldı</p>
+          <p className="text-xs text-red-400">Yeni kod oluşturmak için paketinizi aşağıdan yenileyin.</p>
+        </div>
       )}
 
       {hata && (
