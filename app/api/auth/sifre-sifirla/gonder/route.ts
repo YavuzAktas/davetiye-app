@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sifreSifirlamaGonder } from "@/lib/email";
-import { randomBytes } from "crypto";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
+import { sifreSifirlamaTokenHash, sifreSifirlamaTokenUret } from "@/lib/sifre-sifirlama-token";
 
 // 3 sıfırlama isteği / IP / saat
 export async function POST(req: NextRequest) {
@@ -41,13 +41,14 @@ export async function POST(req: NextRequest) {
       where: { identifier: `sifre:${user.email}` },
     });
 
-    const token = randomBytes(32).toString("hex");
+    const token = sifreSifirlamaTokenUret();
+    const tokenHash = sifreSifirlamaTokenHash(token);
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 saat
 
     await prisma.verificationToken.create({
       data: {
         identifier: `sifre:${user.email}`,
-        token,
+        token: tokenHash,
         expires,
       },
     });

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
+import { sifreSifirlamaTokenHash } from "@/lib/sifre-sifirlama-token";
 
 export async function POST(req: Request) {
   const ip = ipAlNextRequest(req);
@@ -29,29 +30,36 @@ export async function POST(req: Request) {
       return NextResponse.json({ hata: "Şifre en az 8 karakter olmalıdır." }, { status: 400 });
     }
 
-    const kayit = await prisma.verificationToken.findUnique({
-      where: { token: temizToken },
-    });
+    const tokenHash = sifreSifirlamaTokenHash(temizToken);
+    const kayit = await prisma.verificationToken.findUnique({ where: { token: tokenHash } });
 
     if (!kayit || !kayit.identifier.startsWith("sifre:")) {
       return NextResponse.json({ hata: "Geçersiz veya kullanılmış bağlantı." }, { status: 400 });
     }
 
     if (kayit.expires < new Date()) {
-      await prisma.verificationToken.delete({ where: { token: temizToken } });
+      await prisma.verificationToken.delete({ where: { token: tokenHash } });
       return NextResponse.json({ hata: "Bu bağlantının süresi dolmuş. Yeni bir talep oluşturun." }, { status: 400 });
     }
 
     const email = kayit.identifier.replace("sifre:", "");
     const hash = await bcrypt.hash(sifre, 12);
+    const tokenSilindi = await prisma.verificationToken.deleteMany({
+      where: {
+        token: tokenHash,
+        identifier: kayit.identifier,
+        expires: { gte: new Date() },
+      },
+    });
+
+    if (tokenSilindi.count === 0) {
+      return NextResponse.json({ hata: "Geçersiz veya kullanılmış bağlantı." }, { status: 400 });
+    }
 
     await prisma.user.update({
       where: { email },
       data: { password: hash },
     });
-
-    // Kullanılan tokeni sil
-    await prisma.verificationToken.delete({ where: { token: temizToken } });
 
     return NextResponse.json({ ok: true });
   } catch {
