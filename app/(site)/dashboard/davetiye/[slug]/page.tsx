@@ -710,33 +710,6 @@ export default async function DavetiyeDetay({ params }: Props) {
               </div>
             </div>
 
-            {/* Referral Promo */}
-            <div className="rounded-3xl overflow-hidden border border-purple-100"
-              style={{ background: "linear-gradient(135deg, #faf5ff 0%, #fdf2f8 100%)" }}>
-              <div className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
-                    style={{ background: "linear-gradient(135deg,#a855f7,#ec4899)" }}>
-                    🎁
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-800">Arkadaşını getir</p>
-                    <p className="text-xs font-semibold text-purple-600">50₺ kredi kazan</p>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                  Referral linkinle davet ettiğin her kişi ödeme yapınca hesabına 50₺ eklenir.
-                </p>
-                <Link
-                  href="/dashboard/ayarlar"
-                  className="block text-center text-xs font-bold text-white py-2.5 rounded-xl hover:opacity-90 transition-opacity"
-                  style={{ background: `linear-gradient(135deg, ${renk}, ${renk}cc)` }}
-                >
-                  Referral Linkini Al →
-                </Link>
-              </div>
-            </div>
-
           </div>
         </div>
 
