@@ -10,7 +10,6 @@ type Kod = {
   createdAt: string;
   kullanilanAt: string | null;
   not: string | null;
-  davetiye: { slug: string; baslik: string } | null;
 };
 
 type Abonelik = {
@@ -311,19 +310,7 @@ export default function AktivasyonKodlari({
                 )}
 
                 {k.durum === "yayinda" && (
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-xs text-gray-500">Davetiye yayında.</p>
-                    {k.davetiye && (
-                      <a
-                        href={`/davetiye/${k.davetiye.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-purple-600 hover:underline"
-                      >
-                        {k.davetiye.baslik || "Daveti görüntüle"} →
-                      </a>
-                    )}
-                  </div>
+                  <p className="text-xs text-gray-500">Davetiye yayında. Gizlilik gereği davetiye bağlantısı partner panelinde gösterilmez.</p>
                 )}
 
                 {/* Not alanı */}
