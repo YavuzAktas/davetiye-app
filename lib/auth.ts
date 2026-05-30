@@ -64,13 +64,23 @@ export const authOptions: NextAuthOptions = {
         token.id           = user.id;
         token.kvkkOnay     = (user as any).kvkkOnay ?? false;
         token.isAdmin      = isAdmin(user.email);
-        // Partner durumunu login anında çek
         const partner = await prisma.partner.findUnique({
           where: { userId: user.id },
           select: { durum: true },
         });
         token.partnerDurum = partner?.durum ?? null;
       }
+
+      // Eski token'larda (bu alan eklenmeden önce oluşturulmuş) bir kez doldur
+      if (token.id && token.partnerDurum === undefined) {
+        const partner = await prisma.partner.findUnique({
+          where: { userId: token.id as string },
+          select: { durum: true },
+        });
+        token.partnerDurum = partner?.durum ?? null;
+        token.isAdmin      = isAdmin(token.email as string | null | undefined);
+      }
+
       if (trigger === "update" && token.id) {
         const [dbUser, partner] = await Promise.all([
           prisma.user.findUnique({
