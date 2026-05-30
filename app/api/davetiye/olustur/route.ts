@@ -121,25 +121,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Aktivasyon kodu bypass kontrolü
   let aktivasyonKoduKayit: {
     id: string;
     partner: { firmaAdi: string; user: { email: string | null } };
   } | null = null;
-  if (veri.aktivasyonKodu) {
-    const aday = await prisma.aktivasyonKodu.findUnique({
-      where: { kod: veri.aktivasyonKodu },
-      select: {
-        id: true,
-        musteriUserId: true,
-        durum: true,
-        partner: { select: { firmaAdi: true, user: { select: { email: true } } } },
-      },
-    });
-    if (aday && aday.musteriUserId === session.user.id && aday.durum === "kayit_oldu") {
-      aktivasyonKoduKayit = aday;
-    }
-  }
 
   const slug = nanoid(10);
   const fiyat = davetiyeFiyatiHesapla({
@@ -154,47 +139,100 @@ export async function POST(req: NextRequest) {
     checkInAktif:    veri.checkInAktif,
   });
 
-  const davetiye = await prisma.davetiye.create({
-    data: {
-      slug,
-      baslik: veri.baslik,
-      etkinlikTur: veri.etkinlikTur,
-      tarih:           tarihSaat,
-      mekan:           veri.mekan,
-      mesaj:           veri.mesaj,
-      sablon:          veri.sablon,
-      font:            veri.font,
-      ozelRenk:        veri.renk,
-      muzik:           veri.muzik,
-      userId:          user!.id,
-      kisi1:           veri.kisi1,
-      kisi2:           veri.kisi2,
-      polaroid1:       veri.polaroid1,
-      polaroid2:       veri.polaroid2,
-      polaroid3:       veri.polaroid3,
-      sesliAniAktif:   veri.sesliAniAktif,
-      canliDuvarAktif: veri.canliDuvarAktif,
-      aniDefteriAktif: veri.aniDefteriAktif,
-      oturmaPlanAktif: veri.oturmaPlanAktif,
-      dressKod:        veri.dressKod,
-      dressKodRenkler: veri.dressKodRenkler,
-      albumAktif:      veri.albumAktif,
-      aniKitabiAktif:  veri.aniKitabiAktif,
-      checkInAktif:    veri.checkInAktif,
-      rsvpSorular:     veri.rsvpSorular,
-      odemeDurumu:     aktivasyonKoduKayit ? "odendi" : "odeme_bekliyor",
-      aktif:           aktivasyonKoduKayit ? true : false,
-      fiyatSnapshot:   fiyat as any,
-    },
-  });
+  const davetiyeVerisi = {
+    slug,
+    baslik: veri.baslik,
+    etkinlikTur: veri.etkinlikTur,
+    tarih:           tarihSaat,
+    mekan:           veri.mekan,
+    mesaj:           veri.mesaj,
+    sablon:          veri.sablon,
+    font:            veri.font,
+    ozelRenk:        veri.renk,
+    muzik:           veri.muzik,
+    userId:          user.id,
+    kisi1:           veri.kisi1,
+    kisi2:           veri.kisi2,
+    polaroid1:       veri.polaroid1,
+    polaroid2:       veri.polaroid2,
+    polaroid3:       veri.polaroid3,
+    sesliAniAktif:   veri.sesliAniAktif,
+    canliDuvarAktif: veri.canliDuvarAktif,
+    aniDefteriAktif: veri.aniDefteriAktif,
+    oturmaPlanAktif: veri.oturmaPlanAktif,
+    dressKod:        veri.dressKod,
+    dressKodRenkler: veri.dressKodRenkler,
+    albumAktif:      veri.albumAktif,
+    aniKitabiAktif:  veri.aniKitabiAktif,
+    checkInAktif:    veri.checkInAktif,
+    rsvpSorular:     veri.rsvpSorular,
+    fiyatSnapshot:   fiyat as any,
+  };
 
-  if (aktivasyonKoduKayit) {
-    await prisma.aktivasyonKodu.update({
-      where: { id: aktivasyonKoduKayit.id },
-      data: { davetiyeId: davetiye.id, durum: "yayinda" },
+  let davetiye: { id: string; slug: string };
+
+  if (veri.aktivasyonKodu) {
+    const aktivasyonluOlusturma = await prisma.$transaction(async (tx) => {
+      const rezervasyon = await tx.aktivasyonKodu.updateMany({
+        where: {
+          kod: veri.aktivasyonKodu!,
+          musteriUserId: user.id,
+          durum: "kayit_oldu",
+          davetiyeId: null,
+        },
+        data: { durum: "davetiye_olusturuluyor" },
+      });
+
+      if (rezervasyon.count !== 1) return null;
+
+      const aktivasyon = await tx.aktivasyonKodu.findUnique({
+        where: { kod: veri.aktivasyonKodu! },
+        select: {
+          id: true,
+          partner: { select: { firmaAdi: true, user: { select: { email: true } } } },
+        },
+      });
+
+      if (!aktivasyon) return null;
+
+      const yeniDavetiye = await tx.davetiye.create({
+        data: {
+          ...davetiyeVerisi,
+          odemeDurumu: "odendi",
+          aktif: true,
+        },
+        select: { id: true, slug: true },
+      });
+
+      await tx.aktivasyonKodu.update({
+        where: { id: aktivasyon.id },
+        data: { davetiyeId: yeniDavetiye.id, durum: "yayinda" },
+      });
+
+      return { davetiye: yeniDavetiye, aktivasyon };
     });
 
-    // Partner'a bildirim — fire and forget
+    if (!aktivasyonluOlusturma) {
+      return NextResponse.json(
+        { hata: "Aktivasyon linki geçersiz, süresi dolmuş veya daha önce kullanılmış." },
+        { status: 409 }
+      );
+    }
+
+    davetiye = aktivasyonluOlusturma.davetiye;
+    aktivasyonKoduKayit = aktivasyonluOlusturma.aktivasyon;
+  } else {
+    davetiye = await prisma.davetiye.create({
+      data: {
+        ...davetiyeVerisi,
+        odemeDurumu: "odeme_bekliyor",
+        aktif: false,
+      },
+      select: { id: true, slug: true },
+    });
+  }
+
+  if (aktivasyonKoduKayit) {
     const partnerEmail = aktivasyonKoduKayit.partner.user.email;
     if (partnerEmail) {
       const musteriEmail = session.user.email ?? "";
