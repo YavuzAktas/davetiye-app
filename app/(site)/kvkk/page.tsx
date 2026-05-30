@@ -53,6 +53,8 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>İçerik ve medya</strong></td><td>Davetiye metinleri, anı defteri mesajları, yüklenen fotoğraflar, polaroid görselleri ve sesli anı kayıtları</td><td>Kullanıcı veya davetli yüklemeleri</td></tr>
                   <tr><td><strong>Çocuklara ait içerik</strong></td><td>Doğum günü veya aile etkinliği davetiyelerinde girilebilecek çocuk adı, fotoğrafı, yaşı veya etkinlik bilgisi</td><td>Ebeveyn/veli veya yetkili kullanıcı girişi</td></tr>
                   <tr><td><strong>Ödeme</strong></td><td>Davetiye ve ek özellik bilgisi, ödeme doğrulama tokenı, işlem durumu, ödeme tutarı ve ödeme sağlayıcısına aktarılan alıcı/fatura bilgileri (ödeme kartı bilgileri tarafımızca saklanmaz)</td><td>İyzico ödeme altyapısı</td></tr>
+                  <tr><td><strong>Partner programı</strong></td><td>Partner başvurusunda firma/organizasyon adı, firma türü, telefon, tahmini müşteri sayısı, başvuru notu, partner abonelik ve aktivasyon kodu kullanım kayıtları</td><td>Partner başvuru formu ve partner paneli</td></tr>
+                  <tr><td><strong>Partner aktivasyon</strong></td><td>Aktivasyon kodu, kod durumu, kodun hangi partner aboneliğinden üretildiği, aktivasyonun davetiye hesabıyla eşleşme durumu</td><td>Partner paneli ve müşteri aktivasyon akışı</td></tr>
                   <tr><td><strong>İşlem güvenliği</strong></td><td>IP adresi, oturum bilgisi, CSRF ve callback çerezleri</td><td>Otomatik (teknik)</td></tr>
                   <tr><td><strong>Misafir verisi (RSVP)</strong></td><td>Misafir adı, e-posta, telefon, katılım durumu, kişi sayısı, not, diyet tercihi ve şarkı önerisi</td><td>RSVP formu</td></tr>
                   <tr><td><strong>Özel nitelikli veri</strong></td><td>Misafirin isteğe bağlı olarak paylaştığı alerji, diyet veya özel beslenme bilgileri</td><td>RSVP formunda ayrı açık rıza ile</td></tr>
@@ -73,6 +75,8 @@ export default function KvkkSayfasi() {
               <li>Misafir fotoğrafları, yazılı ve sesli anıların davet sahibi onayı sonrası yayınlanması</li>
               <li>RSVP üzerinden iletilen şarkı önerilerinin davet sahibine gösterilmesi</li>
               <li>Ödeme işlemlerinin gerçekleştirilmesi ve satın alınan davetiye özelliklerinin aktif edilmesi</li>
+              <li>Partner programı başvurularının değerlendirilmesi, partner aboneliklerinin ve aktivasyon haklarının yönetilmesi</li>
+              <li>Partner tarafından sağlanan aktivasyon hakkının müşterinin kendi hesabına tanımlanması</li>
               <li>Teknik destek ve müşteri hizmetleri sunulması</li>
               <li>Platform güvenliğinin ve bütünlüğünün sağlanması</li>
               <li>Yasal yükümlülüklerin yerine getirilmesi</li>
@@ -96,6 +100,7 @@ export default function KvkkSayfasi() {
                   <tr><td>RSVP'de isteğe bağlı alerji, diyet veya özel beslenme bilgileri</td><td>İlgili kişinin açık rızası</td></tr>
                   <tr><td>İsteğe bağlı medya, Canlı Duvar, sesli anı ve şarkı önerisi özellikleri</td><td>Özelliğin talep edilmesi halinde sözleşmenin ifası (m.5/2-c) ve gerektiğinde açık rıza</td></tr>
                   <tr><td>Ödeme işlemleri</td><td>Sözleşmenin ifası (m.5/2-c), kanuni yükümlülük (m.5/2-ç)</td></tr>
+                  <tr><td>Partner başvurusu, partner aboneliği ve aktivasyon hakkı yönetimi</td><td>Sözleşmenin kurulması/ifası (m.5/2-c), meşru menfaat (m.5/2-f)</td></tr>
                   <tr><td>Güvenlik, log kayıtları</td><td>Meşru menfaat (m.5/2-f)</td></tr>
                   <tr><td>Yasal yükümlülükler</td><td>Kanuni yükümlülük (m.5/2-ç)</td></tr>
                 </tbody>
@@ -118,12 +123,19 @@ export default function KvkkSayfasi() {
                   <tr><td><strong>Resend Inc.</strong></td><td>İşlemsel e-posta gönderimi</td><td>Yurt dışı</td></tr>
                   <tr><td><strong>Supabase Inc.</strong></td><td>Veritabanı barındırma</td><td>Yurt dışı / seçilen bölge</td></tr>
                   <tr><td><strong>Vercel Inc.</strong></td><td>Uygulama ve dosya barındırma</td><td>Yurt dışı / seçilen bölge</td></tr>
+                  <tr><td><strong>Partner firmalar</strong></td><td>Yalnızca partnerin kendi ürettiği aktivasyon kodunun durumu ve kullanım istatistiği; müşteri e-postası, davetli listesi, RSVP yanıtları, fotoğraf/ses/anı içerikleri ve davetiye bağlantısı partnerle paylaşılmaz</td><td>Türkiye / partnerin bulunduğu ülke</td></tr>
                 </tbody>
               </table>
               <p>
                 Ödeme başlatılırken iyzico'ya aktarılabilecek alıcı/fatura bilgileri şunlardır:{" "}
                 {ODEME_ALICI_VERILERI.join(", ")}. Kart bilgileri iyzico altyapısında işlenir;
                 Bekleriz tarafından saklanmaz.
+              </p>
+              <p>
+                Partner programında partner firma, müşteriye yalnızca dijital davetiye aktivasyon hakkı
+                sağlar. Davetiye sahibi hesabını kendisi oluşturur ve yasal metinleri kendi adına kabul eder.
+                Partner panelinde davetli verileri, RSVP yanıtları, müşteri e-postası, davetiye içeriği,
+                medya/anı içerikleri veya check-in kayıtları gösterilmez.
               </p>
               <p>
                 Yurt dışına aktarım gerektiren hizmetlerde KVKK m.9 kapsamında yeterlilik kararı, uygun güvence
@@ -145,6 +157,7 @@ export default function KvkkSayfasi() {
                 <tbody>
                   <tr><td>Üyelik ve hesap bilgileri</td><td>Hesap silinene kadar; uyuşmazlık ve yasal yükümlülükler için gerekli kayıtlar en fazla 3 yıl</td></tr>
                   <tr><td>Ödeme kayıtları</td><td>10 yıl (Vergi Usul Kanunu)</td></tr>
+                  <tr><td>Partner başvuru, abonelik ve aktivasyon kayıtları</td><td>Partner ilişkisi süresince; sona erdikten sonra uyuşmazlık ve yasal yükümlülükler için gerekli süre kadar</td></tr>
                   <tr><td>RSVP ve davetli listesi misafir bilgileri</td><td>Etkinlik tarihinden itibaren en geç 1 yıl; davetiye veya hesap silinirse daha erken</td></tr>
                   <tr><td>Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri</td><td>Davetiye veya hesap silinene kadar; ilgili kişinin silme talebi halinde ayrıca değerlendirilir</td></tr>
                   <tr><td>Log ve güvenlik kayıtları</td><td>2 yıl</td></tr>

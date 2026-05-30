@@ -49,6 +49,12 @@ export default function GizlilikSayfasi() {
                 <li>Davetiye görüntülenme sayısı</li>
                 <li>Masa planı ve misafir listesi</li>
               </ul>
+              <p><strong>Partner programı kapsamında:</strong></p>
+              <ul>
+                <li>Partner başvurusunda firma/organizasyon adı, telefon, firma türü ve tahmini müşteri sayısı</li>
+                <li>Partner abonelik paketi, ödeme ve aktivasyon hakkı kayıtları</li>
+                <li>Aktivasyon kodu durumu ve kullanım istatistikleri</li>
+              </ul>
               <p><strong>RSVP (katılım bildirimi) formlarından:</strong></p>
               <ul>
                 <li>Misafirin adı (zorunlu)</li>
@@ -82,6 +88,8 @@ export default function GizlilikSayfasi() {
               <li><strong>Şarkı önerileri:</strong> RSVP üzerinden iletilen müzik dileklerini davet sahibine göstermek</li>
               <li><strong>Kimlik doğrulama:</strong> Hesabınıza güvenli erişim sağlamak</li>
               <li><strong>Ödeme:</strong> Davetiye ve ek özellik ödemelerini gerçekleştirmek</li>
+              <li><strong>Partner programı:</strong> Partner başvurularını değerlendirmek, partner aboneliklerini ve aktivasyon haklarını yönetmek</li>
+              <li><strong>Aktivasyon:</strong> Partner tarafından sağlanan ücretsiz davetiye hakkını müşterinin kendi hesabına tanımlamak</li>
               <li><strong>Güvenlik:</strong> Yetkisiz erişim ve sahteciliği engellemek</li>
               <li><strong>İyileştirme:</strong> Anonim kullanım istatistikleri ile platformu geliştirmek</li>
             </ul>
@@ -118,6 +126,12 @@ export default function GizlilikSayfasi() {
                   <strong>Vercel Inc.</strong> — Uygulama ve yüklenen medya dosyalarının barındırılması.
                   Dosyalar sağlayıcının altyapısında yurt dışında işlenebilir.
                 </li>
+                <li>
+                  <strong>Partner firmalar</strong> — Yalnızca kendi ürettikleri aktivasyon kodlarının
+                  durumunu ve anonim kullanım istatistiğini görebilir. Müşteri e-postası, davetli listesi,
+                  RSVP yanıtları, davetiye bağlantısı, fotoğraf, sesli/yazılı anı ve check-in kayıtları
+                  partnerlerle paylaşılmaz.
+                </li>
               </ul>
               <p>
                 Yurt dışı aktarım gerektiren hizmetlerde KVKK m.9 kapsamındaki güncel aktarım şartları,
@@ -127,6 +141,11 @@ export default function GizlilikSayfasi() {
               <p>
                 Kişisel verileriniz bu hizmetler dışında hiçbir üçüncü tarafla ticari amaçla
                 paylaşılmaz, satılmaz veya kiralanmaz.
+              </p>
+              <p>
+                Partner tarafından sağlanan aktivasyon hakkıyla davetiye oluşturduğunuzda, hesabın ve
+                davetiyenin kontrolü sizde kalır. Partner firma davetli verilerinize veya davetiye
+                içeriklerinize erişemez.
               </p>
             </>
           ),

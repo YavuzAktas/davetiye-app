@@ -47,6 +47,7 @@ export default function KullanimSartlariSayfasi() {
                 <li>RSVP (katılım bildirimi) toplama ve yönetimi</li>
                 <li>Misafir listesi yönetimi</li>
                 <li>E-posta bildirimleri</li>
+                <li>Organizasyon firmaları için partner aboneliği ve müşteriye özel aktivasyon hakkı yönetimi</li>
               </ul>
             </>
           ),
@@ -99,6 +100,40 @@ export default function KullanimSartlariSayfasi() {
                 <li>Ödeme başarısız olursa davetiye taslak olarak kalır ve yayına alınmaz.</li>
                 <li>Fiyatlar KDV dahildir. KDV oranı yasal mevzuata göre değişebilir.</li>
               </ul>
+              <p>
+                Partner programı ayrı bir B2B hizmettir. Partner firmalar aylık aktivasyon hakkı
+                satın alabilir ve bu hakları müşterilerine iletebilir. Aktivasyon hakkı ile gelen müşteri
+                davetiyesini kendi hesabında oluşturur; yasal metinleri kendi adına kabul eder ve davetli
+                verilerini kendisi yönetir.
+              </p>
+              <p>
+                Partnerin müşteriye aktivasyon linki sağlaması, partnerin müşteri adına yasal onay verdiği
+                veya davetli verilerini yönetebileceği anlamına gelmez. Partner panelinde müşteri e-postası,
+                davetli listesi, RSVP yanıtları, medya/anı içerikleri, check-in kayıtları ve davetiye bağlantısı
+                gösterilmez.
+              </p>
+            </>
+          ),
+        },
+        {
+          baslik: "Partner Programı Kuralları",
+          icerik: (
+            <>
+              <p>
+                Partner programı; organizasyon firmaları, fotoğrafçılar, mekanlar ve benzeri ticari
+                iş ortaklarının müşterilerine dijital davetiye aktivasyon hakkı sunabilmesi için tasarlanmıştır.
+              </p>
+              <ul>
+                <li>Partner yalnızca satın aldığı paket kapsamındaki aktivasyon linklerini müşterilerine iletebilir.</li>
+                <li>Aktivasyon linki tek kullanımlıktır ve ilgili partner aboneliği süresince geçerlidir.</li>
+                <li>Aktivasyon hakkı kullanıldığında davetiye müşterinin kendi Bekleriz hesabında oluşur.</li>
+                <li>Partner, müşteri adına KVKK, gizlilik, kullanım şartları veya ticari ileti onayı veremez.</li>
+                <li>Partner, platform üzerinden müşteriye veya müşterinin davetlilerine reklam/kampanya mesajı gönderemez.</li>
+                <li>Ticari elektronik ileti gönderimi yapılacaksa gerekli izinler ve İYS yükümlülükleri partnerin kendi sorumluluğundadır.</li>
+              </ul>
+              <p>
+                Partner programı için ayrıca <a href="/partner/sozlesme">Partner Sözleşmesi</a> uygulanır.
+              </p>
             </>
           ),
         },
