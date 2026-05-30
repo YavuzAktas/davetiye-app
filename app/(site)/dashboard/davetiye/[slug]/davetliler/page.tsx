@@ -731,8 +731,8 @@ export default function DavetlilerSayfasi() {
                       const duzenleniyor = duzenleId === davetli.id;
 
                       return (
-                        <div key={davetli.id} className="group">
-                          <div className="flex items-start gap-3 px-5 py-4 hover:bg-gray-50/50 transition-colors">
+                        <div key={davetli.id}>
+                          <div className="flex items-start gap-3 px-5 py-4">
                             {/* Avatar */}
                             <div
                               className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
@@ -803,7 +803,7 @@ export default function DavetlilerSayfasi() {
                               {davetli.ozelKod && (
                                 <button
                                   onClick={() => ozelLinkKopyala(davetli.ozelKod!, davetli.id)}
-                                  className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition-all"
+                                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition-all"
                                   title="Kişisel linki kopyala"
                                 >
                                   {kopyalananId === davetli.id
@@ -817,7 +817,7 @@ export default function DavetlilerSayfasi() {
                                   href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli.ad)}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
+                                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
                                   title="WhatsApp'ta gönder"
                                 >
                                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
@@ -827,7 +827,7 @@ export default function DavetlilerSayfasi() {
                               )}
                               <button
                                 onClick={() => duzenleniyor ? setDuzenleId(null) : duzenleAc(davetli)}
-                                className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 transition-all"
+                                className="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 transition-all"
                                 title="Düzenle"
                               >
                                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
@@ -835,7 +835,7 @@ export default function DavetlilerSayfasi() {
                               <button
                                 onClick={() => davetliSil(davetli.id)}
                                 disabled={siliniyor === davetli.id}
-                                className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 transition-all disabled:opacity-40"
+                                className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 transition-all disabled:opacity-40"
                                 title="Sil"
                               >
                                 {siliniyor === davetli.id
