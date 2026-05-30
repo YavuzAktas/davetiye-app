@@ -138,6 +138,76 @@ export default async function DavetiyeDetay({ params }: Props) {
     ? new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(davetiye.tarih))
     : null;
 
+  const bugun = new Date();
+  bugun.setHours(0, 0, 0, 0);
+  const etkinlikGunu = davetiye.tarih ? new Date(davetiye.tarih) : null;
+  etkinlikGunu?.setHours(0, 0, 0, 0);
+  const etkinligeKalanGun = etkinlikGunu
+    ? Math.ceil((etkinlikGunu.getTime() - bugun.getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+  const etkinlikYaklasti = etkinligeKalanGun !== null && etkinligeKalanGun <= 1;
+  const etkinlikGecti = etkinligeKalanGun !== null && etkinligeKalanGun < 0;
+  const bekleyenDavetliSayisi = bekleyenDavetliler.length;
+  const anaAksiyon = odemeBekliyor
+    ? {
+        etiket: "Sonraki adım",
+        baslik: "Ödemeyi tamamlayıp davetiyeyi yayına al",
+        aciklama: "Davetiyen hazır. Ödeme tamamlandıktan sonra paylaşım, RSVP ve QR akışları aktif kullanılabilir.",
+        href: "#odeme-paneli",
+        buton: "Ödemeye geç",
+        ikincilHref: davetiyeUrl,
+        ikincilButon: "Önizle",
+      }
+    : etkinlikGecti && herhangiAniAktif
+      ? {
+          etiket: "Etkinlik sonrası",
+          baslik: toplamIcerik > 0 ? "Anıları toparla ve arşivi hazırla" : "Misafir anılarını kontrol et",
+          aciklama: "Fotoğraf, yazılı anı ve sesli mesajları tek yerden yönetip etkinlik sonrası arşivini hazırlayabilirsin.",
+          href: `/dashboard/davetiye/${davetiye.slug}/album`,
+          buton: "Anıları yönet",
+          ikincilHref: davetiyeUrl,
+          ikincilButon: "Davetiyeyi gör",
+        }
+      : etkinlikYaklasti
+        ? {
+            etiket: etkinligeKalanGun === 0 ? "Bugünün önceliği" : "Etkinlik yaklaşıyor",
+            baslik: "QR check-in ekranını hazır tut",
+            aciklama: "Etkinlik girişinde davetlilerin kişiye özel QR kodlarını okutarak katılımı hızlıca takip edebilirsin.",
+            href: `/dashboard/davetiye/${davetiye.slug}/check-in`,
+            buton: "Check-in'i aç",
+            ikincilHref: `/dashboard/davetiye/${davetiye.slug}/davetliler`,
+            ikincilButon: "Davetlileri kontrol et",
+          }
+        : bekleyenDavetliSayisi > 0 && toplamRsvp > 0
+          ? {
+              etiket: "Yanıt takibi",
+              baslik: `${bekleyenDavetliSayisi} davetli henüz yanıt vermedi`,
+              aciklama: "Cevaplamayan davetlileri filtreleyip kişiye özel bağlantıyla WhatsApp hatırlatması gönderebilirsin.",
+              href: `/dashboard/davetiye/${davetiye.slug}/davetliler`,
+              buton: "Hatırlatma gönder",
+              ikincilHref: "#paylasim",
+              ikincilButon: "Paylaşımı aç",
+            }
+          : toplamRsvp === 0
+            ? {
+                etiket: "Yayına hazır",
+                baslik: "Davetiyeyi misafirlerinle paylaş",
+                aciklama: "Linki kopyalayabilir, WhatsApp üzerinden gönderebilir veya genel QR kodunu indirebilirsin.",
+                href: "#paylasim",
+                buton: "Paylaşmaya başla",
+                ikincilHref: davetiyeUrl,
+                ikincilButon: "Önizle",
+              }
+            : {
+                etiket: "Yönetim",
+                baslik: "Yanıtları ve davetli listesini takip et",
+                aciklama: "Katılım durumunu, kişi sayısını ve davetlilerin özel bağlantılarını tek ekrandan yönetebilirsin.",
+                href: `/dashboard/davetiye/${davetiye.slug}/davetliler`,
+                buton: "Davetlileri yönet",
+                ikincilHref: "#paylasim",
+                ikincilButon: "Paylaşım araçları",
+              };
+
   const olusturulmaTarih = new Intl.DateTimeFormat("tr-TR", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(davetiye.createdAt));
@@ -252,8 +322,58 @@ export default async function DavetiyeDetay({ params }: Props) {
       {/* ══ CONTENT ══ */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {odemeBekliyor && (
-          <DavetiyeOdemePanel davetiyeId={davetiye.id} baslik={davetiye.baslik} fiyat={fiyat} adminMi={["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "")} />
+          <div id="odeme-paneli" className="scroll-mt-6">
+            <DavetiyeOdemePanel davetiyeId={davetiye.id} baslik={davetiye.baslik} fiyat={fiyat} adminMi={["aylinyavuz@gmail.com","mehlikaalan@icloud.com"].includes(session.user.email ?? "")} />
+          </div>
         )}
+
+        {/* ── Next best action ── */}
+        <div className="bg-white border border-gray-100 rounded-3xl p-5 sm:p-6 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-5">
+            <div
+              className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: renk + "14", color: renk }}
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold tracking-widest uppercase mb-1" style={{ color: renk }}>
+                {anaAksiyon.etiket}
+              </p>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 leading-snug">
+                {anaAksiyon.baslik}
+              </h2>
+              <p className="text-sm text-gray-500 leading-relaxed mt-1 max-w-2xl">
+                {anaAksiyon.aciklama}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2.5 shrink-0">
+              <Link
+                href={anaAksiyon.href}
+                className="inline-flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-2xl transition-all hover:opacity-90"
+                style={{
+                  background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
+                  color: "#fff",
+                  boxShadow: `0 4px 18px rgba(${rgb}, 0.24)`,
+                }}
+              >
+                {anaAksiyon.buton}
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link
+                href={anaAksiyon.ikincilHref}
+                target={anaAksiyon.ikincilHref.startsWith("http") ? "_blank" : undefined}
+                className="inline-flex items-center justify-center text-sm font-semibold px-5 py-3 rounded-2xl border border-gray-100 text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                {anaAksiyon.ikincilButon}
+              </Link>
+            </div>
+          </div>
+        </div>
 
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -340,7 +460,7 @@ export default async function DavetiyeDetay({ params }: Props) {
           <div className="lg:col-span-3 space-y-6">
 
             {/* Share Card */}
-            <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+            <div id="paylasim" className="bg-white border border-gray-100 rounded-3xl overflow-hidden scroll-mt-6">
               <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Paylaşım</p>
