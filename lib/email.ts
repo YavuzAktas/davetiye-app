@@ -299,3 +299,129 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
     throw error;
   }
 }
+
+export async function partnerBasvuruAdminBildir({
+  partnerAdi,
+  firmaAdi,
+  email,
+  firmaTuru,
+  aylikMusteriSayisi,
+  basvuruNotu,
+  adminPanelUrl,
+  adminEmails,
+}: {
+  partnerAdi: string;
+  firmaAdi: string;
+  email: string;
+  firmaTuru: string;
+  aylikMusteriSayisi: string;
+  basvuruNotu?: string;
+  adminPanelUrl: string;
+  adminEmails: string[];
+}) {
+  const guvenliPartnerAdi = escapeHtml(partnerAdi);
+  const guvenliFiremaAdi = escapeHtml(firmaAdi);
+  const guvenliEmail = escapeHtml(email);
+  const guvenlifirmaTuru = escapeHtml(firmaTuru);
+  const guvenliAylik = escapeHtml(aylikMusteriSayisi);
+  const guvenliNot = basvuruNotu ? escapeHtml(basvuruNotu) : "—";
+  const guvenliUrl = encodeURI(adminPanelUrl);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,sans-serif;">
+      <div style="max-width:560px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:linear-gradient(135deg,#7C3AED,#DB2777);padding:28px;text-align:center;">
+          <p style="color:white;font-size:28px;margin:0;">🤝</p>
+          <h1 style="color:white;font-size:18px;margin:8px 0 0;font-weight:700;">Yeni Partner Başvurusu</h1>
+        </div>
+        <div style="padding:28px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Firma Adı</td><td style="padding:8px 0;color:#111827;font-weight:600;">${guvenliFiremaAdi}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Ad Soyad</td><td style="padding:8px 0;color:#111827;">${guvenliPartnerAdi}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">E-posta</td><td style="padding:8px 0;color:#7C3AED;">${guvenliEmail}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Firma Türü</td><td style="padding:8px 0;color:#111827;">${guvenlifirmaTuru}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Aylık Müşteri</td><td style="padding:8px 0;color:#111827;">${guvenliAylik}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Not</td><td style="padding:8px 0;color:#111827;">${guvenliNot}</td></tr>
+          </table>
+          <div style="margin-top:24px;text-align:center;">
+            <a href="${guvenliUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Admin Panelinde İncele</a>
+          </div>
+        </div>
+        <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz — Partner Admin Bildirimi</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: adminEmails,
+      subject: sanitizeSubject(`Yeni Partner Başvurusu — ${firmaAdi}`),
+      html,
+    });
+  } catch (error) {
+    console.error("Partner başvuru admin bildirimi gönderilemedi:", error);
+  }
+}
+
+export async function partnerOnayBildir({
+  email,
+  partnerAdi,
+  firmaAdi,
+  panelUrl,
+}: {
+  email: string;
+  partnerAdi: string;
+  firmaAdi: string;
+  panelUrl: string;
+}) {
+  const guvenliPartnerAdi = escapeHtml(partnerAdi);
+  const guvenliFiremaAdi = escapeHtml(firmaAdi);
+  const guvenliUrl = encodeURI(panelUrl);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,sans-serif;">
+      <div style="max-width:520px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:linear-gradient(135deg,#7C3AED,#DB2777);padding:32px;text-align:center;">
+          <p style="color:white;font-size:32px;margin:0;">🎉</p>
+          <h1 style="color:white;font-size:20px;margin:10px 0 0;font-weight:700;">Partner Başvurunuz Onaylandı!</h1>
+        </div>
+        <div style="padding:32px;">
+          <p style="color:#374151;font-size:15px;margin:0 0 16px;">Merhaba ${guvenliPartnerAdi},</p>
+          <p style="color:#374151;font-size:15px;margin:0 0 16px;">
+            <strong>${guvenliFiremaAdi}</strong> adına yaptığınız partner başvurusu onaylandı.
+            Artık partner panelinize erişebilir, aktivasyon hakları satın alabilir ve müşterilerinize dijital davetiye sunabilirsiniz.
+          </p>
+          <div style="text-align:center;margin:28px 0;">
+            <a href="${guvenliUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;">Partner Paneline Git →</a>
+          </div>
+          <p style="color:#9ca3af;font-size:13px;margin:0;">Sorularınız için <a href="mailto:destek@bekleriz.com" style="color:#7C3AED;">destek@bekleriz.com</a> adresinden bize ulaşabilirsiniz.</p>
+        </div>
+        <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: email,
+      subject: "Bekleriz Partner Başvurunuz Onaylandı 🎉",
+      html,
+    });
+  } catch (error) {
+    console.error("Partner onay e-postası gönderilemedi:", error);
+  }
+}
