@@ -298,7 +298,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                 {davetiye.baslik}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-4 mt-3">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3">
                 {tarihStr && (
                   <div className="flex items-center gap-1.5 text-white/40 text-xs">
                     <span>📅</span>
@@ -306,14 +306,14 @@ export default async function DavetiyeDetay({ params }: Props) {
                   </div>
                 )}
                 {davetiye.mekan && (
-                  <div className="flex items-center gap-1.5 text-white/40 text-xs">
-                    <span>📍</span>
-                    <span className="truncate max-w-48">{davetiye.mekan}</span>
+                  <div className="flex items-center gap-1.5 text-white/40 text-xs min-w-0 max-w-45 sm:max-w-xs">
+                    <span className="shrink-0">📍</span>
+                    <span className="truncate">{davetiye.mekan}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-1.5 text-white/30 text-xs">
                   <span>🗓️</span>
-                  <span>{olusturulmaTarih}&apos;de oluşturuldu</span>
+                  <span className="whitespace-nowrap">{olusturulmaTarih}&apos;de oluşturuldu</span>
                 </div>
               </div>
             </div>
@@ -398,98 +398,71 @@ export default async function DavetiyeDetay({ params }: Props) {
         </div>
 
         {/* ── Stat Cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {[
-            { label: "Görüntülenme", value: davetiye.goruntulenme, Icon: Eye,          sub: "toplam ziyaret" },
-            { label: "Katılıyor",    value: katilimCount,          Icon: CheckCircle2, sub: `${toplamKisi} kişi toplam` },
-            { label: "Katılmıyor",   value: katilmayanCount,       Icon: XCircle,      sub: "olumsuz yanıt" },
-            { label: "Yanıt Oranı",  value: `%${katilimYuzde}`,    Icon: BarChart3,    sub: `${toplamRsvp} yanıt` },
-          ].map(({ Icon, ...stat }) => (
-            <div
-              key={stat.label}
-              className="bg-white border border-gray-100 rounded-2xl p-5 relative overflow-hidden group hover:shadow-md transition-shadow"
-            >
-              <div
-                className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                style={{ backgroundColor: renk + "20", transform: "translate(40%, -40%)" }}
-              />
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
-                style={{ backgroundColor: renk + "10", color: renk }}
-              >
-                <Icon className="w-[18px] h-[18px]" />
+            { label: "Görüntülenme", value: davetiye.goruntulenme, Icon: Eye,          sub: "toplam ziyaret",          href: null },
+            { label: "Katılıyor",    value: katilimCount,          Icon: CheckCircle2, sub: `${toplamKisi} kişi toplam`, href: `#rsvp-listesi` },
+            { label: "Katılmıyor",   value: katilmayanCount,       Icon: XCircle,      sub: "olumsuz yanıt",           href: `#rsvp-listesi` },
+            { label: "Yanıt Oranı",  value: `%${katilimYuzde}`,    Icon: BarChart3,    sub: `${toplamRsvp} yanıt`,     href: null },
+          ].map(({ Icon, href, ...stat }) => {
+            const inner = (
+              <>
+                <div
+                  className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  style={{ backgroundColor: renk + "20", transform: "translate(40%, -40%)" }}
+                />
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                  style={{ backgroundColor: renk + "10", color: renk }}
+                >
+                  <Icon className="w-4.5 h-4.5" />
+                </div>
+                <p className="text-2xl font-bold text-gray-900 tabular-nums leading-none">{stat.value}</p>
+                <p className="text-sm font-semibold text-gray-700 mt-1">{stat.label}</p>
+                <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{stat.sub}</p>
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: `linear-gradient(90deg, transparent, ${renk}, transparent)` }}
+                />
+              </>
+            );
+            const cls = "bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 relative overflow-hidden group hover:shadow-md transition-shadow";
+            return href ? (
+              <Link key={stat.label} href={href} className={cls + " cursor-pointer"} scroll>
+                {inner}
+              </Link>
+            ) : (
+              <div key={stat.label} className={cls}>
+                {inner}
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums">{stat.value}</p>
-              <p className="text-sm font-semibold text-gray-700 mt-0.5">{stat.label}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{stat.sub}</p>
-              <div
-                className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ background: `linear-gradient(90deg, transparent, ${renk}, transparent)` }}
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* ── Mobil hızlı erişim (sadece küçük ekran) ── */}
-        <div className="lg:hidden grid grid-cols-2 gap-2">
-          <Link
-            href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
-          >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-              <Users className="w-4 h-4 text-gray-500" />
-            </span>
-            <span className="text-xs font-semibold text-gray-700 truncate">Davetliler</span>
-          </Link>
-          <Link
-            href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
-            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-emerald-100 rounded-2xl hover:bg-emerald-50/50 transition-colors"
-          >
-            <span className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-              <QrCode className="w-4 h-4 text-emerald-600" />
-            </span>
-            <span className="text-xs font-semibold text-gray-700 truncate">Check-in</span>
-          </Link>
-          <Link
-            href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
-            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
-          >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-              <ClipboardList className="w-4 h-4 text-gray-500" />
-            </span>
-            <span className="text-xs font-semibold text-gray-700 truncate">RSVP</span>
-          </Link>
-          <Link
-            href={`/dashboard/davetiye/${davetiye.slug}/program`}
-            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
-          >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-              <CalendarDays className="w-4 h-4 text-gray-500" />
-            </span>
-            <span className="text-xs font-semibold text-gray-700 truncate">Program</span>
-          </Link>
-          <Link
-            href={`/dashboard/davetiye/${davetiye.slug}/album`}
-            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
-          >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-              <Images className="w-4 h-4 text-gray-500" />
-            </span>
-            <span className="text-xs font-semibold text-gray-700 truncate">Albüm</span>
-          </Link>
-          {!odemeBekliyor && (
-            <a
-              href={davetiyeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
-            >
-              <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-                <Eye className="w-4 h-4 text-gray-500" />
-              </span>
-              <span className="text-xs font-semibold text-gray-700 truncate">Önizle</span>
-            </a>
-          )}
+        <div className="lg:hidden -mx-4 sm:-mx-6 px-4 sm:px-6">
+          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+            {[
+              { href: `/dashboard/davetiye/${davetiye.slug}/davetliler`, icon: <Users className="w-4 h-4" />, label: "Davetliler", color: "text-gray-500 bg-gray-50" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/check-in`,   icon: <QrCode className="w-4 h-4" />, label: "Check-in",  color: "text-emerald-600 bg-emerald-50", border: "border-emerald-100" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`, icon: <ClipboardList className="w-4 h-4" />, label: "RSVP", color: "text-gray-500 bg-gray-50" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/program`,    icon: <CalendarDays className="w-4 h-4" />, label: "Program", color: "text-gray-500 bg-gray-50" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/album`,      icon: <Images className="w-4 h-4" />, label: "Albüm",   color: "text-gray-500 bg-gray-50" },
+              ...(!odemeBekliyor ? [{ href: davetiyeUrl, icon: <Eye className="w-4 h-4" />, label: "Önizle", color: "text-gray-500 bg-gray-50", external: true }] : []),
+            ].map(item => (
+              <Link
+                key={item.label}
+                href={item.href}
+                {...("external" in item && item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className={`flex items-center gap-2 shrink-0 px-3 py-2.5 bg-white border rounded-2xl hover:bg-gray-50 transition-colors ${item.border ?? "border-gray-100"}`}
+              >
+                <span className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${item.color}`}>
+                  {item.icon}
+                </span>
+                <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">{item.label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* ── Main grid ── */}
@@ -521,25 +494,28 @@ export default async function DavetiyeDetay({ params }: Props) {
                       className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                       style={{ backgroundColor: renk + "14", color: renk }}
                     >
-                      <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H15a3 3 0 010 6h-1.5m-3 0H9a3 3 0 010-6h1.5m-1.5 6h6" />
                       </svg>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-gray-900">Genel davetiye linki</p>
                       <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Hızlı paylaşım için kullanılır. Kişi bazlı takip gerekiyorsa davetli linklerini tercih edin.</p>
-                      <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                        <div className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 font-mono overflow-x-auto whitespace-nowrap">
+                      <div className="mt-3 flex items-center gap-2">
+                        <div
+                          title={davetiyeUrl}
+                          className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 font-mono truncate"
+                        >
                           {davetiyeUrl}
                         </div>
                         <CopyButton text={davetiyeUrl} />
                       </div>
-                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         <a
                           href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " için davetiyem: " + davetiyeUrl)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center text-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
+                          className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold whitespace-nowrap"
                         >
                           WhatsApp ile paylaş
                         </a>
@@ -547,7 +523,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                           href={`https://t.me/share/url?url=${encodeURIComponent(davetiyeUrl)}&text=${encodeURIComponent(davetiye.baslik)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center text-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
+                          className="inline-flex items-center justify-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold whitespace-nowrap"
                         >
                           Telegram
                         </a>
@@ -612,7 +588,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                         href={canliDuvarUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-flex items-center justify-center text-xs font-semibold text-gray-500 hover:text-gray-700 break-words"
+                        className="mt-2 inline-flex items-center justify-center text-xs font-semibold text-gray-500 hover:text-gray-700 wrap-break-word"
                       >
                         Canlı duvarı aç ↗
                       </a>
@@ -623,6 +599,7 @@ export default async function DavetiyeDetay({ params }: Props) {
             </div>
 
             {/* RSVP List */}
+            <div id="rsvp-listesi" className="scroll-mt-4">
             <RsvpListesi
               baslangicRsvplar={baslangicRsvplar.map(r => ({
                 id: r.id,
@@ -643,6 +620,7 @@ export default async function DavetiyeDetay({ params }: Props) {
               slug={slug}
               renk={renk}
             />
+            </div>
           </div>
 
           {/* RIGHT — Quick actions sidebar (2/5) */}
@@ -666,24 +644,31 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
-                <Link
-                  href={davetiyeUrl}
-                  target="_blank"
-                  aria-disabled={odemeBekliyor}
-                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
-                    odemeBekliyor
-                      ? "pointer-events-none border-gray-100 bg-gray-50 opacity-50"
-                      : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Eye className="w-4 h-4 text-gray-500" />
+                {odemeBekliyor ? (
+                  <span className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center">
+                        <Eye className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Önizle</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Önizle</span>
-                  </div>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">↗</span>
-                </Link>
+                    <span className="text-gray-300 text-sm">↗</span>
+                  </span>
+                ) : (
+                  <Link
+                    href={davetiyeUrl}
+                    target="_blank"
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Eye className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">Önizle</span>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">↗</span>
+                  </Link>
+                )}
 
                 <Link
                   href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
@@ -750,28 +735,35 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/oturma-plani`}
-                  aria-disabled={!oturmaPlanAktif}
-                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
-                    oturmaPlanAktif
-                      ? "border-purple-100 hover:border-purple-200 hover:bg-purple-50/50"
-                      : "pointer-events-none border-gray-100 bg-gray-50 opacity-50"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Armchair className="w-4 h-4 text-purple-500" />
+                {oturmaPlanAktif ? (
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/oturma-plani`}
+                    className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-purple-100 hover:border-purple-200 hover:bg-purple-50/50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Armchair className="w-4 h-4 text-purple-500" />
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
+                        <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">Aktif</span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
-                      <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">
-                        {oturmaPlanAktif ? "Aktif" : "Ek özellik"}
-                      </span>
+                    <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
+                  </Link>
+                ) : (
+                  <div className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-gray-50/60">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
+                        <Armchair className="w-4 h-4 text-gray-400" />
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-400">Oturma Planı</span>
+                        <span className="ml-2 text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">Ek özellik</span>
+                      </div>
                     </div>
                   </div>
-                  <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
-                </Link>
+                )}
 
               </div>
             </div>
