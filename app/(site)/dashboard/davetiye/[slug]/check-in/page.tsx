@@ -41,8 +41,13 @@ export default async function CheckInPage({ params }: Props) {
             </svg>
           </Link>
           <div>
-            <p className="text-xs text-gray-400">{davetiye.baslik}</p>
-            <h1 className="text-lg font-bold text-gray-900">QR Check-in</h1>
+            <p className="text-xs text-gray-400 truncate max-w-50 sm:max-w-none">{davetiye.baslik}</p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-gray-900">QR Check-in</h1>
+              <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">
+                {girisYapan}/{davetiye._count.davetliler}
+              </span>
+            </div>
           </div>
         </div>
       </div>
