@@ -56,7 +56,8 @@ export async function POST(
   }
 
   // Zaten bu kullanıcıya bağlı → idempotent, izin ver
-  if (aktivasyon.musteriUserId === session.user.id && aktivasyon.durum === "kayit_oldu") {
+  if (aktivasyon.musteriUserId === session.user.id &&
+      (aktivasyon.durum === "kayit_oldu" || aktivasyon.durum === "odeme_bekliyor")) {
     return NextResponse.json({ ok: true });
   }
 

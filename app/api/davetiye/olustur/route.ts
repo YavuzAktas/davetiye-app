@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
+import { dahilKodlarGetir } from "@/lib/partner-paketler";
 import { ipIzinVer } from "@/lib/rate-limit";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { MUZIK_KUTUPHANESI } from "@/lib/muzik-kutuphanesi";
@@ -125,6 +126,7 @@ export async function POST(req: NextRequest) {
   let aktivasyonKoduKayit: {
     id: string;
     partner: { firmaAdi: string; user: { email: string | null } };
+    eksikOdeme: boolean;
   } | null = null;
 
   const slug = nanoid(10);
@@ -198,27 +200,47 @@ export async function POST(req: NextRequest) {
         where: { kod: veri.aktivasyonKodu! },
         select: {
           id: true,
-          partner: { select: { firmaAdi: true, user: { select: { email: true } } } },
+          partner: {
+            select: {
+              firmaAdi: true,
+              user: { select: { email: true } },
+              abonelikler: {
+                where: { aktif: true },
+                orderBy: { createdAt: "desc" },
+                take: 1,
+                select: { paketId: true },
+              },
+            },
+          },
         },
       });
 
       if (!aktivasyon) return null;
 
+      const paketId = aktivasyon.partner.abonelikler[0]?.paketId ?? "baslangic";
+      const dahilKodlar = dahilKodlarGetir(paketId);
+      const fiyatEkstra = fiyat.kalemler
+        .filter(k => !dahilKodlar.includes(k.kod))
+        .reduce((s, k) => s + k.tutar, 0);
+
       const yeniDavetiye = await tx.davetiye.create({
         data: {
           ...davetiyeVerisi,
-          odemeDurumu: "odendi",
-          aktif: true,
+          odemeDurumu: fiyatEkstra > 0 ? "odeme_bekliyor" : "odendi",
+          aktif: fiyatEkstra === 0,
         },
         select: { id: true, slug: true },
       });
 
       await tx.aktivasyonKodu.update({
         where: { id: aktivasyon.id },
-        data: { davetiyeId: yeniDavetiye.id, durum: "yayinda" },
+        data: {
+          davetiyeId: yeniDavetiye.id,
+          durum: fiyatEkstra > 0 ? "odeme_bekliyor" : "yayinda",
+        },
       });
 
-      return { davetiye: yeniDavetiye, aktivasyon };
+      return { davetiye: yeniDavetiye, aktivasyon, fiyatEkstra };
     });
 
     if (!aktivasyonluOlusturma) {
@@ -229,7 +251,10 @@ export async function POST(req: NextRequest) {
     }
 
     davetiye = aktivasyonluOlusturma.davetiye;
-    aktivasyonKoduKayit = aktivasyonluOlusturma.aktivasyon;
+    aktivasyonKoduKayit = {
+      ...aktivasyonluOlusturma.aktivasyon,
+      eksikOdeme: aktivasyonluOlusturma.fiyatEkstra > 0,
+    };
   } else {
     davetiye = await prisma.davetiye.create({
       data: {
@@ -241,7 +266,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  if (aktivasyonKoduKayit) {
+  if (aktivasyonKoduKayit && !aktivasyonKoduKayit.eksikOdeme) {
     const partnerEmail = aktivasyonKoduKayit.partner.user.email;
     if (partnerEmail) {
       davetiyeYayindaBildir({
@@ -266,5 +291,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ id: davetiye.id, slug: davetiye.slug, fiyat, activated: !!aktivasyonKoduKayit });
+  const activated = !!aktivasyonKoduKayit && !aktivasyonKoduKayit.eksikOdeme;
+  return NextResponse.json({ id: davetiye.id, slug: davetiye.slug, fiyat, activated });
 }

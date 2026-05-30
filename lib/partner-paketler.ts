@@ -21,3 +21,14 @@ export const PARTNER_PAKET_LISTESI = Object.values(PARTNER_PAKETLERI);
 export function paketGetir(id: string) {
   return PARTNER_PAKETLERI[id as PartnerPaketId] ?? null;
 }
+
+// Aktivasyon koduyla ücretsiz dahil edilen fiyat kodu listesi (paket başına)
+// Kodlar lib/davetiye-fiyatlandirma.ts DAVETIYE_FIYAT_KALEMLERI ile eşleşmeli
+export const PARTNER_PAKET_DAHIL: Record<string, string[]> = {
+  baslangic:   ["temel-davetiye"],
+  profesyonel: ["temel-davetiye", "muzik"],
+};
+
+export function dahilKodlarGetir(paketId: string): string[] {
+  return PARTNER_PAKET_DAHIL[paketId] ?? ["temel-davetiye"];
+}

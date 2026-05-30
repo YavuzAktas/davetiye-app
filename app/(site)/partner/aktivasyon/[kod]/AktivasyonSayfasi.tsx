@@ -26,7 +26,7 @@ export default function AktivasyonSayfasi({
       .then(async res => {
         if (res.ok) {
           setDurum("yonlendiriliyor");
-          router.push(`/olustur?aktivasyon=${kod}`);
+          router.push(`/sablonlar?aktivasyon=${kod}`);
         } else {
           const d = await res.json().catch(() => ({}));
           setHataMesaji(d.error ?? "Aktivasyon tamamlanamadı.");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -705,7 +705,7 @@ const PREMIUM_OZELLIKLER: Record<string, { icon: string; baslik: string; aciklam
 /* ══════════════════════════════════════════════
    PREMIUM KART — Showcase (yeniden tasarım)
 ══════════════════════════════════════════════ */
-function PremiumKart({ sablon }: { sablon: Sablon }) {
+function PremiumKart({ sablon, aktivasyon = "" }: { sablon: Sablon; aktivasyon?: string }) {
   const router   = useRouter();
   const demoUrl  = DEMO_URLS[sablon.id];
   const ozellikler = PREMIUM_OZELLIKLER[sablon.id] ?? [];
@@ -855,7 +855,7 @@ function PremiumKart({ sablon }: { sablon: Sablon }) {
             <motion.button
               whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
+              onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}${aktivasyon ? `&aktivasyon=${aktivasyon}` : ""}`); }}
               className="flex-1 py-4 rounded-2xl text-sm font-bold"
               style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
             >
@@ -891,7 +891,7 @@ const STD_OZELLIKLER = [
   { Icon: Music,          label: "Müzik" },
 ] as const;
 
-function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
+function StdKompaktKart({ sablon, index, aktivasyon = "" }: { sablon: Sablon; index: number; aktivasyon?: string }) {
   const router = useRouter();
   const r = sablon.renk;
   const emoji = KAT_EMOJI[sablon.kategori] ?? "✨";
@@ -906,7 +906,7 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
         y: -4,
         boxShadow: `0 16px 40px rgba(0,0,0,0.1), 0 0 0 1px ${r}30`,
       }}
-      onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
+      onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}${aktivasyon ? `&aktivasyon=${aktivasyon}` : ""}`); }}
       className="flex flex-col cursor-pointer"
       style={{
         background: "#ffffff",
@@ -990,7 +990,7 @@ function StdKompaktKart({ sablon, index }: { sablon: Sablon; index: number }) {
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: `0 6px 24px ${r}35` }}
             whileTap={{ scale: 0.97 }}
-            onClick={e => { e.stopPropagation(); saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}`); }}
+            onClick={e => { e.stopPropagation(); saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}${aktivasyon ? `&aktivasyon=${aktivasyon}` : ""}`); }}
             className="flex-1 py-3 rounded-2xl text-xs font-bold text-white"
             style={{
               background: `linear-gradient(135deg, ${r} 0%, ${r}cc 100%)`,
@@ -1022,6 +1022,8 @@ const ETIKET_FILTRELER = ["hepsi", "En Çok Seçilen", "Lüks", "Minimal", "Roma
 type EtiketFiltre = typeof ETIKET_FILTRELER[number];
 
 export default function SablonlarSayfasi() {
+  const searchParams = useSearchParams();
+  const aktivasyon = searchParams.get("aktivasyon") ?? "";
   const [aktifKat, setAktifKat] = useState("hepsi");
   const [aktifEtiket, setAktifEtiket] = useState<EtiketFiltre>("hepsi");
 
@@ -1229,7 +1231,7 @@ export default function SablonlarSayfasi() {
                   </div>
 
                   <div className="space-y-5">
-                    {goruntulenenPremium.map(s => <PremiumKart key={s.id} sablon={s} />)}
+                    {goruntulenenPremium.map(s => <PremiumKart key={s.id} sablon={s} aktivasyon={aktivasyon} />)}
                   </div>
                 </motion.section>
               )}
@@ -1275,7 +1277,7 @@ export default function SablonlarSayfasi() {
                     transition={{ duration:0.2 }}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {goruntulenenStandart.map((s, i) => (
-                      <StdKompaktKart key={s.id} sablon={s} index={i} />
+                      <StdKompaktKart key={s.id} sablon={s} index={i} aktivasyon={aktivasyon} />
                     ))}
                   </motion.div>
                 </AnimatePresence>

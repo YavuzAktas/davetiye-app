@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
+import { davetiyeYayindaBildir } from "@/lib/email";
+import { getSiteUrl } from "@/lib/site-url";
 
 const BASARISIZ = `${process.env.NEXT_PUBLIC_URL}/odeme/basarisiz`;
 
@@ -170,6 +172,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     }),
   ]);
+
+  // Aktivasyon kodu varsa ve ek ödeme bekliyorduysa artık yayında.
+  const aktivasyonKodu = await prisma.aktivasyonKodu.findFirst({
+    where: { davetiyeId: odemeToken.davetiyeId, durum: "odeme_bekliyor" },
+    select: {
+      id: true,
+      partner: { select: { firmaAdi: true, user: { select: { email: true } } } },
+    },
+  });
+  if (aktivasyonKodu) {
+    await prisma.aktivasyonKodu.update({
+      where: { id: aktivasyonKodu.id },
+      data: { durum: "yayinda" },
+    });
+    const partnerEmail = aktivasyonKodu.partner.user.email;
+    if (partnerEmail) {
+      davetiyeYayindaBildir({
+        partnerEmail,
+        firmaAdi: aktivasyonKodu.partner.firmaAdi,
+        panelUrl: `${getSiteUrl()}/partner/panel`,
+      });
+    }
+  }
 
   // Referral ödülü: bu kullanıcı birisinin referralıyla geldiyse ve
   // daha önce ödüllendirilmediyse referrer'a 50₺ kredi ekle.

@@ -86,7 +86,9 @@ function OzellikKarti({
               <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                 locked
                   ? "bg-amber-100 text-amber-700"
-                  : "bg-purple-100 text-purple-700"
+                  : planEtiketi === "Dahil"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-purple-100 text-purple-700"
               }`}>{planEtiketi}</span>
             )}
           </div>
@@ -216,6 +218,14 @@ function OlusturIcerigi() {
     return () => { document.body.style.overflow = ""; };
   }, [mobilOnizlemeAcik]);
 
+  useEffect(() => {
+    if (!aktivasyonKodu) return;
+    fetch(`/api/partner/aktivasyon/${aktivasyonKodu}/kapsam`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.dahilKodlar) setDahilKodlar(data.dahilKodlar); })
+      .catch(() => {});
+  }, [aktivasyonKodu]);
+
   const [notAcik,         setNotAcik]         = useState(false);
   const [muzikAcik,       setMuzikAcik]       = useState(false);
   const [albumAcik,       setAlbumAcik]       = useState(false);
@@ -225,6 +235,7 @@ function OlusturIcerigi() {
   const [oturmaPlanAcik,  setOturmaPlanAcik]  = useState(false);
   const [aniKitabiAcik,   setAniKitabiAcik]   = useState(false);
   const [checkInAcik,     setCheckInAcik]     = useState(false);
+  const [dahilKodlar,    setDahilKodlar]    = useState<string[]>([]);
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
@@ -296,6 +307,12 @@ function OlusturIcerigi() {
     aniKitabiAktif:  aniKitabiAcik,
     checkInAktif:    checkInAcik,
   });
+
+  const isDahil = (kod: string) => aktivasyonKodu ? dahilKodlar.includes(kod) : false;
+  const dahilTutar = aktivasyonKodu && dahilKodlar.length > 0
+    ? fiyat.kalemler.filter(k => dahilKodlar.includes(k.kod)).reduce((s, k) => s + k.tutar, 0)
+    : 0;
+  const odenecekTutar = fiyat.toplamTutar - dahilTutar;
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
     alanRefleri.current[alan] = el;
@@ -488,6 +505,8 @@ function OlusturIcerigi() {
             className="shrink-0 bg-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-700 active:scale-95 transition-all disabled:opacity-50 shadow-sm shadow-purple-200 flex items-center gap-2">
             {yukleniyor ? (
               <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor</>
+            ) : aktivasyonKodu && odenecekTutar === 0 ? (
+              <>Davetiyeni Oluştur →</>
             ) : (
               <>Ödeme Adımına Geç →</>
             )}
@@ -511,11 +530,16 @@ function OlusturIcerigi() {
           <div className="lg:col-span-3 space-y-5">
 
             {aktivasyonKodu && (
-              <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
-                <span className="text-xl">🎁</span>
-                <p className="text-sm font-semibold text-green-700">
-                  Aktivasyon kodu ile ücretsiz davetiye oluşturuyorsunuz. Ödeme alınmayacak.
-                </p>
+              <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
+                <span className="text-xl shrink-0">🎁</span>
+                <div>
+                  <p className="text-sm font-semibold text-green-700">Partner aktivasyon koduyla oluşturuyorsunuz</p>
+                  <p className="text-xs text-green-600 mt-0.5">
+                    {dahilKodlar.length > 0
+                      ? `Pakete dahil özellikler ücretsiz. Ek özellikler seçerseniz ayrıca ücretlendirilir.`
+                      : "Dahil özellikler yükleniyor…"}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -861,7 +885,7 @@ function OlusturIcerigi() {
                       icon="🎵" baslik="Arka Plan Müziği"
                       aciklama="Seçtiğiniz şarkı için davetiyede bir çalma butonu gösterilir"
                       misafirGorur="Misafir davetiyeye dokunduğunda müzik başlar; istediği zaman durdurabilir"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("muzik") ? "Dahil" : "Ek ücret"}
                       acik={muzikAcik} onToggle={() => setMuzikAcik(!muzikAcik)}
                     >
                       <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
@@ -872,7 +896,7 @@ function OlusturIcerigi() {
                       icon="📸" baslik="Fotoğraf Albümü"
                       aciklama="Misafirler etkinlik boyunca fotoğraf yükler, sen onaylarsın"
                       misafirGorur="Davetiyede 📸 Fotoğraflar sekmesi belirir"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("album-foto") ? "Dahil" : "Ek ücret"}
                       acik={albumAcik} onToggle={() => setAlbumAcik(!albumAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -886,7 +910,7 @@ function OlusturIcerigi() {
                       icon="💌" baslik="Anı Defteri"
                       aciklama="Misafirler etkinlik için yazılı iyi dilek ve anı bırakır"
                       misafirGorur="Davetiyede 💌 Anı Defteri sekmesi belirir"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("ani-defteri") ? "Dahil" : "Ek ücret"}
                       acik={aniDefteriAcik} onToggle={() => setAniDefteriAcik(!aniDefteriAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -900,7 +924,7 @@ function OlusturIcerigi() {
                       icon="📺" baslik="Canlı Fotoğraf Duvarı"
                       aciklama="Misafir fotoğrafları salonunuzdaki ekranda canlı akış olarak görünür"
                       misafirGorur="Fotoğraf yükleyen misafirler canlı duvarda görebilir"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("canli-duvar") ? "Dahil" : "Ek ücret"}
                       acik={canliDuvarAcik} onToggle={() => setCanliDuvarAcik(!canliDuvarAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -915,7 +939,7 @@ function OlusturIcerigi() {
                         icon="🎙️" baslik="Sesli Anı"
                         aciklama="Misafirler tarayıcıdan 30 saniyeye kadar sesli mesaj kaydedebilir"
                         misafirGorur="Davetiyede bir mikrofon butonu belirir; kayıtlar onayınızla yayınlanır"
-                        planEtiketi="Ek ücret"
+                        planEtiketi={isDahil("sesli-ani") ? "Dahil" : "Ek ücret"}
                         acik={sesliAniAcik} onToggle={() => setSesliAniAcik(!sesliAniAcik)}
                       >
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -930,7 +954,7 @@ function OlusturIcerigi() {
                       icon="📖" baslik="Anı Kitabı PDF"
                       aciklama="Onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir premium PDF'e derle"
                       misafirGorur="Bu özellik sadece davetiye sahibi için geçerlidir"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("ani-kitabi-pdf") ? "Dahil" : "Ek ücret"}
                       acik={aniKitabiAcik} onToggle={() => setAniKitabiAcik(!aniKitabiAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -944,7 +968,7 @@ function OlusturIcerigi() {
                       icon="📲" baslik="QR Check-in"
                       aciklama="Etkinlik girişinde her davetlinin kişiye özel QR kodunu okutarak katılımı saniyeler içinde kaydet"
                       misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("qr-check-in") ? "Dahil" : "Ek ücret"}
                       acik={checkInAcik} onToggle={() => setCheckInAcik(!checkInAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -958,7 +982,7 @@ function OlusturIcerigi() {
                       icon="🪑" baslik="Oturma Planı"
                       aciklama="Katılacak misafirleri masalara atayabileceğiniz yönetim ekranı açılır"
                       misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
-                      planEtiketi="Ek ücret"
+                      planEtiketi={isDahil("oturma-plani") ? "Dahil" : "Ek ücret"}
                       acik={oturmaPlanAcik} onToggle={() => setOturmaPlanAcik(!oturmaPlanAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -969,7 +993,7 @@ function OlusturIcerigi() {
                   </div>
                 </div>
 
-                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} />
+                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} dahilKodlar={dahilKodlar} />
 
                 {/* Hata + Oluştur */}
                 {hata && (
@@ -982,6 +1006,8 @@ function OlusturIcerigi() {
                   className="w-full bg-purple-600 text-white py-4 rounded-2xl font-bold hover:bg-purple-700 active:scale-[0.99] transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-2 shadow-md shadow-purple-200">
                   {yukleniyor ? (
                     <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor...</>
+                  ) : aktivasyonKodu && odenecekTutar === 0 ? (
+                    "Davetiyeni Oluştur →"
                   ) : (
                     "Taslağı Oluştur ve Ödeme Adımına Geç →"
                   )}
@@ -1012,7 +1038,7 @@ function OlusturIcerigi() {
                 </div>
               </TelefonMockup>
               <div className="mt-5">
-                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} kompakt />
+                <FiyatOzeti fiyat={fiyat} fiyatHref={fiyatHref} kompakt dahilKodlar={dahilKodlar} />
               </div>
               <div className="mt-3 flex flex-col items-center gap-1">
                 <p className="text-[10px] text-gray-300">Değişiklikler anında yansır</p>
@@ -1230,39 +1256,67 @@ function FiyatOzeti({
   fiyat,
   fiyatHref,
   kompakt = false,
+  dahilKodlar = [],
 }: {
   fiyat: DavetiyeFiyatSonucu;
   fiyatHref: string;
   kompakt?: boolean;
+  dahilKodlar?: string[];
 }) {
+  const dahilTutar = dahilKodlar.length > 0
+    ? fiyat.kalemler.filter(k => dahilKodlar.includes(k.kod)).reduce((s, k) => s + k.tutar, 0)
+    : 0;
+  const odenecekTutar = fiyat.toplamTutar - dahilTutar;
+
   return (
     <div className={`rounded-2xl border border-purple-100 bg-white shadow-sm shadow-purple-50 ${kompakt ? "p-4" : "p-5"}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">Fiyat Özeti</p>
-          <p className="mt-1 text-sm text-gray-500">
-            Seçtiğiniz davetiye ve özelliklere göre hesaplanır.
-          </p>
+          {dahilTutar > 0 ? (
+            <p className="mt-1 text-sm text-green-600 font-medium">
+              🎁 {tutarMetni(dahilTutar)} partner tarafından karşılanır
+            </p>
+          ) : (
+            <p className="mt-1 text-sm text-gray-500">
+              Seçtiğiniz davetiye ve özelliklere göre hesaplanır.
+            </p>
+          )}
         </div>
         <div className="text-right">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">Toplam</p>
-          <p className="text-2xl font-black text-gray-950">{tutarMetni(fiyat.toplamTutar)}</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+            {dahilTutar > 0 ? "Ödenecek" : "Toplam"}
+          </p>
+          {dahilTutar > 0 && (
+            <p className="text-xs line-through text-gray-400">{tutarMetni(fiyat.toplamTutar)}</p>
+          )}
+          <p className="text-2xl font-black text-gray-950">{tutarMetni(odenecekTutar)}</p>
         </div>
       </div>
 
       <div className={`mt-4 ${kompakt ? "space-y-2" : "space-y-2.5"}`}>
-        {fiyat.kalemler.map(kalem => (
-          <div key={kalem.kod} className="flex items-center justify-between gap-3 rounded-xl bg-gray-50 px-3 py-2">
-            <span className="text-xs font-medium text-gray-600">{kalem.ad}</span>
-            <span className="text-xs font-bold text-gray-900">{tutarMetni(kalem.tutar)}</span>
-          </div>
-        ))}
+        {fiyat.kalemler.map(kalem => {
+          const dahil = dahilKodlar.includes(kalem.kod);
+          return (
+            <div key={kalem.kod} className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 ${dahil ? "bg-green-50" : "bg-gray-50"}`}>
+              <span className="text-xs font-medium text-gray-600">
+                {kalem.ad}
+                {dahil && <span className="ml-1.5 text-[10px] font-bold text-green-600">✓ Dahil</span>}
+              </span>
+              <span className={`text-xs font-bold ${dahil ? "text-green-600" : "text-gray-900"}`}>
+                {dahil ? "Ücretsiz" : tutarMetni(kalem.tutar)}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       {!kompakt && (
         <div className="mt-3 flex flex-col gap-2">
           <p className="text-xs leading-relaxed text-gray-400">
-            Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır.
+            {odenecekTutar === 0
+              ? "Aktivasyon kapsamında tüm seçimler ücretsiz; davetiye anında yayına alınır."
+              : "Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır."}
           </p>
           <Link href={fiyatHref} className="text-xs font-bold text-purple-600 hover:text-purple-700">
             Fiyatları detaylı gör →
