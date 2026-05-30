@@ -333,39 +333,6 @@ export default async function DavetiyelerimSayfasi() {
               </div>
             </div>
 
-            {/* Genel özet */}
-            <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
-              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Genel Özet</p>
-              <div className="space-y-3">
-                {[
-                  { icon: "📨", label: "Davetiye",    value: user.davetiyeler.length, color: "text-purple-600" },
-                  { icon: "👁️", label: "Görüntülenme", value: toplamGoruntulenme,    color: "text-blue-600"   },
-                  { icon: "✅", label: "Katılıyor",   value: toplamKatilim,           color: "text-emerald-600"},
-                  { icon: "❌", label: "Katılamıyor", value: toplamRsvp - toplamKatilim, color: "text-red-500" },
-                ].map(s => (
-                  <div key={s.label} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm">{s.icon}</div>
-                      <span className="text-sm text-gray-500">{s.label}</span>
-                    </div>
-                    <span className={`font-bold ${s.color}`}>{s.value}</span>
-                  </div>
-                ))}
-                {toplamRsvp > 0 && (
-                  <div className="pt-3 border-t border-gray-100">
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-gray-400">Katılım oranı</span>
-                      <span className="font-bold text-emerald-600">%{katilimOrani}</span>
-                    </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-linear-to-r from-emerald-400 to-teal-400 rounded-full transition-all duration-700"
-                        style={{ width: `${katilimOrani}%` }} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
             {/* Hızlı erişim */}
             <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
               <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-3">Hızlı Erişim</p>

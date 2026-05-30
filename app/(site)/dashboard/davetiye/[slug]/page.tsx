@@ -17,7 +17,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-
 const EMOJILER: Record<string, string> = {
   dugun: "💒", nisan: "💍", dogumgunu: "🎂", sunnet: "⭐",
   kina: "🕯️", kurumsal: "🏢", diger: "🎉",
@@ -74,7 +73,6 @@ export default async function DavetiyeDetay({ params }: Props) {
 
   if (!davetiye) notFound();
 
-  // İstatistikler DB'de hesaplanıyor; ilk 50 RSVP ve RSVP'siz davetliler ayrı çekiliyor.
   const [rsvpGruplari, baslangicRsvplar, bekleyenDavetliler] = await Promise.all([
     prisma.rSVP.groupBy({
       by: ["katilim"],
@@ -152,7 +150,6 @@ export default async function DavetiyeDetay({ params }: Props) {
 
       {/* ══ DARK HERO ══ */}
       <div className="relative bg-[#080112] overflow-hidden">
-        {/* Color blobs themed to invitation */}
         <div
           className="absolute -top-20 left-1/4 w-80 h-80 rounded-full blur-[100px] opacity-25 pointer-events-none"
           style={{ backgroundColor: renk }}
@@ -180,7 +177,6 @@ export default async function DavetiyeDetay({ params }: Props) {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            {/* Invitation icon */}
             <div
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center text-4xl shrink-0 shadow-2xl"
               style={{ backgroundColor: renk + "22", border: `2px solid ${renk}44` }}
@@ -225,12 +221,11 @@ export default async function DavetiyeDetay({ params }: Props) {
                 )}
                 <div className="flex items-center gap-1.5 text-white/30 text-xs">
                   <span>🗓️</span>
-                  <span>{olusturulmaTarih}'de oluşturuldu</span>
+                  <span>{olusturulmaTarih}&apos;de oluşturuldu</span>
                 </div>
               </div>
             </div>
 
-            {/* CTA */}
             {!odemeBekliyor && (
               <Link
                 href={davetiyeUrl}
@@ -264,9 +259,9 @@ export default async function DavetiyeDetay({ params }: Props) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: "Görüntülenme", value: davetiye.goruntulenme, icon: "👁️", sub: "toplam ziyaret" },
-            { label: "Katılıyor", value: katilimCount, icon: "✅", sub: `${toplamKisi} kişi toplam` },
-            { label: "Katılmıyor", value: katilmayanCount, icon: "❌", sub: "bildirim aldı" },
-            { label: "Yanıt Oranı", value: `%${katilimYuzde}`, icon: "📊", sub: `${toplamRsvp} yanıt` },
+            { label: "Katılıyor",    value: katilimCount,          icon: "✅", sub: `${toplamKisi} kişi toplam` },
+            { label: "Katılmıyor",   value: katilmayanCount,       icon: "❌", sub: "bildirim aldı" },
+            { label: "Yanıt Oranı",  value: `%${katilimYuzde}`,    icon: "📊", sub: `${toplamRsvp} yanıt` },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -288,122 +283,54 @@ export default async function DavetiyeDetay({ params }: Props) {
           ))}
         </div>
 
-        {/* ── Anı & Arşiv Showcase ── */}
-        <div className="relative rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-[#080112]" />
-          <div className="absolute -top-16 right-12 w-72 h-72 rounded-full blur-[90px] opacity-20 pointer-events-none" style={{ backgroundColor: renk }} />
-          <div className="absolute bottom-0 left-6 w-48 h-48 rounded-full blur-[60px] opacity-10 pointer-events-none" style={{ backgroundColor: renk }} />
-          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-
-          <div className="relative px-6 sm:px-8 py-7">
-            <div className="flex flex-col sm:flex-row gap-6 items-start">
-
-              {/* Sol: Başlık + açıklama + feature pills */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
-                    style={{ background: renk + "22", border: `1px solid ${renk}40` }}
-                  >
-                    📖
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold tracking-widest uppercase" style={{ color: renk + "99" }}>
-                      Anı & Arşiv
-                    </p>
-                    <p className="text-xs text-white/25 mt-0.5">
-                      {herhangiAniAktif ? "Aktif özellik" : "Premium özellik"}
-                    </p>
-                  </div>
-                </div>
-
-                <h2 className="text-lg sm:text-xl font-bold text-white leading-snug mb-2">
-                  {herhangiAniAktif
-                    ? toplamIcerik > 0
-                      ? `Misafirleriniz ${toplamIcerik} anı bıraktı`
-                      : "Anı arşiviniz hazır — QR kodu masalara koyun"
-                    : "Sadece davet değil, anı arşivi"}
-                </h2>
-                <p className="text-sm text-white/35 leading-relaxed max-w-xl">
-                  {herhangiAniAktif
-                    ? "Fotoğraf, anı yazısı ve sesli mesajları yönetin. Etkinlik sonrası tek tıkla PDF kitap indirin."
-                    : "Misafirler QR kodu tarayarak fotoğraf yükler, anı yazar, sesli mesaj bırakır. Etkinlik sonrası tek PDF kitap olur."}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {[
-                    { icon: "📸", label: "Fotoğraf Albümü", aktif: albumAktif, count: davetiye._count.albumFotolar },
-                    { icon: "💌", label: "Anı Defteri",     aktif: aniDefAktif,  count: davetiye._count.aniDefterleri },
-                    { icon: "🎙", label: "Sesli Mesaj",     aktif: sesliAniAktif, count: davetiye._count.sesliAnilar },
-                    { icon: "📖", label: "PDF Kitap",       aktif: aniKitabiAktif, count: null },
-                    { icon: "📺", label: "Canlı Duvar",     aktif: canliDuvarOdendi, count: null },
-                  ].map(f => (
-                    <span
-                      key={f.label}
-                      className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-full border"
-                      style={f.aktif
-                        ? { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)", borderColor: "rgba(255,255,255,0.12)" }
-                        : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.2)",  borderColor: "rgba(255,255,255,0.06)" }
-                      }
-                    >
-                      {f.icon} {f.label}
-                      {f.aktif && f.count != null && f.count > 0 && (
-                        <span className="font-bold ml-0.5" style={{ color: renk }}>{f.count}</span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sağ: CTA butonları */}
-              <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-auto sm:items-end">
-                {herhangiAniAktif ? (
-                  <>
-                    <Link
-                      href={`/dashboard/davetiye/${davetiye.slug}/album`}
-                      className="flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-2xl transition-all hover:opacity-90 whitespace-nowrap"
-                      style={{
-                        background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
-                        color: "#fff",
-                        boxShadow: `0 4px 20px rgba(${rgb}, 0.35)`,
-                      }}
-                    >
-                      Albüm & Anıları Yönet →
-                    </Link>
-                    {aniKitabiAktif && (
-                      <AniKitabiButon slug={davetiye.slug} renk={renk} rgb={rgb} />
-                    )}
-                    {canliDuvarOdendi && (
-                      <a
-                        href={canliDuvarUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8 whitespace-nowrap"
-                        style={{ borderColor: renk + "45", color: renk }}
-                      >
-                        📺 Canlı Duvarı Aç ↗
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-2 sm:items-end">
-                    <p className="text-xs text-white/25 leading-relaxed sm:text-right">
-                      Bu özellikler yeni davetiyede<br className="hidden sm:block" />
-                      oluşturma sırasında seçilebilir.
-                    </p>
-                    <Link
-                      href="/olustur"
-                      className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8"
-                      style={{ borderColor: renk + "45", color: renk }}
-                    >
-                      Yeni Davetiye Oluştur →
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-            </div>
-          </div>
+        {/* ── Mobil hızlı erişim (sadece küçük ekran) ── */}
+        <div className="lg:hidden flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 no-scrollbar">
+          <Link
+            href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+          >
+            <span className="text-xl">👥</span>
+            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Davetliler</span>
+          </Link>
+          <Link
+            href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
+            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-emerald-100 rounded-2xl hover:bg-emerald-50/50 transition-colors"
+          >
+            <span className="text-xl">✅</span>
+            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Check-in</span>
+          </Link>
+          <Link
+            href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
+            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+          >
+            <span className="text-xl">📋</span>
+            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">RSVP</span>
+          </Link>
+          <Link
+            href={`/dashboard/davetiye/${davetiye.slug}/program`}
+            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+          >
+            <span className="text-xl">📅</span>
+            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Program</span>
+          </Link>
+          <Link
+            href={`/dashboard/davetiye/${davetiye.slug}/album`}
+            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+          >
+            <span className="text-xl">📸</span>
+            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Albüm</span>
+          </Link>
+          {!odemeBekliyor && (
+            <a
+              href={davetiyeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-xl">👁️</span>
+              <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Önizle</span>
+            </a>
+          )}
         </div>
 
         {/* ── Main grid ── */}
@@ -543,43 +470,25 @@ export default async function DavetiyeDetay({ params }: Props) {
             />
           </div>
 
-          {/* RIGHT — Quick info + actions (2/5) */}
+          {/* RIGHT — Quick actions sidebar (2/5) */}
           <div className="lg:col-span-2 space-y-4">
 
-            {/* Invitation Info Card */}
-            <div className="relative rounded-3xl overflow-hidden" style={{
-              background: `linear-gradient(135deg, ${renk}15 0%, ${renk}05 100%)`,
-              border: `1px solid ${renk}25`,
-            }}>
-              <div className="p-6">
-                <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: renk + "99" }}>
-                  Davetiye Bilgileri
-                </p>
-                <div className="space-y-4">
-                  {[
-                    { icon: "🎭", label: "Şablon", value: sablon.isim },
-                    { icon: "📅", label: "Tarih", value: tarihStr ?? "Belirtilmedi" },
-                    { icon: "📍", label: "Mekan", value: davetiye.mekan ?? "Belirtilmedi" },
-                    { icon: "🎵", label: "Müzik", value: davetiye.muzik ? "Açık" : "Kapalı" },
-                  ].map(row => (
-                    <div key={row.label} className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base shrink-0 bg-white/60">
-                        {row.icon}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-gray-400 mb-0.5">{row.label}</p>
-                        <p className="text-sm font-semibold text-gray-800 truncate">{row.value}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
+            {/* Hızlı İşlemler */}
             <div className="bg-white border border-gray-100 rounded-3xl p-5">
               <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Hızlı İşlemler</p>
               <div className="space-y-2">
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">👥</div>
+                    <span className="text-sm font-medium text-gray-700">Davetliler</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
+                </Link>
+
                 <Link
                   href={davetiyeUrl}
                   target="_blank"
@@ -591,25 +500,10 @@ export default async function DavetiyeDetay({ params }: Props) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      👁️
-                    </div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">👁️</div>
                     <span className="text-sm font-medium text-gray-700">Önizle</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">↗</span>
-                </Link>
-
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/program`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      📅
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
-                  </div>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
                 <Link
@@ -617,23 +511,8 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      📋
-                    </div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📋</div>
                     <span className="text-sm font-medium text-gray-700">RSVP Soruları</span>
-                  </div>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
-                </Link>
-
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      👥
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Davetliler</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
@@ -643,12 +522,21 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-emerald-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      ✅
-                    </div>
+                    <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">✅</div>
                     <span className="text-sm font-medium text-gray-700">QR Check-in</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-emerald-500 transition-colors text-sm">→</span>
+                </Link>
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/program`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📅</div>
+                    <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
                 <Link
@@ -656,9 +544,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      📸
-                    </div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📸</div>
                     <span className="text-sm font-medium text-gray-700">Albüm & Anı</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -674,9 +560,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                      🪑
-                    </div>
+                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🪑</div>
                     <div>
                       <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
                       <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">
@@ -686,6 +570,7 @@ export default async function DavetiyeDetay({ params }: Props) {
                   </div>
                   <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
                 </Link>
+
               </div>
             </div>
 
@@ -716,44 +601,125 @@ export default async function DavetiyeDetay({ params }: Props) {
               </div>
             </div>
 
-            {/* RSVP Summary donut-style */}
-            {toplamRsvp > 0 && (
-              <div className="bg-white border border-gray-100 rounded-3xl p-5">
-                <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Katılım Özeti</p>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-gray-500 font-medium">Katılıyor</span>
-                      <span className="font-bold" style={{ color: renk }}>{katilimCount}</span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${katilimYuzde}%`, backgroundColor: renk }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-gray-500 font-medium">Katılmıyor</span>
-                      <span className="font-bold text-red-400">{katilmayanCount}</span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-red-300"
-                        style={{ width: `${100 - katilimYuzde}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t border-gray-50 flex justify-between items-center">
-                    <span className="text-xs text-gray-400">Toplam misafir</span>
-                    <span className="text-sm font-bold text-gray-900">{toplamKisi} kişi</span>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* ── Anı & Arşiv (sayfanın altında, yardımcı bölüm olarak) ── */}
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-[#080112]" />
+          <div className="absolute -top-16 right-12 w-72 h-72 rounded-full blur-[90px] opacity-20 pointer-events-none" style={{ backgroundColor: renk }} />
+          <div className="absolute bottom-0 left-6 w-48 h-48 rounded-full blur-[60px] opacity-10 pointer-events-none" style={{ backgroundColor: renk }} />
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+
+          <div className="relative px-6 sm:px-8 py-7">
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
+                    style={{ background: renk + "22", border: `1px solid ${renk}40` }}
+                  >
+                    📖
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold tracking-widest uppercase" style={{ color: renk + "99" }}>
+                      Anı & Arşiv
+                    </p>
+                    <p className="text-xs text-white/25 mt-0.5">
+                      {herhangiAniAktif ? "Aktif özellik" : "Premium özellik"}
+                    </p>
+                  </div>
+                </div>
+
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-snug mb-2">
+                  {herhangiAniAktif
+                    ? toplamIcerik > 0
+                      ? `Misafirleriniz ${toplamIcerik} anı bıraktı`
+                      : "Anı arşiviniz hazır — QR kodu masalara koyun"
+                    : "Sadece davet değil, anı arşivi"}
+                </h2>
+                <p className="text-sm text-white/35 leading-relaxed max-w-xl">
+                  {herhangiAniAktif
+                    ? "Fotoğraf, anı yazısı ve sesli mesajları yönetin. Etkinlik sonrası tek tıkla PDF kitap indirin."
+                    : "Misafirler QR kodu tarayarak fotoğraf yükler, anı yazar, sesli mesaj bırakır. Etkinlik sonrası tek PDF kitap olur."}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {[
+                    { icon: "📸", label: "Fotoğraf Albümü", aktif: albumAktif,       count: davetiye._count.albumFotolar  },
+                    { icon: "💌", label: "Anı Defteri",     aktif: aniDefAktif,       count: davetiye._count.aniDefterleri },
+                    { icon: "🎙", label: "Sesli Mesaj",     aktif: sesliAniAktif,     count: davetiye._count.sesliAnilar   },
+                    { icon: "📖", label: "PDF Kitap",       aktif: aniKitabiAktif,    count: null                          },
+                    { icon: "📺", label: "Canlı Duvar",     aktif: canliDuvarOdendi,  count: null                          },
+                  ].map(f => (
+                    <span
+                      key={f.label}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-full border"
+                      style={f.aktif
+                        ? { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)", borderColor: "rgba(255,255,255,0.12)" }
+                        : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.2)",  borderColor: "rgba(255,255,255,0.06)" }
+                      }
+                    >
+                      {f.icon} {f.label}
+                      {f.aktif && f.count != null && f.count > 0 && (
+                        <span className="font-bold ml-0.5" style={{ color: renk }}>{f.count}</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-auto sm:items-end">
+                {herhangiAniAktif ? (
+                  <>
+                    <Link
+                      href={`/dashboard/davetiye/${davetiye.slug}/album`}
+                      className="flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-2xl transition-all hover:opacity-90 whitespace-nowrap"
+                      style={{
+                        background: `linear-gradient(135deg, ${renk}, ${renk}cc)`,
+                        color: "#fff",
+                        boxShadow: `0 4px 20px rgba(${rgb}, 0.35)`,
+                      }}
+                    >
+                      Albüm & Anıları Yönet →
+                    </Link>
+                    {aniKitabiAktif && (
+                      <AniKitabiButon slug={davetiye.slug} renk={renk} rgb={rgb} />
+                    )}
+                    {canliDuvarOdendi && (
+                      <a
+                        href={canliDuvarUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8 whitespace-nowrap"
+                        style={{ borderColor: renk + "45", color: renk }}
+                      >
+                        📺 Canlı Duvarı Aç ↗
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-2 sm:items-end">
+                    <p className="text-xs text-white/25 leading-relaxed sm:text-right">
+                      Bu özellikler yeni davetiyede<br className="hidden sm:block" />
+                      oluşturma sırasında seçilebilir.
+                    </p>
+                    <Link
+                      href="/olustur"
+                      className="flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-2xl border transition-all hover:bg-white/8"
+                      style={{ borderColor: renk + "45", color: renk }}
+                    >
+                      Yeni Davetiye Oluştur →
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
