@@ -461,108 +461,130 @@ export default async function DavetiyeDetay({ params }: Props) {
 
             {/* Share Card */}
             <div id="paylasim" className="bg-white border border-gray-100 rounded-3xl overflow-hidden scroll-mt-6">
-              <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex items-center justify-between">
+              <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Paylaşım</p>
-                  <p className="text-xs text-gray-300 mt-0.5">Davetiyeyi misafirlerinle paylaş</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Genel link, kişiye özel linkler ve mekan QR&apos;ını ayrı yönetin.</p>
                 </div>
                 <Link
                   href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-                  className="text-xs font-semibold px-4 py-2 rounded-xl border transition-all hover:opacity-90"
+                  className="inline-flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-xl border transition-all hover:opacity-90"
                   style={{ borderColor: renk + "44", color: renk, backgroundColor: renk + "10" }}
                 >
-                  👥 Davetliler →
+                  Davetli linklerini yönet →
                 </Link>
               </div>
 
-              <div className="p-6 flex flex-col sm:flex-row gap-6">
-                {/* QR */}
-                <div className="flex flex-col items-center gap-3 shrink-0">
-                  <div
-                    className="p-3 rounded-2xl"
-                    style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}
-                  >
-                    <img
-                      src={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
-                      alt="QR Kod"
-                      className="w-28 h-28 rounded-lg"
-                    />
-                  </div>
-                  <a
-                    href={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
-                    download={`davetiye-${davetiye.slug}.png`}
-                    className="text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity"
-                    style={{ color: renk }}
-                  >
-                    ⬇ QR İndir
-                  </a>
-                </div>
-
-                {/* Link + Buttons */}
-                <div className="flex-1 space-y-4">
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Davetiye Linki</p>
-                    <div className="flex gap-2">
-                      <input
-                        readOnly
-                        value={davetiyeUrl}
-                        className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-gray-50 text-gray-500 focus:outline-none font-mono"
-                      />
-                      <CopyButton text={davetiyeUrl} />
+              <div className="p-6 space-y-5">
+                <div className="grid grid-cols-1 xl:grid-cols-[1.35fr_0.9fr] gap-4">
+                  <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ backgroundColor: renk + "14", color: renk }}
+                      >
+                        <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H15a3 3 0 010 6h-1.5m-3 0H9a3 3 0 010-6h1.5m-1.5 6h6" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-gray-900">Genel davetiye linki</p>
+                        <p className="text-xs text-gray-400 mt-0.5">Hızlı paylaşım için kullanılır. Kişi bazlı takip gerekiyorsa davetli linklerini tercih edin.</p>
+                        <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                          <input
+                            readOnly
+                            value={davetiyeUrl}
+                            className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 focus:outline-none font-mono"
+                          />
+                          <CopyButton text={davetiyeUrl} />
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <a
+                            href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " için davetiyem: " + davetiyeUrl)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
+                          >
+                            WhatsApp ile paylaş
+                          </a>
+                          <a
+                            href={`https://t.me/share/url?url=${encodeURIComponent(davetiyeUrl)}&text=${encodeURIComponent(davetiye.baslik)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
+                          >
+                            Telegram
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
+                  <div className="rounded-2xl border border-gray-100 p-4">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="p-3 rounded-2xl shrink-0"
+                        style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}
+                      >
+                        <img
+                          src={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
+                          alt="Genel davetiye QR kodu"
+                          className="w-24 h-24 rounded-lg"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-gray-900">Mekan QR&apos;ı</p>
+                        <p className="text-xs text-gray-400 leading-relaxed mt-0.5">Masa kartı, giriş panosu veya baskı için genel QR kod.</p>
+                        <a
+                          href={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
+                          download={`davetiye-${davetiye.slug}.png`}
+                          className="mt-3 inline-flex items-center justify-center text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
+                          style={{ backgroundColor: renk + "12", color: renk }}
+                        >
+                          QR indir
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-dashed border-gray-200 p-4">
+                    <p className="text-sm font-bold text-gray-900">Kişiye özel davetli linkleri</p>
+                    <p className="text-xs text-gray-400 leading-relaxed mt-1">
+                      RSVP takibi ve hatırlatma için her davetliye özel bağlantı oluşturulur.
+                    </p>
+                    <Link
+                      href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+                      className="mt-3 inline-flex items-center justify-center text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
+                      style={{ backgroundColor: renk + "12", color: renk }}
+                    >
+                      Davetlileri aç
+                    </Link>
+                  </div>
+
                   {canliDuvarOdendi && (
-                    <div>
-                      <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Canlı Duvar</p>
-                      <div className="flex gap-2 items-center">
+                    <div className="rounded-2xl border border-gray-100 p-4">
+                      <p className="text-sm font-bold text-gray-900">Canlı duvar linki</p>
+                      <p className="text-xs text-gray-400 leading-relaxed mt-1">Salon TV&apos;sinde açılır; onaylı fotoğraflar etkinlikte akar.</p>
+                      <div className="mt-3 flex gap-2">
                         <input
                           readOnly
                           value={canliDuvarUrl}
                           className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-gray-50 text-gray-500 focus:outline-none font-mono"
                         />
                         <CopyButton text={canliDuvarUrl} />
-                        <a
-                          href={canliDuvarUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors"
-                          style={{ background: renk + "18", color: renk }}
-                        >
-                          Aç →
-                        </a>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1.5">Bu linki salon TV&apos;sinde aç — fotoğraflar otomatik akar.</p>
+                      <a
+                        href={canliDuvarUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center justify-center text-xs font-semibold text-gray-500 hover:text-gray-700"
+                      >
+                        Canlı duvarı aç ↗
+                      </a>
                     </div>
                   )}
-
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-2">Hızlı Paylaşım</p>
-                    <div className="flex flex-wrap gap-2">
-                      <a
-                        href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " için davetiyem: " + davetiyeUrl)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
-                      >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        WhatsApp
-                      </a>
-                      <a
-                        href={`https://t.me/share/url?url=${encodeURIComponent(davetiyeUrl)}&text=${encodeURIComponent(davetiye.baslik)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
-                      >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                        </svg>
-                        Telegram
-                      </a>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
