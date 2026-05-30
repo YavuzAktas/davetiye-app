@@ -12,6 +12,16 @@ type Abonelik = {
   bitisAt: string | null;
 } | null;
 
+type OdemeKayit = {
+  id: string;
+  createdAt: string;
+  planId: string;
+  paidPrice: string | null;
+  currency: string | null;
+  paymentId: string | null;
+  fiyatKirilimi: unknown;
+};
+
 type Fatura = {
   faturaTipi: "bireysel" | "kurumsal";
   adSoyad: string;
@@ -41,10 +51,12 @@ export default function PanelIcerik({
   partner,
   abonelik,
   odemeBasarili,
+  odemeGecmisi = [],
 }: {
   partner: { id: string; firmaAdi: string };
   abonelik: Abonelik;
   odemeBasarili: boolean;
+  odemeGecmisi?: OdemeKayit[];
 }) {
   const [secilenPaket, setSecilenPaket] = useState<PartnerPaketId | null>(null);
   const [fatura, setFatura] = useState<Fatura>(BOS_FATURA);
@@ -204,50 +216,62 @@ export default function PanelIcerik({
         );
       })()}
 
-      {/* Paket seçimi */}
+      {/* Paket seçimi / yenileme */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
         <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">
-          {abonelik ? "Paket Yenile / Yükselt" : "Paket Seç"}
+          {abonelik ? "Paket Yenile" : "Paket Seç"}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          {PARTNER_PAKET_LISTESI.map(paket => {
-            const secili = secilenPaket === paket.id;
-            return (
-              <button
-                key={paket.id}
-                type="button"
-                onClick={() => {
-                  setSecilenPaket(paket.id as PartnerPaketId);
-                  setCheckoutHtml(null);
-                  setHatalar({});
-                }}
-                className={`relative text-left rounded-2xl border-2 p-4 transition-all ${
-                  secili
-                    ? "border-purple-400 bg-purple-50/50 shadow-sm"
-                    : "border-gray-200 hover:border-purple-200 hover:bg-gray-50"
-                }`}
-              >
-                {secili && (
-                  <span className="absolute top-3 right-3 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-[10px] font-bold">✓</span>
-                  </span>
-                )}
-                <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
-                  {paket.ad}
-                </p>
-                <p className="text-xl font-black text-gray-900 mb-0.5">
-                  ₺{paket.aylikTutar.toLocaleString("tr-TR")}
-                  <span className="text-xs font-normal text-gray-400">/ay</span>
-                </p>
-                <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
-              </button>
-            );
-          })}
-        </div>
+        {abonelik ? (
+          /* Aktif abonelik varken satın alımı engelle */
+          <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4 text-center">
+            <p className="text-sm font-bold text-blue-700 mb-1">Aktif aboneliğiniz devam ediyor</p>
+            <p className="text-xs text-blue-500 leading-relaxed">
+              {abonelik.bitisAt
+                ? <>Mevcut aboneliğiniz <strong>{new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</strong> tarihinde sona eriyor. Yeni paket bu tarihten itibaren alınabilir.</>
+                : "Mevcut aboneliğiniz aktif olduğu sürece yeni paket satın alınamaz."}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+              {PARTNER_PAKET_LISTESI.map(paket => {
+                const secili = secilenPaket === paket.id;
+                return (
+                  <button
+                    key={paket.id}
+                    type="button"
+                    onClick={() => {
+                      setSecilenPaket(paket.id as PartnerPaketId);
+                      setCheckoutHtml(null);
+                      setHatalar({});
+                    }}
+                    className={`relative text-left rounded-2xl border-2 p-4 transition-all ${
+                      secili
+                        ? "border-purple-400 bg-purple-50/50 shadow-sm"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    {secili && (
+                      <span className="absolute top-3 right-3 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center">
+                        <span className="text-white text-[10px] font-bold">✓</span>
+                      </span>
+                    )}
+                    <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
+                      {paket.ad}
+                    </p>
+                    <p className="text-xl font-black text-gray-900 mb-0.5">
+                      ₺{paket.aylikTutar.toLocaleString("tr-TR")}
+                      <span className="text-xs font-normal text-gray-400">/ay</span>
+                    </p>
+                    <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
+                  </button>
+                );
+              })}
+            </div>
 
-        {/* Fatura formu */}
-        {secilenPaket && !checkoutHtml && (
+            {/* Fatura formu */}
+            {secilenPaket && !checkoutHtml && (
           <form onSubmit={odemeBaslat} className="border-t border-gray-100 pt-6 space-y-4">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">Fatura Bilgileri</p>
 
@@ -370,7 +394,51 @@ export default function PanelIcerik({
             </button>
           </form>
         )}
+          </>
+        )}
       </div>
+
+      {/* Ödeme Geçmişi */}
+      {odemeGecmisi.length > 0 && (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Ödeme Geçmişi</p>
+          <div className="space-y-3">
+            {odemeGecmisi.map(kayit => {
+              const fk = kayit.fiyatKirilimi as { paketAd?: string; tutar?: number; hakSayisi?: number } | null;
+              const paketAd = fk?.paketAd ?? paketGetir(kayit.planId)?.ad ?? kayit.planId;
+              const hakSayisi = fk?.hakSayisi ?? paketGetir(kayit.planId)?.hakSayisi;
+              const tutar = kayit.paidPrice ? parseFloat(kayit.paidPrice) : (fk?.tutar ?? 0);
+              const tarih = new Date(kayit.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+              return (
+                <div key={kayit.id} className="flex items-center justify-between gap-3 bg-gray-50 rounded-2xl px-4 py-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-sm font-semibold text-gray-800">{paketAd} Paketi</p>
+                      {hakSayisi && (
+                        <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-md">
+                          {hakSayisi} hak
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">{tarih}</p>
+                    {kayit.paymentId && (
+                      <p className="text-[10px] text-gray-300 mt-0.5 font-mono truncate">#{kayit.paymentId}</p>
+                    )}
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-black text-gray-900">
+                      ₺{tutar.toLocaleString("tr-TR")}
+                    </p>
+                    <span className="text-[10px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                      Ödendi
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* iyzico modal */}
       {checkoutHtml && (

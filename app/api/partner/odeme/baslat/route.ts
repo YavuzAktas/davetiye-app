@@ -49,6 +49,25 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Aktif partner hesabı gerekli." }, { status: 403 });
   }
 
+  const aktifAbonelik = await prisma.partnerAbonelik.findFirst({
+    where: {
+      partnerId: partner.id,
+      aktif: true,
+      OR: [{ bitisAt: null }, { bitisAt: { gt: new Date() } }],
+    },
+    select: { bitisAt: true },
+  });
+  if (aktifAbonelik) {
+    const bitisStr = aktifAbonelik.bitisAt
+      ? new Date(aktifAbonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })
+      : null;
+    return NextResponse.json({
+      hata: bitisStr
+        ? `Aktif aboneliğiniz ${bitisStr} tarihine kadar geçerli. Bu tarihten sonra yeni paket alabilirsiniz.`
+        : "Aktif aboneliğiniz bulunuyor. Sona erdikten sonra yeni paket alabilirsiniz.",
+    }, { status: 409 });
+  }
+
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { id: true, email: true, name: true },

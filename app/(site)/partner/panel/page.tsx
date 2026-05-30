@@ -21,7 +21,7 @@ export default async function PartnerPanelPage({
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/giris?callbackUrl=/partner/panel");
 
-  const [partner, aktivasyonKodlariHam] = await Promise.all([
+  const [partner, aktivasyonKodlariHam, odemeKayitlariHam] = await Promise.all([
     prisma.partner.findUnique({
       where: { userId: session.user.id },
       include: {
@@ -42,6 +42,20 @@ export default async function PartnerPanelPage({
         durum: true,
         createdAt: true,
         kullanilanAt: true,
+      },
+    }),
+    prisma.odemeKaydi.findMany({
+      where: { userId: session.user.id, urunTipi: "partner-paket" },
+      orderBy: { createdAt: "desc" },
+      take: 12,
+      select: {
+        id: true,
+        createdAt: true,
+        planId: true,
+        paidPrice: true,
+        currency: true,
+        paymentId: true,
+        fiyatKirilimi: true,
       },
     }),
   ]);
@@ -127,6 +141,15 @@ export default async function PartnerPanelPage({
               partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
               abonelik={abonelik}
               odemeBasarili={odemeBasarili}
+              odemeGecmisi={odemeKayitlariHam.map(k => ({
+                id: k.id,
+                createdAt: k.createdAt.toISOString(),
+                planId: k.planId,
+                paidPrice: k.paidPrice,
+                currency: k.currency,
+                paymentId: k.paymentId,
+                fiyatKirilimi: k.fiyatKirilimi,
+              }))}
             />
           </div>
         )}
