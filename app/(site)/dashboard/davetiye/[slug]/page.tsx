@@ -476,70 +476,41 @@ export default async function DavetiyeDetay({ params }: Props) {
               </div>
 
               <div className="p-4 sm:p-6 space-y-5">
-                <div className="grid grid-cols-1 xl:grid-cols-[1.35fr_0.9fr] gap-4">
-                  <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ backgroundColor: renk + "14", color: renk }}
-                      >
-                        <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H15a3 3 0 010 6h-1.5m-3 0H9a3 3 0 010-6h1.5m-1.5 6h6" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900">Genel davetiye linki</p>
-                        <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Hızlı paylaşım için kullanılır. Kişi bazlı takip gerekiyorsa davetli linklerini tercih edin.</p>
-                        <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                          <div className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 font-mono overflow-x-auto whitespace-nowrap">
-                            {davetiyeUrl}
-                          </div>
-                          <CopyButton text={davetiyeUrl} />
-                        </div>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          <a
-                            href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " için davetiyem: " + davetiyeUrl)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex flex-1 sm:flex-none items-center justify-center text-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold min-w-[140px]"
-                          >
-                            WhatsApp ile paylaş
-                          </a>
-                          <a
-                            href={`https://t.me/share/url?url=${encodeURIComponent(davetiyeUrl)}&text=${encodeURIComponent(davetiye.baslik)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex flex-1 sm:flex-none items-center justify-center text-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold min-w-[120px]"
-                          >
-                            Telegram
-                          </a>
-                        </div>
-                      </div>
+                <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+                  <div className="flex items-start gap-3">
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: renk + "14", color: renk }}
+                    >
+                      <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H15a3 3 0 010 6h-1.5m-3 0H9a3 3 0 010-6h1.5m-1.5 6h6" />
+                      </svg>
                     </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-gray-100 p-4">
-                    <div className="flex flex-col sm:flex-row xl:flex-col min-[1180px]:flex-row items-start gap-4">
-                      <div
-                        className="p-3 rounded-2xl shrink-0"
-                        style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}
-                      >
-                        <img
-                          src={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
-                          alt="Genel davetiye QR kodu"
-                          className="w-24 h-24 rounded-lg"
-                        />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-gray-900">Genel davetiye linki</p>
+                      <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Hızlı paylaşım için kullanılır. Kişi bazlı takip gerekiyorsa davetli linklerini tercih edin.</p>
+                      <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                        <div className="flex-1 min-w-0 border border-gray-100 rounded-xl px-3 py-2.5 text-xs bg-white text-gray-500 font-mono overflow-x-auto whitespace-nowrap">
+                          {davetiyeUrl}
+                        </div>
+                        <CopyButton text={davetiyeUrl} />
                       </div>
-                      <div className="min-w-0 w-full">
-                        <p className="text-sm font-bold text-gray-900">Mekan QR&apos;ı</p>
-                        <p className="text-xs text-gray-400 leading-relaxed mt-0.5">Masa kartı, giriş panosu veya baskı için genel QR kod.</p>
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <a
-                          href={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
-                          download={`davetiye-${davetiye.slug}.png`}
-                          className="mt-3 inline-flex w-full sm:w-auto xl:w-full min-[1180px]:w-auto items-center justify-center text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
-                          style={{ backgroundColor: renk + "12", color: renk }}
+                          href={`https://wa.me/?text=${encodeURIComponent(davetiye.baslik + " için davetiyem: " + davetiyeUrl)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center text-center gap-2 bg-[#25D366] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
                         >
-                          QR indir
+                          WhatsApp ile paylaş
+                        </a>
+                        <a
+                          href={`https://t.me/share/url?url=${encodeURIComponent(davetiyeUrl)}&text=${encodeURIComponent(davetiye.baslik)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center text-center gap-2 bg-[#229ED9] text-white text-xs px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity font-semibold"
+                        >
+                          Telegram
                         </a>
                       </div>
                     </div>
@@ -547,6 +518,33 @@ export default async function DavetiyeDetay({ params }: Props) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-gray-100 p-4">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="p-2.5 rounded-2xl shrink-0"
+                        style={{ backgroundColor: renk + "08", border: `1px solid ${renk}20` }}
+                      >
+                        <img
+                          src={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
+                          alt="Genel davetiye QR kodu"
+                          className="w-20 h-20 rounded-lg"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-gray-900">Mekan QR&apos;ı</p>
+                        <p className="text-xs text-gray-400 leading-relaxed mt-0.5">Masa kartı, giriş panosu veya baskı için genel QR kod.</p>
+                        <a
+                          href={`/api/qr?url=${encodeURIComponent(davetiyeUrl)}`}
+                          download={`davetiye-${davetiye.slug}.png`}
+                          className="mt-3 inline-flex items-center justify-center text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
+                          style={{ backgroundColor: renk + "12", color: renk }}
+                        >
+                          QR indir
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="rounded-2xl border border-dashed border-gray-200 p-4">
                     <p className="text-sm font-bold text-gray-900">Kişiye özel davetli linkleri</p>
                     <p className="text-xs text-gray-400 leading-relaxed mt-1">
