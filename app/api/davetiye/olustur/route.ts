@@ -244,13 +244,9 @@ export async function POST(req: NextRequest) {
   if (aktivasyonKoduKayit) {
     const partnerEmail = aktivasyonKoduKayit.partner.user.email;
     if (partnerEmail) {
-      const musteriEmail = session.user.email ?? "";
       davetiyeYayindaBildir({
         partnerEmail,
         firmaAdi: aktivasyonKoduKayit.partner.firmaAdi,
-        musteriEmail,
-        davetiyeBaslik: veri.baslik,
-        davetiyeUrl: `${getSiteUrl()}/davetiye/${davetiye.slug}`,
         panelUrl: `${getSiteUrl()}/partner/panel`,
       });
     }

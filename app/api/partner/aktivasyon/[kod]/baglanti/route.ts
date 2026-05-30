@@ -70,8 +70,6 @@ export async function POST(
     return NextResponse.json({ error: "Bu link artık kullanılamaz." }, { status: 409 });
   }
 
-  const musteriEmail = session.user.email ?? "";
-
   await prisma.aktivasyonKodu.update({
     where: { id: aktivasyon.id },
     data: {
@@ -87,7 +85,6 @@ export async function POST(
     aktivasyonKoduKullanilanBildir({
       partnerEmail,
       firmaAdi: aktivasyon.partner.firmaAdi,
-      musteriEmail,
       kod,
       panelUrl: `${getSiteUrl()}/partner/panel`,
     });

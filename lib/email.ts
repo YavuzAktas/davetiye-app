@@ -429,18 +429,15 @@ export async function partnerOnayBildir({
 export async function aktivasyonKoduKullanilanBildir({
   partnerEmail,
   firmaAdi,
-  musteriEmail,
   kod,
   panelUrl,
 }: {
   partnerEmail: string;
   firmaAdi: string;
-  musteriEmail: string;
   kod: string;
   panelUrl: string;
 }) {
   const guvenliFiremaAdi = escapeHtml(firmaAdi);
-  const guvenliMusteriEmail = escapeHtml(musteriEmail);
   const guvenliKod = escapeHtml(kod);
   const guvenliUrl = encodeURI(panelUrl);
 
@@ -459,10 +456,12 @@ export async function aktivasyonKoduKullanilanBildir({
             <strong>${guvenliFiremaAdi}</strong> adına oluşturduğunuz aktivasyon kodunu bir müşteri kullandı.
           </p>
           <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;">
-            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Müşteri</td><td style="padding:8px 0;color:#7C3AED;">${guvenliMusteriEmail}</td></tr>
-            <tr><td style="padding:8px 0;color:#6b7280;">Kod</td><td style="padding:8px 0;color:#111827;font-family:monospace;font-weight:600;">${guvenliKod}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Aktivasyon Kodu</td><td style="padding:8px 0;color:#111827;font-family:monospace;font-weight:600;">${guvenliKod}</td></tr>
             <tr><td style="padding:8px 0;color:#6b7280;">Durum</td><td style="padding:8px 0;color:#d97706;font-weight:600;">Davetiye oluşturuluyor</td></tr>
           </table>
+          <p style="color:#9ca3af;font-size:12px;line-height:1.5;margin:0 0 20px;">
+            KVKK veri minimizasyonu gereği müşteri e-postası ve davetiye içeriği bu bildirimde paylaşılmaz.
+          </p>
           <div style="text-align:center;">
             <a href="${guvenliUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Partner Panelinde Görüntüle</a>
           </div>
@@ -490,22 +489,13 @@ export async function aktivasyonKoduKullanilanBildir({
 export async function davetiyeYayindaBildir({
   partnerEmail,
   firmaAdi,
-  musteriEmail,
-  davetiyeBaslik,
-  davetiyeUrl,
   panelUrl,
 }: {
   partnerEmail: string;
   firmaAdi: string;
-  musteriEmail: string;
-  davetiyeBaslik: string;
-  davetiyeUrl: string;
   panelUrl: string;
 }) {
   const guvenliFiremaAdi = escapeHtml(firmaAdi);
-  const guvenliMusteriEmail = escapeHtml(musteriEmail);
-  const guvenliBaslik = escapeHtml(davetiyeBaslik);
-  const guvenliDavetiyeUrl = encodeURI(davetiyeUrl);
   const guvenliPanelUrl = encodeURI(panelUrl);
 
   const html = `
@@ -523,12 +513,12 @@ export async function davetiyeYayindaBildir({
             <strong>${guvenliFiremaAdi}</strong> aracılığıyla bir müşteriniz davetiyesini oluşturdu ve yayınladı.
           </p>
           <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;">
-            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Müşteri</td><td style="padding:8px 0;color:#7C3AED;">${guvenliMusteriEmail}</td></tr>
-            <tr><td style="padding:8px 0;color:#6b7280;">Davetiye</td><td style="padding:8px 0;color:#111827;font-weight:600;">${guvenliBaslik}</td></tr>
-            <tr><td style="padding:8px 0;color:#6b7280;">Durum</td><td style="padding:8px 0;color:#16a34a;font-weight:600;">✓ Yayında</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Durum</td><td style="padding:8px 0;color:#16a34a;font-weight:600;">✓ Davetiye yayında</td></tr>
           </table>
-          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-            <a href="${guvenliDavetiyeUrl}" style="display:inline-block;background:#f3f4f6;color:#374151;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;">Davetiyeyi Gör</a>
+          <p style="color:#9ca3af;font-size:12px;line-height:1.5;margin:0 0 20px;">
+            Müşteri e-postası, davetiye bağlantısı ve davetiye içeriği partner bildirimlerinde paylaşılmaz.
+          </p>
+          <div style="text-align:center;">
             <a href="${guvenliPanelUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;">Partner Paneli</a>
           </div>
         </div>
@@ -544,7 +534,7 @@ export async function davetiyeYayindaBildir({
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: partnerEmail,
-      subject: sanitizeSubject(`Müşterinizin davetiyesi yayınlandı — ${davetiyeBaslik}`),
+      subject: sanitizeSubject(`Müşterinizin davetiyesi yayınlandı — ${firmaAdi}`),
       html,
     });
   } catch (error) {

@@ -36,9 +36,12 @@ export default async function PartnerPanelPage({
       where: { partner: { userId: session.user.id } },
       orderBy: { createdAt: "desc" },
       take: 100,
-      include: {
-        musteriUser: { select: { name: true, email: true } },
-        davetiye: { select: { slug: true, baslik: true } },
+      select: {
+        id: true,
+        kod: true,
+        durum: true,
+        createdAt: true,
+        kullanilanAt: true,
       },
     }),
   ]);
@@ -68,12 +71,6 @@ export default async function PartnerPanelPage({
     durum: k.durum,
     createdAt: k.createdAt.toISOString(),
     kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
-    musteriUser: k.musteriUser
-      ? { name: k.musteriUser.name, email: k.musteriUser.email }
-      : null,
-    davetiye: k.davetiye
-      ? { slug: k.davetiye.slug, baslik: k.davetiye.baslik }
-      : null,
   }));
 
   return (

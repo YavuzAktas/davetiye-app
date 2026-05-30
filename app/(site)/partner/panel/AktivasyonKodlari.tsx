@@ -9,8 +9,6 @@ type Kod = {
   durum: string;
   createdAt: string;
   kullanilanAt: string | null;
-  musteriUser: { name: string | null; email: string | null } | null;
-  davetiye: { slug: string; baslik: string } | null;
 };
 
 type Abonelik = {
@@ -201,26 +199,12 @@ export default function AktivasyonKodlari({
                   </span>
                 </div>
 
-                {/* Müşteri bilgisi (kullanıldıysa) */}
-                {k.musteriUser && (
-                  <p className="text-xs text-gray-600 font-medium">
-                    👤 {k.musteriUser.name ?? k.musteriUser.email}
-                    {k.musteriUser.name && k.musteriUser.email && (
-                      <span className="text-gray-400 font-normal"> · {k.musteriUser.email}</span>
-                    )}
+                {["kayit_oldu", "davetiye_olusturuldu", "yayinda"].includes(k.durum) && (
+                  <p className="text-xs text-gray-500">
+                    {k.durum === "yayinda"
+                      ? "Bu aktivasyon hakkıyla bir davetiye yayına alındı."
+                      : "Bu aktivasyon linki müşteri tarafından kullanıldı."}
                   </p>
-                )}
-
-                {/* Oluşturulan davetiye */}
-                {k.davetiye && (
-                  <a
-                    href={`/davetiye/${k.davetiye.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs text-purple-600 font-medium hover:underline"
-                  >
-                    🎉 {k.davetiye.baslik}
-                  </a>
                 )}
 
                 {/* Link */}
