@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 const IPTAL_EDILEBILİR = ["olusturuldu", "gonderildi"];
 
 export async function PATCH(
-  _req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ kod: string }> }
 ): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
@@ -21,6 +21,12 @@ export async function PATCH(
   if (!partner) return NextResponse.json({ error: "Partner bulunamadı." }, { status: 404 });
 
   const { kod } = await params;
+  const body = await req.json().catch(() => ({}));
+  const action: string = body.action ?? "iptal";
+
+  if (action !== "iptal" && action !== "gonderildi") {
+    return NextResponse.json({ error: "Geçersiz işlem." }, { status: 400 });
+  }
 
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
@@ -31,6 +37,18 @@ export async function PATCH(
     return NextResponse.json({ error: "Kod bulunamadı." }, { status: 404 });
   }
 
+  if (action === "gonderildi") {
+    if (aktivasyon.durum !== "olusturuldu") {
+      return NextResponse.json({ error: "Yalnızca 'oluşturuldu' durumundaki kodlar gönderilebilir." }, { status: 409 });
+    }
+    await prisma.aktivasyonKodu.update({
+      where: { id: aktivasyon.id },
+      data: { durum: "gonderildi" },
+    });
+    return NextResponse.json({ ok: true });
+  }
+
+  // action === "iptal"
   if (!IPTAL_EDILEBILİR.includes(aktivasyon.durum)) {
     return NextResponse.json(
       { error: "Bu kod artık iptal edilemez (müşteri tarafından kullanılmış)." },
@@ -43,7 +61,6 @@ export async function PATCH(
       where: { id: aktivasyon.id },
       data: { durum: "iptal" },
     }),
-    // Aktif abonelik varsa hakkı geri ver
     prisma.partnerAbonelik.updateMany({
       where: { partnerId: partner.id, aktif: true },
       data: { kullanilanHak: { decrement: 1 } },

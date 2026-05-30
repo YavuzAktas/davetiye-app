@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { isAdmin } from "@/lib/admin";
 
 const prisma = new PrismaClient();
 
@@ -60,24 +61,38 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, trigger }) {
       if (user) {
-        token.id       = user.id;
-        token.kvkkOnay = (user as any).kvkkOnay ?? false;
+        token.id           = user.id;
+        token.kvkkOnay     = (user as any).kvkkOnay ?? false;
+        token.isAdmin      = isAdmin(user.email);
+        // Partner durumunu login anında çek
+        const partner = await prisma.partner.findUnique({
+          where: { userId: user.id },
+          select: { durum: true },
+        });
+        token.partnerDurum = partner?.durum ?? null;
       }
       if (trigger === "update" && token.id) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { kvkkOnay: true },
-        });
-        if (dbUser) {
-          token.kvkkOnay = dbUser.kvkkOnay ?? false;
-        }
+        const [dbUser, partner] = await Promise.all([
+          prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { kvkkOnay: true },
+          }),
+          prisma.partner.findUnique({
+            where: { userId: token.id as string },
+            select: { durum: true },
+          }),
+        ]);
+        if (dbUser) token.kvkkOnay = dbUser.kvkkOnay ?? false;
+        token.partnerDurum = partner?.durum ?? null;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id       = token.id       as string;
-        session.user.kvkkOnay = token.kvkkOnay as boolean;
+        session.user.id           = token.id           as string;
+        session.user.kvkkOnay     = token.kvkkOnay     as boolean;
+        session.user.isAdmin      = token.isAdmin      as boolean ?? false;
+        session.user.partnerDurum = token.partnerDurum as string | null ?? null;
       }
       return session;
     },

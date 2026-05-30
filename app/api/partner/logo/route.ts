@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { put } from "@vercel/blob";
 import { dogrulaGorselDosya } from "@/lib/dosya-dogrulama";
+import { ipIzinVer } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -16,6 +17,10 @@ export async function POST(req: NextRequest) {
 
   if (!partner || partner.durum !== "aktif") {
     return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
+  }
+
+  if (!(await ipIzinVer("partner-logo", session.user.id, 5, 60 * 60_000))) {
+    return NextResponse.json({ hata: "Saatlik logo yükleme limitine ulaştınız." }, { status: 429 });
   }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN)

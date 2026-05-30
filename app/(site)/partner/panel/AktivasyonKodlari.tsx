@@ -105,6 +105,18 @@ export default function AktivasyonKodlari({
     }
   };
 
+  const whatsappGonder = async (kod: string, mevcutDurum: string) => {
+    window.open(`https://wa.me/?text=${whatsappMesaji(kod)}`, "_blank", "noopener,noreferrer");
+    // Sadece ilk gönderimde durumu güncelle
+    if (mevcutDurum === "olusturuldu") {
+      await fetch(`/api/partner/aktivasyon/${kod}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "gonderildi" }),
+      }).then(() => router.refresh()).catch(() => {});
+    }
+  };
+
   const aktifKodlar = ilkKodlar.filter(k => k.durum !== "iptal");
   const iptalKodlar = ilkKodlar.filter(k => k.durum === "iptal");
   const yayindaKodlar = ilkKodlar.filter(k => k.durum === "yayinda");
@@ -224,14 +236,12 @@ export default function AktivasyonKodlari({
                   >
                     {kopyalananKod === k.kod ? "✓ Kopyalandı" : "Kopyala"}
                   </button>
-                  <a
-                    href={`https://wa.me/?text=${whatsappMesaji(k.kod)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => whatsappGonder(k.kod, k.durum)}
                     className="text-[11px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors px-3 py-1.5 rounded-lg"
                   >
-                    WhatsApp
-                  </a>
+                    {k.durum === "olusturuldu" ? "WhatsApp ile Gönder" : "WhatsApp"}
+                  </button>
                   {IPTAL_EDILEBILİR.has(k.durum) && (
                     <button
                       onClick={() => iptalEt(k.kod)}

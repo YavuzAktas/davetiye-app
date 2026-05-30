@@ -5,6 +5,8 @@ declare module "next-auth" {
     user: {
       id: string;
       kvkkOnay: boolean;
+      isAdmin: boolean;
+      partnerDurum: string | null;
     } & DefaultSession["user"];
   }
 
@@ -17,5 +19,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
     kvkkOnay?: boolean;
+    isAdmin?: boolean;
+    partnerDurum?: string | null;
   }
 }
