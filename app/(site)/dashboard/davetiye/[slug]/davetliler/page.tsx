@@ -15,6 +15,9 @@ interface Davetli {
   ozelKod?: string | null;
   linkGoruntulendiAt?: string | null;
   linkGoruntulenmeSayisi?: number;
+  whatsappGonderildiAt?: string | null;
+  sonHatirlatmaAt?: string | null;
+  hatirlatmaSayisi?: number;
   rsvpId?: string | null;
 }
 
@@ -426,6 +429,28 @@ export default function DavetlilerSayfasi() {
     );
   };
 
+  const whatsappTakipKaydet = (davetli: Davetli, aksiyon: "davet" | "hatirlatma") => {
+    const simdi = new Date().toISOString();
+    setDavetliler(prev => prev.map(d => {
+      if (d.id !== davetli.id) return d;
+      if (aksiyon === "davet") {
+        return { ...d, whatsappGonderildiAt: d.whatsappGonderildiAt ?? simdi };
+      }
+      return {
+        ...d,
+        whatsappGonderildiAt: d.whatsappGonderildiAt ?? simdi,
+        sonHatirlatmaAt: simdi,
+        hatirlatmaSayisi: (d.hatirlatmaSayisi ?? 0) + 1,
+      };
+    }));
+
+    fetch("/api/davetli", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: davetli.id, whatsappAksiyon: aksiyon }),
+    }).catch(() => {});
+  };
+
   // ── Computed ──────────────────────────────────────────────
 
   const filtreliDavetliler = seciliGrup
@@ -821,11 +846,23 @@ export default function DavetlilerSayfasi() {
                               </div>
 
                               {/* Link durumu */}
-                              {davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId && (
-                                <div className="flex gap-1.5 mt-1.5">
+                              {((davetli.whatsappGonderildiAt || (davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId))) && (
+                                <div className="flex gap-1.5 mt-1.5 flex-wrap">
+                                  {davetli.whatsappGonderildiAt && (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
+                                      WhatsApp gönderildi
+                                    </span>
+                                  )}
+                                  {davetli.sonHatirlatmaAt && (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">
+                                      {davetli.hatirlatmaSayisi ?? 1}× hatırlatıldı
+                                    </span>
+                                  )}
+                                  {davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId && (
                                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
                                     👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
                                   </span>
+                                  )}
                                 </div>
                               )}
 
@@ -885,6 +922,7 @@ export default function DavetlilerSayfasi() {
                                   href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappDavetMesaj(davetli)}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
+                                  onClick={() => whatsappTakipKaydet(davetli, "davet")}
                                   className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
                                   title="WhatsApp'ta gönder"
                                 >
@@ -1054,6 +1092,7 @@ export default function DavetlilerSayfasi() {
                               href={`https://wa.me/${waPhone(davetli.telefon)}?text=${whatsappMesaj(davetli)}`}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={() => whatsappTakipKaydet(davetli, "hatirlatma")}
                               className="flex items-center gap-1.5 bg-[#25D366] text-white text-xs px-3.5 py-2 rounded-xl hover:opacity-90 transition-opacity font-semibold shrink-0"
                             >
                               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">

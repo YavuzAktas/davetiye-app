@@ -434,11 +434,16 @@ model Davetli {
   linkGoruntulendiAt     DateTime?
   linkGoruntulenmeSayisi Int       @default(0)
   sonGoruntulenmeAt      DateTime?
+  whatsappGonderildiAt   DateTime?
+  sonHatirlatmaAt        DateTime?
+  hatirlatmaSayisi       Int       @default(0)
   rsvpId                 String?   @unique
   rsvp                   RSVP?     @relation(fields: [rsvpId], references: [id], onDelete: SetNull)
 
   @@index([davetiyeId, createdAt])
   @@index([davetiyeId, grup, ad])
+  @@index([davetiyeId, whatsappGonderildiAt])
+  @@index([davetiyeId, sonHatirlatmaAt])
 }
 
 model Referral {

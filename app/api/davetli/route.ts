@@ -27,7 +27,21 @@ export async function GET(req: NextRequest) {
 
   const davetliler = await prisma.davetli.findMany({
     where: { davetiyeId, davetiye: { userId: session.user.id } },
-    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true, ozelKod: true, linkGoruntulendiAt: true, linkGoruntulenmeSayisi: true, rsvpId: true },
+    select: {
+      id: true,
+      ad: true,
+      telefon: true,
+      email: true,
+      grup: true,
+      notlar: true,
+      ozelKod: true,
+      linkGoruntulendiAt: true,
+      linkGoruntulenmeSayisi: true,
+      whatsappGonderildiAt: true,
+      sonHatirlatmaAt: true,
+      hatirlatmaSayisi: true,
+      rsvpId: true,
+    },
     orderBy: [{ grup: "asc" }, { ad: "asc" }],
     take: 500,
   });
@@ -84,25 +98,49 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  const { id, grup, notlar } = await req.json();
+  const { id, grup, notlar, whatsappAksiyon } = await req.json();
   if (!id) return NextResponse.json({ hata: "id gerekli." }, { status: 400 });
 
   const davetli = await prisma.davetli.findUnique({
     where: { id },
-    select: { davetiye: { select: { userId: true } } },
+    select: {
+      whatsappGonderildiAt: true,
+      davetiye: { select: { userId: true } },
+    },
   });
 
   if (!davetli || davetli.davetiye.userId !== session.user.id) {
     return NextResponse.json({ hata: "Yetkisiz." }, { status: 403 });
   }
 
+  const simdi = new Date();
   const guncellenmis = await prisma.davetli.update({
     where: { id },
     data: {
       ...(grup    !== undefined && { grup }),
       ...(notlar  !== undefined && { notlar: notlar || null }),
+      ...(whatsappAksiyon === "davet" && { whatsappGonderildiAt: davetli.whatsappGonderildiAt ?? simdi }),
+      ...(whatsappAksiyon === "hatirlatma" && {
+        sonHatirlatmaAt: simdi,
+        hatirlatmaSayisi: { increment: 1 },
+        whatsappGonderildiAt: davetli.whatsappGonderildiAt ?? simdi,
+      }),
     },
-    select: { id: true, ad: true, telefon: true, email: true, grup: true, notlar: true },
+    select: {
+      id: true,
+      ad: true,
+      telefon: true,
+      email: true,
+      grup: true,
+      notlar: true,
+      ozelKod: true,
+      linkGoruntulendiAt: true,
+      linkGoruntulenmeSayisi: true,
+      whatsappGonderildiAt: true,
+      sonHatirlatmaAt: true,
+      hatirlatmaSayisi: true,
+      rsvpId: true,
+    },
   });
 
   return NextResponse.json({ basarili: true, davetli: guncellenmis });
