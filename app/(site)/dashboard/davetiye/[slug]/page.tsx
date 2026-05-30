@@ -12,6 +12,18 @@ import DavetiyeOdemePanel from "@/components/DavetiyeOdemePanel";
 import { davetiyeFiyatiHesapla, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import AniKitabiButon from "@/components/AniKitabiButon";
+import {
+  Armchair,
+  BarChart3,
+  CalendarDays,
+  CheckCircle2,
+  ClipboardList,
+  Eye,
+  Images,
+  QrCode,
+  Users,
+  XCircle,
+} from "lucide-react";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -388,11 +400,11 @@ export default async function DavetiyeDetay({ params }: Props) {
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Görüntülenme", value: davetiye.goruntulenme, icon: "👁️", sub: "toplam ziyaret" },
-            { label: "Katılıyor",    value: katilimCount,          icon: "✅", sub: `${toplamKisi} kişi toplam` },
-            { label: "Katılmıyor",   value: katilmayanCount,       icon: "❌", sub: "bildirim aldı" },
-            { label: "Yanıt Oranı",  value: `%${katilimYuzde}`,    icon: "📊", sub: `${toplamRsvp} yanıt` },
-          ].map((stat) => (
+            { label: "Görüntülenme", value: davetiye.goruntulenme, Icon: Eye,          sub: "toplam ziyaret" },
+            { label: "Katılıyor",    value: katilimCount,          Icon: CheckCircle2, sub: `${toplamKisi} kişi toplam` },
+            { label: "Katılmıyor",   value: katilmayanCount,       Icon: XCircle,      sub: "olumsuz yanıt" },
+            { label: "Yanıt Oranı",  value: `%${katilimYuzde}`,    Icon: BarChart3,    sub: `${toplamRsvp} yanıt` },
+          ].map(({ Icon, ...stat }) => (
             <div
               key={stat.label}
               className="bg-white border border-gray-100 rounded-2xl p-5 relative overflow-hidden group hover:shadow-md transition-shadow"
@@ -401,7 +413,12 @@ export default async function DavetiyeDetay({ params }: Props) {
                 className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                 style={{ backgroundColor: renk + "20", transform: "translate(40%, -40%)" }}
               />
-              <div className="text-2xl mb-3">{stat.icon}</div>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                style={{ backgroundColor: renk + "10", color: renk }}
+              >
+                <Icon className="w-[18px] h-[18px]" />
+              </div>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums">{stat.value}</p>
               <p className="text-sm font-semibold text-gray-700 mt-0.5">{stat.label}</p>
               <p className="text-xs text-gray-400 mt-0.5">{stat.sub}</p>
@@ -419,35 +436,45 @@ export default async function DavetiyeDetay({ params }: Props) {
             href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
             className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">👥</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+              <Users className="w-4 h-4 text-gray-500" />
+            </span>
             <span className="text-xs font-semibold text-gray-700 truncate">Davetliler</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
             className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-emerald-100 rounded-2xl hover:bg-emerald-50/50 transition-colors"
           >
-            <span className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-base shrink-0">✅</span>
+            <span className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+              <QrCode className="w-4 h-4 text-emerald-600" />
+            </span>
             <span className="text-xs font-semibold text-gray-700 truncate">Check-in</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
             className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📋</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+              <ClipboardList className="w-4 h-4 text-gray-500" />
+            </span>
             <span className="text-xs font-semibold text-gray-700 truncate">RSVP</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/program`}
             className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📅</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+              <CalendarDays className="w-4 h-4 text-gray-500" />
+            </span>
             <span className="text-xs font-semibold text-gray-700 truncate">Program</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/album`}
             className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📸</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+              <Images className="w-4 h-4 text-gray-500" />
+            </span>
             <span className="text-xs font-semibold text-gray-700 truncate">Albüm</span>
           </Link>
           {!odemeBekliyor && (
@@ -457,7 +484,9 @@ export default async function DavetiyeDetay({ params }: Props) {
               rel="noopener noreferrer"
               className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
             >
-              <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">👁️</span>
+              <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+                <Eye className="w-4 h-4 text-gray-500" />
+              </span>
               <span className="text-xs font-semibold text-gray-700 truncate">Önizle</span>
             </a>
           )}
@@ -629,7 +658,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">👥</div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Users className="w-4 h-4 text-gray-500" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700">Davetliler</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -646,7 +677,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">👁️</div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Eye className="w-4 h-4 text-gray-500" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700">Önizle</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">↗</span>
@@ -657,7 +690,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📋</div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <ClipboardList className="w-4 h-4 text-gray-500" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700">RSVP Soruları</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -674,7 +709,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform ${
                       checkinVurgulu ? "bg-emerald-100" : "bg-gray-50"
-                    }`}>✅</div>
+                    }`}>
+                      <QrCode className={`w-4 h-4 ${checkinVurgulu ? "text-emerald-600" : "text-gray-500"}`} />
+                    </div>
                     <div className="min-w-0">
                       <span className="block text-sm font-medium text-gray-700">QR Check-in</span>
                       <span className={`block text-[11px] font-semibold mt-0.5 ${
@@ -692,7 +729,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📅</div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <CalendarDays className="w-4 h-4 text-gray-500" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700">Etkinlik Programı</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -703,7 +742,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">📸</div>
+                    <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Images className="w-4 h-4 text-gray-500" />
+                    </div>
                     <span className="text-sm font-medium text-gray-700">Albüm & Anı</span>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -719,7 +760,9 @@ export default async function DavetiyeDetay({ params }: Props) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🪑</div>
+                    <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Armchair className="w-4 h-4 text-purple-500" />
+                    </div>
                     <div>
                       <span className="text-sm font-medium text-gray-700">Oturma Planı</span>
                       <span className="ml-2 text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">
