@@ -9,6 +9,7 @@ export type DavetiyeFiyatGirdisi = {
   canliDuvarAktif?: boolean | null;
   oturmaPlanAktif?: boolean | null;
   aniKitabiAktif?: boolean | null;
+  checkInAktif?: boolean | null;
 };
 
 export type DavetiyeFiyatKalemi = {
@@ -34,6 +35,7 @@ export const DAVETIYE_FIYAT_KALEMLERI = {
   sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 99 },
   oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
   aniKitabi:  { kod: "ani-kitabi-pdf", ad: "Anı Kitabı PDF", tutar: 79 },
+  checkIn:    { kod: "qr-check-in", ad: "QR Check-in", tutar: 99 },
 } as const;
 
 function kalemEkle(kalemler: DavetiyeFiyatKalemi[], kalem: DavetiyeFiyatKalemi, kosul: boolean) {
@@ -51,6 +53,7 @@ export function davetiyeFiyatiHesapla(girdi: DavetiyeFiyatGirdisi): DavetiyeFiya
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.sesliAni }, girdi.sesliAniAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan }, girdi.oturmaPlanAktif === true);
   kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.aniKitabi },  girdi.aniKitabiAktif  === true);
+  kalemEkle(kalemler, { ...DAVETIYE_FIYAT_KALEMLERI.checkIn },    girdi.checkInAktif    === true);
 
   const toplamTutar = kalemler.reduce((toplam, kalem) => toplam + kalem.tutar, 0);
 
@@ -73,6 +76,7 @@ export const ASIL_FIYAT_KODU: Record<string, number> = {
   "sesli-ani":      199,
   "oturma-plani":   269,
   "ani-kitabi-pdf": 129,
+  "qr-check-in":   149,
 };
 
 export function indirimOrani(asil: number, simdiki: number): number {

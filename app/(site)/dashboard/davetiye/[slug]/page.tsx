@@ -71,6 +71,7 @@ export default async function DavetiyeDetay({ params }: Props) {
       canliDuvarAktif: true,
       oturmaPlanAktif: true,
       aniKitabiAktif: true,
+      checkInAktif: true,
       goruntulenme: true,
       _count: {
         select: {
@@ -135,8 +136,10 @@ export default async function DavetiyeDetay({ params }: Props) {
     sesliAniAktif: davetiye.sesliAniAktif,
     canliDuvarAktif: davetiye.canliDuvarAktif,
     oturmaPlanAktif: davetiye.oturmaPlanAktif,
+    checkInAktif:    davetiye.checkInAktif,
   });
   const oturmaPlanAktif  = davetiyeOzelligiAktif(davetiye, "oturmaPlan");
+  const checkInOdendi    = davetiyeOzelligiAktif(davetiye, "checkIn");
   const canliDuvarOdendi = davetiyeOzelligiAktif(davetiye, "canliDuvar");
   const canliDuvarUrl    = `${process.env.NEXT_PUBLIC_URL}/davetiye/${davetiye.slug}/canli-duvar`;
   const albumAktif       = davetiyeOzelligiAktif(davetiye, "album");
@@ -688,31 +691,45 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
                 </Link>
 
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
-                  className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
-                    checkinVurgulu
-                      ? "border-emerald-200 bg-emerald-50/70 hover:bg-emerald-50"
-                      : "border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/40"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform ${
-                      checkinVurgulu ? "bg-emerald-100" : "bg-gray-50"
-                    }`}>
-                      <QrCode className={`w-4 h-4 ${checkinVurgulu ? "text-emerald-600" : "text-gray-500"}`} />
-                    </div>
-                    <div className="min-w-0">
-                      <span className="block text-sm font-medium text-gray-700">QR Check-in</span>
-                      <span className={`block text-[11px] font-semibold mt-0.5 ${
-                        checkinVurgulu ? "text-emerald-600" : "text-gray-400"
+                {checkInOdendi ? (
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
+                    className={`flex items-center justify-between w-full p-3.5 rounded-2xl border transition-all group ${
+                      checkinVurgulu
+                        ? "border-emerald-200 bg-emerald-50/70 hover:bg-emerald-50"
+                        : "border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/40"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform ${
+                        checkinVurgulu ? "bg-emerald-100" : "bg-gray-50"
                       }`}>
-                        {checkinDurumMetni}
-                      </span>
+                        <QrCode className={`w-4 h-4 ${checkinVurgulu ? "text-emerald-600" : "text-gray-500"}`} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="block text-sm font-medium text-gray-700">QR Check-in</span>
+                        <span className={`block text-[11px] font-semibold mt-0.5 ${
+                          checkinVurgulu ? "text-emerald-600" : "text-gray-400"
+                        }`}>
+                          {checkinDurumMetni}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-gray-300 group-hover:text-emerald-500 transition-colors text-sm">→</span>
+                  </Link>
+                ) : (
+                  <div className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-gray-100 bg-gray-50/60">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
+                        <QrCode className="w-4 h-4 text-gray-400" />
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-400">QR Check-in</span>
+                        <span className="ml-2 text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">Ek özellik</span>
+                      </div>
                     </div>
                   </div>
-                  <span className="text-gray-300 group-hover:text-emerald-500 transition-colors text-sm">→</span>
-                </Link>
+                )}
 
                 <Link
                   href={`/dashboard/davetiye/${davetiye.slug}/program`}

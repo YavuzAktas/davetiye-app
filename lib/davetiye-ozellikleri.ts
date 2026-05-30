@@ -1,4 +1,4 @@
-export type DavetiyeOzellik = "album" | "aniDefteri" | "sesliAni" | "canliDuvar" | "oturmaPlan" | "muzik" | "aniKitabi";
+export type DavetiyeOzellik = "album" | "aniDefteri" | "sesliAni" | "canliDuvar" | "oturmaPlan" | "muzik" | "aniKitabi" | "checkIn";
 
 type DavetiyeOzellikKaynak = {
   odemeDurumu?: string | null;
@@ -8,6 +8,7 @@ type DavetiyeOzellikKaynak = {
   canliDuvarAktif?: boolean | null;
   oturmaPlanAktif?: boolean | null;
   aniKitabiAktif?: boolean | null;
+  checkInAktif?: boolean | null;
   muzik?: string | null;
 };
 
@@ -18,6 +19,7 @@ const OZELLIK_FLAG: Record<DavetiyeOzellik, keyof DavetiyeOzellikKaynak | null> 
   canliDuvar: "canliDuvarAktif",
   oturmaPlan: "oturmaPlanAktif",
   aniKitabi: "aniKitabiAktif",
+  checkIn: "checkInAktif",
   muzik: "muzik",
 };
 

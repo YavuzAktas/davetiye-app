@@ -115,6 +115,7 @@ model Davetiye {
   canliDuvarAktif  Boolean      @default(false)
   aniDefteriAktif  Boolean      @default(false)
   oturmaPlanAktif  Boolean      @default(false)
+  checkInAktif     Boolean      @default(false)
   sesliAnilar      SesliAni[]
   dressKod         String?
   dressKodRenkler  String?

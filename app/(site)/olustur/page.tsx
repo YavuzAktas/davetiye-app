@@ -196,6 +196,7 @@ function OlusturIcerigi() {
       if (t.canliDuvarAcik  != null) setCanliDuvarAcik(t.canliDuvarAcik);
       if (t.oturmaPlanAcik  != null) setOturmaPlanAcik(t.oturmaPlanAcik);
       if (t.aniKitabiAcik   != null) setAniKitabiAcik(t.aniKitabiAcik);
+      if (t.checkInAcik     != null) setCheckInAcik(t.checkInAcik);
       if (t.dressKodAcik      != null) setDressKodAcik(t.dressKodAcik);
       if (t.dressKodMetin)            setDressKodMetin(t.dressKodMetin);
       if (t.rsvpSorularAcik   != null) setRsvpSorularAcik(t.rsvpSorularAcik);
@@ -222,6 +223,7 @@ function OlusturIcerigi() {
   const [canliDuvarAcik,  setCanliDuvarAcik]  = useState(false);
   const [oturmaPlanAcik,  setOturmaPlanAcik]  = useState(false);
   const [aniKitabiAcik,   setAniKitabiAcik]   = useState(false);
+  const [checkInAcik,     setCheckInAcik]     = useState(false);
   const [dressKodAcik,   setDressKodAcik]   = useState(false);
   const [dressKodMetin,  setDressKodMetin]  = useState("");
   const [dressRenkler,   setDressRenkler]   = useState<DressRenkler>(["#6B1A2B","#1A6B45","#C4A05A","#1A1A1A","#F5EDD8"]);
@@ -291,6 +293,7 @@ function OlusturIcerigi() {
     canliDuvarAktif: canliDuvarAcik,
     oturmaPlanAktif: oturmaPlanAcik,
     aniKitabiAktif:  aniKitabiAcik,
+    checkInAktif:    checkInAcik,
   });
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
@@ -387,6 +390,7 @@ function OlusturIcerigi() {
           canliDuvarAktif:   canliDuvarAcik,
           oturmaPlanAktif:   oturmaPlanAcik,
           aniKitabiAktif:    aniKitabiAcik,
+          checkInAktif:      checkInAcik,
           dressKod:          dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
           dressKodRenkler:   dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
           rsvpSorular:       rsvpSorularAcik ? rsvpSorularConfig : null,
@@ -917,6 +921,20 @@ function OlusturIcerigi() {
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
                         <span className="text-base shrink-0">✅</span>
                         <p className="text-xs text-gray-600 leading-relaxed">Anı Kitabı aktif. Etkinlik sonrası Dashboard → Albüm sayfasından tek tıkla PDF indirebilirsiniz.</p>
+                      </div>
+                    </OzellikKarti>
+
+                    {/* 📲 QR Check-in */}
+                    <OzellikKarti
+                      icon="📲" baslik="QR Check-in"
+                      aciklama="Etkinlik girişinde her davetlinin kişiye özel QR kodunu okutarak katılımı saniyeler içinde kaydet"
+                      misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
+                      planEtiketi="Ek ücret"
+                      acik={checkInAcik} onToggle={() => setCheckInAcik(!checkInAcik)}
+                    >
+                      <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
+                        <span className="text-base shrink-0">✅</span>
+                        <p className="text-xs text-gray-600 leading-relaxed">QR Check-in aktif. Etkinlik günü Dashboard → QR Check-in sayfasından kamerayı aç ve davetlileri tara.</p>
                       </div>
                     </OzellikKarti>
 

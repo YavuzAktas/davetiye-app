@@ -49,6 +49,7 @@ const davetiyeOlusturSemasi = z.object({
   oturmaPlanAktif: z.boolean().optional().default(false),
   albumAktif: z.boolean().optional().default(false),
   aniKitabiAktif: z.boolean().optional().default(false),
+  checkInAktif:   z.boolean().optional().default(false),
   dressKod: opsiyonelMetin(80),
   dressKodRenkler: z.string().trim().max(300).optional().nullable().transform((v) => v || null)
     .refine((v) => {
@@ -127,6 +128,7 @@ export async function POST(req: NextRequest) {
     canliDuvarAktif: veri.canliDuvarAktif,
     oturmaPlanAktif: veri.oturmaPlanAktif,
     aniKitabiAktif:  veri.aniKitabiAktif,
+    checkInAktif:    veri.checkInAktif,
   });
 
   const davetiye = await prisma.davetiye.create({
@@ -156,6 +158,7 @@ export async function POST(req: NextRequest) {
       dressKodRenkler: veri.dressKodRenkler,
       albumAktif:      veri.albumAktif,
       aniKitabiAktif:  veri.aniKitabiAktif,
+      checkInAktif:    veri.checkInAktif,
       rsvpSorular:     veri.rsvpSorular,
       odemeDurumu:     "odeme_bekliyor",
       fiyatSnapshot:   fiyat as any,
