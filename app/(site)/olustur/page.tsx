@@ -13,7 +13,7 @@ import { getSablonTipi } from "@/lib/sablon-registry";
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import MuzikSecici from "@/components/MuzikSecici";
 import { davetiyeFiyatiHesapla, tutarMetni, type DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
-import { type RsvpSoru, type RsvpSoruId, VARSAYILAN_RSVP_SORULAR, SORU_META } from "@/lib/rsvp-sorular";
+import { type RsvpSoru, type RsvpSoruId, VARSAYILAN_RSVP_SORULAR, SORU_META, soruGetir } from "@/lib/rsvp-sorular";
 
 const FONTLAR = [
   { id: "font-sans",  isim: "Modern",   ornek: "Aa" },
@@ -233,6 +233,9 @@ function OlusturIcerigi() {
   }
   function rsvpOzelSoruGuncelle(soru: string) {
     setRsvpSorularConfig(prev => prev.map(s => s.id === "ozel" ? { ...s, soru } : s));
+  }
+  function rsvpMaxKisiGuncelle(val: number) {
+    setRsvpSorularConfig(prev => prev.map(s => s.id === "kisiSayisi" ? { ...s, maxKisi: val } : s));
   }
 
   const hasPolaroid        = isNisanLuks || isVintageNisan;
@@ -804,6 +807,20 @@ function OlusturIcerigi() {
                                 </div>
                                 <Toggle acik={soru.aktif} onChange={() => rsvpSoruToggle(id)} />
                               </div>
+                              {id === "kisiSayisi" && soru.aktif && (
+                                <div className="flex items-center gap-3 mb-2 mt-1">
+                                  <span className="text-xs text-gray-500">Maks kişi:</span>
+                                  <input
+                                    type="number"
+                                    min={2}
+                                    max={20}
+                                    value={soruGetir(rsvpSorularConfig, "kisiSayisi").maxKisi ?? 2}
+                                    onChange={e => rsvpMaxKisiGuncelle(Math.max(2, Math.min(20, Number(e.target.value))))}
+                                    className="w-20 border-2 border-purple-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                                  />
+                                  <span className="text-xs text-gray-400">(2–20)</span>
+                                </div>
+                              )}
                               {id === "ozel" && soru.aktif && (
                                 <input
                                   type="text"

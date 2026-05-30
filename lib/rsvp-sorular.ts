@@ -1,29 +1,32 @@
-export type RsvpSoruId = "sarki" | "yemek" | "ulasim" | "cocuk" | "alerji" | "ozel";
+export type RsvpSoruId = "sarki" | "yemek" | "ulasim" | "cocuk" | "alerji" | "ozel" | "kisiSayisi";
 
 export interface RsvpSoru {
   id: RsvpSoruId;
   aktif: boolean;
-  soru?: string; // "ozel" tipinde davet sahibinin yazdığı soru metni
+  soru?: string;    // "ozel" tipinde davet sahibinin yazdığı soru metni
+  maxKisi?: number; // "kisiSayisi" tipinde davet sahibinin belirlediği maks
 }
 
 export type RsvpSorular = RsvpSoru[];
 
 export const VARSAYILAN_RSVP_SORULAR: RsvpSorular = [
-  { id: "sarki",  aktif: true  },
-  { id: "yemek",  aktif: false },
-  { id: "ulasim", aktif: false },
-  { id: "cocuk",  aktif: false },
-  { id: "alerji", aktif: false },
-  { id: "ozel",   aktif: false, soru: "" },
+  { id: "kisiSayisi", aktif: false, maxKisi: 2 },
+  { id: "sarki",      aktif: true  },
+  { id: "yemek",      aktif: false },
+  { id: "ulasim",     aktif: false },
+  { id: "cocuk",      aktif: false },
+  { id: "alerji",     aktif: false },
+  { id: "ozel",       aktif: false, soru: "" },
 ];
 
 export const SORU_META: Record<RsvpSoruId, { label: string; icon: string; aciklama: string }> = {
-  sarki:  { label: "Şarkı İsteği",    icon: "🎵", aciklama: "Dans pistindeki favori şarkınız?" },
-  yemek:  { label: "Yemek / Özel Beslenme", icon: "🍽️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
-  ulasim: { label: "Servis / Ulaşım", icon: "🚌", aciklama: "Servis kullanıp kullanmayacağını seçer" },
-  cocuk:  { label: "Çocuk Katılımı",  icon: "👶", aciklama: "Yanında getireceği çocuk sayısını girer" },
-  alerji: { label: "Alerji / Özel Beslenme Notu", icon: "⚠️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
-  ozel:   { label: "Özel Soru",       icon: "💬", aciklama: "Kendi oluşturduğunuz soruya serbest metin yanıt" },
+  kisiSayisi: { label: "Kaç Kişi Geliyor?", icon: "👥", aciklama: "Misafir kaç kişiyle geleceğini seçer; maksimum kişi sayısını siz belirlersiniz" },
+  sarki:      { label: "Şarkı İsteği",    icon: "🎵", aciklama: "Dans pistindeki favori şarkınız?" },
+  yemek:      { label: "Yemek / Özel Beslenme", icon: "🍽️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
+  ulasim:     { label: "Servis / Ulaşım", icon: "🚌", aciklama: "Servis kullanıp kullanmayacağını seçer" },
+  cocuk:      { label: "Çocuk Katılımı",  icon: "👶", aciklama: "Yanında getireceği çocuk sayısını girer" },
+  alerji:     { label: "Alerji / Özel Beslenme Notu", icon: "⚠️", aciklama: "Yanıt verilirse misafirden ayrıca açık rıza alınır" },
+  ozel:       { label: "Özel Soru",       icon: "💬", aciklama: "Kendi oluşturduğunuz soruya serbest metin yanıt" },
 };
 
 export function rsvpSorularCoz(json: unknown): RsvpSorular {

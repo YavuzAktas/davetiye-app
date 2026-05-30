@@ -43,6 +43,8 @@ function tarihFormatla(isoStr: string | null, saat: string | null): string {
 
 export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorular, onAd, maxKisiSayisi, davetliKod }: Props) {
   const sorular = rsvpSorularCoz(rsvpSorular);
+  const kisiSayisiAktif = soruAktifMi(sorular, "kisiSayisi");
+  const globalMaxKisi   = soruGetir(sorular, "kisiSayisi").maxKisi ?? 2;
   const sarkiAktif  = soruAktifMi(sorular, "sarki");
   const yemekAktif  = soruAktifMi(sorular, "yemek");
   const ulasimAktif = soruAktifMi(sorular, "ulasim");
@@ -70,7 +72,8 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
   const [ozelNitelikliVeriOnayi, setOzelNitelikliVeriOnayi] = useState(false);
   const [kisiSayisi, setKisiSayisi] = useState(1);
 
-  const maxKisi = maxKisiSayisi ?? 2;
+  // per-guest limit > global config > varsayılan 1 (gösterilmez)
+  const maxKisi = maxKisiSayisi ?? (kisiSayisiAktif ? globalMaxKisi : 1);
 
   const programVar = etkinlikler.length >= 2;
   const hassasBeslenmeBilgisiVar = katilim === true && (

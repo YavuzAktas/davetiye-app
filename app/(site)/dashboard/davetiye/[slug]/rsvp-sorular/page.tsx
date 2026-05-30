@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
-import { type RsvpSoru, type RsvpSoruId, VARSAYILAN_RSVP_SORULAR, SORU_META } from "@/lib/rsvp-sorular";
+import { type RsvpSoru, type RsvpSoruId, VARSAYILAN_RSVP_SORULAR, SORU_META, soruGetir } from "@/lib/rsvp-sorular";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -44,6 +44,10 @@ export default function RsvpSorularPage({ params }: Props) {
 
   function ozelSoruGuncelle(soru: string) {
     setSorular(prev => prev.map(s => s.id === "ozel" ? { ...s, soru } : s));
+  }
+
+  function maxKisiGuncelle(val: number) {
+    setSorular(prev => prev.map(s => s.id === "kisiSayisi" ? { ...s, maxKisi: val } : s));
   }
 
   async function kaydet() {
@@ -114,6 +118,22 @@ export default function RsvpSorularPage({ params }: Props) {
                   </div>
                   <Toggle acik={soru.aktif} onChange={() => soruToggle(id)} />
                 </div>
+
+                {/* Kişi sayısı — max input */}
+                {id === "kisiSayisi" && soru.aktif && (
+                  <div className="mt-3 ml-14 flex items-center gap-3">
+                    <span className="text-sm text-gray-500">Maksimum kişi:</span>
+                    <input
+                      type="number"
+                      min={2}
+                      max={20}
+                      value={soruGetir(sorular, "kisiSayisi").maxKisi ?? 2}
+                      onChange={e => maxKisiGuncelle(Math.max(2, Math.min(20, Number(e.target.value))))}
+                      className="w-20 border-2 border-purple-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                    />
+                    <span className="text-xs text-gray-400">kişi (2–20)</span>
+                  </div>
+                )}
 
                 {/* Özel soru metni */}
                 {id === "ozel" && soru.aktif && (

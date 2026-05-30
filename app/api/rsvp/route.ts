@@ -13,7 +13,7 @@ const rsvpSemasi = z.object({
   email:        z.string().email().max(254).optional().or(z.literal("")).transform(v => v || undefined),
   telefon:      z.string().max(20).optional(),
   katilim:      z.boolean(),
-  kisiSayisi:   z.number().int().min(1).max(2).default(1),
+  kisiSayisi:   z.number().int().min(1).max(20).default(1),
   mesaj:        z.string().max(500).optional(),
   diyet:        z.string().max(100).optional(),
   sarkiOnerisi: z.string().max(200).optional(),
