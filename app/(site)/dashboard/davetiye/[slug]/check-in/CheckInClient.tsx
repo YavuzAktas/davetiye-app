@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import jsQR from "jsqr";
 
 type CheckInSonuc = {
   durum: "giris_yapildi" | "zaten_girdi";
@@ -39,6 +40,7 @@ export default function CheckInClient({
   const [kameraAcik, setKameraAcik] = useState(false);
   const [kameraHata, setKameraHata] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const kameraIleGeldi = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -77,11 +79,6 @@ export default function CheckInClient({
     let frame = 0;
 
     async function baslat() {
-      if (!window.BarcodeDetector) {
-        setKameraHata("Bu tarayıcı QR okumayı desteklemiyor. Kodu elle yapıştırabilirsiniz.");
-        setKameraAcik(false);
-        return;
-      }
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
         streamRef.current = stream;
@@ -89,25 +86,49 @@ export default function CheckInClient({
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
         }
-        const detector = new window.BarcodeDetector({ formats: ["qr_code"] });
-        const tara = async () => {
-          if (iptal || !videoRef.current) return;
-          try {
-            const codes = await detector.detect(videoRef.current);
-            const raw = codes[0]?.rawValue;
-            if (raw) {
-              setKameraAcik(false);
-              await checkInYapRef.current(raw, true);
-              return;
-            }
-          } catch {}
-          frame = window.setTimeout(tara, 500);
-        };
-        tara();
       } catch {
         setKameraHata("Kamera açılamadı. Tarayıcı iznini kontrol edin.");
         setKameraAcik(false);
+        return;
       }
+
+      // BarcodeDetector destekliyorsa kullan, yoksa jsQR ile canvas fallback
+      const detector = window.BarcodeDetector
+        ? new window.BarcodeDetector({ formats: ["qr_code"] })
+        : null;
+
+      const tara = async () => {
+        if (iptal || !videoRef.current) return;
+        let raw: string | null = null;
+
+        try {
+          if (detector) {
+            const codes = await detector.detect(videoRef.current);
+            raw = codes[0]?.rawValue ?? null;
+          } else {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            if (canvas && video.readyState >= video.HAVE_ENOUGH_DATA) {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              const ctx = canvas.getContext("2d");
+              if (ctx) {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                raw = jsQR(imageData.data, imageData.width, imageData.height)?.data ?? null;
+              }
+            }
+          }
+        } catch {}
+
+        if (raw) {
+          setKameraAcik(false);
+          await checkInYapRef.current(raw, true);
+          return;
+        }
+        frame = window.setTimeout(tara, 300);
+      };
+      tara();
     }
 
     baslat();
@@ -171,6 +192,9 @@ export default function CheckInClient({
 
       {/* ── Tarayıcı kartı ── */}
       <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
+
+        {/* jsQR için gizli canvas */}
+        <canvas ref={canvasRef} className="hidden" />
 
         {kameraAcik ? (
           /* Kamera aktif */
