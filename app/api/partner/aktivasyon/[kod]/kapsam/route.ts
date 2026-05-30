@@ -8,22 +8,19 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ kod: string }> }
 ) {
+  const simdi = new Date();
   const { kod } = await params;
 
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
     select: {
       durum: true,
+      expiresAt: true,
+      abonelik: { select: { paketId: true, aktif: true, bitisAt: true } },
       partner: {
         select: {
           firmaAdi: true,
           durum: true,
-          abonelikler: {
-            where: { aktif: true },
-            orderBy: { createdAt: "desc" },
-            take: 1,
-            select: { paketId: true },
-          },
         },
       },
     },
@@ -37,7 +34,18 @@ export async function GET(
     return NextResponse.json({ error: "Partner aktif değil." }, { status: 409 });
   }
 
-  const paketId = aktivasyon.partner.abonelikler[0]?.paketId ?? "baslangic";
+  const abonelik = aktivasyon.abonelik;
+  const kodSuresiGecerli = !aktivasyon.expiresAt || aktivasyon.expiresAt > simdi;
+  const abonelikGecerli =
+    abonelik &&
+    abonelik.aktif &&
+    (!abonelik.bitisAt || abonelik.bitisAt > simdi);
+
+  if (!kodSuresiGecerli || !abonelikGecerli) {
+    return NextResponse.json({ error: "Bu aktivasyon linkinin süresi dolmuş." }, { status: 409 });
+  }
+
+  const paketId = abonelik.paketId;
   const dahilKodlar = dahilKodlarGetir(paketId);
 
   return NextResponse.json({

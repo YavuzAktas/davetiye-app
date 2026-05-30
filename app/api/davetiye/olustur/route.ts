@@ -200,16 +200,11 @@ export async function POST(req: NextRequest) {
         where: { kod: veri.aktivasyonKodu! },
         select: {
           id: true,
+          abonelik: { select: { paketId: true } },
           partner: {
             select: {
               firmaAdi: true,
               user: { select: { email: true } },
-              abonelikler: {
-                where: { aktif: true },
-                orderBy: { createdAt: "desc" },
-                take: 1,
-                select: { paketId: true },
-              },
             },
           },
         },
@@ -217,7 +212,7 @@ export async function POST(req: NextRequest) {
 
       if (!aktivasyon) return null;
 
-      const paketId = aktivasyon.partner.abonelikler[0]?.paketId ?? "baslangic";
+      const paketId = aktivasyon.abonelik?.paketId ?? "baslangic";
       const dahilKodlar = dahilKodlarGetir(paketId);
       const fiyatEkstra = fiyat.kalemler
         .filter(k => !dahilKodlar.includes(k.kod))
