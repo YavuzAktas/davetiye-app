@@ -19,9 +19,7 @@ type BarcodeDetectorCtor = new (options?: { formats?: string[] }) => {
 };
 
 declare global {
-  interface Window {
-    BarcodeDetector?: BarcodeDetectorCtor;
-  }
+  interface Window { BarcodeDetector?: BarcodeDetectorCtor }
 }
 
 export default function CheckInClient({
@@ -70,9 +68,6 @@ export default function CheckInClient({
     }
   };
 
-  // Kamera effect'in stale closure sorunu yaşamaması için ref kullan.
-  // Effect sadece kameraAcik değişince çalışır; checkInYap her render'da yeni
-  // referans alsa da ref hep güncel kalır.
   const checkInYapRef = useRef(checkInYap);
   useEffect(() => { checkInYapRef.current = checkInYap; });
 
@@ -83,7 +78,7 @@ export default function CheckInClient({
 
     async function baslat() {
       if (!window.BarcodeDetector) {
-        setKameraHata("Bu tarayıcı kamera ile QR okumayı desteklemiyor. Kodu veya linki elle yapıştırabilirsiniz.");
+        setKameraHata("Bu tarayıcı QR okumayı desteklemiyor. Kodu elle yapıştırabilirsiniz.");
         setKameraAcik(false);
         return;
       }
@@ -110,7 +105,7 @@ export default function CheckInClient({
         };
         tara();
       } catch {
-        setKameraHata("Kamera açılamadı. Tarayıcı iznini kontrol edin veya kodu elle girin.");
+        setKameraHata("Kamera açılamadı. Tarayıcı iznini kontrol edin.");
         setKameraAcik(false);
       }
     }
@@ -122,7 +117,7 @@ export default function CheckInClient({
       streamRef.current?.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     };
-  }, [kameraAcik]); // sadece kameraAcik — checkInYap ref üzerinden erişiliyor
+  }, [kameraAcik]);
 
   const sonucTemizle = useCallback(() => {
     setSonuc(null);
@@ -130,120 +125,151 @@ export default function CheckInClient({
     if (kameraIleGeldi.current) {
       setKameraAcik(true);
     } else {
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, []);
 
+  const kameraKapat = () => {
+    setKameraAcik(false);
+    setKameraHata("");
+  };
+
   const bekleyen = toplam - girisYapan;
   const oran = toplam ? Math.round((girisYapan / toplam) * 100) : 0;
+  const cubukRenk = oran >= 90 ? "#ef4444" : oran >= 70 ? "#f59e0b" : "#22c55e";
 
   return (
     <div className="space-y-4">
 
-      {/* ── Sayaç ── */}
-      <div className="bg-white border border-gray-100 rounded-3xl p-5">
-        <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Giriş Durumu</p>
-        <div className="flex items-end gap-6 mb-4">
+      {/* ── Sayaç kartı ── */}
+      <div className="bg-white border border-gray-100 rounded-3xl p-6">
+        <p className="text-[11px] font-semibold text-gray-400 tracking-widest uppercase mb-5">Giriş Durumu</p>
+
+        <div className="flex items-end justify-between gap-4 mb-5">
           <div>
-            <p className="text-4xl font-black text-gray-900 tabular-nums leading-none">{girisYapan}</p>
-            <p className="text-xs text-emerald-600 font-semibold mt-1.5">giriş yaptı</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-black text-gray-900 tabular-nums leading-none">{girisYapan}</span>
+              <span className="text-xl font-bold text-gray-200 tabular-nums">/ {toplam}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">kişi giriş yaptı</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-300 tabular-nums leading-none">{bekleyen}</p>
-            <p className="text-xs text-gray-400 mt-1.5">bekleniyor</p>
-          </div>
-          <div className="ml-auto self-start">
-            <span className="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl">
+          <div className="text-right">
+            <p className="text-3xl font-black tabular-nums leading-none" style={{ color: cubukRenk }}>
               %{oran}
-            </span>
+            </p>
+            <p className="text-xs text-gray-400 mt-1.5">{bekleyen} bekleniyor</p>
           </div>
         </div>
+
         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${oran}%`,
-              backgroundColor: oran >= 90 ? "#ef4444" : oran >= 70 ? "#f59e0b" : "#22c55e",
-            }}
+            className="h-full rounded-full transition-all duration-700"
+            style={{ width: `${oran}%`, backgroundColor: cubukRenk }}
           />
         </div>
       </div>
 
-      {/* ── Tarama / Giriş ── */}
-      <div className="bg-white border border-gray-100 rounded-3xl p-5 space-y-3">
+      {/* ── Tarayıcı kartı ── */}
+      <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden">
 
-        {/* Kamera butonu — birincil aksiyon */}
-        <button
-          onClick={() => { setKameraHata(""); setKameraAcik(v => !v); }}
-          className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl text-sm font-bold transition-all ${
-            kameraAcik
-              ? "bg-gray-100 text-gray-600"
-              : "bg-gray-900 text-white hover:bg-gray-800 active:scale-[0.98]"
-          }`}
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-            <rect x="3" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
-            <rect x="14" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
-            <rect x="3" y="14" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 14h2v2h-2zm4 0h3v3h-3zm-4 4h3v3h-3zm4 2h3" />
-          </svg>
-          {kameraAcik ? "Kamerayı Kapat" : "QR Kodu Okut"}
-        </button>
-
-        {/* Kamera önizleme + tarama çerçevesi */}
-        {kameraAcik && (
-          <div className="relative rounded-2xl overflow-hidden bg-gray-900">
+        {kameraAcik ? (
+          /* Kamera aktif */
+          <div className="relative">
             <video
               ref={videoRef}
-              className="w-full aspect-square object-cover"
+              className="w-full aspect-square object-cover bg-gray-900"
               muted
               playsInline
             />
+            {/* Tarama çerçevesi */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-52 h-52 relative">
-                <div className="absolute top-0 left-0 w-10 h-10 border-t-[3px] border-l-[3px] border-white rounded-tl-lg" />
-                <div className="absolute top-0 right-0 w-10 h-10 border-t-[3px] border-r-[3px] border-white rounded-tr-lg" />
-                <div className="absolute bottom-0 left-0 w-10 h-10 border-b-[3px] border-l-[3px] border-white rounded-bl-lg" />
-                <div className="absolute bottom-0 right-0 w-10 h-10 border-b-[3px] border-r-[3px] border-white rounded-br-lg" />
+              {/* Köşe işaretçileri */}
+              <div className="w-56 h-56 relative">
+                <div className="absolute top-0 left-0 w-9 h-9 border-t-[3px] border-l-[3px] border-white/90 rounded-tl-xl" />
+                <div className="absolute top-0 right-0 w-9 h-9 border-t-[3px] border-r-[3px] border-white/90 rounded-tr-xl" />
+                <div className="absolute bottom-0 left-0 w-9 h-9 border-b-[3px] border-l-[3px] border-white/90 rounded-bl-xl" />
+                <div className="absolute bottom-0 right-0 w-9 h-9 border-b-[3px] border-r-[3px] border-white/90 rounded-br-xl" />
               </div>
             </div>
-            <p className="absolute bottom-3 left-0 right-0 text-center text-xs text-white/60 font-medium">
-              QR kodu çerçeveye getirin
-            </p>
+            {/* Alt kapat butonu */}
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+              <button
+                onClick={kameraKapat}
+                className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white text-sm font-semibold px-5 py-2.5 rounded-2xl hover:bg-black/70 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Kamerayı Kapat
+              </button>
+            </div>
           </div>
+        ) : (
+          /* Kamera kapalı — büyük tara butonu */
+          <button
+            onClick={() => { setKameraHata(""); setKameraAcik(true); }}
+            className="w-full flex flex-col items-center gap-4 py-10 px-6 hover:bg-gray-50/70 transition-colors group"
+          >
+            <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-gray-900/10">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <path strokeLinecap="round" d="M14 14h3v3m0 0v3h3m-3-3h3" />
+              </svg>
+            </div>
+            <div className="text-center">
+              <p className="text-base font-bold text-gray-900">QR Kodu Tara</p>
+              <p className="text-sm text-gray-400 mt-0.5">Kamerayı aç, QR koda tut</p>
+            </div>
+          </button>
         )}
 
-        {/* Elle giriş */}
-        <div className="flex gap-2">
-          <input
-            ref={inputRef}
-            value={kod}
-            onChange={e => setKod(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && checkInYap(kod)}
-            placeholder="QR linkini veya /d/ kodunu yapıştır"
-            className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-100 transition-all"
-          />
-          <button
-            onClick={() => checkInYap(kod)}
-            disabled={!kod.trim() || yukleniyor}
-            className="px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 disabled:opacity-40 transition-all active:scale-95 whitespace-nowrap"
-          >
-            {yukleniyor ? (
-              <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-            ) : "Giriş"}
-          </button>
+        {/* Ayraç */}
+        <div className="flex items-center gap-3 px-6">
+          <div className="h-px bg-gray-100 flex-1" />
+          <span className="text-xs text-gray-300 font-medium">veya</span>
+          <div className="h-px bg-gray-100 flex-1" />
         </div>
 
-        {kameraHata && (
-          <p className="text-sm text-amber-600 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
-            {kameraHata}
-          </p>
-        )}
-        {hata && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
-            {hata}
-          </p>
-        )}
+        {/* Elle giriş */}
+        <div className="p-5 pt-4 space-y-3">
+          <div className="flex gap-2">
+            <input
+              ref={inputRef}
+              value={kod}
+              onChange={e => setKod(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && checkInYap(kod)}
+              placeholder="Kişisel linki veya kodu yapıştır"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all placeholder:text-gray-300"
+            />
+            <button
+              onClick={() => checkInYap(kod)}
+              disabled={!kod.trim() || yukleniyor}
+              className="px-5 py-3 rounded-xl bg-gray-900 text-white text-sm font-bold hover:bg-gray-800 disabled:opacity-30 transition-all active:scale-95 whitespace-nowrap"
+            >
+              {yukleniyor
+                ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                : "Giriş"
+              }
+            </button>
+          </div>
+
+          {kameraHata && (
+            <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+              <span className="text-amber-500 text-sm shrink-0 mt-0.5">⚠</span>
+              <p className="text-sm text-amber-700">{kameraHata}</p>
+            </div>
+          )}
+          {hata && (
+            <div className="flex items-start gap-2.5 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" d="M12 8v4m0 4h.01" />
+              </svg>
+              <p className="text-sm text-red-600">{hata}</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Sonuç kartı ── */}
@@ -255,74 +281,81 @@ export default function CheckInClient({
           : null;
 
         return (
-          <div className={`border rounded-3xl p-5 ${
-            basarili ? "bg-emerald-50 border-emerald-100" : "bg-amber-50 border-amber-100"
+          <div className={`rounded-3xl border overflow-hidden ${
+            basarili ? "border-emerald-100" : "border-amber-100"
           }`}>
-            <div className="flex items-start gap-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
-                basarili ? "bg-emerald-100" : "bg-amber-100"
-              }`}>
-                {basarili ? (
-                  <svg className="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  <svg className="w-7 h-7 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                  </svg>
-                )}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <p className={`text-xs font-bold tracking-widest uppercase mb-1 ${
+            {/* Renk şeridi + ikon + ad */}
+            <div className={`px-6 py-5 ${basarili ? "bg-emerald-50" : "bg-amber-50"}`}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+                  basarili ? "bg-emerald-100" : "bg-amber-100"
+                }`}>
+                  {basarili ? (
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                    </svg>
+                  )}
+                </div>
+                <p className={`text-xs font-bold tracking-widest uppercase ${
                   basarili ? "text-emerald-600" : "text-amber-600"
                 }`}>
                   {basarili ? "Giriş Onaylandı" : "Daha Önce Giriş Yapmış"}
                 </p>
-                <h2 className="text-xl font-black text-gray-900 truncate">{sonuc.davetli.ad}</h2>
-
-                <div className="mt-2.5 flex flex-wrap gap-2">
-                  <span className="text-xs font-semibold bg-white/80 border border-white px-3 py-1.5 rounded-xl text-gray-700">
-                    {kisiSayisi} kişi
-                  </span>
-                  {sonuc.davetli.rsvp ? (
-                    <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl ${
-                      sonuc.davetli.rsvp.katilim ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
-                    }`}>
-                      RSVP {sonuc.davetli.rsvp.katilim ? "✓ Katılıyor" : "✗ Katılamıyor"}
-                    </span>
-                  ) : (
-                    <span className="text-xs font-semibold bg-gray-100 text-gray-500 px-3 py-1.5 rounded-xl">
-                      RSVP yok
-                    </span>
-                  )}
-                  {!basarili && girisSaati && (
-                    <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-3 py-1.5 rounded-xl">
-                      {girisSaati}&apos;de girdi
-                    </span>
-                  )}
-                  {basarili && girisSaati && (
-                    <span className="text-xs font-semibold bg-white/80 border border-white text-gray-500 px-3 py-1.5 rounded-xl">
-                      {girisSaati}
-                    </span>
-                  )}
-                </div>
               </div>
+
+              <h2 className="text-2xl font-black text-gray-900 leading-tight">{sonuc.davetli.ad}</h2>
             </div>
 
-            <button
-              onClick={sonucTemizle}
-              className={`w-full mt-4 py-3.5 rounded-2xl text-sm font-bold transition-all active:scale-[0.98] ${
-                basarili
-                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                  : "bg-amber-200 text-amber-900 hover:bg-amber-300"
-              }`}
-            >
-              {kameraIleGeldi.current ? "Sonraki Davetli → (Kamera Açılıyor)" : "Sonraki Davetli →"}
-            </button>
+            {/* Detaylar */}
+            <div className="bg-white px-6 py-4 flex flex-wrap gap-2">
+              <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl">
+                {kisiSayisi} kişi
+              </span>
+              {sonuc.davetli.rsvp ? (
+                <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl ${
+                  sonuc.davetli.rsvp.katilim
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "bg-red-50 text-red-600"
+                }`}>
+                  {sonuc.davetli.rsvp.katilim ? "RSVP ✓" : "RSVP ✗"}
+                </span>
+              ) : (
+                <span className="text-xs font-semibold bg-gray-50 text-gray-400 px-3 py-1.5 rounded-xl">
+                  RSVP yok
+                </span>
+              )}
+              {girisSaati && (
+                <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl ${
+                  basarili
+                    ? "bg-gray-50 text-gray-500"
+                    : "bg-amber-50 text-amber-700"
+                }`}>
+                  {basarili ? girisSaati : `${girisSaati}'de girmişti`}
+                </span>
+              )}
+            </div>
+
+            {/* Aksiyon */}
+            <div className="px-5 pb-5">
+              <button
+                onClick={sonucTemizle}
+                className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all active:scale-[0.98] ${
+                  basarili
+                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                    : "bg-amber-100 text-amber-900 hover:bg-amber-200"
+                }`}
+              >
+                {kameraIleGeldi.current ? "Sonraki Davetli → Kamera Açılıyor" : "Sonraki Davetli →"}
+              </button>
+            </div>
           </div>
         );
       })()}
+
     </div>
   );
 }

@@ -30,8 +30,8 @@ export default async function CheckInPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-3">
+      <div className="bg-white/90 border-b border-gray-100 sticky top-0 z-30 backdrop-blur-xl">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <Link
             href={`/dashboard/davetiye/${slug}`}
             className="w-9 h-9 bg-gray-50 hover:bg-gray-100 rounded-xl flex items-center justify-center transition-colors shrink-0"
@@ -40,15 +40,13 @@ export default async function CheckInPage({ params }: Props) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <div>
-            <p className="text-xs text-gray-400 truncate max-w-50 sm:max-w-none">{davetiye.baslik}</p>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-gray-900">QR Check-in</h1>
-              <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">
-                {girisYapan}/{davetiye._count.davetliler}
-              </span>
-            </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-gray-400 truncate">{davetiye.baslik}</p>
+            <h1 className="text-base font-bold text-gray-900">QR Check-in</h1>
           </div>
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-xl shrink-0">
+            {girisYapan} / {davetiye._count.davetliler} giriş
+          </span>
         </div>
       </div>
 
