@@ -4,6 +4,24 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const IPTAL_EDILEBILİR = ["olusturuldu", "gonderildi"];
+const EPOSTA_DESENI = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+
+function kodEtiketiniOku(deger: unknown): { etiket: string | null; hata?: string } {
+  if (deger == null) return { etiket: null };
+
+  const etiket = String(deger).trim().replace(/\s+/g, " ").slice(0, 60);
+  if (!etiket) return { etiket: null };
+
+  const rakamlar = etiket.replace(/\D/g, "");
+  if (EPOSTA_DESENI.test(etiket) || rakamlar.length >= 10) {
+    return {
+      etiket: null,
+      hata: "Kod etiketine e-posta, telefon, TCKN veya benzeri kişisel veri yazmayın.",
+    };
+  }
+
+  return { etiket };
+}
 
 export async function PATCH(
   req: NextRequest,
@@ -42,10 +60,14 @@ export async function PATCH(
   }
 
   if (action === "not-guncelle") {
-    const notDeger = body.not != null ? String(body.not).trim().slice(0, 100) || null : null;
+    const { etiket, hata } = kodEtiketiniOku(body.not);
+    if (hata) {
+      return NextResponse.json({ error: hata }, { status: 400 });
+    }
+
     await prisma.aktivasyonKodu.update({
       where: { id: aktivasyon.id },
-      data: { not: notDeger },
+      data: { not: etiket },
     });
     return NextResponse.json({ ok: true });
   }

@@ -48,7 +48,7 @@ export default function PartnerSozlesmePage() {
             <h2 className="text-lg font-bold text-gray-900 mb-3">3. Partnerin Yetkileri</h2>
             <ul className="space-y-2 text-gray-600 list-disc pl-5">
               <li>Satın aldığı paket kapsamında aktivasyon linki oluşturmak ve müşterilerine iletmek.</li>
-              <li>Partner panelinde şu bilgileri görüntülemek: müşteri adı/organizasyon adı, davetiye durumu (aktivasyon gönderildi / kayıt olundu / davetiye oluşturuldu / yayında), kullanılan ve kalan aktivasyon hakkı sayısı.</li>
+              <li>Partner panelinde şu bilgileri görüntülemek: aktivasyon kodu durumu (aktivasyon gönderildi / kayıt olundu / davetiye oluşturuldu / yayında), kullanılan ve kalan aktivasyon hakkı sayısı ve partnerin kişisel veri içermeden eklediği dahili kod etiketi.</li>
               <li>Paket yenilemek veya üst pakete geçmek.</li>
             </ul>
           </section>

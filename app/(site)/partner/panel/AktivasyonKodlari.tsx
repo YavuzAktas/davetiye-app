@@ -52,7 +52,7 @@ export default function AktivasyonKodlari({
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
   const [mesajAcik, setMesajAcik] = useState(false);
 
-  // Satır içi not düzenleme
+  // Satır içi kod etiketi düzenleme
   const [notDuzenlemeKod, setNotDuzenlemeKod] = useState<string | null>(null);
   const [notDeger, setNotDeger] = useState("");
   const [notKaydediliyor, setNotKaydediliyor] = useState(false);
@@ -136,15 +136,20 @@ export default function AktivasyonKodlari({
   const notKaydet = async (kod: string) => {
     setNotKaydediliyor(true);
     try {
-      await fetch(`/api/partner/aktivasyon/${kod}`, {
+      const res = await fetch(`/api/partner/aktivasyon/${kod}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "not-guncelle", not: notDeger }),
       });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        setHata(d.error ?? "Kod etiketi kaydedilemedi.");
+        return;
+      }
       setNotDuzenlemeKod(null);
       router.refresh();
     } catch {
-      setHata("Not kaydedilemedi.");
+      setHata("Kod etiketi kaydedilemedi.");
     } finally {
       setNotKaydediliyor(false);
     }
@@ -313,31 +318,36 @@ export default function AktivasyonKodlari({
                   <p className="text-xs text-gray-500">Davetiye yayında. Gizlilik gereği davetiye bağlantısı partner panelinde gösterilmez.</p>
                 )}
 
-                {/* Not alanı */}
+                {/* Kod etiketi alanı */}
                 {notDuzenlemede ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      autoFocus
-                      value={notDeger}
-                      onChange={e => setNotDeger(e.target.value)}
-                      onKeyDown={e => { if (e.key === "Enter") notKaydet(k.kod); if (e.key === "Escape") setNotDuzenlemeKod(null); }}
-                      maxLength={100}
-                      placeholder="Müşteri adı veya not…"
-                      className="flex-1 text-xs border border-purple-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-300"
-                    />
-                    <button
-                      onClick={() => notKaydet(k.kod)}
-                      disabled={notKaydediliyor}
-                      className="text-[11px] font-bold text-white bg-purple-600 px-3 py-1.5 rounded-lg disabled:opacity-50"
-                    >
-                      {notKaydediliyor ? "…" : "Kaydet"}
-                    </button>
-                    <button
-                      onClick={() => setNotDuzenlemeKod(null)}
-                      className="text-[11px] text-gray-400 hover:text-gray-600 px-2 py-1.5"
-                    >
-                      İptal
-                    </button>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <input
+                        autoFocus
+                        value={notDeger}
+                        onChange={e => setNotDeger(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter") notKaydet(k.kod); if (e.key === "Escape") setNotDuzenlemeKod(null); }}
+                        maxLength={60}
+                        placeholder="Kod etiketi: örn. Salon A-12"
+                        className="flex-1 text-xs border border-purple-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-300"
+                      />
+                      <button
+                        onClick={() => notKaydet(k.kod)}
+                        disabled={notKaydediliyor}
+                        className="text-[11px] font-bold text-white bg-purple-600 px-3 py-1.5 rounded-lg disabled:opacity-50"
+                      >
+                        {notKaydediliyor ? "…" : "Kaydet"}
+                      </button>
+                      <button
+                        onClick={() => setNotDuzenlemeKod(null)}
+                        className="text-[11px] text-gray-400 hover:text-gray-600 px-2 py-1.5"
+                      >
+                        İptal
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-gray-400">
+                      Dahili takip içindir; müşteri adı, telefon, e-posta veya TCKN yazmayın.
+                    </p>
                   </div>
                 ) : (
                   <button
@@ -351,7 +361,7 @@ export default function AktivasyonKodlari({
                         <span className="text-gray-300 group-hover:text-gray-500">✏</span>
                       </>
                     ) : (
-                      <span className="italic">+ Not ekle</span>
+                      <span className="italic">+ Kod etiketi ekle</span>
                     )}
                   </button>
                 )}
