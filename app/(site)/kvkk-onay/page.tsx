@@ -6,11 +6,12 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Suspense } from "react";
 import PageLoader from "@/components/PageLoader";
+import { guvenliCallbackUrl } from "@/lib/guvenli-yonlendirme";
 
 function KvkkOnayIcerigi() {
   const { update } = useSession();
   const searchParams  = useSearchParams();
-  const callbackUrl   = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl   = guvenliCallbackUrl(searchParams.get("callbackUrl"));
 
   const [kvkk,      setKvkk]      = useState(false);
   const [kullanim,  setKullanim]  = useState(false);

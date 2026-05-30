@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import PageLoader from "@/components/PageLoader";
 import Link from "next/link";
+import { guvenliCallbackUrl } from "@/lib/guvenli-yonlendirme";
 
 /* ── Sol panel davetiye kartları ── */
 const CARDS = [
@@ -60,7 +61,7 @@ function KvkkCheckbox({ id, checked, onChange, children }: {
 function GirisIcerigi() {
   const searchParams = useSearchParams();
   const router       = useRouter();
-  const callbackUrl  = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl  = guvenliCallbackUrl(searchParams.get("callbackUrl"));
 
   const [tab,     setTab]     = useState<"google"|"email">("google");
   const [mod,     setMod]     = useState<"giris"|"kayit">("giris");
