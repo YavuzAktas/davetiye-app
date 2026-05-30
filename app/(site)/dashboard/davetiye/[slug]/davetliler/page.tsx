@@ -587,7 +587,7 @@ export default function DavetlilerSayfasi() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
             {huniAdimlari.map((adim) => {
               const oran = davetliler.length ? Math.round((adim.value / davetliler.length) * 100) : 0;
               return (
@@ -771,11 +771,11 @@ export default function DavetlilerSayfasi() {
                   type="number"
                   min={1}
                   max={20}
-                  placeholder="Kişi"
+                  placeholder="Maks. kişi"
                   value={yeniKisiLimiti}
                   onChange={e => setYeniKisiLimiti(e.target.value)}
                   className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all"
-                  title="Bu davetlinin RSVP'de seçebileceği maksimum kişi sayısı"
+                  title="Bu davetlinin RSVP'de seçebileceği maksimum kişi sayısı (boşsa genel RSVP limiti geçerli)"
                 />
               </div>
 
@@ -903,21 +903,19 @@ export default function DavetlilerSayfasi() {
                                 </span>
                               </div>
 
-                              {/* Notlar */}
-                              {notlar.length > 0 && (
+                              {/* Notlar + kişi limiti */}
+                              {(notlar.length > 0 || davetli.kisiLimiti) && (
                                 <div className="flex gap-1 flex-wrap mt-1">
                                   {notlar.map(n => (
                                     <span key={n} className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-medium">
                                       {n}
                                     </span>
                                   ))}
-                                </div>
-                              )}
-                              {davetli.kisiLimiti && (
-                                <div className="flex gap-1 flex-wrap mt-1">
-                                  <span className="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded-md font-medium">
-                                    En fazla {davetli.kisiLimiti} kişi
-                                  </span>
+                                  {davetli.kisiLimiti && (
+                                    <span className="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded-md font-medium">
+                                      En fazla {davetli.kisiLimiti} kişi
+                                    </span>
+                                  )}
                                 </div>
                               )}
 
@@ -935,28 +933,28 @@ export default function DavetlilerSayfasi() {
                                 )}
                               </div>
 
-                              {/* Link durumu */}
-                              {((davetli.checkinAt || davetli.whatsappGonderildiAt || (davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId))) && (
+                              {/* Link durumu — checkin her zaman, takip rozetleri sadece yanıt beklenirken */}
+                              {(davetli.checkinAt || (!davetli.rsvpId && (davetli.whatsappGonderildiAt || davetli.sonHatirlatmaAt || (davetli.ozelKod && davetli.linkGoruntulendiAt)))) && (
                                 <div className="flex gap-1.5 mt-1.5 flex-wrap">
                                   {davetli.checkinAt && (
                                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
                                       Giriş yapıldı · {davetli.checkinKisiSayisi ?? 1} kişi
                                     </span>
                                   )}
-                                  {davetli.whatsappGonderildiAt && (
+                                  {!davetli.rsvpId && davetli.whatsappGonderildiAt && (
                                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">
                                       WhatsApp gönderildi
                                     </span>
                                   )}
-                                  {davetli.sonHatirlatmaAt && (
+                                  {!davetli.rsvpId && davetli.sonHatirlatmaAt && (
                                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">
                                       {davetli.hatirlatmaSayisi ?? 1}× hatırlatıldı
                                     </span>
                                   )}
-                                  {davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId && (
-                                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
-                                    👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
-                                  </span>
+                                  {!davetli.rsvpId && davetli.ozelKod && davetli.linkGoruntulendiAt && (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                                      👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
+                                    </span>
                                   )}
                                 </div>
                               )}
@@ -990,9 +988,6 @@ export default function DavetlilerSayfasi() {
                                     >
                                       {yukl && rsvp?.katilim !== false ? "..." : "✗ Katılamıyor"}
                                     </button>
-                                    {!rsvp && (
-                                      <span className="text-[11px] text-gray-300 ml-1">Bekleniyor</span>
-                                    )}
                                   </div>
                                 );
                               })()}
