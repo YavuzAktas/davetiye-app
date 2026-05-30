@@ -19,6 +19,7 @@ const RSVP_SORU_IDLERI = ["sarki", "yemek", "ulasim", "cocuk", "alerji", "ozel"]
 const HEX_RENK = /^#[0-9a-fA-F]{6}$/;
 const TARIH_DESENI = /^\d{4}-\d{2}-\d{2}$/;
 const SAAT_DESENI = /^([01]\d|2[0-3]):[0-5]\d$/;
+const PAKET_DISI_OZELLIK_HATASI = "PAKET_DISI_OZELLIK" as const;
 
 const opsiyonelMetin = (max: number) =>
   z.string().trim().max(max).optional().nullable().transform((v) => v || null);
@@ -214,15 +215,17 @@ export async function POST(req: NextRequest) {
 
       const paketId = aktivasyon.abonelik?.paketId ?? "baslangic";
       const dahilKodlar = dahilKodlarGetir(paketId);
-      const fiyatEkstra = fiyat.kalemler
-        .filter(k => !dahilKodlar.includes(k.kod))
-        .reduce((s, k) => s + k.tutar, 0);
+      const paketDisiKalemler = fiyat.kalemler.filter(k => !dahilKodlar.includes(k.kod));
+
+      if (paketDisiKalemler.length > 0) {
+        throw new Error(PAKET_DISI_OZELLIK_HATASI);
+      }
 
       const yeniDavetiye = await tx.davetiye.create({
         data: {
           ...davetiyeVerisi,
-          odemeDurumu: fiyatEkstra > 0 ? "odeme_bekliyor" : "odendi",
-          aktif: fiyatEkstra === 0,
+          odemeDurumu: "odendi",
+          aktif: true,
         },
         select: { id: true, slug: true },
       });
@@ -231,12 +234,24 @@ export async function POST(req: NextRequest) {
         where: { id: aktivasyon.id },
         data: {
           davetiyeId: yeniDavetiye.id,
-          durum: fiyatEkstra > 0 ? "odeme_bekliyor" : "yayinda",
+          durum: "yayinda",
         },
       });
 
-      return { davetiye: yeniDavetiye, aktivasyon, fiyatEkstra };
+      return { davetiye: yeniDavetiye, aktivasyon };
+    }).catch((error) => {
+      if (error instanceof Error && error.message === PAKET_DISI_OZELLIK_HATASI) {
+        return PAKET_DISI_OZELLIK_HATASI;
+      }
+      throw error;
     });
+
+    if (aktivasyonluOlusturma === PAKET_DISI_OZELLIK_HATASI) {
+      return NextResponse.json(
+        { hata: "Bu aktivasyon paketinde seçtiğiniz bazı özellikler bulunmuyor. Lütfen yalnızca pakete dahil özelliklerle devam edin." },
+        { status: 400 }
+      );
+    }
 
     if (!aktivasyonluOlusturma) {
       return NextResponse.json(
@@ -248,7 +263,7 @@ export async function POST(req: NextRequest) {
     davetiye = aktivasyonluOlusturma.davetiye;
     aktivasyonKoduKayit = {
       ...aktivasyonluOlusturma.aktivasyon,
-      eksikOdeme: aktivasyonluOlusturma.fiyatEkstra > 0,
+      eksikOdeme: false,
     };
   } else {
     davetiye = await prisma.davetiye.create({

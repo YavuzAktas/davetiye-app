@@ -716,6 +716,8 @@ function PremiumKart({ sablon, aktivasyon = "", dahilKodlar = [] }: { sablon: Sa
   const glowRgb      = sablon.id === "vintage-nisan" ? "201,168,64" : sablon.id === "nisan-luks" ? "196,160,90" : sablon.id === "dugun-luks" ? "212,170,112" : "212,168,75";
   const goldGradient = "linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)";
   const goldShadow   = `0 4px 24px rgba(${glowRgb},0.45)`;
+  const partnerPaketDisiLuks =
+    !!aktivasyon && LUKS_SABLON_IDS.has(sablon.id) && !dahilKodlar.includes("luks-sablon");
 
   /* iframe ölçekleme: TelefonMockup iç ekran 240×500px (260 - 2×10px padding, height:500)
      transform+negatif margin: layout boyutunu görsel boyuta eşitler → iOS Safari'de de çalışır
@@ -785,6 +787,11 @@ function PremiumKart({ sablon, aktivasyon = "", dahilKodlar = [] }: { sablon: Sa
             <>
               <p className="text-sm font-bold" style={{ color: "#4ade80" }}>✓ Dahil</p>
               <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>PAKETTE</p>
+            </>
+          ) : partnerPaketDisiLuks ? (
+            <>
+              <p className="text-sm font-bold" style={{ color: "#fbbf24" }}>Pakette yok</p>
+              <p className="text-[9px] font-bold tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>KİLİTLİ</p>
             </>
           ) : (
             <>
@@ -863,13 +870,20 @@ function PremiumKart({ sablon, aktivasyon = "", dahilKodlar = [] }: { sablon: Sa
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-2.5 mt-auto pt-1">
             <motion.button
-              whileHover={{ scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => { saveSablonSecimi(sablon.id, sablon.isim); router.push(`/olustur?sablon=${sablon.id}${aktivasyon ? `&aktivasyon=${aktivasyon}` : ""}`); }}
+              whileHover={partnerPaketDisiLuks ? {} : { scale: 1.02, boxShadow: `0 8px 36px rgba(${glowRgb},0.55)` }}
+              whileTap={partnerPaketDisiLuks ? {} : { scale: 0.97 }}
+              onClick={() => {
+                if (partnerPaketDisiLuks) return;
+                saveSablonSecimi(sablon.id, sablon.isim);
+                router.push(`/olustur?sablon=${sablon.id}${aktivasyon ? `&aktivasyon=${aktivasyon}` : ""}`);
+              }}
+              disabled={partnerPaketDisiLuks}
               className="flex-1 py-4 rounded-2xl text-sm font-bold"
-              style={{ background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
+              style={partnerPaketDisiLuks
+                ? { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.38)", boxShadow: "none", cursor: "not-allowed" }
+                : { background: goldGradient, color: "#1a0a00", boxShadow: goldShadow }}
             >
-              Bu Şablonla Başla →
+              {partnerPaketDisiLuks ? "Bu Pakette Yok" : "Bu Şablonla Başla →"}
             </motion.button>
             {demoUrl && (
               <motion.a

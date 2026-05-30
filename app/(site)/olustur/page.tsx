@@ -60,7 +60,7 @@ function Toggle({ acik, onChange, disabled }: { acik: boolean; onChange: () => v
 /* ── Özellik kartı ── */
 function OzellikKarti({
   icon, baslik, aciklama, misafirGorur,
-  locked, planEtiketi,
+  locked, lockedMsg, planEtiketi,
   acik, onToggle,
   children,
   fiyatHref = "/fiyatlar",
@@ -99,10 +99,16 @@ function OzellikKarti({
         </div>
         <div className="shrink-0 mt-0.5">
           {locked ? (
-            <Link href={fiyatHref} onClick={e => e.stopPropagation()}
-              className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg hover:bg-amber-100 transition-colors whitespace-nowrap">
-              Yükselt →
-            </Link>
+            lockedMsg ? (
+              <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg whitespace-nowrap">
+                {lockedMsg}
+              </span>
+            ) : (
+              <Link href={fiyatHref} onClick={e => e.stopPropagation()}
+                className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg hover:bg-amber-100 transition-colors whitespace-nowrap">
+                Yükselt →
+              </Link>
+            )
           ) : (
             <Toggle acik={acik} onChange={onToggle} />
           )}
@@ -242,6 +248,23 @@ function OlusturIcerigi() {
   const [rsvpSorularAcik,   setRsvpSorularAcik]   = useState(false);
   const [rsvpSorularConfig, setRsvpSorularConfig] = useState<RsvpSoru[]>(VARSAYILAN_RSVP_SORULAR);
 
+  useEffect(() => {
+    if (!aktivasyonKodu || dahilKodlar.length === 0) return;
+    const dahil = (kod: string) => dahilKodlar.includes(kod);
+
+    if (!dahil("muzik")) {
+      setMuzikAcik(false);
+      setForm(prev => prev.muzik ? { ...prev, muzik: "" } : prev);
+    }
+    if (!dahil("album-foto")) setAlbumAcik(false);
+    if (!dahil("ani-defteri")) setAniDefteriAcik(false);
+    if (!dahil("canli-duvar")) setCanliDuvarAcik(false);
+    if (!dahil("sesli-ani")) setSesliAniAcik(false);
+    if (!dahil("ani-kitabi-pdf")) setAniKitabiAcik(false);
+    if (!dahil("qr-check-in")) setCheckInAcik(false);
+    if (!dahil("oturma-plani")) setOturmaPlanAcik(false);
+  }, [aktivasyonKodu, dahilKodlar]);
+
   function rsvpSoruToggle(id: RsvpSoruId) {
     setRsvpSorularConfig(prev => prev.map(s => s.id === id ? { ...s, aktif: !s.aktif } : s));
   }
@@ -313,6 +336,17 @@ function OlusturIcerigi() {
     ? fiyat.kalemler.filter(k => dahilKodlar.includes(k.kod)).reduce((s, k) => s + k.tutar, 0)
     : 0;
   const odenecekTutar = fiyat.toplamTutar - dahilTutar;
+  const aktivasyonKapsamiHazir = !aktivasyonKodu || dahilKodlar.length > 0;
+  const paketDisiKalemler = aktivasyonKodu && aktivasyonKapsamiHazir
+    ? fiyat.kalemler.filter(k => !dahilKodlar.includes(k.kod))
+    : [];
+  const aktivasyonPaketDisiVar = paketDisiKalemler.length > 0;
+  const paketDisiOzellikKilitli = (kod: string) =>
+    !!aktivasyonKodu && aktivasyonKapsamiHazir && !dahilKodlar.includes(kod);
+  const paketEtiketi = (kod: string) =>
+    isDahil(kod) ? "Dahil" : aktivasyonKodu ? "Pakette yok" : "Ek ücret";
+  const olusturmaEngelli =
+    yukleniyor || (!!aktivasyonKodu && (!aktivasyonKapsamiHazir || aktivasyonPaketDisiVar));
 
   const alanRefi = (alan: ZorunluAlan) => (el: HTMLInputElement | null) => {
     alanRefleri.current[alan] = el;
@@ -380,6 +414,16 @@ function OlusturIcerigi() {
       setAlanHatalari(yeniHatalar);
       setHata("Lütfen işaretli zorunlu alanları tamamlayın.");
       ilkHataliAlanaGit(yeniHatalar);
+      return;
+    }
+
+    if (aktivasyonKodu && !aktivasyonKapsamiHazir) {
+      setHata("Aktivasyon paketi yükleniyor. Lütfen birkaç saniye sonra tekrar deneyin.");
+      return;
+    }
+
+    if (aktivasyonPaketDisiVar) {
+      setHata("Bu aktivasyon paketinde olmayan özellikleri kapatıp devam edin.");
       return;
     }
 
@@ -507,7 +551,7 @@ function OlusturIcerigi() {
             {[
               { no: 1, label: "Şablon", done: true },
               { no: 2, label: "Bilgiler", done: false, aktif: true },
-              { no: 3, label: aktivasyonKodu && odenecekTutar === 0 ? "Yayınla" : "Ödeme", done: false },
+              { no: 3, label: aktivasyonKodu ? "Yayınla" : "Ödeme", done: false },
             ].map((adim, i) => (
               <div key={adim.no} className="flex items-center gap-1.5">
                 {i > 0 && <div className="w-5 h-px bg-gray-200" />}
@@ -522,11 +566,11 @@ function OlusturIcerigi() {
               </div>
             ))}
           </div>
-          <button onClick={handleSubmit} disabled={yukleniyor}
+          <button onClick={handleSubmit} disabled={olusturmaEngelli}
             className="shrink-0 bg-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-700 active:scale-95 transition-all disabled:opacity-50 shadow-sm shadow-purple-200 flex items-center gap-2">
             {yukleniyor ? (
               <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor</>
-            ) : aktivasyonKodu && odenecekTutar === 0 ? (
+            ) : aktivasyonKodu ? (
               <>Davetiyeni Oluştur →</>
             ) : (
               <>Ödeme Adımına Geç →</>
@@ -557,8 +601,21 @@ function OlusturIcerigi() {
                   <p className="text-sm font-semibold text-green-700">Partner aktivasyon koduyla oluşturuyorsunuz</p>
                   <p className="text-xs text-green-600 mt-0.5">
                     {dahilKodlar.length > 0
-                      ? `Pakete dahil özellikler ücretsiz. Ek özellikler seçerseniz ayrıca ücretlendirilir.`
+                      ? `Pakete dahil özelliklerle davetiyeniz ücretsiz yayınlanır. Paket dışı özellikler bu aktivasyonla seçilemez.`
                       : "Dahil özellikler yükleniyor…"}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {aktivasyonPaketDisiVar && (
+              <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+                <span className="text-xl shrink-0">⚠️</span>
+                <div>
+                  <p className="text-sm font-semibold text-amber-800">Paket dışı seçim var</p>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    Bu aktivasyon paketinde {paketDisiKalemler.map(k => k.ad).join(", ")} bulunmuyor.
+                    Devam etmek için bu seçimleri kapatın veya pakete dahil bir şablon/özellik seçin.
                   </p>
                 </div>
               </div>
@@ -906,7 +963,9 @@ function OlusturIcerigi() {
                       icon="🎵" baslik="Arka Plan Müziği"
                       aciklama="Seçtiğiniz şarkı için davetiyede bir çalma butonu gösterilir"
                       misafirGorur="Misafir davetiyeye dokunduğunda müzik başlar; istediği zaman durdurabilir"
-                      planEtiketi={isDahil("muzik") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("muzik")}
+                      locked={paketDisiOzellikKilitli("muzik")}
+                      lockedMsg="Pakette yok"
                       acik={muzikAcik} onToggle={() => setMuzikAcik(!muzikAcik)}
                     >
                       <MuzikSecici secili={form.muzik || null} onChange={url => setForm({ ...form, muzik: url ?? "" })} />
@@ -917,7 +976,9 @@ function OlusturIcerigi() {
                       icon="📸" baslik="Fotoğraf Albümü"
                       aciklama="Misafirler etkinlik boyunca fotoğraf yükler, sen onaylarsın"
                       misafirGorur="Davetiyede 📸 Fotoğraflar sekmesi belirir"
-                      planEtiketi={isDahil("album-foto") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("album-foto")}
+                      locked={paketDisiOzellikKilitli("album-foto")}
+                      lockedMsg="Pakette yok"
                       acik={albumAcik} onToggle={() => setAlbumAcik(!albumAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -931,7 +992,9 @@ function OlusturIcerigi() {
                       icon="💌" baslik="Anı Defteri"
                       aciklama="Misafirler etkinlik için yazılı iyi dilek ve anı bırakır"
                       misafirGorur="Davetiyede 💌 Anı Defteri sekmesi belirir"
-                      planEtiketi={isDahil("ani-defteri") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("ani-defteri")}
+                      locked={paketDisiOzellikKilitli("ani-defteri")}
+                      lockedMsg="Pakette yok"
                       acik={aniDefteriAcik} onToggle={() => setAniDefteriAcik(!aniDefteriAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -945,7 +1008,9 @@ function OlusturIcerigi() {
                       icon="📺" baslik="Canlı Fotoğraf Duvarı"
                       aciklama="Misafir fotoğrafları salonunuzdaki ekranda canlı akış olarak görünür"
                       misafirGorur="Fotoğraf yükleyen misafirler canlı duvarda görebilir"
-                      planEtiketi={isDahil("canli-duvar") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("canli-duvar")}
+                      locked={paketDisiOzellikKilitli("canli-duvar")}
+                      lockedMsg="Pakette yok"
                       acik={canliDuvarAcik} onToggle={() => setCanliDuvarAcik(!canliDuvarAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -960,7 +1025,9 @@ function OlusturIcerigi() {
                         icon="🎙️" baslik="Sesli Anı"
                         aciklama="Misafirler tarayıcıdan 30 saniyeye kadar sesli mesaj kaydedebilir"
                         misafirGorur="Davetiyede bir mikrofon butonu belirir; kayıtlar onayınızla yayınlanır"
-                        planEtiketi={isDahil("sesli-ani") ? "Dahil" : "Ek ücret"}
+                        planEtiketi={paketEtiketi("sesli-ani")}
+                        locked={paketDisiOzellikKilitli("sesli-ani")}
+                        lockedMsg="Pakette yok"
                         acik={sesliAniAcik} onToggle={() => setSesliAniAcik(!sesliAniAcik)}
                       >
                         <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -975,7 +1042,9 @@ function OlusturIcerigi() {
                       icon="📖" baslik="Anı Kitabı PDF"
                       aciklama="Onaylı fotoğraf, yazılı anı ve sesli mesajları tek bir premium PDF'e derle"
                       misafirGorur="Bu özellik sadece davetiye sahibi için geçerlidir"
-                      planEtiketi={isDahil("ani-kitabi-pdf") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("ani-kitabi-pdf")}
+                      locked={paketDisiOzellikKilitli("ani-kitabi-pdf")}
+                      lockedMsg="Pakette yok"
                       acik={aniKitabiAcik} onToggle={() => setAniKitabiAcik(!aniKitabiAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -989,7 +1058,9 @@ function OlusturIcerigi() {
                       icon="📲" baslik="QR Check-in"
                       aciklama="Etkinlik girişinde her davetlinin kişiye özel QR kodunu okutarak katılımı saniyeler içinde kaydet"
                       misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
-                      planEtiketi={isDahil("qr-check-in") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("qr-check-in")}
+                      locked={paketDisiOzellikKilitli("qr-check-in")}
+                      lockedMsg="Pakette yok"
                       acik={checkInAcik} onToggle={() => setCheckInAcik(!checkInAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -1003,7 +1074,9 @@ function OlusturIcerigi() {
                       icon="🪑" baslik="Oturma Planı"
                       aciklama="Katılacak misafirleri masalara atayabileceğiniz yönetim ekranı açılır"
                       misafirGorur="Bu özellik sadece davetiye sahibinin panelinde görünür"
-                      planEtiketi={isDahil("oturma-plani") ? "Dahil" : "Ek ücret"}
+                      planEtiketi={paketEtiketi("oturma-plani")}
+                      locked={paketDisiOzellikKilitli("oturma-plani")}
+                      lockedMsg="Pakette yok"
                       acik={oturmaPlanAcik} onToggle={() => setOturmaPlanAcik(!oturmaPlanAcik)}
                     >
                       <div className="bg-purple-50 border border-purple-100 rounded-xl p-3.5 flex gap-2.5 items-start">
@@ -1023,11 +1096,11 @@ function OlusturIcerigi() {
                   </div>
                 )}
 
-                <button onClick={handleSubmit} disabled={yukleniyor}
+                <button onClick={handleSubmit} disabled={olusturmaEngelli}
                   className="w-full bg-purple-600 text-white py-4 rounded-2xl font-bold hover:bg-purple-700 active:scale-[0.99] transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-2 shadow-md shadow-purple-200">
                   {yukleniyor ? (
                     <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Oluşturuluyor...</>
-                  ) : aktivasyonKodu && odenecekTutar === 0 ? (
+                  ) : aktivasyonKodu ? (
                     "Davetiyeni Oluştur →"
                   ) : (
                     "Taslağı Oluştur ve Ödeme Adımına Geç →"
@@ -1288,6 +1361,7 @@ function FiyatOzeti({
     ? fiyat.kalemler.filter(k => dahilKodlar.includes(k.kod)).reduce((s, k) => s + k.tutar, 0)
     : 0;
   const odenecekTutar = fiyat.toplamTutar - dahilTutar;
+  const partnerAktivasyonu = dahilKodlar.length > 0;
 
   return (
     <div className={`rounded-2xl border border-purple-100 bg-white shadow-sm shadow-purple-50 ${kompakt ? "p-4" : "p-5"}`}>
@@ -1306,7 +1380,7 @@ function FiyatOzeti({
         </div>
         <div className="text-right">
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-            {dahilTutar > 0 ? "Ödenecek" : "Toplam"}
+            {partnerAktivasyonu ? (odenecekTutar > 0 ? "Pakette Yok" : "Ödenecek") : "Toplam"}
           </p>
           {dahilTutar > 0 && (
             <p className="text-xs line-through text-gray-400">{tutarMetni(fiyat.toplamTutar)}</p>
@@ -1325,7 +1399,7 @@ function FiyatOzeti({
                 {dahil && <span className="ml-1.5 text-[10px] font-bold text-green-600">✓ Dahil</span>}
               </span>
               <span className={`text-xs font-bold ${dahil ? "text-green-600" : "text-gray-900"}`}>
-                {dahil ? "Ücretsiz" : tutarMetni(kalem.tutar)}
+                {dahil ? "Ücretsiz" : partnerAktivasyonu ? "Pakette yok" : tutarMetni(kalem.tutar)}
               </span>
             </div>
           );
@@ -1335,9 +1409,11 @@ function FiyatOzeti({
       {!kompakt && (
         <div className="mt-3 flex flex-col gap-2">
           <p className="text-xs leading-relaxed text-gray-400">
-            {odenecekTutar === 0
-              ? "Aktivasyon kapsamında tüm seçimler ücretsiz; davetiye anında yayına alınır."
-              : "Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır."}
+            {partnerAktivasyonu && odenecekTutar > 0
+              ? "Bu aktivasyon paketinde olmayan seçimleri kapattığınızda davetiye ücretsiz yayına alınır."
+              : odenecekTutar === 0
+                ? "Aktivasyon kapsamında tüm seçimler ücretsiz; davetiye anında yayına alınır."
+                : "Ödeme tamamlanana kadar davetiye taslak olarak saklanır; ödeme sonrası yayına alınır."}
           </p>
           <Link href={fiyatHref} className="text-xs font-bold text-purple-600 hover:text-purple-700">
             Fiyatları detaylı gör →
