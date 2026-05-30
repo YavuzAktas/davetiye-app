@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 
 export async function POST(): Promise<NextResponse> {
+  const simdi = new Date();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Giriş gerekli." }, { status: 401 });
@@ -20,8 +21,12 @@ export async function POST(): Promise<NextResponse> {
   }
 
   const abonelik = await prisma.partnerAbonelik.findFirst({
-    where: { partnerId: partner.id, aktif: true },
-    select: { id: true, hakSayisi: true, kullanilanHak: true },
+    where: {
+      partnerId: partner.id,
+      aktif: true,
+      OR: [{ bitisAt: null }, { bitisAt: { gt: simdi } }],
+    },
+    select: { id: true, hakSayisi: true, kullanilanHak: true, bitisAt: true },
   });
 
   if (!abonelik) {
@@ -44,6 +49,8 @@ export async function POST(): Promise<NextResponse> {
       where: {
         id: abonelik.id,
         kullanilanHak: { lt: abonelik.hakSayisi },
+        aktif: true,
+        OR: [{ bitisAt: null }, { bitisAt: { gt: simdi } }],
       },
       data: { kullanilanHak: { increment: 1 } },
     });
@@ -53,8 +60,10 @@ export async function POST(): Promise<NextResponse> {
     return tx.aktivasyonKodu.create({
       data: {
         partnerId: partner.id,
+        abonelikId: abonelik.id,
         kod,
         durum: "olusturuldu",
+        expiresAt: abonelik.bitisAt,
       },
     });
   });

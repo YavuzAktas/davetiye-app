@@ -11,6 +11,7 @@ export async function POST(
   _req: Request,
   { params }: { params: Promise<{ kod: string }> }
 ): Promise<NextResponse> {
+  const simdi = new Date();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Giriş gerekli." }, { status: 401 });
@@ -24,8 +25,11 @@ export async function POST(
       id: true,
       durum: true,
       musteriUserId: true,
+      expiresAt: true,
+      abonelik: { select: { aktif: true, bitisAt: true } },
       partner: {
         select: {
+          durum: true,
           firmaAdi: true,
           user: { select: { email: true } },
         },
@@ -35,6 +39,20 @@ export async function POST(
 
   if (!aktivasyon) {
     return NextResponse.json({ error: "Geçersiz aktivasyon kodu." }, { status: 404 });
+  }
+
+  if (aktivasyon.partner.durum !== "aktif") {
+    return NextResponse.json({ error: "Bu partner hesabı aktif olmadığı için link kullanılamaz." }, { status: 409 });
+  }
+
+  const kodSuresiGecerli = !aktivasyon.expiresAt || aktivasyon.expiresAt > simdi;
+  const abonelikGecerli =
+    aktivasyon.abonelik &&
+    aktivasyon.abonelik.aktif &&
+    (!aktivasyon.abonelik.bitisAt || aktivasyon.abonelik.bitisAt > simdi);
+
+  if (!kodSuresiGecerli || !abonelikGecerli) {
+    return NextResponse.json({ error: "Bu aktivasyon linkinin süresi dolmuş." }, { status: 409 });
   }
 
   // Zaten bu kullanıcıya bağlı → idempotent, izin ver

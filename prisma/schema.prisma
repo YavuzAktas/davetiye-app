@@ -521,6 +521,7 @@ model PartnerAbonelik {
   aktif         Boolean  @default(true)
   createdAt     DateTime @default(now())
   partner       Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  aktivasyonKodlari AktivasyonKodu[]
 
   @@index([partnerId, aktif])
 }
@@ -528,16 +529,21 @@ model PartnerAbonelik {
 model AktivasyonKodu {
   id            String    @id @default(cuid())
   partnerId     String
+  abonelikId    String?
   kod           String    @unique
   durum         String    @default("olusturuldu")
   musteriUserId String?
   davetiyeId    String?   @unique
   createdAt     DateTime  @default(now())
   kullanilanAt  DateTime?
+  expiresAt     DateTime?
   partner       Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  abonelik      PartnerAbonelik? @relation(fields: [abonelikId], references: [id], onDelete: SetNull)
   musteriUser   User?     @relation("AktivasyonMusteriUser", fields: [musteriUserId], references: [id], onDelete: SetNull)
   davetiye      Davetiye? @relation(fields: [davetiyeId], references: [id], onDelete: SetNull)
 
   @@index([partnerId])
+  @@index([abonelikId])
   @@index([musteriUserId])
+  @@index([expiresAt])
 }

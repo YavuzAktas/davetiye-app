@@ -30,11 +30,15 @@ export async function PATCH(
 
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
-    select: { id: true, partnerId: true, durum: true },
+    select: { id: true, partnerId: true, abonelikId: true, durum: true, expiresAt: true },
   });
 
   if (!aktivasyon || aktivasyon.partnerId !== partner.id) {
     return NextResponse.json({ error: "Kod bulunamadı." }, { status: 404 });
+  }
+
+  if (aktivasyon.expiresAt && aktivasyon.expiresAt < new Date() && action === "gonderildi") {
+    return NextResponse.json({ error: "Süresi dolan kod gönderilemez." }, { status: 409 });
   }
 
   if (action === "gonderildi") {
@@ -56,16 +60,25 @@ export async function PATCH(
     );
   }
 
-  await prisma.$transaction([
-    prisma.aktivasyonKodu.update({
+  await prisma.$transaction(async (tx) => {
+    await tx.aktivasyonKodu.update({
       where: { id: aktivasyon.id },
       data: { durum: "iptal" },
-    }),
-    prisma.partnerAbonelik.updateMany({
-      where: { partnerId: partner.id, aktif: true },
+    });
+
+    if (aktivasyon.abonelikId) {
+      await tx.partnerAbonelik.updateMany({
+        where: { id: aktivasyon.abonelikId, partnerId: partner.id, kullanilanHak: { gt: 0 } },
+        data: { kullanilanHak: { decrement: 1 } },
+      });
+      return;
+    }
+
+    await tx.partnerAbonelik.updateMany({
+      where: { partnerId: partner.id, aktif: true, kullanilanHak: { gt: 0 } },
       data: { kullanilanHak: { decrement: 1 } },
-    }),
-  ]);
+    });
+  });
 
   return NextResponse.json({ ok: true });
 }

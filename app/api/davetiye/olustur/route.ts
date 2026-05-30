@@ -78,6 +78,7 @@ function tarihSaatOlustur(tarih: string, saat: string | null) {
 }
 
 export async function POST(req: NextRequest) {
+  const simdi = new Date();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ hata: "Giriş yapmanız gerekiyor." }, { status: 401 });
@@ -179,6 +180,14 @@ export async function POST(req: NextRequest) {
           musteriUserId: user.id,
           durum: "kayit_oldu",
           davetiyeId: null,
+          partner: { durum: "aktif" },
+          abonelik: {
+            is: {
+              aktif: true,
+              OR: [{ bitisAt: null }, { bitisAt: { gt: simdi } }],
+            },
+          },
+          OR: [{ expiresAt: null }, { expiresAt: { gt: simdi } }],
         },
         data: { durum: "davetiye_olusturuluyor" },
       });

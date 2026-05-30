@@ -17,20 +17,33 @@ export default async function AktivasyonPage({
   params: Promise<{ kod: string }>;
 }) {
   const { kod } = await params;
+  const simdi = new Date();
 
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
-    include: { partner: { select: { firmaAdi: true } } },
+    include: {
+      abonelik: { select: { aktif: true, bitisAt: true } },
+      partner: { select: { firmaAdi: true, durum: true } },
+    },
   });
 
   /* ── Geçersiz / iptal ── */
-  if (!aktivasyon || aktivasyon.durum === "iptal") {
+  const linkGecersiz =
+    !aktivasyon ||
+    aktivasyon.durum === "iptal" ||
+    aktivasyon.partner.durum !== "aktif" ||
+    !!(aktivasyon.expiresAt && aktivasyon.expiresAt < simdi) ||
+    !aktivasyon.abonelik ||
+    !aktivasyon.abonelik.aktif ||
+    !!(aktivasyon.abonelik.bitisAt && aktivasyon.abonelik.bitisAt < simdi);
+
+  if (linkGecersiz) {
     return (
       <PageShell>
         <div className="text-center">
           <div className="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6">🔗</div>
           <h1 className="text-2xl font-black text-gray-900 mb-2">Geçersiz Link</h1>
-          <p className="text-sm text-gray-500">Bu aktivasyon linki bulunamadı veya iptal edildi.</p>
+          <p className="text-sm text-gray-500">Bu aktivasyon linki bulunamadı, iptal edildi veya süresi doldu.</p>
         </div>
       </PageShell>
     );
