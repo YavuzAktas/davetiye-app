@@ -537,6 +537,7 @@ model AktivasyonKodu {
   createdAt     DateTime  @default(now())
   kullanilanAt  DateTime?
   expiresAt     DateTime?
+  not           String?   @db.VarChar(100)
   partner       Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
   abonelik      PartnerAbonelik? @relation(fields: [abonelikId], references: [id], onDelete: SetNull)
   musteriUser   User?     @relation("AktivasyonMusteriUser", fields: [musteriUserId], references: [id], onDelete: SetNull)

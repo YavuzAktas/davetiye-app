@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 
-export async function POST(): Promise<NextResponse> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const simdi = new Date();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -33,44 +33,60 @@ export async function POST(): Promise<NextResponse> {
     return NextResponse.json({ error: "Aktif abonelik bulunamadı." }, { status: 403 });
   }
 
-  // Atomik: nanoid çakışmasına karşı retry (ihtimali çok düşük ama önlem)
-  let kod: string | null = null;
-  for (let i = 0; i < 5; i++) {
-    const aday = nanoid(12);
-    const mevcut = await prisma.aktivasyonKodu.findUnique({ where: { kod: aday } });
-    if (!mevcut) { kod = aday; break; }
-  }
-  if (!kod) {
-    return NextResponse.json({ error: "Kod üretilemedi, tekrar deneyin." }, { status: 500 });
+  const body = await req.json().catch(() => ({}));
+  const adet = Math.min(5, Math.max(1, parseInt(body.adet ?? "1", 10) || 1));
+  const kalanHak = abonelik.hakSayisi - abonelik.kullanilanHak;
+  if (adet > kalanHak) {
+    return NextResponse.json(
+      { error: `Yalnızca ${kalanHak} hak kaldı. ${adet} kod oluşturulamaz.` },
+      { status: 403 }
+    );
   }
 
-  const yeniKod = await prisma.$transaction(async (tx) => {
+  // Benzersiz kodları önceden üret
+  const kodlar: string[] = [];
+  for (let i = 0; i < adet; i++) {
+    let kod: string | null = null;
+    for (let j = 0; j < 5; j++) {
+      const aday = nanoid(12);
+      const mevcut = await prisma.aktivasyonKodu.findUnique({ where: { kod: aday } });
+      if (!mevcut) { kod = aday; break; }
+    }
+    if (!kod) return NextResponse.json({ error: "Kod üretilemedi, tekrar deneyin." }, { status: 500 });
+    kodlar.push(kod);
+  }
+
+  const olusturulanlar = await prisma.$transaction(async (tx) => {
     const hakGuncelleme = await tx.partnerAbonelik.updateMany({
       where: {
         id: abonelik.id,
-        kullanilanHak: { lt: abonelik.hakSayisi },
+        kullanilanHak: { lte: abonelik.hakSayisi - adet },
         aktif: true,
         OR: [{ bitisAt: null }, { bitisAt: { gt: simdi } }],
       },
-      data: { kullanilanHak: { increment: 1 } },
+      data: { kullanilanHak: { increment: adet } },
     });
 
     if (hakGuncelleme.count !== 1) return null;
 
-    return tx.aktivasyonKodu.create({
-      data: {
-        partnerId: partner.id,
-        abonelikId: abonelik.id,
-        kod,
-        durum: "olusturuldu",
-        expiresAt: abonelik.bitisAt,
-      },
-    });
+    return Promise.all(
+      kodlar.map(kod =>
+        tx.aktivasyonKodu.create({
+          data: {
+            partnerId: partner.id,
+            abonelikId: abonelik.id,
+            kod,
+            durum: "olusturuldu",
+            expiresAt: abonelik.bitisAt,
+          },
+        })
+      )
+    );
   });
 
-  if (!yeniKod) {
+  if (!olusturulanlar) {
     return NextResponse.json({ error: "Bu ay için aktivasyon hakkınız tükendi." }, { status: 403 });
   }
 
-  return NextResponse.json({ kod: yeniKod.kod, id: yeniKod.id });
+  return NextResponse.json({ kodlar: olusturulanlar.map(k => ({ kod: k.kod, id: k.id })) });
 }

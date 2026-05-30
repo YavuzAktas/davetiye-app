@@ -59,6 +59,7 @@ export default function PanelIcerik({
   odemeGecmisi?: OdemeKayit[];
 }) {
   const [secilenPaket, setSecilenPaket] = useState<PartnerPaketId | null>(null);
+  const [yenilemeFormAcik, setYenilemeFormAcik] = useState(false);
   const [fatura, setFatura] = useState<Fatura>(BOS_FATURA);
   const [hatalar, setHatalar] = useState<Partial<Record<string, string>>>({});
   const [onay, setOnay] = useState(false);
@@ -189,7 +190,7 @@ export default function PanelIcerik({
                 </div>
                 <button
                   type="button"
-                  onClick={() => setSecilenPaket(abonelik.paketId as any)}
+                  onClick={() => { setSecilenPaket(abonelik.paketId as PartnerPaketId); setYenilemeFormAcik(true); }}
                   className="shrink-0 text-[11px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors px-3 py-1.5 rounded-xl ml-3"
                 >
                   Yenile
@@ -203,10 +204,19 @@ export default function PanelIcerik({
               </p>
             )}
 
-            {yakindaBitiyor && !hakTukendi && (
-              <p className="text-[11px] text-amber-600 font-medium">
-                ⚠️ Aboneliğiniz {kalanGun} gün içinde sona eriyor.
-              </p>
+            {yakindaBitiyor && !hakTukendi && !yenilemeFormAcik && (
+              <div className="flex items-center justify-between bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3">
+                <p className="text-[11px] text-amber-600 font-medium">
+                  ⚠️ Aboneliğiniz {kalanGun} gün içinde sona eriyor.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setYenilemeFormAcik(true)}
+                  className="shrink-0 text-[11px] font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors px-3 py-1.5 rounded-xl ml-3"
+                >
+                  Şimdi Yenile
+                </button>
+              </div>
             )}
 
             {!hakTukendi && !hakDolmakUzere && (
@@ -222,7 +232,7 @@ export default function PanelIcerik({
           {abonelik ? "Paket Yenile" : "Paket Seç"}
         </p>
 
-        {abonelik ? (
+        {abonelik && !yenilemeFormAcik ? (
           /* Aktif abonelik varken satın alımı engelle */
           <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4 text-center">
             <p className="text-sm font-bold text-blue-700 mb-1">Aktif aboneliğiniz devam ediyor</p>

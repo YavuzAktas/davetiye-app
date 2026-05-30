@@ -501,6 +501,27 @@ function OlusturIcerigi() {
               <p className="text-sm font-bold text-gray-900 leading-tight">{sablon.isim}</p>
             </div>
           </div>
+
+          {/* Adım göstergesi */}
+          <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+            {[
+              { no: 1, label: "Şablon", done: true },
+              { no: 2, label: "Bilgiler", done: false, aktif: true },
+              { no: 3, label: aktivasyonKodu && odenecekTutar === 0 ? "Yayınla" : "Ödeme", done: false },
+            ].map((adim, i) => (
+              <div key={adim.no} className="flex items-center gap-1.5">
+                {i > 0 && <div className="w-5 h-px bg-gray-200" />}
+                <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold transition-colors ${
+                  adim.done ? "bg-green-50 text-green-600" :
+                  adim.aktif ? "bg-purple-100 text-purple-700" :
+                  "text-gray-400"
+                }`}>
+                  {adim.done ? "✓" : <span className="w-4 h-4 rounded-full border flex items-center justify-center text-[9px] font-bold border-current">{adim.no}</span>}
+                  <span>{adim.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
           <button onClick={handleSubmit} disabled={yukleniyor}
             className="shrink-0 bg-purple-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-purple-700 active:scale-95 transition-all disabled:opacity-50 shadow-sm shadow-purple-200 flex items-center gap-2">
             {yukleniyor ? (

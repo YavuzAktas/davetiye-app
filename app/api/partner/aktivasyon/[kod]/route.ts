@@ -24,7 +24,7 @@ export async function PATCH(
   const body = await req.json().catch(() => ({}));
   const action: string = body.action ?? "iptal";
 
-  if (action !== "iptal" && action !== "gonderildi") {
+  if (!["iptal", "gonderildi", "not-guncelle"].includes(action)) {
     return NextResponse.json({ error: "Geçersiz işlem." }, { status: 400 });
   }
 
@@ -39,6 +39,15 @@ export async function PATCH(
 
   if (aktivasyon.expiresAt && aktivasyon.expiresAt < new Date() && action === "gonderildi") {
     return NextResponse.json({ error: "Süresi dolan kod gönderilemez." }, { status: 409 });
+  }
+
+  if (action === "not-guncelle") {
+    const notDeger = body.not != null ? String(body.not).trim().slice(0, 100) || null : null;
+    await prisma.aktivasyonKodu.update({
+      where: { id: aktivasyon.id },
+      data: { not: notDeger },
+    });
+    return NextResponse.json({ ok: true });
   }
 
   if (action === "gonderildi") {

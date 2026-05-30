@@ -42,6 +42,7 @@ export default async function PartnerPanelPage({
         durum: true,
         createdAt: true,
         kullanilanAt: true,
+        not: true,
         davetiye: { select: { slug: true, baslik: true } },
       },
     }),
@@ -86,6 +87,7 @@ export default async function PartnerPanelPage({
     durum: k.durum,
     createdAt: k.createdAt.toISOString(),
     kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
+    not: k.not ?? null,
     davetiye: k.davetiye ? { slug: k.davetiye.slug, baslik: k.davetiye.baslik } : null,
   }));
 
@@ -113,10 +115,46 @@ export default async function PartnerPanelPage({
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         {partner.durum === "beklemede" && (
-          <div className="bg-white rounded-3xl border border-gray-100 p-10 text-center">
-            <div className="text-4xl mb-4">⏳</div>
-            <h2 className="text-xl font-black text-gray-900 mb-2">Başvurunuz İnceleniyor</h2>
-            <p className="text-sm text-gray-500">Ekibimiz en kısa sürede sizinle iletişime geçecek.</p>
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-lg mx-auto">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">⏳</div>
+              <h2 className="text-xl font-black text-gray-900 mb-2">Başvurunuz İnceleniyor</h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Başvurunuzu aldık. Ekibimiz inceleme yapıyor.
+              </p>
+            </div>
+
+            {/* Süreç adımları */}
+            <div className="space-y-3 mb-8">
+              {[
+                { label: "Başvuru alındı", done: true, desc: new Date(partner.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) },
+                { label: "İnceleme aşamasında", done: false, aktif: true, desc: "Ortalama 24 saat içinde değerlendiriyoruz" },
+                { label: "Hesap aktivasyonu", done: false, desc: "Onay sonrası panel erişiminiz açılır" },
+              ].map((adim, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold ${
+                    adim.done ? "bg-green-500 text-white" :
+                    adim.aktif ? "bg-yellow-400 text-white" :
+                    "bg-gray-200 text-gray-400"
+                  }`}>
+                    {adim.done ? "✓" : i + 1}
+                  </div>
+                  <div>
+                    <p className={`text-sm font-semibold ${adim.aktif ? "text-gray-900" : adim.done ? "text-gray-600" : "text-gray-400"}`}>
+                      {adim.label}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">{adim.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-gray-100 pt-6 text-center">
+              <p className="text-xs text-gray-400 mb-1">Sorularınız için</p>
+              <a href="mailto:destek@bekleriz.com" className="text-sm font-semibold text-purple-600 hover:underline">
+                destek@bekleriz.com
+              </a>
+            </div>
           </div>
         )}
 

@@ -55,17 +55,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       aktif: true,
       OR: [{ bitisAt: null }, { bitisAt: { gt: new Date() } }],
     },
-    select: { bitisAt: true },
+    select: { bitisAt: true, kullanilanHak: true, hakSayisi: true },
   });
   if (aktifAbonelik) {
-    const bitisStr = aktifAbonelik.bitisAt
-      ? new Date(aktifAbonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })
-      : null;
-    return NextResponse.json({
-      hata: bitisStr
-        ? `Aktif aboneliğiniz ${bitisStr} tarihine kadar geçerli. Bu tarihten sonra yeni paket alabilirsiniz.`
-        : "Aktif aboneliğiniz bulunuyor. Sona erdikten sonra yeni paket alabilirsiniz.",
-    }, { status: 409 });
+    const besGunSonra = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+    const erkenYenileIzin =
+      (aktifAbonelik.bitisAt !== null && aktifAbonelik.bitisAt < besGunSonra) ||
+      aktifAbonelik.kullanilanHak >= aktifAbonelik.hakSayisi;
+    if (!erkenYenileIzin) {
+      const bitisStr = aktifAbonelik.bitisAt
+        ? new Date(aktifAbonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })
+        : null;
+      return NextResponse.json({
+        hata: bitisStr
+          ? `Aktif aboneliğiniz ${bitisStr} tarihine kadar geçerli. Bu tarihten sonra yeni paket alabilirsiniz.`
+          : "Aktif aboneliğiniz bulunuyor. Sona erdikten sonra yeni paket alabilirsiniz.",
+      }, { status: 409 });
+    }
   }
 
   const user = await prisma.user.findUnique({
