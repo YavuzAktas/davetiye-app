@@ -404,51 +404,51 @@ export default async function DavetiyeDetay({ params }: Props) {
         </div>
 
         {/* ── Mobil hızlı erişim (sadece küçük ekran) ── */}
-        <div className="lg:hidden flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 no-scrollbar">
+        <div className="lg:hidden grid grid-cols-2 gap-2">
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="text-xl">👥</span>
-            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Davetliler</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">👥</span>
+            <span className="text-xs font-semibold text-gray-700 truncate">Davetliler</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/check-in`}
-            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-emerald-100 rounded-2xl hover:bg-emerald-50/50 transition-colors"
+            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-emerald-100 rounded-2xl hover:bg-emerald-50/50 transition-colors"
           >
-            <span className="text-xl">✅</span>
-            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Check-in</span>
+            <span className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-base shrink-0">✅</span>
+            <span className="text-xs font-semibold text-gray-700 truncate">Check-in</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`}
-            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="text-xl">📋</span>
-            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">RSVP</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📋</span>
+            <span className="text-xs font-semibold text-gray-700 truncate">RSVP</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/program`}
-            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="text-xl">📅</span>
-            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Program</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📅</span>
+            <span className="text-xs font-semibold text-gray-700 truncate">Program</span>
           </Link>
           <Link
             href={`/dashboard/davetiye/${davetiye.slug}/album`}
-            className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
           >
-            <span className="text-xl">📸</span>
-            <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Albüm</span>
+            <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">📸</span>
+            <span className="text-xs font-semibold text-gray-700 truncate">Albüm</span>
           </Link>
           {!odemeBekliyor && (
             <a
               href={davetiyeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1.5 shrink-0 px-4 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 min-w-0 px-3 py-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors"
             >
-              <span className="text-xl">👁️</span>
-              <span className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">Önizle</span>
+              <span className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-base shrink-0">👁️</span>
+              <span className="text-xs font-semibold text-gray-700 truncate">Önizle</span>
             </a>
           )}
         </div>
