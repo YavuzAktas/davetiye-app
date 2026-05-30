@@ -25,6 +25,7 @@ export default async function AdminPartnerlerPage() {
     include: {
       user: { select: { email: true, name: true } },
       abonelikler: { where: { aktif: true }, take: 1 },
+      _count: { select: { aktivasyonKodlari: true } },
     },
   });
 
@@ -70,18 +71,38 @@ export default async function AdminPartnerlerPage() {
                       )}
                       <span>📅 {new Date(p.createdAt).toLocaleDateString("tr-TR")}</span>
                     </div>
+
+                    {/* Abonelik bilgisi */}
+                    {p.abonelikler[0] ? (() => {
+                      const ab = p.abonelikler[0];
+                      const kalanGun = ab.bitisAt
+                        ? Math.ceil((new Date(ab.bitisAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                        : null;
+                      return (
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 bg-green-50 rounded-xl px-3 py-2 mt-2">
+                          <span className="font-semibold text-green-700 capitalize">{ab.paketId} paketi</span>
+                          <span>{ab.kullanilanHak}/{ab.hakSayisi} hak</span>
+                          {kalanGun !== null && (
+                            <span className={kalanGun <= 5 ? "text-red-500 font-semibold" : ""}>
+                              {kalanGun > 0 ? `${kalanGun}g kaldı` : "Süresi dolmuş"}
+                            </span>
+                          )}
+                          <span>{p._count.aktivasyonKodlari} toplam kod</span>
+                        </div>
+                      );
+                    })() : (
+                      <div className="text-xs text-gray-400 bg-gray-50 rounded-xl px-3 py-2 mt-2">
+                        Aktif abonelik yok — {p._count.aktivasyonKodlari} toplam kod
+                      </div>
+                    )}
+
                     {detay.basvuruNotu && (
                       <p className="text-xs text-gray-500 bg-gray-50 rounded-xl px-3 py-2 mt-2 max-w-lg">
                         {detay.basvuruNotu}
                       </p>
                     )}
                   </div>
-                  {p.durum === "beklemede" && (
-                    <PartnerEylemleri partnerId={p.id} />
-                  )}
-                  {p.durum !== "beklemede" && (
-                    <PartnerEylemleri partnerId={p.id} readonly />
-                  )}
+                  <PartnerEylemleri partnerId={p.id} durum={p.durum} />
                 </div>
               </div>
             );

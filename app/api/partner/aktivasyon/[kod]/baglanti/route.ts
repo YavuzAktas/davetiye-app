@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { aktivasyonKoduKullanilanBildir } from "@/lib/email";
+import { getSiteUrl } from "@/lib/site-url";
 
 const KULLANILABILIR = new Set(["olusturuldu", "gonderildi"]);
 
@@ -18,7 +20,17 @@ export async function POST(
 
   const aktivasyon = await prisma.aktivasyonKodu.findUnique({
     where: { kod },
-    select: { id: true, durum: true, musteriUserId: true },
+    select: {
+      id: true,
+      durum: true,
+      musteriUserId: true,
+      partner: {
+        select: {
+          firmaAdi: true,
+          user: { select: { email: true } },
+        },
+      },
+    },
   });
 
   if (!aktivasyon) {
@@ -40,6 +52,8 @@ export async function POST(
     return NextResponse.json({ error: "Bu link artık kullanılamaz." }, { status: 409 });
   }
 
+  const musteriEmail = session.user.email ?? "";
+
   await prisma.aktivasyonKodu.update({
     where: { id: aktivasyon.id },
     data: {
@@ -48,6 +62,18 @@ export async function POST(
       kullanilanAt: new Date(),
     },
   });
+
+  // Partner'a bildirim — fire and forget
+  const partnerEmail = aktivasyon.partner.user.email;
+  if (partnerEmail) {
+    aktivasyonKoduKullanilanBildir({
+      partnerEmail,
+      firmaAdi: aktivasyon.partner.firmaAdi,
+      musteriEmail,
+      kod,
+      panelUrl: `${getSiteUrl()}/partner/panel`,
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

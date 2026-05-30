@@ -425,3 +425,129 @@ export async function partnerOnayBildir({
     console.error("Partner onay e-postası gönderilemedi:", error);
   }
 }
+
+export async function aktivasyonKoduKullanilanBildir({
+  partnerEmail,
+  firmaAdi,
+  musteriEmail,
+  kod,
+  panelUrl,
+}: {
+  partnerEmail: string;
+  firmaAdi: string;
+  musteriEmail: string;
+  kod: string;
+  panelUrl: string;
+}) {
+  const guvenliFiremaAdi = escapeHtml(firmaAdi);
+  const guvenliMusteriEmail = escapeHtml(musteriEmail);
+  const guvenliKod = escapeHtml(kod);
+  const guvenliUrl = encodeURI(panelUrl);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,sans-serif;">
+      <div style="max-width:520px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:linear-gradient(135deg,#7C3AED,#DB2777);padding:28px;text-align:center;">
+          <p style="color:white;font-size:28px;margin:0;">👤</p>
+          <h1 style="color:white;font-size:18px;margin:8px 0 0;font-weight:700;">Müşteriniz Kaydoldu</h1>
+        </div>
+        <div style="padding:28px;">
+          <p style="color:#374151;font-size:15px;margin:0 0 16px;">
+            <strong>${guvenliFiremaAdi}</strong> adına oluşturduğunuz aktivasyon kodunu bir müşteri kullandı.
+          </p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;">
+            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Müşteri</td><td style="padding:8px 0;color:#7C3AED;">${guvenliMusteriEmail}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Kod</td><td style="padding:8px 0;color:#111827;font-family:monospace;font-weight:600;">${guvenliKod}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Durum</td><td style="padding:8px 0;color:#d97706;font-weight:600;">Davetiye oluşturuluyor</td></tr>
+          </table>
+          <div style="text-align:center;">
+            <a href="${guvenliUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Partner Panelinde Görüntüle</a>
+          </div>
+        </div>
+        <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: partnerEmail,
+      subject: sanitizeSubject(`Müşteriniz aktivasyon kodunu kullandı — ${firmaAdi}`),
+      html,
+    });
+  } catch (error) {
+    console.error("Aktivasyon kodu kullanılan bildirimi gönderilemedi:", error);
+  }
+}
+
+export async function davetiyeYayindaBildir({
+  partnerEmail,
+  firmaAdi,
+  musteriEmail,
+  davetiyeBaslik,
+  davetiyeUrl,
+  panelUrl,
+}: {
+  partnerEmail: string;
+  firmaAdi: string;
+  musteriEmail: string;
+  davetiyeBaslik: string;
+  davetiyeUrl: string;
+  panelUrl: string;
+}) {
+  const guvenliFiremaAdi = escapeHtml(firmaAdi);
+  const guvenliMusteriEmail = escapeHtml(musteriEmail);
+  const guvenliBaslik = escapeHtml(davetiyeBaslik);
+  const guvenliDavetiyeUrl = encodeURI(davetiyeUrl);
+  const guvenliPanelUrl = encodeURI(panelUrl);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,sans-serif;">
+      <div style="max-width:520px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:linear-gradient(135deg,#7C3AED,#DB2777);padding:28px;text-align:center;">
+          <p style="color:white;font-size:28px;margin:0;">🎉</p>
+          <h1 style="color:white;font-size:18px;margin:8px 0 0;font-weight:700;">Davetiye Yayınlandı!</h1>
+        </div>
+        <div style="padding:28px;">
+          <p style="color:#374151;font-size:15px;margin:0 0 16px;">
+            <strong>${guvenliFiremaAdi}</strong> aracılığıyla bir müşteriniz davetiyesini oluşturdu ve yayınladı.
+          </p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;">
+            <tr><td style="padding:8px 0;color:#6b7280;width:40%;">Müşteri</td><td style="padding:8px 0;color:#7C3AED;">${guvenliMusteriEmail}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Davetiye</td><td style="padding:8px 0;color:#111827;font-weight:600;">${guvenliBaslik}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Durum</td><td style="padding:8px 0;color:#16a34a;font-weight:600;">✓ Yayında</td></tr>
+          </table>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <a href="${guvenliDavetiyeUrl}" style="display:inline-block;background:#f3f4f6;color:#374151;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;">Davetiyeyi Gör</a>
+            <a href="${guvenliPanelUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;">Partner Paneli</a>
+          </div>
+        </div>
+        <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: partnerEmail,
+      subject: sanitizeSubject(`Müşterinizin davetiyesi yayınlandı — ${davetiyeBaslik}`),
+      html,
+    });
+  } catch (error) {
+    console.error("Davetiye yayında bildirimi gönderilemedi:", error);
+  }
+}

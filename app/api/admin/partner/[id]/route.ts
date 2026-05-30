@@ -19,7 +19,10 @@ export async function PATCH(
   const body = await req.json().catch(() => ({}));
   const action: string = body.action ?? "";
 
-  if (action !== "onayla" && action !== "reddet") {
+  const GECERLI_AKSIYONLAR = ["onayla", "reddet", "askiya-al", "aktifleştir"] as const;
+  type Aksiyon = typeof GECERLI_AKSIYONLAR[number];
+
+  if (!GECERLI_AKSIYONLAR.includes(action as Aksiyon)) {
     return NextResponse.json({ error: "Geçersiz işlem." }, { status: 400 });
   }
 
@@ -32,10 +35,17 @@ export async function PATCH(
     return NextResponse.json({ error: "Partner bulunamadı." }, { status: 404 });
   }
 
-  const yeniDurum = action === "onayla" ? "aktif" : "askida";
+  const DURUM_MAP: Record<Aksiyon, string> = {
+    "onayla": "aktif",
+    "reddet": "askida",
+    "askiya-al": "askida",
+    "aktifleştir": "aktif",
+  };
+
+  const yeniDurum = DURUM_MAP[action as Aksiyon];
   await prisma.partner.update({ where: { id }, data: { durum: yeniDurum } });
 
-  if (action === "onayla" && partner.user.email) {
+  if ((action === "onayla" || action === "aktifleştir") && partner.user.email) {
     await partnerOnayBildir({
       email: partner.user.email,
       partnerAdi: partner.user.name ?? partner.user.email,

@@ -8,6 +8,8 @@ import { davetiyeFiyatiHesapla } from "@/lib/davetiye-fiyatlandirma";
 import { ipIzinVer } from "@/lib/rate-limit";
 import { SABLONLAR } from "@/lib/sablonlar";
 import { MUZIK_KUTUPHANESI } from "@/lib/muzik-kutuphanesi";
+import { davetiyeYayindaBildir } from "@/lib/email";
+import { getSiteUrl } from "@/lib/site-url";
 
 const SABLON_IDLERI = new Set(SABLONLAR.map((s) => s.id));
 const MUZIK_URLLERI = new Set(MUZIK_KUTUPHANESI.map((m) => m.url));
@@ -120,11 +122,19 @@ export async function POST(req: NextRequest) {
   }
 
   // Aktivasyon kodu bypass kontrolü
-  let aktivasyonKoduKayit: { id: string } | null = null;
+  let aktivasyonKoduKayit: {
+    id: string;
+    partner: { firmaAdi: string; user: { email: string | null } };
+  } | null = null;
   if (veri.aktivasyonKodu) {
     const aday = await prisma.aktivasyonKodu.findUnique({
       where: { kod: veri.aktivasyonKodu },
-      select: { id: true, musteriUserId: true, durum: true },
+      select: {
+        id: true,
+        musteriUserId: true,
+        durum: true,
+        partner: { select: { firmaAdi: true, user: { select: { email: true } } } },
+      },
     });
     if (aday && aday.musteriUserId === session.user.id && aday.durum === "kayit_oldu") {
       aktivasyonKoduKayit = aday;
@@ -183,6 +193,20 @@ export async function POST(req: NextRequest) {
       where: { id: aktivasyonKoduKayit.id },
       data: { davetiyeId: davetiye.id, durum: "yayinda" },
     });
+
+    // Partner'a bildirim — fire and forget
+    const partnerEmail = aktivasyonKoduKayit.partner.user.email;
+    if (partnerEmail) {
+      const musteriEmail = session.user.email ?? "";
+      davetiyeYayindaBildir({
+        partnerEmail,
+        firmaAdi: aktivasyonKoduKayit.partner.firmaAdi,
+        musteriEmail,
+        davetiyeBaslik: veri.baslik,
+        davetiyeUrl: `${getSiteUrl()}/davetiye/${davetiye.slug}`,
+        panelUrl: `${getSiteUrl()}/partner/panel`,
+      });
+    }
   }
 
   if (kullanilanPolaroidler.length > 0) {
