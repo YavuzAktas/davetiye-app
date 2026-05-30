@@ -67,6 +67,7 @@ const davetiyeOlusturSemasi = z.object({
       return new Set(sorular.map((s) => s.id)).size === sorular.length;
     }, "RSVP soruları tekrar edemez.")
     .transform((v) => v || undefined),
+  aktivasyonKodu: z.string().trim().max(30).optional().nullable().transform((v) => v || null),
 }).strict();
 
 function tarihSaatOlustur(tarih: string, saat: string | null) {
@@ -118,6 +119,18 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Aktivasyon kodu bypass kontrolü
+  let aktivasyonKoduKayit: { id: string } | null = null;
+  if (veri.aktivasyonKodu) {
+    const aday = await prisma.aktivasyonKodu.findUnique({
+      where: { kod: veri.aktivasyonKodu },
+      select: { id: true, musteriUserId: true, durum: true },
+    });
+    if (aday && aday.musteriUserId === session.user.id && aday.durum === "kayit_oldu") {
+      aktivasyonKoduKayit = aday;
+    }
+  }
+
   const slug = nanoid(10);
   const fiyat = davetiyeFiyatiHesapla({
     sablon: veri.sablon,
@@ -140,7 +153,6 @@ export async function POST(req: NextRequest) {
       mekan:           veri.mekan,
       mesaj:           veri.mesaj,
       sablon:          veri.sablon,
-      aktif:           false,
       font:            veri.font,
       ozelRenk:        veri.renk,
       muzik:           veri.muzik,
@@ -160,10 +172,18 @@ export async function POST(req: NextRequest) {
       aniKitabiAktif:  veri.aniKitabiAktif,
       checkInAktif:    veri.checkInAktif,
       rsvpSorular:     veri.rsvpSorular,
-      odemeDurumu:     "odeme_bekliyor",
+      odemeDurumu:     aktivasyonKoduKayit ? "odendi" : "odeme_bekliyor",
+      aktif:           aktivasyonKoduKayit ? true : false,
       fiyatSnapshot:   fiyat as any,
     },
   });
+
+  if (aktivasyonKoduKayit) {
+    await prisma.aktivasyonKodu.update({
+      where: { id: aktivasyonKoduKayit.id },
+      data: { davetiyeId: davetiye.id, durum: "davetiye_olusturuldu" },
+    });
+  }
 
   if (kullanilanPolaroidler.length > 0) {
     await prisma.geciciYukleme.updateMany({
@@ -179,5 +199,5 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ id: davetiye.id, slug: davetiye.slug, fiyat });
+  return NextResponse.json({ id: davetiye.id, slug: davetiye.slug, fiyat, activated: !!aktivasyonKoduKayit });
 }

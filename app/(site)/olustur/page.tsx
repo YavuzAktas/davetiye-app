@@ -143,6 +143,7 @@ function OlusturIcerigi() {
   const { data: session } = useSession();
 
   const sablonId       = searchParams.get("sablon") || "klasik-dugun";
+  const aktivasyonKodu = searchParams.get("aktivasyon") || "";
   const sablon         = SABLONLAR.find(s => s.id === sablonId) || SABLONLAR[0];
   const fiyatHref      = `/fiyatlar?sablon=${encodeURIComponent(sablon.id)}`;
   const sablonTipi     = getSablonTipi(sablonId);
@@ -394,6 +395,7 @@ function OlusturIcerigi() {
           dressKod:          dressKodAcik && dressKodMetin.trim() ? dressKodMetin.trim() : null,
           dressKodRenkler:   dressKodAcik && dressKodMetin.trim() ? JSON.stringify(dressRenkler) : null,
           rsvpSorular:       rsvpSorularAcik ? rsvpSorularConfig : null,
+          aktivasyonKodu:    aktivasyonKodu || null,
         }),
       });
       const data = await res.json();
@@ -402,7 +404,11 @@ function OlusturIcerigi() {
         return;
       }
       clearSablonSecimi();
-      router.push(`/odeme/${data.slug}`);
+      if (data.activated) {
+        router.push(`/dashboard/davetiye/${data.slug}?yeni=1`);
+      } else {
+        router.push(`/odeme/${data.slug}`);
+      }
     } catch { setHata("Bir hata oluştu, tekrar deneyin."); }
     finally { setYukleniyor(false); }
   };
@@ -503,6 +509,15 @@ function OlusturIcerigi() {
 
           {/* ── Sol — Form ── */}
           <div className="lg:col-span-3 space-y-5">
+
+            {aktivasyonKodu && (
+              <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
+                <span className="text-xl">🎁</span>
+                <p className="text-sm font-semibold text-green-700">
+                  Aktivasyon kodu ile ücretsiz davetiye oluşturuyorsunuz. Ödeme alınmayacak.
+                </p>
+              </div>
+            )}
 
             <>
                 {/* ── 1. Temel Bilgiler ── */}
