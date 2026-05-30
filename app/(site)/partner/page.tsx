@@ -1,0 +1,336 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Partner Programı — Organizasyoncular İçin | Bekleriz",
+  description:
+    "Düğün organizasyonu, etkinlik planlama veya fotoğrafçılık yapıyor musunuz? Müşterilerinize dijital davetiye hakkı sunun, siz yönetin.",
+  robots: { index: false },
+};
+
+const PAKETLER = [
+  {
+    id: "baslangic",
+    ad: "Başlangıç",
+    fiyat: "₺399",
+    periyot: "/ay",
+    renk: "#6366f1",
+    bg: "bg-indigo-50",
+    border: "border-indigo-100",
+    btnClass: "bg-indigo-600 hover:bg-indigo-700",
+    hakSayisi: 10,
+    populer: false,
+    ozellikler: [
+      "Ayda 10 davetiye aktivasyon hakkı",
+      "Kişisel aktivasyon linki oluşturma",
+      "Temel partner paneli",
+      "Müşteri davetiye durumu takibi",
+      "WhatsApp ile link gönderme",
+    ],
+    dahilDegil: ["Partner logo/marka ibaresi", "Kullanım raporu", "Öncelikli destek"],
+  },
+  {
+    id: "profesyonel",
+    ad: "Profesyonel",
+    fiyat: "₺999",
+    periyot: "/ay",
+    renk: "#9333ea",
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    btnClass: "bg-purple-600 hover:bg-purple-700",
+    hakSayisi: 30,
+    populer: true,
+    ozellikler: [
+      "Ayda 30 davetiye aktivasyon hakkı",
+      "Kişisel aktivasyon linki oluşturma",
+      "Partner logo / marka ibaresi",
+      "Detaylı kullanım raporu",
+      "Müşteri davetiye durumu takibi",
+      "Öncelikli destek",
+    ],
+    dahilDegil: ["Özel onboarding", "Çoklu personel hesabı"],
+  },
+  {
+    id: "ajans",
+    ad: "Ajans",
+    fiyat: "Teklif alın",
+    periyot: "",
+    renk: "#db2777",
+    bg: "bg-pink-50",
+    border: "border-pink-100",
+    btnClass: "bg-pink-600 hover:bg-pink-700",
+    hakSayisi: 75,
+    populer: false,
+    ozellikler: [
+      "Ayda 75+ davetiye aktivasyon hakkı",
+      "Partner logo / marka ibaresi",
+      "Özel onboarding süreci",
+      "Özel kampanya linki",
+      "Detaylı kullanım raporu",
+      "Öncelikli destek hattı",
+    ],
+    dahilDegil: [],
+  },
+] as const;
+
+const NASIL_CALISIR = [
+  {
+    n: "1",
+    baslik: "Partner paketi satın al",
+    aciklama: "İhtiyacına uygun paketi seç. Aktivasyon hakları anında hesabına yüklenir.",
+    icon: "📦",
+  },
+  {
+    n: "2",
+    baslik: "Müşteriye aktivasyon linki gönder",
+    aciklama: "Partner panelinden tek tıkla link oluştur, WhatsApp ile ilet.",
+    icon: "🔗",
+  },
+  {
+    n: "3",
+    baslik: "Müşteri kendi hesabını açar",
+    aciklama: "Müşteri linkle gelir, kaydolur, KVKK'yı kabul eder ve davetiyesini oluşturur.",
+    icon: "🎨",
+  },
+  {
+    n: "4",
+    baslik: "Sen sadece durumu takip edersin",
+    aciklama: "Partner panelinde davetiye durumunu görürsün. Davetli verileri sende değil, müşteride.",
+    icon: "📊",
+  },
+];
+
+const PARTNER_GURUPLARI = [
+  { emoji: "💒", label: "Düğün organizasyon firmaları" },
+  { emoji: "📸", label: "Düğün fotoğrafçıları" },
+  { emoji: "🎪", label: "Etkinlik organizatörleri" },
+  { emoji: "🌺", label: "Çiçekçi & dekorasyon firmaları" },
+  { emoji: "🍽️", label: "Catering ve mekan işletmeleri" },
+  { emoji: "🎵", label: "Müzik grupları & DJ'ler" },
+];
+
+const GUVEN_NOKTALAR = [
+  {
+    icon: "🔒",
+    baslik: "Davetli verisi sende değil",
+    aciklama:
+      "Müşterinin davetli isimleri, telefonları ve RSVP cevapları sana gösterilmez. Tamamen müşteriye aittir.",
+  },
+  {
+    icon: "⚖️",
+    baslik: "KVKK müşteri kabul eder",
+    aciklama:
+      "Yasal metinleri müşteri kendi hesabıyla kabul eder. Sen sadece aktivasyon hakkı sağlarsın.",
+  },
+  {
+    icon: "💳",
+    baslik: "Ödeme sürpriz yok",
+    aciklama:
+      "Müşteri ayrıca ödeme yapmaz. Paketinde kalan hak kadar davetiye aktivasyonu ücretsizdir.",
+  },
+];
+
+export default function PartnerPage() {
+  return (
+    <div className="bg-white">
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-[#0c0118] text-white">
+        <div className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{ backgroundImage: "radial-gradient(circle at 30% 40%, #7c3aed 0%, transparent 60%), radial-gradient(circle at 75% 70%, #db2777 0%, transparent 55%)" }}
+        />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 text-xs font-semibold text-white/70 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+            Organizasyoncular İçin · B2B Program
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6">
+            Müşterilerinize<br />
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">
+              dijital davetiye
+            </span>{" "}
+            sunun
+          </h1>
+          <p className="text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Organizasyon firmanız için toplu davetiye aktivasyon hakkı satın alın.
+            Müşterileriniz davetiyelerini kendi hesaplarında oluşturup yönetsin.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/partner/basvuru"
+              className="inline-flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity text-sm"
+            >
+              Partner Başvurusu Yap
+              <span>→</span>
+            </Link>
+            <Link
+              href="/partner/sozlesme"
+              className="inline-flex items-center justify-center gap-2 bg-white/8 border border-white/12 text-white/70 hover:text-white font-semibold px-8 py-4 rounded-2xl hover:bg-white/12 transition-all text-sm"
+            >
+              Partner Sözleşmesi
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Kimler için ── */}
+      <section className="border-b border-gray-100 py-14">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <p className="text-center text-xs font-semibold text-gray-400 tracking-widest uppercase mb-8">
+            Kimler için?
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {PARTNER_GURUPLARI.map(g => (
+              <div key={g.label} className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5">
+                <span className="text-xl shrink-0">{g.emoji}</span>
+                <span className="text-sm font-medium text-gray-700">{g.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Nasıl çalışır ── */}
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Süreç</p>
+            <h2 className="text-3xl font-black text-gray-900">Nasıl çalışır?</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {NASIL_CALISIR.map(adim => (
+              <div key={adim.n} className="relative">
+                <div className="bg-gray-50 rounded-3xl p-6 h-full">
+                  <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-sm mb-4">
+                    {adim.icon}
+                  </div>
+                  <p className="text-[10px] font-bold text-gray-300 tracking-widest uppercase mb-2">Adım {adim.n}</p>
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">{adim.baslik}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{adim.aciklama}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Güven noktaları ── */}
+      <section className="bg-gray-50 py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Hukuki güvenlik</p>
+            <h2 className="text-2xl font-black text-gray-900">
+              Müşteri verisi sende değil — kasıtlı tasarladık
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {GUVEN_NOKTALAR.map(g => (
+              <div key={g.baslik} className="bg-white rounded-3xl p-6 border border-gray-100">
+                <div className="text-3xl mb-4">{g.icon}</div>
+                <h3 className="text-sm font-bold text-gray-900 mb-2">{g.baslik}</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">{g.aciklama}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center mt-8 text-xs text-gray-400">
+            Detaylar için:{" "}
+            <Link href="/partner/sozlesme" className="text-purple-600 hover:underline font-medium">
+              Partner Sözleşmesi
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      {/* ── Paketler ── */}
+      <section className="py-20" id="paketler">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Fiyatlandırma</p>
+            <h2 className="text-3xl font-black text-gray-900">Partner Paketleri</h2>
+            <p className="text-sm text-gray-500 mt-3">Kullanılmayan haklar ertesi aya devretmez, her ay yenilenir.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {PAKETLER.map(paket => (
+              <div
+                key={paket.id}
+                className={`relative rounded-3xl border-2 p-7 flex flex-col ${paket.border} ${paket.bg} ${
+                  paket.populer ? "shadow-xl scale-[1.02]" : ""
+                }`}
+              >
+                {paket.populer && (
+                  <div
+                    className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-white text-[11px] font-bold px-4 py-1 rounded-full"
+                    style={{ backgroundColor: paket.renk }}
+                  >
+                    En Çok Tercih Edilen
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
+                    {paket.ad}
+                  </p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-4xl font-black text-gray-900">{paket.fiyat}</span>
+                    <span className="text-sm text-gray-400 mb-1">{paket.periyot}</span>
+                  </div>
+                  {paket.hakSayisi && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Ayda <strong>{paket.hakSayisi}{paket.id === "ajans" ? "+" : ""}</strong> davetiye aktivasyonu
+                    </p>
+                  )}
+                </div>
+
+                <ul className="space-y-2.5 flex-1 mb-6">
+                  {paket.ozellikler.map(o => (
+                    <li key={o} className="flex items-start gap-2 text-xs text-gray-700">
+                      <svg className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: paket.renk }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {o}
+                    </li>
+                  ))}
+                  {paket.dahilDegil.map(o => (
+                    <li key={o} className="flex items-start gap-2 text-xs text-gray-400 line-through">
+                      <svg className="w-3.5 h-3.5 shrink-0 mt-0.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      {o}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/partner/basvuru"
+                  className={`w-full text-center text-sm font-bold text-white py-3 rounded-2xl transition-colors ${paket.btnClass}`}
+                >
+                  {paket.id === "ajans" ? "Teklif Talep Et" : "Başvur"}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA Banner ── */}
+      <section className="bg-[#0c0118] py-16 text-center">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <p className="text-3xl font-black text-white mb-4">
+            Hazır mısınız?
+          </p>
+          <p className="text-sm text-white/40 mb-8">
+            Başvurunuzu alır, 24 saat içinde iletişime geçeriz.
+          </p>
+          <Link
+            href="/partner/basvuru"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity"
+          >
+            Partner Başvurusu Yap →
+          </Link>
+        </div>
+      </section>
+
+    </div>
+  );
+}

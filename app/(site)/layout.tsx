@@ -51,6 +51,13 @@ const YASAL_LINKS = [
   { href: "/iletisim",          label: "İletişim"            },
 ];
 
+const PARTNER_LINKS = [
+  { href: "/partner",           label: "Partner Programı"       },
+  { href: "/partner#paketler",  label: "Organizasyoncular İçin" },
+  { href: "/partner/sozlesme",  label: "Partner Sözleşmesi"     },
+  { href: "/partner/basvuru",   label: "Partner Başvurusu"      },
+];
+
 function SocialIcon({ href, label, path }: { href: string; label: string; path: string }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
@@ -83,7 +90,7 @@ function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4 group">
               <div className="w-7 h-7 bg-linear-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center">
@@ -118,6 +125,19 @@ function Footer() {
             <p className="text-[10px] font-semibold text-white/20 tracking-[0.2em] uppercase mb-5">Yasal</p>
             <ul className="space-y-3.5">
               {YASAL_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-white/40 hover:text-white transition-colors duration-150">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-semibold text-white/20 tracking-[0.2em] uppercase mb-5">Partnerler</p>
+            <ul className="space-y-3.5">
+              {PARTNER_LINKS.map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm text-white/40 hover:text-white transition-colors duration-150">
                     {label}

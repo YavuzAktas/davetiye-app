@@ -590,6 +590,35 @@ export default async function FiyatlarSayfasi({
           </div>
         </div>
       </section>
+
+      {/* ── B2B Bant ── */}
+      <section className="border-t border-gray-100 bg-gray-50 py-14">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-3xl border border-gray-100 p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
+            <div className="flex-1 min-w-0 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-100 rounded-full px-3 py-1 text-[11px] font-bold text-purple-600 tracking-widest uppercase mb-4">
+                Organizasyoncular İçin
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 mb-2">
+                Müşterilerinize toplu davetiye sunun
+              </h2>
+              <p className="text-sm text-gray-500 leading-relaxed max-w-lg">
+                Düğün organizasyonu, etkinlik planlama veya fotoğrafçılık yapıyorsanız partner
+                paketlerimizle müşterilerinize dijital davetiye hakkı sunabilirsiniz.
+                Müşteri verisi size değil, müşteriye ait kalır.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <Link
+                href="/partner#paketler"
+                className="flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-7 py-3.5 rounded-2xl hover:opacity-90 transition-opacity text-sm"
+              >
+                Partner Paketlerini İncele →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
