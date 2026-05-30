@@ -1,5 +1,4 @@
 import https from "https";
-import http  from "http";
 import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
@@ -14,15 +13,41 @@ export const maxDuration = 60;
 
 interface Props { params: Promise<{ slug: string }> }
 
-/* Node.js https/http ile fotoğrafı base64 data URI'ye çevirir.
+const MAX_IMAGE_REDIRECTS = 3;
+const MAX_IMAGE_BYTES = 8_000_000;
+const ALLOWED_IMAGE_MIME = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
+const ALLOWED_BLOB_HOST_SUFFIXES = [
+  ".public.blob.vercel-storage.com",
+  ".blob.vercel-storage.com",
+];
+
+function guvenliBlobUrl(url: string): URL | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:") return null;
+    if (!ALLOWED_BLOB_HOST_SUFFIXES.some((suffix) => parsed.hostname.endsWith(suffix))) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+/* Node.js https ile fotoğrafı base64 data URI'ye çevirir.
    Native fetch yerine bu modül Vercel serverless'ta daha güvenilir. */
-function toDataUri(url: string): Promise<string | null> {
+function toDataUri(url: string, redirectCount = 0): Promise<string | null> {
   return new Promise((resolve) => {
-    const client = url.startsWith("https") ? https : http;
-    const req = client.get(url, (res) => {
+    const parsedUrl = guvenliBlobUrl(url);
+    if (!parsedUrl || redirectCount > MAX_IMAGE_REDIRECTS) {
+      resolve(null);
+      return;
+    }
+
+    const req = https.get(parsedUrl, (res) => {
       // 3xx redirect'i takip et
       if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        resolve(toDataUri(res.headers.location));
+        res.resume();
+        const nextUrl = new URL(res.headers.location, parsedUrl).toString();
+        resolve(toDataUri(nextUrl, redirectCount + 1));
         return;
       }
       if (res.statusCode !== 200) {
@@ -31,12 +56,32 @@ function toDataUri(url: string): Promise<string | null> {
         resolve(null);
         return;
       }
+      const contentLength = Number(res.headers["content-length"] ?? 0);
+      const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0].trim().toLowerCase();
+      if ((contentLength && contentLength > MAX_IMAGE_BYTES) || !ALLOWED_IMAGE_MIME.has(mime)) {
+        console.error("[ani-kitabi] image rejected", mime, contentLength, url.slice(0, 80));
+        res.resume();
+        resolve(null);
+        return;
+      }
+
       const chunks: Buffer[] = [];
-      res.on("data", (c: Buffer) => chunks.push(c));
+      let toplamByte = 0;
+      let boyutAsildi = false;
+      res.on("data", (c: Buffer) => {
+        toplamByte += c.length;
+        if (toplamByte > MAX_IMAGE_BYTES) {
+          boyutAsildi = true;
+          req.destroy();
+          resolve(null);
+          return;
+        }
+        chunks.push(c);
+      });
       res.on("end", async () => {
+        if (boyutAsildi) return;
         try {
           const buf  = Buffer.concat(chunks);
-          const mime = (res.headers["content-type"] ?? "image/jpeg").split(";")[0].trim();
           // react-pdf desteklemediği için webp/avif → jpeg dönüştür
           if (mime === "image/webp" || mime === "image/avif" || mime === "image/gif") {
             const jpeg = await sharp(buf).jpeg({ quality: 92 }).toBuffer();
@@ -137,6 +182,6 @@ export async function GET(req: NextRequest, { params }: Props) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("[ani-kitabi] hata:", msg);
-    return NextResponse.json({ hata: "PDF oluşturulamadı", detay: msg }, { status: 500 });
+    return NextResponse.json({ hata: "PDF oluşturulamadı." }, { status: 500 });
   }
 }
