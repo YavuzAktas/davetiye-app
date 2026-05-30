@@ -74,8 +74,8 @@ export default async function DavetiyeDetay({ params }: Props) {
 
   if (!davetiye) notFound();
 
-  // İstatistikler DB'de hesaplanıyor; ilk 50 RSVP RsvpListesi için ayrı çekiliyor.
-  const [rsvpGruplari, baslangicRsvplar] = await Promise.all([
+  // İstatistikler DB'de hesaplanıyor; ilk 50 RSVP ve RSVP'siz davetliler ayrı çekiliyor.
+  const [rsvpGruplari, baslangicRsvplar, bekleyenDavetliler] = await Promise.all([
     prisma.rSVP.groupBy({
       by: ["katilim"],
       where: { davetiyeId: davetiye.id },
@@ -91,6 +91,12 @@ export default async function DavetiyeDetay({ params }: Props) {
         katilim: true, kisiSayisi: true, diyet: true,
         sarkiOnerisi: true, cevaplar: true,
       },
+    }),
+    prisma.davetli.findMany({
+      where: { davetiyeId: davetiye.id, rsvpId: null },
+      select: { id: true, ad: true, email: true },
+      orderBy: { ad: "asc" },
+      take: 200,
     }),
   ]);
 
@@ -526,6 +532,11 @@ export default async function DavetiyeDetay({ params }: Props) {
                 diyet: r.diyet,
                 sarkiOnerisi: r.sarkiOnerisi,
                 cevaplar: (r.cevaplar as { ulasim?: boolean; cocuk?: number; alerji?: string; ozelSoru?: string; ozelCevap?: string } | null) ?? null,
+              }))}
+              baslangicBekleyenler={bekleyenDavetliler.map(d => ({
+                davetliId: d.id,
+                ad: d.ad,
+                email: d.email,
               }))}
               slug={slug}
               renk={renk}

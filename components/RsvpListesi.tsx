@@ -26,8 +26,15 @@ type RsvpItem = {
   cevaplar: RsvpCevaplar | null;
 };
 
+type BekleyenItem = {
+  davetliId: string;
+  ad: string;
+  email: string | null;
+};
+
 type YuklenenAlan = { id: string; alan: "katilim" | "kisi" } | null;
 type Parlayan = { id: string; tur: "yesil" | "kirmizi" } | null;
+type BekleyenYukleniyor = string | null;
 
 function MesajBloku({ metin, renk }: { metin: string; renk: string }) {
   const [acik, setAcik] = useState(false);
@@ -85,16 +92,20 @@ function CevapPiller({ cevaplar }: { cevaplar: RsvpCevaplar | null }) {
 
 export default function RsvpListesi({
   baslangicRsvplar,
+  baslangicBekleyenler = [],
   slug,
   renk,
 }: {
   baslangicRsvplar: RsvpItem[];
+  baslangicBekleyenler?: BekleyenItem[];
   slug: string;
   renk: string;
 }) {
-  const [rsvplar, setRsvplar]       = useState<RsvpItem[]>(baslangicRsvplar);
-  const [yukleniyor, setYukleniyor] = useState<YuklenenAlan>(null);
-  const [parlayan, setParlayan]     = useState<Parlayan>(null);
+  const [rsvplar, setRsvplar]         = useState<RsvpItem[]>(baslangicRsvplar);
+  const [bekleyenler, setBekleyenler] = useState<BekleyenItem[]>(baslangicBekleyenler);
+  const [yukleniyor, setYukleniyor]   = useState<YuklenenAlan>(null);
+  const [parlayan, setParlayan]       = useState<Parlayan>(null);
+  const [bekleyenYuk, setBekleyenYuk] = useState<BekleyenYukleniyor>(null);
 
   const katilimlar    = rsvplar.filter(r => r.katilim);
   const katilmayanlar = rsvplar.filter(r => !r.katilim);
@@ -135,6 +146,35 @@ export default function RsvpListesi({
     guncelle(rsvp.id, "katilim", { katilim: yeniDurum }, { katilim: rsvp.katilim }, yeniDurum ? "yesil" : "kirmizi");
   };
 
+  const bekleyenDurumAta = async (item: BekleyenItem, katilim: boolean) => {
+    setBekleyenYuk(item.davetliId);
+    try {
+      const res = await fetch(`/api/dashboard/davetiye/${slug}/rsvp-manuel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ davetliId: item.davetliId, katilim, kisiSayisi: 1 }),
+      });
+      if (!res.ok) throw new Error();
+      const { rsvpId } = await res.json();
+      setBekleyenler(prev => prev.filter(b => b.davetliId !== item.davetliId));
+      setRsvplar(prev => [{
+        id: rsvpId,
+        ad: item.ad,
+        email: item.email,
+        mesaj: null,
+        katilim,
+        kisiSayisi: 1,
+        diyet: null,
+        sarkiOnerisi: null,
+        cevaplar: null,
+      }, ...prev]);
+    } catch {
+      /* sessiz hata */
+    } finally {
+      setBekleyenYuk(null);
+    }
+  };
+
   const kisiDegistir = (rsvp: RsvpItem, delta: number) => {
     const yeniSayi = Math.max(1, Math.min(20, rsvp.kisiSayisi + delta));
     if (yeniSayi === rsvp.kisiSayisi) return;
@@ -166,6 +206,12 @@ export default function RsvpListesi({
                   {katilmayanlar.length} katılamıyor
                 </span>
               )}
+              {bekleyenler.length > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                  {bekleyenler.length} bekleniyor
+                </span>
+              )}
               {toplamKisi > 0 && (
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-50 text-gray-500">
                   👥 {toplamKisi} kişi
@@ -192,7 +238,7 @@ export default function RsvpListesi({
       </div>
 
       {/* ── Liste ── */}
-      {rsvplar.length === 0 ? (
+      {rsvplar.length === 0 && bekleyenler.length === 0 ? (
         <div className="text-center py-16 px-6">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4"
@@ -321,6 +367,54 @@ export default function RsvpListesi({
               </div>
             );
           })}
+
+          {/* ── Bekleniyor davetliler ── */}
+          {bekleyenler.length > 0 && (
+            <>
+              {rsvplar.length > 0 && (
+                <div className="flex items-center gap-2 my-1">
+                  <div className="flex-1 h-px bg-gray-100" />
+                  <span className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider">Bekleniyor</span>
+                  <div className="flex-1 h-px bg-gray-100" />
+                </div>
+              )}
+              {bekleyenler.map(item => (
+                <div
+                  key={item.davetliId}
+                  className="rounded-2xl border border-gray-100 bg-gray-50 p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold shrink-0 bg-gray-200 text-gray-400">
+                      {item.ad[0]?.toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-700 text-sm leading-tight">{item.ad}</p>
+                      {item.email && (
+                        <p className="text-[11px] text-gray-400 mt-0.5 truncate">{item.email}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => bekleyenYuk !== item.davetliId && bekleyenDurumAta(item, true)}
+                        disabled={bekleyenYuk === item.davetliId}
+                        className="text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all disabled:opacity-50 border border-transparent hover:border-emerald-200"
+                        style={{ background: renk + "15", color: renk }}
+                      >
+                        {bekleyenYuk === item.davetliId ? "..." : "✓ Katılıyor"}
+                      </button>
+                      <button
+                        onClick={() => bekleyenYuk !== item.davetliId && bekleyenDurumAta(item, false)}
+                        disabled={bekleyenYuk === item.davetliId}
+                        className="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-red-50 text-red-400 transition-all disabled:opacity-50 border border-transparent hover:border-red-200"
+                      >
+                        {bekleyenYuk === item.davetliId ? "..." : "✗ Katılamıyor"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       )}
     </div>

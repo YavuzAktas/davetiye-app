@@ -348,6 +348,46 @@ export default function DavetlilerSayfasi() {
     setImportYukleniyor(false);
   };
 
+  // ── Durum (RSVP) değiştirme ─────────────────────────────
+
+  const [durumYukleniyor, setDurumYukleniyor] = useState<string | null>(null);
+
+  const durumDegistir = async (davetli: Davetli, katilim: boolean) => {
+    if (!davetiye) return;
+    setDurumYukleniyor(davetli.id);
+    try {
+      let rsvpId = davetli.rsvpId;
+
+      if (rsvpId) {
+        // Mevcut RSVP'yi güncelle
+        await fetch(`/api/dashboard/davetiye/${slug}/rsvp/${rsvpId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ katilim }),
+        });
+      } else {
+        // Yeni RSVP oluştur
+        const res = await fetch(`/api/dashboard/davetiye/${slug}/rsvp-manuel`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ davetliId: davetli.id, katilim, kisiSayisi: 1 }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          rsvpId = data.rsvpId;
+          setRsvplar(prev => [...prev, { id: rsvpId!, ad: davetli.ad, katilim, kisiSayisi: 1 }]);
+        }
+      }
+
+      // Mevcut RSVP'yi güncelle
+      setRsvplar(prev => prev.map(r => r.id === rsvpId ? { ...r, katilim } : r));
+      // Davetli rsvpId'yi güncelle
+      setDavetliler(prev => prev.map(d => d.id === davetli.id ? { ...d, rsvpId } : d));
+    } finally {
+      setDurumYukleniyor(null);
+    }
+  };
+
   // ── Kişisel link ────────────────────────────────────────
 
   const [kopyalananId, setKopyalananId] = useState<string | null>(null);
@@ -779,23 +819,49 @@ export default function DavetlilerSayfasi() {
                               </div>
 
                               {/* Link durumu */}
-                              {davetli.ozelKod && (
-                                <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
-                                  {davetli.rsvpId ? (
-                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-                                      ✓ RSVP verdi
-                                    </span>
-                                  ) : davetli.linkGoruntulendiAt ? (
-                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
-                                      👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
-                                    </span>
-                                  ) : (
-                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
-                                      Bekleniyor
-                                    </span>
-                                  )}
+                              {davetli.ozelKod && davetli.linkGoruntulendiAt && !davetli.rsvpId && (
+                                <div className="flex gap-1.5 mt-1.5">
+                                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                                    👁 {davetli.linkGoruntulenmeSayisi ?? 1}× görüntülendi
+                                  </span>
                                 </div>
                               )}
+
+                              {/* Durum kontrol */}
+                              {(() => {
+                                const rsvp = davetli.rsvpId ? rsvplar.find(r => r.id === davetli.rsvpId) : null;
+                                const yukl = durumYukleniyor === davetli.id;
+                                return (
+                                  <div className="flex items-center gap-1 mt-2">
+                                    <button
+                                      onClick={() => !yukl && durumDegistir(davetli, true)}
+                                      disabled={yukl}
+                                      className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all disabled:opacity-50 ${
+                                        rsvp?.katilim === true
+                                          ? "text-white"
+                                          : "bg-gray-100 text-gray-400 hover:bg-emerald-50 hover:text-emerald-600"
+                                      }`}
+                                      style={rsvp?.katilim === true ? { backgroundColor: renk, color: "white" } : {}}
+                                    >
+                                      {yukl && rsvp?.katilim !== true ? "..." : "✓ Katılıyor"}
+                                    </button>
+                                    <button
+                                      onClick={() => !yukl && durumDegistir(davetli, false)}
+                                      disabled={yukl}
+                                      className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all disabled:opacity-50 ${
+                                        rsvp?.katilim === false
+                                          ? "bg-red-100 text-red-500"
+                                          : "bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-400"
+                                      }`}
+                                    >
+                                      {yukl && rsvp?.katilim !== false ? "..." : "✗ Katılamıyor"}
+                                    </button>
+                                    {!rsvp && (
+                                      <span className="text-[11px] text-gray-300 ml-1">Bekleniyor</span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                             </div>
 
                             {/* Actions */}
