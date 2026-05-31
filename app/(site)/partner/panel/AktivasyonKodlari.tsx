@@ -17,6 +17,8 @@ type Abonelik = {
   kullanilanHak: number;
 } | null;
 
+type DurumFiltresi = "tum" | "aksiyon" | "surecte" | "yayinda";
+
 const DURUM_ETIKET: Record<string, { label: string; cls: string }> = {
   olusturuldu:          { label: "Oluşturuldu",          cls: "bg-gray-100 text-gray-600" },
   gonderildi:           { label: "Gönderildi",           cls: "bg-blue-100 text-blue-700" },
@@ -28,9 +30,49 @@ const DURUM_ETIKET: Record<string, { label: string; cls: string }> = {
 };
 
 const IPTAL_EDILEBILİR = new Set(["olusturuldu", "gonderildi"]);
+const AKSIYON_DURUMLARI = new Set(["olusturuldu", "gonderildi", "odeme_bekliyor"]);
+const SURECTE_DURUMLARI = new Set(["kayit_oldu", "davetiye_olusturuldu"]);
+const AKIS_ADIMLARI = [
+  { key: "olusturuldu", label: "Kod" },
+  { key: "gonderildi", label: "Gönderildi" },
+  { key: "kayit_oldu", label: "Kayıt" },
+  { key: "yayinda", label: "Yayın" },
+] as const;
 
 const VARSAYILAN_MESAJ = (firma: string) =>
   `Merhaba! ${firma} aracılığıyla size özel bir dijital davetiye hakkı sunuyoruz.\n\nDavetiyenizi oluşturmak için:\n{{link}}\n\nBu bağlantı yalnızca size özeldir.`;
+
+function akisIndex(durum: string) {
+  if (durum === "olusturuldu") return 0;
+  if (durum === "gonderildi") return 1;
+  if (durum === "kayit_oldu" || durum === "davetiye_olusturuldu" || durum === "odeme_bekliyor") return 2;
+  if (durum === "yayinda") return 3;
+  return -1;
+}
+
+function DurumAkisi({ durum }: { durum: string }) {
+  const aktifIndex = akisIndex(durum);
+  if (aktifIndex < 0) return null;
+
+  return (
+    <div className="grid grid-cols-4 gap-1.5">
+      {AKIS_ADIMLARI.map((adim, index) => {
+        const tamamlandi = index <= aktifIndex;
+        const aktif = index === aktifIndex;
+        return (
+          <div key={adim.key} className="min-w-0">
+            <div className={`h-1.5 rounded-full ${tamamlandi ? "bg-purple-500" : "bg-gray-100"}`} />
+            <p className={`mt-1 text-[10px] font-semibold truncate ${
+              aktif ? "text-purple-700" : tamamlandi ? "text-gray-500" : "text-gray-300"
+            }`}>
+              {adim.label}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function AktivasyonKodlari({
   firmaAdi,
@@ -47,6 +89,8 @@ export default function AktivasyonKodlari({
   const [kopyalananKod, setKopyalananKod] = useState<string | null>(null);
   const [hata, setHata] = useState("");
   const [adet, setAdet] = useState(1);
+  const [arama, setArama] = useState("");
+  const [durumFiltresi, setDurumFiltresi] = useState<DurumFiltresi>("tum");
 
   // WhatsApp mesaj şablonu
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
@@ -166,6 +210,29 @@ export default function AktivasyonKodlari({
   const kullanilmisKodlar = ilkKodlar.filter(k =>
     ["kayit_oldu", "odeme_bekliyor", "davetiye_olusturuldu", "yayinda"].includes(k.durum)
   );
+  const aksiyonKodlar = aktifKodlar.filter(k => AKSIYON_DURUMLARI.has(k.durum));
+  const surecteKodlar = aktifKodlar.filter(k => SURECTE_DURUMLARI.has(k.durum));
+  const aramaMetni = arama.trim().toLocaleLowerCase("tr-TR");
+  const filtrelenmisKodlar = aktifKodlar.filter(k => {
+    const durumEslesir =
+      durumFiltresi === "tum" ||
+      (durumFiltresi === "aksiyon" && AKSIYON_DURUMLARI.has(k.durum)) ||
+      (durumFiltresi === "surecte" && SURECTE_DURUMLARI.has(k.durum)) ||
+      (durumFiltresi === "yayinda" && k.durum === "yayinda");
+
+    if (!durumEslesir) return false;
+    if (!aramaMetni) return true;
+
+    const durumLabel = DURUM_ETIKET[k.durum]?.label ?? k.durum;
+    return [k.kod, k.not ?? "", durumLabel]
+      .some(deger => deger.toLocaleLowerCase("tr-TR").includes(aramaMetni));
+  });
+  const filtreler: { key: DurumFiltresi; label: string; count: number }[] = [
+    { key: "tum", label: "Tümü", count: aktifKodlar.length },
+    { key: "aksiyon", label: "Aksiyon", count: aksiyonKodlar.length },
+    { key: "surecte", label: "Süreçte", count: surecteKodlar.length },
+    { key: "yayinda", label: "Yayında", count: yayindaKodlar.length },
+  ];
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
@@ -250,6 +317,45 @@ export default function AktivasyonKodlari({
         <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{hata}</p>
       )}
 
+      {aktifKodlar.length > 0 && (
+        <div className="space-y-3">
+          <div className="relative">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-300">⌕</span>
+            <input
+              type="search"
+              value={arama}
+              onChange={e => setArama(e.target.value)}
+              placeholder="Kod, etiket veya durum ara"
+              className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 pl-9 pr-3 text-sm text-gray-700 outline-none transition-all placeholder:text-gray-400 focus:border-purple-200 focus:bg-white focus:ring-2 focus:ring-purple-100"
+            />
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {filtreler.map(filtre => {
+              const secili = durumFiltresi === filtre.key;
+              return (
+                <button
+                  key={filtre.key}
+                  type="button"
+                  onClick={() => setDurumFiltresi(filtre.key)}
+                  className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+                    secili
+                      ? "border-purple-200 bg-purple-50 text-purple-700"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-purple-100 hover:text-purple-600"
+                  }`}
+                >
+                  {filtre.label}
+                  <span className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] ${
+                    secili ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-400"
+                  }`}>
+                    {filtre.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* WhatsApp mesaj şablonu editörü */}
       {ilkKodlar.length > 0 && (
         <div className="border border-dashed border-gray-200 rounded-2xl p-3">
@@ -289,7 +395,7 @@ export default function AktivasyonKodlari({
       {/* Aktif kodlar */}
       {aktifKodlar.length > 0 && (
         <div className="space-y-3">
-          {aktifKodlar.map(k => {
+          {filtrelenmisKodlar.map(k => {
             const etiket = DURUM_ETIKET[k.durum] ?? DURUM_ETIKET.olusturuldu;
             const url = aktivasyonUrl(k.kod);
             const notDuzenlemede = notDuzenlemeKod === k.kod;
@@ -303,6 +409,8 @@ export default function AktivasyonKodlari({
                     {new Date(k.createdAt).toLocaleDateString("tr-TR")}
                   </span>
                 </div>
+
+                <DurumAkisi durum={k.durum} />
 
                 {k.durum === "odeme_bekliyor" && (
                   <p className="text-xs text-orange-600 bg-orange-50 rounded-xl px-3 py-2">
@@ -398,6 +506,12 @@ export default function AktivasyonKodlari({
               </div>
             );
           })}
+          {filtrelenmisKodlar.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-gray-200 px-5 py-8 text-center">
+              <p className="text-sm font-semibold text-gray-700">Bu filtrede kod bulunamadı</p>
+              <p className="mt-1 text-xs text-gray-400">Arama metnini temizleyin veya farklı bir durum seçin.</p>
+            </div>
+          )}
         </div>
       )}
 
