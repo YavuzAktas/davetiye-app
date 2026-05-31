@@ -694,6 +694,37 @@ export default function VintageNisanSablon({ davetiye, rsvpBileseni, previewModu
             </p>
           )}
         </footer>
+
+        {/* ── Bekleriz Rozeti ── */}
+        {!previewModu && (
+          <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", padding: "16px 16px 20px", textAlign: "center", background: "rgba(0,0,0,0.018)" }}>
+            <a
+              href="https://bekleriz.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                fontSize: 11,
+                fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+                color: "rgba(0,0,0,0.28)",
+                textDecoration: "none",
+                letterSpacing: "0.04em",
+                padding: "6px 14px",
+                borderRadius: 20,
+                border: "1px solid rgba(0,0,0,0.08)",
+                background: "rgba(255,255,255,0.7)",
+              }}
+            >
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z" />
+                <path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10" />
+              </svg>
+              Bekleriz ile oluşturuldu
+            </a>
+          </div>
+        )}
       </div>
     </>
   );
