@@ -109,7 +109,13 @@ function paraFormatla(deger: string) {
   }).format(sayi);
 }
 
-export default function PartnerTeklifOlusturucu({ firmaAdi }: { firmaAdi: string }) {
+export default function PartnerTeklifOlusturucu({
+  firmaAdi,
+  whatsappImzasi,
+}: {
+  firmaAdi: string;
+  whatsappImzasi?: string | null;
+}) {
   const [paketId, setPaketId] = useState<PaketId>("tam");
   const [etkinlikTuru, setEtkinlikTuru] = useState(ETKINLIK_TURLERI[0]);
   const [referans, setReferans] = useState("");
@@ -145,6 +151,10 @@ export default function PartnerTeklifOlusturucu({ firmaAdi }: { firmaAdi: string
       satirlar.push("", `Not: ${temizNot}`);
     }
 
+    if (whatsappImzasi?.trim()) {
+      satirlar.push("", whatsappImzasi.trim());
+    }
+
     satirlar.push(
       "",
       "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri müşterinin kendi hesabında yönetilir.",
@@ -152,7 +162,7 @@ export default function PartnerTeklifOlusturucu({ firmaAdi }: { firmaAdi: string
     );
 
     return satirlar.join("\n");
-  }, [etkinlikTuru, firmaAdi, paket, temizNot, temizReferans, tutarMetni]);
+  }, [etkinlikTuru, firmaAdi, paket, temizNot, temizReferans, tutarMetni, whatsappImzasi]);
 
   const kopyala = async () => {
     try {

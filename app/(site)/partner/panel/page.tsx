@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
+import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
 import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
@@ -187,7 +188,20 @@ export default async function PartnerPanelPage({
               kodlar={kodlar}
             />
             <PartnerOperasyonPipeline kodlar={kodlar} />
-            <PartnerTeklifOlusturucu firmaAdi={partner.firmaAdi} />
+            <PartnerMarkaAyarlari
+              firmaAdi={partner.firmaAdi}
+              marka={{
+                markaRenk: partner.markaRenk,
+                markaSlogani: partner.markaSlogani,
+                destekTelefonu: partner.destekTelefonu,
+                instagramUrl: partner.instagramUrl,
+                whatsappImzasi: partner.whatsappImzasi,
+              }}
+            />
+            <PartnerTeklifOlusturucu
+              firmaAdi={partner.firmaAdi}
+              whatsappImzasi={partner.whatsappImzasi}
+            />
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
               abonelik={abonelik ? {

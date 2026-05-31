@@ -502,6 +502,11 @@ model Partner {
   userId            String            @unique
   firmaAdi          String
   logoUrl           String?
+  markaRenk         String?           @db.VarChar(7)
+  markaSlogani      String?           @db.VarChar(120)
+  destekTelefonu    String?           @db.VarChar(30)
+  instagramUrl      String?           @db.VarChar(160)
+  whatsappImzasi    String?           @db.VarChar(160)
   durum             String            @default("beklemede")
   basvuruDetay      Json?
   createdAt         DateTime          @default(now())

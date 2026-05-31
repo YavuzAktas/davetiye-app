@@ -41,11 +41,18 @@ export default function AktivasyonSayfasi({
   kod,
   firmaAdi,
   logoUrl,
+  marka,
   dahilKodlar = [],
 }: {
   kod: string;
   firmaAdi: string;
   logoUrl?: string | null;
+  marka?: {
+    renk?: string | null;
+    slogan?: string | null;
+    destekTelefonu?: string | null;
+    instagramUrl?: string | null;
+  };
   dahilKodlar?: string[];
 }) {
   const { data: session, status } = useSession();
@@ -79,6 +86,7 @@ export default function AktivasyonSayfasi({
     const gorunenOzellikler = dahilKodlar
       .filter(k => OZELLIK_ETIKETI[k])
       .sort((a, b) => (a === "temel-davetiye" ? -1 : b === "temel-davetiye" ? 1 : 0));
+    const markaRenk = marka?.renk || "#7c3aed";
 
     return (
       <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
@@ -91,13 +99,16 @@ export default function AktivasyonSayfasi({
                 className="h-12 w-12 rounded-2xl border border-gray-100 bg-white object-contain p-1.5 shadow-sm"
               />
             ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-xl font-black text-purple-700">
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-black text-white"
+                style={{ backgroundColor: markaRenk }}
+              >
                 {firmaAdi.slice(0, 1).toLocaleUpperCase("tr-TR")}
               </div>
             )}
             <div className="min-w-0">
               <p className="truncate text-sm font-black text-gray-900">{firmaAdi}</p>
-              <p className="text-xs font-semibold text-purple-600">Müşteri teslim portalı</p>
+              <p className="text-xs font-semibold" style={{ color: markaRenk }}>Müşteri teslim portalı</p>
             </div>
           </div>
 
@@ -111,6 +122,14 @@ export default function AktivasyonSayfasi({
             Bu bağlantı {firmaAdi} tarafından size tanımlandı. Davetiyenizi kendi hesabınızda oluşturur,
             yasal onayları kendiniz verir ve etkinlik içeriklerinizi yalnızca kendi panelinizden yönetirsiniz.
           </p>
+          {marka?.slogan && (
+            <p
+              className="mt-4 max-w-xl rounded-2xl border px-4 py-3 text-sm font-semibold leading-relaxed"
+              style={{ borderColor: `${markaRenk}22`, backgroundColor: `${markaRenk}10`, color: markaRenk }}
+            >
+              {marka.slogan}
+            </p>
+          )}
 
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
             {TESLIM_ADIMLARI.map(adim => (
@@ -165,6 +184,25 @@ export default function AktivasyonSayfasi({
             <a href="/gizlilik" className="font-semibold text-purple-500 hover:underline">Gizlilik Politikası</a>
             'nı kabul etmiş olursunuz.
           </p>
+          {(marka?.destekTelefonu || marka?.instagramUrl) && (
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {marka.destekTelefonu && (
+                <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-gray-600 ring-1 ring-gray-100">
+                  Destek: {marka.destekTelefonu}
+                </span>
+              )}
+              {marka.instagramUrl && (
+                <a
+                  href={marka.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-gray-600 ring-1 ring-gray-100 hover:text-purple-600"
+                >
+                  Instagram
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );

@@ -24,7 +24,17 @@ export default async function AktivasyonPage({
     where: { kod },
     include: {
       abonelik: { select: { aktif: true, bitisAt: true, paketId: true } },
-      partner: { select: { firmaAdi: true, logoUrl: true, durum: true } },
+      partner: {
+        select: {
+          firmaAdi: true,
+          logoUrl: true,
+          markaRenk: true,
+          markaSlogani: true,
+          destekTelefonu: true,
+          instagramUrl: true,
+          durum: true,
+        },
+      },
     },
   });
 
@@ -90,6 +100,12 @@ export default async function AktivasyonPage({
         kod={kod}
         firmaAdi={aktivasyon.partner.firmaAdi}
         logoUrl={aktivasyon.partner.logoUrl}
+        marka={{
+          renk: aktivasyon.partner.markaRenk,
+          slogan: aktivasyon.partner.markaSlogani,
+          destekTelefonu: aktivasyon.partner.destekTelefonu,
+          instagramUrl: aktivasyon.partner.instagramUrl,
+        }}
         dahilKodlar={dahilKodlar}
       />
     </PageShell>
