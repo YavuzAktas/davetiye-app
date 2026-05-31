@@ -377,7 +377,7 @@ export default function AktivasyonKodlari({
   const whatsappSablonlari = WHATSAPP_MESAJ_SABLONLARI(firmaAdi);
 
   return (
-    <div id="aktivasyon-kodlari" className="scroll-mt-6 bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
+    <div id="aktivasyon-kodlari" className="scroll-mt-24 bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
       {/* Başlık + oluştur butonu */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>

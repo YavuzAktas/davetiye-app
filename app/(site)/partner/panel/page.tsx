@@ -10,6 +10,7 @@ import PartnerDonusumMetrikleri from "./PartnerDonusumMetrikleri";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
 import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
+import PartnerPanelNav from "./PartnerPanelNav";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 
@@ -179,72 +180,89 @@ export default async function PartnerPanelPage({
 
         {partner.durum === "aktif" && (
           <div className="space-y-6">
-            <PartnerOperasyonOzeti
-              firmaAdi={partner.firmaAdi}
-              abonelik={abonelik ? {
-                paketId: abonelik.paketId,
-                hakSayisi: abonelik.hakSayisi,
-                kullanilanHak: abonelik.kullanilanHak,
-                bitisAt: abonelik.bitisAt,
-              } : null}
-              kodlar={kodlar}
-            />
-            <PartnerDonusumMetrikleri
-              abonelik={abonelik ? {
-                paketId: abonelik.paketId,
-                hakSayisi: abonelik.hakSayisi,
-                kullanilanHak: abonelik.kullanilanHak,
-                bitisAt: abonelik.bitisAt,
-              } : null}
-              kodlar={kodlar}
-            />
-            <PartnerOperasyonPipeline kodlar={kodlar} />
-            <PartnerSatisRehberi />
-            <PartnerMarkaAyarlari
-              firmaAdi={partner.firmaAdi}
-              marka={{
-                markaRenk: partner.markaRenk,
-                markaSlogani: partner.markaSlogani,
-                destekTelefonu: partner.destekTelefonu,
-                instagramUrl: partner.instagramUrl,
-                whatsappImzasi: partner.whatsappImzasi,
-              }}
-            />
-            <PartnerTeklifOlusturucu
-              firmaAdi={partner.firmaAdi}
-              markaRenk={partner.markaRenk}
-              markaSlogani={partner.markaSlogani}
-              destekTelefonu={partner.destekTelefonu}
-              instagramUrl={partner.instagramUrl}
-              whatsappImzasi={partner.whatsappImzasi}
-            />
-            <AktivasyonKodlari
-              firmaAdi={partner.firmaAdi}
-              destekTelefonu={partner.destekTelefonu}
-              instagramUrl={partner.instagramUrl}
-              whatsappImzasi={partner.whatsappImzasi}
-              abonelik={abonelik ? {
-                paketId: abonelik.paketId,
-                hakSayisi: abonelik.hakSayisi,
-                kullanilanHak: abonelik.kullanilanHak,
-                bitisAt: abonelik.bitisAt,
-              } : null}
-              kodlar={kodlar}
-            />
-            <PanelIcerik
-              partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
-              abonelik={abonelik}
-              odemeBasarili={odemeBasarili}
-              odemeGecmisi={odemeKayitlariHam.map(k => ({
-                id: k.id,
-                createdAt: k.createdAt.toISOString(),
-                planId: k.planId,
-                paidPrice: k.paidPrice,
-                currency: k.currency,
-                paymentId: k.paymentId,
-                fiyatKirilimi: k.fiyatKirilimi,
-              }))}
-            />
+            <PartnerPanelNav />
+            <div id="ozet" className="scroll-mt-24">
+              <PartnerOperasyonOzeti
+                firmaAdi={partner.firmaAdi}
+                abonelik={abonelik ? {
+                  paketId: abonelik.paketId,
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                  bitisAt: abonelik.bitisAt,
+                } : null}
+                kodlar={kodlar}
+              />
+            </div>
+            <div id="donusum" className="scroll-mt-24">
+              <PartnerDonusumMetrikleri
+                abonelik={abonelik ? {
+                  paketId: abonelik.paketId,
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                  bitisAt: abonelik.bitisAt,
+                } : null}
+                kodlar={kodlar}
+              />
+            </div>
+            <div id="pipeline" className="scroll-mt-24">
+              <PartnerOperasyonPipeline kodlar={kodlar} />
+            </div>
+            <div id="satis" className="scroll-mt-24">
+              <PartnerSatisRehberi />
+            </div>
+            <div id="marka" className="scroll-mt-24">
+              <PartnerMarkaAyarlari
+                firmaAdi={partner.firmaAdi}
+                marka={{
+                  markaRenk: partner.markaRenk,
+                  markaSlogani: partner.markaSlogani,
+                  destekTelefonu: partner.destekTelefonu,
+                  instagramUrl: partner.instagramUrl,
+                  whatsappImzasi: partner.whatsappImzasi,
+                }}
+              />
+            </div>
+            <div id="teklif" className="scroll-mt-24">
+              <PartnerTeklifOlusturucu
+                firmaAdi={partner.firmaAdi}
+                markaRenk={partner.markaRenk}
+                markaSlogani={partner.markaSlogani}
+                destekTelefonu={partner.destekTelefonu}
+                instagramUrl={partner.instagramUrl}
+                whatsappImzasi={partner.whatsappImzasi}
+              />
+            </div>
+            <div className="scroll-mt-24">
+              <AktivasyonKodlari
+                firmaAdi={partner.firmaAdi}
+                destekTelefonu={partner.destekTelefonu}
+                instagramUrl={partner.instagramUrl}
+                whatsappImzasi={partner.whatsappImzasi}
+                abonelik={abonelik ? {
+                  paketId: abonelik.paketId,
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                  bitisAt: abonelik.bitisAt,
+                } : null}
+                kodlar={kodlar}
+              />
+            </div>
+            <div id="odeme" className="scroll-mt-24">
+              <PanelIcerik
+                partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
+                abonelik={abonelik}
+                odemeBasarili={odemeBasarili}
+                odemeGecmisi={odemeKayitlariHam.map(k => ({
+                  id: k.id,
+                  createdAt: k.createdAt.toISOString(),
+                  planId: k.planId,
+                  paidPrice: k.paidPrice,
+                  currency: k.currency,
+                  paymentId: k.paymentId,
+                  fiyatKirilimi: k.fiyatKirilimi,
+                }))}
+              />
+            </div>
           </div>
         )}
       </div>
