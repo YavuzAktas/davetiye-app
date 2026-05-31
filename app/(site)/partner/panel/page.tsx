@@ -8,6 +8,7 @@ import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
 import PartnerDonusumMetrikleri from "./PartnerDonusumMetrikleri";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
+import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
 import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
 import PartnerPanelNav from "./PartnerPanelNav";
@@ -181,6 +182,24 @@ export default async function PartnerPanelPage({
         {partner.durum === "aktif" && (
           <div className="space-y-6">
             <PartnerPanelNav />
+            <div id="kurulum" className="scroll-mt-24">
+              <PartnerOnboardingChecklist
+                abonelik={abonelik ? {
+                  paketId: abonelik.paketId,
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                  bitisAt: abonelik.bitisAt,
+                } : null}
+                kodlar={kodlar}
+                marka={{
+                  logoUrl: partner.logoUrl,
+                  markaSlogani: partner.markaSlogani,
+                  destekTelefonu: partner.destekTelefonu,
+                  instagramUrl: partner.instagramUrl,
+                  whatsappImzasi: partner.whatsappImzasi,
+                }}
+              />
+            </div>
             <div id="ozet" className="scroll-mt-24">
               <PartnerOperasyonOzeti
                 firmaAdi={partner.firmaAdi}

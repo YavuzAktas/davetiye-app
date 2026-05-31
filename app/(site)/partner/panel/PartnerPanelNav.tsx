@@ -1,4 +1,5 @@
 const NAV_LINKLERI = [
+  { href: "#kurulum", label: "Kurulum" },
   { href: "#ozet", label: "Özet" },
   { href: "#donusum", label: "Dönüşüm" },
   { href: "#pipeline", label: "Pipeline" },
