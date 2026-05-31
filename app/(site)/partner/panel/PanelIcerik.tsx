@@ -200,181 +200,176 @@ export default function PanelIcerik({
         </summary>
 
         <div className="border-t border-gray-100 px-6 pb-6 pt-5">
-
-        {abonelik && !yenilemeFormAcik ? (
-          /* Aktif abonelik varken satın alımı engelle */
-          <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4">
-            <p className="text-sm font-bold text-blue-700 mb-1">Aktif paketiniz devam ediyor</p>
-            <p className="text-xs text-blue-500 leading-relaxed">
-              {abonelik.bitisAt
-                ? <>Paketiniz <strong>{new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</strong> tarihine kadar geçerli. Yenileme, bitişe 5 gün kala veya haklar bitince açılır.</>
-                : "Paketiniz aktif olduğu sürece yeni paket satın alınamaz."}
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              {PARTNER_PAKET_LISTESI.map(paket => {
-                const secili = secilenPaket === paket.id;
-                return (
-                  <button
-                    key={paket.id}
-                    type="button"
-                    onClick={() => {
-                      setSecilenPaket(paket.id as PartnerPaketId);
-                      setCheckoutHtml(null);
-                      setHatalar({});
-                    }}
-                    className={`relative text-left rounded-2xl border-2 p-4 transition-all ${
-                      secili
-                        ? "border-purple-400 bg-purple-50/50 shadow-sm"
-                        : "border-gray-200 hover:border-purple-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {secili && (
-                      <span className="absolute top-3 right-3 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-[10px] font-bold">✓</span>
-                      </span>
-                    )}
-                    <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
-                      {paket.ad}
-                    </p>
-                    <p className="text-xl font-black text-gray-900 mb-0.5">
-                      ₺{paket.aylikTutar.toLocaleString("tr-TR")}
-                      <span className="text-xs font-normal text-gray-400">/ay</span>
-                    </p>
-                    <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Fatura formu */}
-            {secilenPaket && !checkoutHtml && (
-          <form onSubmit={odemeBaslat} className="border-t border-gray-100 pt-6 space-y-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">Fatura Bilgileri</p>
-
-            {/* Bireysel / Kurumsal */}
-            <div className="grid grid-cols-2 gap-2 bg-gray-100 rounded-2xl p-1">
-              {(["bireysel", "kurumsal"] as const).map(tip => (
-                <button
-                  key={tip}
-                  type="button"
-                  onClick={() => degistir("faturaTipi", tip)}
-                  className={`rounded-xl py-2.5 text-sm font-semibold transition-all ${
-                    fatura.faturaTipi === tip
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-400 hover:text-gray-600"
-                  }`}
-                >
-                  {tip === "bireysel" ? "Bireysel" : "Kurumsal"}
-                </button>
-              ))}
-            </div>
-
-            {hatalar.genel && (
-              <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
-                {hatalar.genel}
+          {abonelik && !yenilemeFormAcik ? (
+            <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4">
+              <p className="text-sm font-bold text-blue-700 mb-1">Aktif paketiniz devam ediyor</p>
+              <p className="text-xs text-blue-500 leading-relaxed">
+                {abonelik.bitisAt
+                  ? <>Paketiniz <strong>{new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</strong> tarihine kadar geçerli. Yenileme, bitişe 5 gün kala veya haklar bitince açılır.</>
+                  : "Paketiniz aktif olduğu sürece yeni paket satın alınamaz."}
               </p>
-            )}
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">
-                {fatura.faturaTipi === "kurumsal" ? "Unvan / Yetkili" : "Ad Soyad"} <span className="text-red-400">*</span>
-              </label>
-              <input
-                className={inputCls("adSoyad")}
-                value={fatura.adSoyad}
-                onChange={e => degistir("adSoyad", e.target.value)}
-              />
-              {hatalar.adSoyad && <p className="text-[11px] text-red-500 mt-1">{hatalar.adSoyad}</p>}
             </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                {PARTNER_PAKET_LISTESI.map(paket => {
+                  const secili = secilenPaket === paket.id;
+                  return (
+                    <button
+                      key={paket.id}
+                      type="button"
+                      onClick={() => {
+                        setSecilenPaket(paket.id as PartnerPaketId);
+                        setCheckoutHtml(null);
+                        setHatalar({});
+                      }}
+                      className={`relative text-left rounded-2xl border-2 p-4 transition-all ${
+                        secili
+                          ? "border-purple-400 bg-purple-50/50 shadow-sm"
+                          : "border-gray-200 hover:border-purple-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      {secili && (
+                        <span className="absolute top-3 right-3 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center">
+                          <span className="text-white text-[10px] font-bold">✓</span>
+                        </span>
+                      )}
+                      <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: paket.renk }}>
+                        {paket.ad}
+                      </p>
+                      <p className="text-xl font-black text-gray-900 mb-0.5">
+                        ₺{paket.aylikTutar.toLocaleString("tr-TR")}
+                        <span className="text-xs font-normal text-gray-400">/ay</span>
+                      </p>
+                      <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
+                    </button>
+                  );
+                })}
+              </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">Telefon <span className="text-red-400">*</span></label>
-              <input
-                className={inputCls("telefon")}
-                value={fatura.telefon}
-                onChange={e => degistir("telefon", e.target.value)}
-                placeholder="05XX XXX XX XX"
-              />
-              {hatalar.telefon && <p className="text-[11px] text-red-500 mt-1">{hatalar.telefon}</p>}
-            </div>
+              {secilenPaket && !checkoutHtml && (
+                <form onSubmit={odemeBaslat} className="border-t border-gray-100 pt-6 space-y-4">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">Fatura Bilgileri</p>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">Şehir <span className="text-red-400">*</span></label>
-              <input
-                className={inputCls("sehir")}
-                value={fatura.sehir}
-                onChange={e => degistir("sehir", e.target.value)}
-              />
-              {hatalar.sehir && <p className="text-[11px] text-red-500 mt-1">{hatalar.sehir}</p>}
-            </div>
+                  <div className="grid grid-cols-2 gap-2 bg-gray-100 rounded-2xl p-1">
+                    {(["bireysel", "kurumsal"] as const).map(tip => (
+                      <button
+                        key={tip}
+                        type="button"
+                        onClick={() => degistir("faturaTipi", tip)}
+                        className={`rounded-xl py-2.5 text-sm font-semibold transition-all ${
+                          fatura.faturaTipi === tip
+                            ? "bg-white text-gray-900 shadow-sm"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                      >
+                        {tip === "bireysel" ? "Bireysel" : "Kurumsal"}
+                      </button>
+                    ))}
+                  </div>
 
-            {fatura.faturaTipi === "kurumsal" && (
-              <>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1.5">Vergi No / TCKN <span className="text-red-400">*</span></label>
-                  <input
-                    className={inputCls("kimlikVergiNo")}
-                    value={fatura.kimlikVergiNo}
-                    onChange={e => degistir("kimlikVergiNo", e.target.value)}
-                  />
-                  {hatalar.kimlikVergiNo && <p className="text-[11px] text-red-500 mt-1">{hatalar.kimlikVergiNo}</p>}
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1.5">Fatura Adresi <span className="text-red-400">*</span></label>
-                  <textarea
-                    className={inputCls("adres") + " resize-none"}
-                    rows={2}
-                    value={fatura.adres}
-                    onChange={e => degistir("adres", e.target.value)}
-                  />
-                  {hatalar.adres && <p className="text-[11px] text-red-500 mt-1">{hatalar.adres}</p>}
-                </div>
-              </>
-            )}
+                  {hatalar.genel && (
+                    <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                      {hatalar.genel}
+                    </p>
+                  )}
 
-            {/* Onay */}
-            <label className={`flex gap-3 cursor-pointer rounded-2xl p-4 transition-all ${
-              hatalar.onay ? "bg-red-50 border border-red-100" : "bg-gray-50 border border-gray-100"
-            }`}>
-              <input
-                type="checkbox"
-                checked={onay}
-                onChange={e => {
-                  setOnay(e.target.checked);
-                  if (e.target.checked) setHatalar(p => ({ ...p, onay: undefined }));
-                }}
-                className="mt-0.5 w-4 h-4 accent-purple-600 cursor-pointer shrink-0"
-              />
-              <span className="text-[11px] leading-relaxed text-gray-500">
-                <Link href="/on-bilgilendirme" target="_blank" className="text-purple-600 hover:underline">Ön Bilgilendirme</Link>
-                {", "}
-                <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="text-purple-600 hover:underline">Mesafeli Satış Sözleşmesi</Link>
-                {" ve "}
-                <Link href="/partner/sozlesme" target="_blank" className="text-purple-600 hover:underline">Partner Sözleşmesi</Link>
-                {"'ni okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
-              </span>
-            </label>
-            {hatalar.onay && <p className="text-[11px] text-red-500">{hatalar.onay}</p>}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+                      {fatura.faturaTipi === "kurumsal" ? "Unvan / Yetkili" : "Ad Soyad"} <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      className={inputCls("adSoyad")}
+                      value={fatura.adSoyad}
+                      onChange={e => degistir("adSoyad", e.target.value)}
+                    />
+                    {hatalar.adSoyad && <p className="text-[11px] text-red-500 mt-1">{hatalar.adSoyad}</p>}
+                  </div>
 
-            <button
-              type="submit"
-              disabled={yukleniyor}
-              className="w-full bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-            >
-              {yukleniyor ? (
-                <>
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Ödeme hazırlanıyor…
-                </>
-              ) : "🔒 Güvenli Ödemeye Geç"}
-            </button>
-          </form>
-        )}
-          </>
-        )}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Telefon <span className="text-red-400">*</span></label>
+                    <input
+                      className={inputCls("telefon")}
+                      value={fatura.telefon}
+                      onChange={e => degistir("telefon", e.target.value)}
+                      placeholder="05XX XXX XX XX"
+                    />
+                    {hatalar.telefon && <p className="text-[11px] text-red-500 mt-1">{hatalar.telefon}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Şehir <span className="text-red-400">*</span></label>
+                    <input
+                      className={inputCls("sehir")}
+                      value={fatura.sehir}
+                      onChange={e => degistir("sehir", e.target.value)}
+                    />
+                    {hatalar.sehir && <p className="text-[11px] text-red-500 mt-1">{hatalar.sehir}</p>}
+                  </div>
+
+                  {fatura.faturaTipi === "kurumsal" && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 mb-1.5">Vergi No / TCKN <span className="text-red-400">*</span></label>
+                        <input
+                          className={inputCls("kimlikVergiNo")}
+                          value={fatura.kimlikVergiNo}
+                          onChange={e => degistir("kimlikVergiNo", e.target.value)}
+                        />
+                        {hatalar.kimlikVergiNo && <p className="text-[11px] text-red-500 mt-1">{hatalar.kimlikVergiNo}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 mb-1.5">Fatura Adresi <span className="text-red-400">*</span></label>
+                        <textarea
+                          className={inputCls("adres") + " resize-none"}
+                          rows={2}
+                          value={fatura.adres}
+                          onChange={e => degistir("adres", e.target.value)}
+                        />
+                        {hatalar.adres && <p className="text-[11px] text-red-500 mt-1">{hatalar.adres}</p>}
+                      </div>
+                    </>
+                  )}
+
+                  <label className={`flex gap-3 cursor-pointer rounded-2xl p-4 transition-all ${
+                    hatalar.onay ? "bg-red-50 border border-red-100" : "bg-gray-50 border border-gray-100"
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={onay}
+                      onChange={e => {
+                        setOnay(e.target.checked);
+                        if (e.target.checked) setHatalar(p => ({ ...p, onay: undefined }));
+                      }}
+                      className="mt-0.5 w-4 h-4 accent-purple-600 cursor-pointer shrink-0"
+                    />
+                    <span className="text-[11px] leading-relaxed text-gray-500">
+                      <Link href="/on-bilgilendirme" target="_blank" className="text-purple-600 hover:underline">Ön Bilgilendirme</Link>
+                      {", "}
+                      <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="text-purple-600 hover:underline">Mesafeli Satış Sözleşmesi</Link>
+                      {" ve "}
+                      <Link href="/partner/sozlesme" target="_blank" className="text-purple-600 hover:underline">Partner Sözleşmesi</Link>
+                      {"'ni okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
+                    </span>
+                  </label>
+                  {hatalar.onay && <p className="text-[11px] text-red-500">{hatalar.onay}</p>}
+
+                  <button
+                    type="submit"
+                    disabled={yukleniyor}
+                    className="w-full bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                  >
+                    {yukleniyor ? (
+                      <>
+                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        Ödeme hazırlanıyor…
+                      </>
+                    ) : "🔒 Güvenli Ödemeye Geç"}
+                  </button>
+                </form>
+              )}
+            </>
+          )}
         </div>
       </details>
 
