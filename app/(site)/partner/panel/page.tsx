@@ -7,6 +7,7 @@ import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
+import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 
 export const dynamic = "force-dynamic";
@@ -185,6 +186,7 @@ export default async function PartnerPanelPage({
               } : null}
               kodlar={kodlar}
             />
+            <PartnerOperasyonPipeline kodlar={kodlar} />
             <PartnerTeklifOlusturucu firmaAdi={partner.firmaAdi} />
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
