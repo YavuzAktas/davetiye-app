@@ -28,9 +28,22 @@ export default function PartnerMarkaAyarlari({
   });
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [mesaj, setMesaj] = useState<{ tip: "hata" | "basari"; metin: string } | null>(null);
+  const [kaydedildi, setKaydedildi] = useState(true);
+
+  const baslangic = {
+    markaRenk: marka.markaRenk || "#7c3aed",
+    markaSlogani: marka.markaSlogani || "",
+    destekTelefonu: marka.destekTelefonu || "",
+    instagramUrl: marka.instagramUrl || "",
+    whatsappImzasi: marka.whatsappImzasi || "",
+  };
 
   const guncelle = (alan: keyof typeof form, deger: string) => {
-    setForm(prev => ({ ...prev, [alan]: deger }));
+    setForm(prev => {
+      const yeni = { ...prev, [alan]: deger };
+      setKaydedildi(JSON.stringify(yeni) === JSON.stringify(baslangic));
+      return yeni;
+    });
     setMesaj(null);
   };
 
@@ -46,6 +59,7 @@ export default function PartnerMarkaAyarlari({
       const data = await res.json();
       if (!res.ok) throw new Error(data.hata || "Marka ayarları kaydedilemedi.");
       setMesaj({ tip: "basari", metin: "Marka ayarları kaydedildi." });
+      setKaydedildi(true);
       router.refresh();
     } catch (err) {
       setMesaj({ tip: "hata", metin: err instanceof Error ? err.message : "Marka ayarları kaydedilemedi." });
@@ -186,11 +200,16 @@ export default function PartnerMarkaAyarlari({
             </div>
           </div>
 
+          {!kaydedildi && !mesaj && (
+            <p className="mt-4 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-2.5 text-xs font-semibold text-amber-700">
+              Kaydedilmemiş değişiklikler var.
+            </p>
+          )}
           <button
             type="button"
             onClick={kaydet}
-            disabled={kaydediliyor}
-            className="mt-4 w-full rounded-2xl bg-purple-600 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:opacity-60"
+            disabled={kaydediliyor || kaydedildi}
+            className="mt-3 w-full rounded-2xl bg-purple-600 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:opacity-40"
           >
             {kaydediliyor ? "Kaydediliyor..." : "Marka Ayarlarını Kaydet"}
           </button>
