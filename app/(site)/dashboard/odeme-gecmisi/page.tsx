@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SABLONLAR } from "@/lib/sablonlar";
 import type { DavetiyeFiyatSonucu } from "@/lib/davetiye-fiyatlandirma";
+import { paketGetir } from "@/lib/partner-paketler";
 
 const EMOJILER: Record<string, string> = {
   dugun: "💒", nisan: "💍", dogumgunu: "🎂",
@@ -44,6 +45,7 @@ export default async function OdemeGecmisiSayfasi() {
       currency: true,
       paymentStatus: true,
       paymentId: true,
+      planId: true,
       aliciAdSoyad: true,
       createdAt: true,
       davetiye: {
@@ -174,6 +176,81 @@ export default async function OdemeGecmisiSayfasi() {
           /* ── Payment list ── */
           <div className="space-y-4">
             {kayitlar.map((kayit, idx) => {
+              const tarih = new Intl.DateTimeFormat("tr-TR", {
+                day: "numeric", month: "long", year: "numeric",
+              }).format(new Date(kayit.createdAt));
+              const saat = new Intl.DateTimeFormat("tr-TR", {
+                hour: "2-digit", minute: "2-digit",
+              }).format(new Date(kayit.createdAt));
+              const basarili = kayit.paymentStatus === "SUCCESS";
+
+              /* ── Partner paketi özel kartı ── */
+              if (kayit.urunTipi === "partner-paket") {
+                const fk = kayit.fiyatKirilimi as { paketAd?: string; tutar?: number; hakSayisi?: number } | null;
+                const paket = paketGetir(kayit.planId ?? "");
+                const paketAd = fk?.paketAd ?? paket?.ad ?? kayit.planId ?? "Partner Paketi";
+                const hakSayisi = fk?.hakSayisi ?? paket?.hakSayisi;
+                const tutar = formatTutar(kayit.paidPrice, fk?.tutar);
+
+                return (
+                  <div
+                    key={kayit.id}
+                    className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-lg hover:shadow-black/5 hover:-translate-y-0.5 transition-all duration-300"
+                    style={{ animationDelay: `${idx * 40}ms` }}
+                  >
+                    <div className="h-1 bg-linear-to-r from-purple-600 to-pink-500" />
+                    <div className="p-5 sm:p-6">
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-xl sm:text-2xl shrink-0">🤝</div>
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-gray-900 text-sm sm:text-base truncate">{paketAd} — Partner Aboneliği</h3>
+                            <p className="text-xs text-gray-400 mt-0.5">{tarih}, {saat}</p>
+                          </div>
+                        </div>
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full border shrink-0 ${
+                          basarili ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100"
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${basarili ? "bg-emerald-500" : "bg-gray-400"}`} />
+                          <span className="hidden sm:inline">{basarili ? "Onaylandı" : (kayit.paymentStatus ?? "—")}</span>
+                        </span>
+                      </div>
+
+                      <div className="bg-purple-50 border border-purple-100 rounded-2xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-purple-900">{paketAd} Paketi</p>
+                          {hakSayisi && (
+                            <p className="text-xs text-purple-600 mt-0.5">{hakSayisi} aktivasyon hakkı · 1 aylık</p>
+                          )}
+                        </div>
+                        <p className="text-xl font-black text-purple-900 shrink-0">{tutar}</p>
+                      </div>
+
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          {kayit.aliciAdSoyad && (
+                            <span className="flex items-center gap-1.5 text-xs text-gray-400">
+                              <span className="w-5 h-5 bg-gray-100 rounded-lg flex items-center justify-center text-[10px]">👤</span>
+                              {kayit.aliciAdSoyad}
+                            </span>
+                          )}
+                          {kayit.paymentId && (
+                            <span className="text-xs text-gray-300 font-mono hidden sm:inline">ID: {kayit.paymentId.slice(0, 20)}…</span>
+                          )}
+                        </div>
+                        <span className="flex items-center gap-1 text-xs text-gray-300">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          iyzico güvenli ödeme
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              /* ── Davetiye ödeme kartı ── */
               const fk = kayit.fiyatKirilimi as DavetiyeFiyatSonucu | null;
               const davetiye = kayit.davetiye;
               const sablon = davetiye
@@ -182,16 +259,7 @@ export default async function OdemeGecmisiSayfasi() {
               const renk = sablon?.renk ?? "#7C3AED";
               const emoji = davetiye ? (EMOJILER[davetiye.etkinlikTur] ?? "🎉") : "📄";
               const baslik = davetiye?.baslik ?? "Silinmiş Davetiye";
-              const basarili = kayit.paymentStatus === "SUCCESS";
               const tutar = formatTutar(kayit.paidPrice, fk?.toplamTutar);
-
-              const tarih = new Intl.DateTimeFormat("tr-TR", {
-                day: "numeric", month: "long", year: "numeric",
-              }).format(new Date(kayit.createdAt));
-
-              const saat = new Intl.DateTimeFormat("tr-TR", {
-                hour: "2-digit", minute: "2-digit",
-              }).format(new Date(kayit.createdAt));
 
               return (
                 <div
