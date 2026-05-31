@@ -229,50 +229,64 @@ export default async function PartnerPanelPage({
                 }}
               />
             </div>
-            <div id="aktivasyon-kodlari" className="scroll-mt-24">
-              <AktivasyonKodlari
-                firmaAdi={partner.firmaAdi}
-                destekTelefonu={partner.destekTelefonu}
-                instagramUrl={partner.instagramUrl}
-                whatsappImzasi={partner.whatsappImzasi}
-                abonelik={abonelik ? {
-                  paketId: abonelik.paketId,
-                  hakSayisi: abonelik.hakSayisi,
-                  kullanilanHak: abonelik.kullanilanHak,
-                  bitisAt: abonelik.bitisAt,
-                } : null}
-                kodlar={kodlar}
-              />
-            </div>
-            <div id="ozet" className="scroll-mt-24">
-              <PartnerOperasyonOzeti
-                firmaAdi={partner.firmaAdi}
-                abonelik={abonelik ? {
-                  paketId: abonelik.paketId,
-                  hakSayisi: abonelik.hakSayisi,
-                  kullanilanHak: abonelik.kullanilanHak,
-                  bitisAt: abonelik.bitisAt,
-                } : null}
-                kodlar={kodlar}
-              />
-            </div>
-            <div id="pipeline" className="scroll-mt-24">
-              <PartnerOperasyonPipeline kodlar={kodlar} />
-            </div>
-            <div id="donusum" className="scroll-mt-24">
-              <PartnerDonusumMetrikleri
-                abonelik={abonelik ? {
-                  paketId: abonelik.paketId,
-                  hakSayisi: abonelik.hakSayisi,
-                  kullanilanHak: abonelik.kullanilanHak,
-                  bitisAt: abonelik.bitisAt,
-                } : null}
-                kodlar={kodlar}
-              />
-            </div>
-            <div id="satis" className="scroll-mt-24">
-              <PartnerSatisRehberi />
-            </div>
+            {abonelik && (
+              <>
+                <div id="aktivasyon-kodlari" className="scroll-mt-24">
+                  <AktivasyonKodlari
+                    firmaAdi={partner.firmaAdi}
+                    destekTelefonu={partner.destekTelefonu}
+                    instagramUrl={partner.instagramUrl}
+                    whatsappImzasi={partner.whatsappImzasi}
+                    abonelik={{
+                      paketId: abonelik.paketId,
+                      hakSayisi: abonelik.hakSayisi,
+                      kullanilanHak: abonelik.kullanilanHak,
+                      bitisAt: abonelik.bitisAt,
+                    }}
+                    kodlar={kodlar}
+                  />
+                </div>
+                <div id="ozet" className="scroll-mt-24">
+                  <PartnerOperasyonOzeti
+                    firmaAdi={partner.firmaAdi}
+                    abonelik={{
+                      paketId: abonelik.paketId,
+                      hakSayisi: abonelik.hakSayisi,
+                      kullanilanHak: abonelik.kullanilanHak,
+                      bitisAt: abonelik.bitisAt,
+                    }}
+                    kodlar={kodlar}
+                  />
+                </div>
+                <div id="pipeline" className="scroll-mt-24">
+                  <PartnerOperasyonPipeline kodlar={kodlar} />
+                </div>
+                <div id="donusum" className="scroll-mt-24">
+                  <PartnerDonusumMetrikleri
+                    abonelik={{
+                      paketId: abonelik.paketId,
+                      hakSayisi: abonelik.hakSayisi,
+                      kullanilanHak: abonelik.kullanilanHak,
+                      bitisAt: abonelik.bitisAt,
+                    }}
+                    kodlar={kodlar}
+                  />
+                </div>
+                <div id="satis" className="scroll-mt-24">
+                  <PartnerSatisRehberi />
+                </div>
+                <div id="teklif" className="scroll-mt-24">
+                  <PartnerTeklifOlusturucu
+                    firmaAdi={partner.firmaAdi}
+                    markaRenk={partner.markaRenk}
+                    markaSlogani={partner.markaSlogani}
+                    destekTelefonu={partner.destekTelefonu}
+                    instagramUrl={partner.instagramUrl}
+                    whatsappImzasi={partner.whatsappImzasi}
+                  />
+                </div>
+              </>
+            )}
             <div id="marka" className="scroll-mt-24">
               <PartnerMarkaAyarlari
                 firmaAdi={partner.firmaAdi}
@@ -283,16 +297,6 @@ export default async function PartnerPanelPage({
                   instagramUrl: partner.instagramUrl,
                   whatsappImzasi: partner.whatsappImzasi,
                 }}
-              />
-            </div>
-            <div id="teklif" className="scroll-mt-24">
-              <PartnerTeklifOlusturucu
-                firmaAdi={partner.firmaAdi}
-                markaRenk={partner.markaRenk}
-                markaSlogani={partner.markaSlogani}
-                destekTelefonu={partner.destekTelefonu}
-                instagramUrl={partner.instagramUrl}
-                whatsappImzasi={partner.whatsappImzasi}
               />
             </div>
             <div id="odeme" className="scroll-mt-24">
