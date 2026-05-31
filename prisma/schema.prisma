@@ -508,6 +508,8 @@ model Partner {
   instagramUrl      String?           @db.VarChar(160)
   whatsappImzasi    String?           @db.VarChar(160)
   durum             String            @default("beklemede")
+  teklifHazir       Boolean           @default(false)
+  teklifNotlari     Json?
   basvuruDetay      Json?
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt

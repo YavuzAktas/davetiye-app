@@ -218,6 +218,7 @@ export default async function PartnerPanelPage({
                   bitisAt: abonelik.bitisAt,
                 } : null}
                 kodlar={kodlar}
+                teklifHazir={partner.teklifHazir}
                 marka={{
                   logoUrl: partner.logoUrl,
                   markaSlogani: partner.markaSlogani,
@@ -267,6 +268,12 @@ export default async function PartnerPanelPage({
                     destekTelefonu={partner.destekTelefonu}
                     instagramUrl={partner.instagramUrl}
                     whatsappImzasi={partner.whatsappImzasi}
+                    teklifHazir={partner.teklifHazir}
+                    teklifNotlari={
+                      Array.isArray(partner.teklifNotlari)
+                        ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
+                        : []
+                    }
                   />
                 </div>
               </>

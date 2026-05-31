@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type PaketId = "davet" | "operasyon" | "hatira" | "tam";
 
@@ -118,6 +119,58 @@ function paraFormatla(deger: string) {
   }).format(sayi);
 }
 
+type OzelNot = { id: string; metin: string; createdAt: string };
+
+function OzelNotKarti({
+  not,
+  silinenId,
+  onSil,
+}: {
+  not: OzelNot;
+  silinenId: string | null;
+  onSil: (id: string) => void;
+}) {
+  const [kopyalandi, setKopyalandi] = useState(false);
+
+  const kopyala = async () => {
+    try {
+      await navigator.clipboard.writeText(not.metin);
+      setKopyalandi(true);
+      setTimeout(() => setKopyalandi(false), 2000);
+    } catch {
+      setKopyalandi(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-gray-100 bg-white p-4">
+      <p className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">{not.metin}</p>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-gray-100 pt-3">
+        <span className="text-[11px] font-semibold text-gray-400">
+          {new Date(not.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
+        </span>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={kopyala}
+            className="rounded-lg bg-purple-50 px-3 py-1.5 text-[11px] font-black text-purple-700 transition-colors hover:bg-purple-100"
+          >
+            {kopyalandi ? "✓ Kopyalandı" : "Kopyala"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onSil(not.id)}
+            disabled={silinenId === not.id}
+            className="rounded-lg bg-red-50 px-3 py-1.5 text-[11px] font-black text-red-500 transition-colors hover:bg-red-100 disabled:opacity-50"
+          >
+            {silinenId === not.id ? "…" : "Sil"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PartnerTeklifOlusturucu({
   firmaAdi,
   markaRenk,
@@ -125,6 +178,8 @@ export default function PartnerTeklifOlusturucu({
   destekTelefonu,
   instagramUrl,
   whatsappImzasi,
+  teklifHazir: teklifHazirBaslangic,
+  teklifNotlari: teklifNotlariBaslangic,
 }: {
   firmaAdi: string;
   markaRenk?: string | null;
@@ -132,13 +187,22 @@ export default function PartnerTeklifOlusturucu({
   destekTelefonu?: string | null;
   instagramUrl?: string | null;
   whatsappImzasi?: string | null;
+  teklifHazir: boolean;
+  teklifNotlari: OzelNot[];
 }) {
+  const router = useRouter();
   const [paketId, setPaketId] = useState<PaketId>("tam");
   const [etkinlikTuru, setEtkinlikTuru] = useState(ETKINLIK_TURLERI[0]);
   const [referans, setReferans] = useState("");
   const [tutar, setTutar] = useState("");
   const [not, setNot] = useState("");
   const [kopyalandi, setKopyalandi] = useState(false);
+  const [teklifHazir, setTeklifHazir] = useState(teklifHazirBaslangic);
+  const [ozelNotlar, setOzelNotlar] = useState<OzelNot[]>(teklifNotlariBaslangic);
+  const [yeniNot, setYeniNot] = useState("");
+  const [notKaydediliyor, setNotKaydediliyor] = useState(false);
+  const [silinenId, setSilinenId] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const paket = PAKETLER.find(p => p.id === paketId) ?? PAKETLER[0];
   const tutarMetni = paraFormatla(tutar);
@@ -187,13 +251,65 @@ export default function PartnerTeklifOlusturucu({
     return satirlar.join("\n");
   }, [etkinlikTuru, firmaAdi, paket, temizNot, temizReferans, tutarMetni, whatsappImzasi]);
 
+  const hazirIsaretle = async () => {
+    if (teklifHazir) return;
+    try {
+      await fetch("/api/partner/teklif", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aksiyon: "hazir-isaretle" }),
+      });
+      setTeklifHazir(true);
+      router.refresh();
+    } catch {
+      // sessiz hata — checklist bir sonraki refresh'te güncellenir
+    }
+  };
+
   const kopyala = async () => {
     try {
       await navigator.clipboard.writeText(teklifMetni);
       setKopyalandi(true);
       setTimeout(() => setKopyalandi(false), 2000);
+      hazirIsaretle();
     } catch {
       setKopyalandi(false);
+    }
+  };
+
+  const notEkle = async () => {
+    if (!yeniNot.trim() || notKaydediliyor) return;
+    setNotKaydediliyor(true);
+    try {
+      const res = await fetch("/api/partner/teklif", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aksiyon: "not-ekle", metin: yeniNot }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setOzelNotlar(prev => [...prev, data.not]);
+        setYeniNot("");
+        setTeklifHazir(true);
+        router.refresh();
+      }
+    } finally {
+      setNotKaydediliyor(false);
+    }
+  };
+
+  const notSil = async (id: string) => {
+    setSilinenId(id);
+    try {
+      await fetch("/api/partner/teklif", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aksiyon: "not-sil", notId: id }),
+      });
+      setOzelNotlar(prev => prev.filter(n => n.id !== id));
+      router.refresh();
+    } finally {
+      setSilinenId(null);
     }
   };
 
@@ -534,7 +650,7 @@ export default function PartnerTeklifOlusturucu({
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">
               WhatsApp / Teklif Metni
             </p>
-            <pre className="mt-3 max-h-[480px] overflow-auto whitespace-pre-wrap rounded-2xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-700 border border-gray-200">
+            <pre className="mt-3 max-h-120 overflow-auto whitespace-pre-wrap rounded-2xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-700 border border-gray-200">
               {teklifMetni}
             </pre>
           </div>
@@ -551,6 +667,7 @@ export default function PartnerTeklifOlusturucu({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={hazirIsaretle}
               className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-green-700"
             >
               WhatsApp&apos;ta Aç
@@ -566,6 +683,63 @@ export default function PartnerTeklifOlusturucu({
           <p className="mt-3 text-xs leading-relaxed text-gray-400">
             PDF çıktısı tarayıcıda hazırlanır; teklif bilgileri sunucuya kaydedilmez.
           </p>
+        </div>
+      </div>
+
+      {/* ── Özel teklif notları ── */}
+      <div className="border-t border-gray-100 bg-gray-50 p-5 lg:p-7">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-sm font-black text-gray-950">Kendi teklif metinlerim</p>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+              Müşteri türüne göre hazırladığın özel metinleri kaydet. Tek tıkla kopyala veya sil.
+            </p>
+          </div>
+          {teklifHazir && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-700">
+              ✓ Teklif adımı tamamlandı
+            </span>
+          )}
+        </div>
+
+        {/* Kayıtlı notlar */}
+        {ozelNotlar.length > 0 && (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {ozelNotlar.map(n => (
+              <OzelNotKarti
+                key={n.id}
+                not={n}
+                silinenId={silinenId}
+                onSil={notSil}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Yeni not textarea */}
+        <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4">
+          <textarea
+            ref={textareaRef}
+            value={yeniNot}
+            onChange={e => setYeniNot(e.target.value)}
+            rows={4}
+            maxLength={2000}
+            placeholder="Müşteri tipine veya etkinlik türüne göre özel bir teklif metni yaz..."
+            className="w-full resize-none rounded-xl bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-800 outline-none placeholder:text-gray-300 focus:ring-2 focus:ring-purple-100"
+          />
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold text-gray-400">
+              {yeniNot.length}/2000
+            </span>
+            <button
+              type="button"
+              onClick={notEkle}
+              disabled={!yeniNot.trim() || notKaydediliyor}
+              className="rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:opacity-40"
+            >
+              {notKaydediliyor ? "Kaydediliyor..." : "Kaydet"}
+            </button>
+          </div>
         </div>
       </div>
     </section>

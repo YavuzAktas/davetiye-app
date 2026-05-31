@@ -31,10 +31,12 @@ export default function PartnerOnboardingChecklist({
   abonelik,
   kodlar,
   marka,
+  teklifHazir,
 }: {
   abonelik: Abonelik;
   kodlar: Kod[];
   marka: Marka;
+  teklifHazir: boolean;
 }) {
   const aktifKodlar = kodlar.filter(k => k.durum !== "iptal");
   const markaTamam = Boolean(
@@ -69,9 +71,9 @@ export default function PartnerOnboardingChecklist({
     {
       baslik: "İlk teklif metnini hazırla",
       aciklama: "Satış metni veya PDF çıktısı ile müşteriye paketi net anlat.",
-      tamam: ilkKodVar || gonderilenVar || baslayanVar || yayindaVar,
+      tamam: teklifHazir,
       href: "#teklif",
-      cta: "Teklife git",
+      cta: teklifHazir ? "Teklif hazır" : "Teklife git",
     },
     {
       baslik: "İlk aktivasyon linkini oluştur",
