@@ -4,19 +4,24 @@ export default function PartnerPanelYukleniyor() {
 
       {/* Dark hero header */}
       <div className="relative bg-[#080112] overflow-hidden">
+        <div className="absolute top-0 left-1/3 w-72 h-72 bg-purple-700 opacity-20 blur-[90px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-56 h-56 bg-pink-700 opacity-15 blur-[70px] rounded-full pointer-events-none" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-14">
 
-          {/* Eyebrow + title row */}
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-4">
-              {/* Logo circle */}
-              <div className="w-14 h-14 bg-white/10 rounded-2xl animate-pulse shrink-0" />
-              <div className="space-y-2">
-                <div className="h-2.5 w-24 bg-white/15 rounded-full animate-pulse" />
-                <div className="h-5 w-40 bg-white/20 rounded-full animate-pulse" />
-              </div>
+          {/* Breadcrumb skeleton */}
+          <div className="flex items-center gap-2 mb-8">
+            <div className="h-3 w-20 bg-white/10 rounded-full animate-pulse" />
+            <span className="text-white/20 text-xs">›</span>
+            <div className="h-3 w-24 bg-white/15 rounded-full animate-pulse" />
+          </div>
+
+          {/* Logo + title + badge row */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="w-14 h-14 bg-white/10 rounded-2xl animate-pulse shrink-0" />
+            <div className="flex-1 space-y-2.5">
+              <div className="h-2.5 w-24 bg-white/15 rounded-full animate-pulse" />
+              <div className="h-7 w-48 bg-white/20 rounded-full animate-pulse" />
             </div>
-            {/* Status badge */}
             <div className="h-6 w-20 bg-white/10 border border-white/10 rounded-full animate-pulse" />
           </div>
         </div>

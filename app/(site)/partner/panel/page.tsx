@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
+import Link from "next/link";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
@@ -100,29 +101,57 @@ export default async function PartnerPanelPage({
     not: k.not ?? null,
   }));
 
+  const durumRenk =
+    partner.durum === "aktif"    ? "bg-emerald-400/15 text-emerald-300 border border-emerald-400/25" :
+    partner.durum === "beklemede" ? "bg-yellow-400/15 text-yellow-300 border border-yellow-400/25" :
+                                    "bg-red-400/15 text-red-300 border border-red-400/25";
+  const durumLabel =
+    partner.durum === "aktif"    ? "Aktif" :
+    partner.durum === "beklemede" ? "İnceleniyor" :
+                                    "Askıda";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 py-6">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-4">
-            {partner.durum === "aktif" && <LogoYukle mevcutLogo={partner.logoUrl ?? null} />}
-            <div>
-              <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-0.5">Partner Paneli</p>
-              <h1 className="text-xl font-black text-gray-900">{partner.firmaAdi}</h1>
-            </div>
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+
+      {/* ── Dark hero header ── */}
+      <div className="relative bg-[#080112] overflow-hidden">
+        <div className="absolute top-0 left-1/3 w-72 h-72 bg-purple-700 opacity-20 blur-[90px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-56 h-56 bg-pink-700 opacity-15 blur-[70px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-14">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-white/30 text-xs mb-8">
+            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</Link>
+            <span>›</span>
+            <span className="text-white/50">Partner Paneli</span>
           </div>
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-            partner.durum === "aktif" ? "bg-green-100 text-green-700" :
-            partner.durum === "beklemede" ? "bg-yellow-100 text-yellow-700" :
-            "bg-red-100 text-red-600"
-          }`}>
-            {partner.durum}
-          </span>
+
+          {/* Logo + firma adı + durum */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            {partner.durum === "aktif" && (
+              <div className="shrink-0">
+                <LogoYukle mevcutLogo={partner.logoUrl ?? null} />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold tracking-[0.26em] uppercase text-purple-300/70 mb-1">
+                Partner Paneli
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                {partner.firmaAdi}
+              </h1>
+            </div>
+            <span className={`text-xs font-bold px-3 py-1.5 rounded-full shrink-0 ${durumRenk}`}>
+              {durumLabel}
+            </span>
+          </div>
         </div>
+
+        <div className="h-10 bg-linear-to-b from-transparent to-gray-50 pointer-events-none" />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-10">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         {partner.durum === "beklemede" && (
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-lg mx-auto">
             <div className="text-center mb-8">
