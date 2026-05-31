@@ -122,7 +122,7 @@ export default function AktivasyonKodlari({
   const [arama, setArama] = useState("");
   const [durumFiltresi, setDurumFiltresi] = useState<DurumFiltresi>("tum");
   const [sonOlusturulanKodlar, setSonOlusturulanKodlar] = useState<YeniKod[]>([]);
-  const [topluKopyalandi, setTopluKopyalandi] = useState(false);
+  const [topluKopyaDurumu, setTopluKopyaDurumu] = useState<string | null>(null);
 
   // WhatsApp mesaj şablonu
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
@@ -222,15 +222,19 @@ export default function AktivasyonKodlari({
     }
   };
 
-  const yeniKodlariKopyala = async () => {
-    if (sonOlusturulanKodlar.length === 0) return;
+  const linkSatirlari = (kodlar: { kod: string; not?: string | null }[]) =>
+    kodlar.map(k => `${k.not ? `${k.not} - ` : ""}${aktivasyonUrl(k.kod)}`).join("\n");
+
+  const topluLinkKopyala = async (
+    kodlar: { kod: string; not?: string | null }[],
+    durumAnahtari: string
+  ) => {
+    if (kodlar.length === 0) return;
 
     try {
-      await navigator.clipboard.writeText(
-        sonOlusturulanKodlar.map(k => aktivasyonUrl(k.kod)).join("\n")
-      );
-      setTopluKopyalandi(true);
-      setTimeout(() => setTopluKopyalandi(false), 2000);
+      await navigator.clipboard.writeText(linkSatirlari(kodlar));
+      setTopluKopyaDurumu(durumAnahtari);
+      setTimeout(() => setTopluKopyaDurumu(null), 2000);
     } catch {
       setHata("Linkler kopyalanamadı.");
     }
@@ -303,6 +307,7 @@ export default function AktivasyonKodlari({
     { key: "surecte", label: "Süreçte", count: surecteKodlar.length },
     { key: "yayinda", label: "Yayında", count: yayindaKodlar.length },
   ];
+  const gonderilecekKodlar = aktifKodlar.filter(k => k.durum === "olusturuldu");
   const yeniKodSet = new Set(sonOlusturulanKodlar.map(k => k.kod));
   const iptalOnay = ilkKodlar.find(k => k.kod === iptalOnayKodu) ?? null;
   const whatsappSablonlari = WHATSAPP_MESAJ_SABLONLARI(firmaAdi);
@@ -544,10 +549,10 @@ export default function AktivasyonKodlari({
             </button>
             <button
               type="button"
-              onClick={yeniKodlariKopyala}
+              onClick={() => topluLinkKopyala(sonOlusturulanKodlar, "yeni")}
               className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-green-700 ring-1 ring-green-200 transition-colors hover:bg-green-100"
             >
-              {topluKopyalandi ? "Linkler Kopyalandı" : "Tüm Yeni Linkleri Kopyala"}
+              {topluKopyaDurumu === "yeni" ? "Linkler Kopyalandı" : "Tüm Yeni Linkleri Kopyala"}
             </button>
           </div>
         </div>
@@ -589,6 +594,54 @@ export default function AktivasyonKodlari({
               );
             })}
           </div>
+        </div>
+      )}
+
+      {aktifKodlar.length > 1 && (
+        <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-black text-gray-900">Toplu işlemler</p>
+              <p className="mt-1 text-xs leading-relaxed text-gray-500">
+                Filtrede görünen linkleri veya henüz gönderilmemiş kodları tek seferde kopyalayın.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-2 sm:flex sm:items-center">
+              <button
+                type="button"
+                onClick={() => topluLinkKopyala(filtrelenmisKodlar, "filtre")}
+                disabled={filtrelenmisKodlar.length === 0}
+                className="rounded-xl bg-white px-3 py-2.5 text-xs font-bold text-purple-600 ring-1 ring-purple-100 transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {topluKopyaDurumu === "filtre"
+                  ? "Kopyalandı"
+                  : `Filtredekileri Kopyala (${filtrelenmisKodlar.length})`}
+              </button>
+              <button
+                type="button"
+                onClick={() => topluLinkKopyala(gonderilecekKodlar, "gonderilecek")}
+                disabled={gonderilecekKodlar.length === 0}
+                className="rounded-xl bg-white px-3 py-2.5 text-xs font-bold text-green-700 ring-1 ring-green-100 transition-colors hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {topluKopyaDurumu === "gonderilecek"
+                  ? "Kopyalandı"
+                  : `Gönderilecekleri Kopyala (${gonderilecekKodlar.length})`}
+              </button>
+            </div>
+          </div>
+
+          {(arama || durumFiltresi !== "tum") && (
+            <button
+              type="button"
+              onClick={() => {
+                setArama("");
+                setDurumFiltresi("tum");
+              }}
+              className="mt-3 text-[11px] font-bold text-gray-400 transition-colors hover:text-gray-600"
+            >
+              Filtreleri temizle
+            </button>
+          )}
         </div>
       )}
 
