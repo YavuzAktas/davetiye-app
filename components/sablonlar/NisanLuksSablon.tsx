@@ -203,9 +203,9 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tarihObj?.getTime()]);
 
-  /* İsimler */
-  const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
-  const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
+  /* İsimler — yalnızca ad (soyad gösterilmez) */
+  const isim1 = (davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik).split(" ")[0];
+  const isim2 = (davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null)?.split(" ")[0] ?? null;
 
   return (
     <>
@@ -229,8 +229,11 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-12px); }
         }
+        @keyframes goldPulse {
+          0%, 100% { opacity: 1; text-shadow: 0 0 16px rgba(196,160,90,0.5); }
+          50% { opacity: 0.7; text-shadow: 0 0 32px rgba(196,160,90,0.9); }
+        }
       `}</style>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ══ KAPALI DURUM ══ */}
       {!acildi && (
@@ -265,15 +268,26 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
                 <p style={{
                   fontFamily:"var(--font-cormorant),serif",
                   fontSize:15, letterSpacing:"0.4em",
-                  color:GOLD, marginBottom:12, fontWeight: 600,
+                  color:GOLD, marginBottom:10, fontWeight: 600,
                   textShadow: "0 2px 10px rgba(0,0,0,0.3)"
                 }}>{tarihKisa}</p>
               )}
+              {isim2 && (
+                <p style={{
+                  fontFamily:"var(--font-cormorant),serif",
+                  fontSize:14, fontStyle:"italic",
+                  color:`${CREAM}80`, letterSpacing:"0.14em",
+                  marginBottom:16,
+                }}>
+                  {isim1} ve {isim2} aileleri
+                </p>
+              )}
               <p style={{
                 fontFamily:"var(--font-cormorant),serif",
-                fontSize:13, fontStyle:"italic",
-                color:`${GOLD}70`, letterSpacing:"0.15em",
-              }}>Mühüre dokun ✦</p>
+                fontSize:16, fontStyle:"italic",
+                color:GOLD, letterSpacing:"0.2em",
+                animation:"goldPulse 2.2s ease-in-out infinite",
+              }}>✦ Mühüre dokun ✦</p>
             </div>
           </div>
         </div>
@@ -284,6 +298,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
       {/* ══ AÇIK DURUM ══ */}
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
 
       {/* ════════════════════════════════════
           BÖLÜM 1 — BİZ (Hero kemer)
@@ -379,7 +394,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
       {/* ════════════════════════════════════
           BÖLÜM 2 — ANILAR (Polaroid)
       ════════════════════════════════════ */}
-      {davetiye.albumAktif && <section id="anilar" style={{
+      {davetiye.albumAktif && (davetiye.polaroid1 || davetiye.polaroid2 || davetiye.polaroid3) && <section id="anilar" style={{
         padding:"80px 24px 100px", textAlign:"center", background:BG
       }}>
         <p style={{
@@ -616,19 +631,38 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
       )}
 
       {/* ─── Footer ─── */}
-      {!davetiye.mesaj && (
       <footer style={{
         background:BG_DARK,
-        padding:"20px 24px 80px",
+        padding:"32px 24px 52px",
         textAlign:"center",
+        borderTop:`1px solid ${GOLD}15`,
       }}>
-        <p style={{
-          fontFamily:"var(--font-dancing),cursive",
-          fontSize:"clamp(2.4rem,7vw,3.6rem)",
-          color:CREAM,
-        }}>Sizi çok seviyoruz 💛</p>
+        {!davetiye.mesaj && (
+          <p style={{
+            fontFamily:"var(--font-dancing),cursive",
+            fontSize:"clamp(2.4rem,7vw,3.6rem)",
+            color:CREAM, marginBottom:28,
+          }}>Sizi çok seviyoruz 💛</p>
+        )}
+        <a
+          href="https://bekleriz.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display:"inline-flex", alignItems:"center", gap:8,
+            padding:"9px 20px", borderRadius:100,
+            border:`1px solid ${GOLD}35`,
+            background:`rgba(196,160,90,0.07)`,
+            color:`${GOLD}90`,
+            textDecoration:"none",
+            fontFamily:"var(--font-cormorant),serif",
+            fontSize:12, letterSpacing:"0.22em",
+            transition:"all 0.2s",
+          }}
+        >
+          ✦ Bekleriz ile oluşturuldu
+        </a>
       </footer>
-      )}
 
     </div>
       )}
