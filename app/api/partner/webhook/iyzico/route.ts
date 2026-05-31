@@ -3,14 +3,24 @@ import { createHash, createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { paketGetir } from "@/lib/partner-paketler";
 
-function dogrulaImza(payload: string, gelen: string): boolean {
-  const secret = process.env.IYZICO_WEBHOOK_SECRET ?? process.env.IYZICO_SECRET_KEY ?? "";
-  if (!secret || !gelen) return false;
-  const beklenen = createHmac("sha1", secret).update(payload).digest("base64");
+function dogrulaSubscriptionImzasi(eventType: string, data: any, gelen: string): boolean {
+  const secret = process.env.IYZICO_SECRET_KEY ?? "";
+  const merchantId = process.env.IYZICO_MERCHANT_ID ?? ilkDoluString(data.merchantId);
+  const subscriptionReferenceCode = ilkDoluString(data.subscriptionReferenceCode, data.referenceCode);
+  const orderReferenceCode = ilkDoluString(data.orderReferenceCode);
+  const customerReferenceCode = ilkDoluString(data.customerReferenceCode);
+
+  if (!secret || !merchantId || !eventType || !gelen || !subscriptionReferenceCode || !orderReferenceCode || !customerReferenceCode) {
+    return false;
+  }
+
+  const mesaj = merchantId + secret + eventType + subscriptionReferenceCode + orderReferenceCode + customerReferenceCode;
+  const beklenen = createHmac("sha256", secret).update(mesaj).digest("hex").toLowerCase();
+  const gelenNormalize = gelen.trim().toLowerCase();
   try {
-    return timingSafeEqual(Buffer.from(beklenen), Buffer.from(gelen));
+    return timingSafeEqual(Buffer.from(beklenen), Buffer.from(gelenNormalize));
   } catch {
-    return beklenen === gelen;
+    return beklenen === gelenNormalize;
   }
 }
 
@@ -38,6 +48,8 @@ function eventAnahtari(event: any, data: any, eventType: string, rawBody: string
     event.iyziEventId,
     event.eventId,
     event.id,
+    event.iyziReferenceCode,
+    data.iyziReferenceCode,
     data.orderReferenceCode,
     data.paymentId,
     data.conversationId,
@@ -58,11 +70,6 @@ function tarihOku(...degerler: unknown[]): Date | null {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const rawBody = await req.text();
 
-  const imza = req.headers.get("x-iyzi-signature") ?? req.headers.get("x-iyzico-signature") ?? "";
-  if (!imza || !dogrulaImza(rawBody, imza)) {
-    return NextResponse.json({ hata: "Geçersiz imza." }, { status: 401 });
-  }
-
   let event: any;
   try {
     event = JSON.parse(rawBody);
@@ -72,6 +79,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const eventType: string = event.iyziEventType ?? event.eventType ?? "";
   const data = event.data ?? event;
+  const imza = req.headers.get("x-iyz-signature-v3") ?? "";
+  if (!dogrulaSubscriptionImzasi(eventType, data, imza)) {
+    return NextResponse.json({ hata: "Geçersiz imza." }, { status: 401 });
+  }
+
   const eventKey = eventAnahtari(event, data, eventType || "unknown", rawBody);
 
   try {
