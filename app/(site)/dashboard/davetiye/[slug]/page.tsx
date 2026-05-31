@@ -467,6 +467,7 @@ export default async function DavetiyeDetay({ params }: Props) {
           <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar px-4 sm:px-6 pr-10 sm:pr-12">
             {[
               { href: `/dashboard/davetiye/${davetiye.slug}/davetliler`, icon: <Users className="w-4 h-4" />, label: "Davetliler", color: "text-gray-500 bg-gray-50" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/qr-kiti`, icon: <QrCode className="w-4 h-4" />, label: "QR Kiti", color: "text-purple-600 bg-purple-50", border: "border-purple-100" },
               { href: `/dashboard/davetiye/${davetiye.slug}/check-in`,   icon: <QrCode className="w-4 h-4" />, label: "Check-in",  color: "text-emerald-600 bg-emerald-50", border: "border-emerald-100" },
               { href: `/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`, icon: <ClipboardList className="w-4 h-4" />, label: "RSVP", color: "text-gray-500 bg-gray-50" },
               { href: `/dashboard/davetiye/${davetiye.slug}/program`,    icon: <CalendarDays className="w-4 h-4" />, label: "Program", color: "text-gray-500 bg-gray-50" },
@@ -501,13 +502,21 @@ export default async function DavetiyeDetay({ params }: Props) {
                   <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Paylaşım</p>
                   <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">Genel link, kişiye özel linkler ve mekan QR&apos;ını ayrı yönetin.</p>
                 </div>
-                <Link
-                  href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
-                  className="inline-flex items-center justify-center text-center text-xs font-semibold px-4 py-2 rounded-xl border transition-all hover:opacity-90 sm:shrink-0"
-                  style={{ borderColor: renk + "44", color: renk, backgroundColor: renk + "10" }}
-                >
-                  Davetli linklerini yönet →
-                </Link>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:shrink-0">
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/qr-kiti`}
+                    className="inline-flex items-center justify-center text-center text-xs font-bold px-4 py-2 rounded-xl border transition-all hover:opacity-90"
+                    style={{ borderColor: renk + "44", color: renk, backgroundColor: renk + "10" }}
+                  >
+                    QR kitini hazırla →
+                  </Link>
+                  <Link
+                    href={`/dashboard/davetiye/${davetiye.slug}/davetliler`}
+                    className="inline-flex items-center justify-center text-center text-xs font-semibold px-4 py-2 rounded-xl border border-gray-200 text-gray-600 transition-all hover:bg-gray-50"
+                  >
+                    Davetli linklerini yönet →
+                  </Link>
+                </div>
               </div>
 
               <div className="p-4 sm:p-6 space-y-5">
