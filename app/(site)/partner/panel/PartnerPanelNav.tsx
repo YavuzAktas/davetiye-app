@@ -12,7 +12,7 @@ const NAV_LINKLERI = [
 
 export default function PartnerPanelNav() {
   return (
-    <nav className="sticky top-0 z-30 -mx-4 border-b border-gray-100 bg-gray-50/92 px-4 py-3 backdrop-blur-xl sm:top-0">
+    <nav className="sticky top-0 z-30 -mx-4 border-b border-gray-100 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm sm:top-0">
       <div className="mx-auto max-w-5xl">
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {NAV_LINKLERI.map(link => (

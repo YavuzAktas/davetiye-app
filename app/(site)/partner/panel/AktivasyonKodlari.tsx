@@ -533,7 +533,7 @@ export default function AktivasyonKodlari({
       )}
 
       {ilkKodlar.length === 0 && abonelik && (
-        <div className="overflow-hidden rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-rose-50">
+        <div className="overflow-hidden rounded-3xl border border-purple-100 bg-linear-to-br from-purple-50 via-white to-rose-50">
           <div className="p-5 sm:p-6">
             <div className="max-w-2xl">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-400">İlk aktivasyon</p>
@@ -900,7 +900,7 @@ export default function AktivasyonKodlari({
                   </button>
                   <button
                     onClick={() => setTeslimPaketiAcikKod(k.kod)}
-                    className="rounded-xl bg-gray-950 px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-gray-800 sm:rounded-lg sm:bg-purple-50 sm:py-1.5 sm:text-[11px] sm:text-purple-700 sm:hover:bg-purple-100"
+                    className="rounded-xl bg-purple-600 px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-purple-700 sm:rounded-lg sm:bg-purple-50 sm:py-1.5 sm:text-[11px] sm:text-purple-700 sm:hover:bg-purple-100"
                   >
                     Teslim Paketi
                   </button>
@@ -1010,7 +1010,7 @@ export default function AktivasyonKodlari({
               </button>
               <a
                 href={teslimPaketiMailUrl(teslimPaketiAcikKod)}
-                className="inline-flex items-center justify-center rounded-xl bg-gray-950 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-gray-800"
+                className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-black text-gray-700 transition-colors hover:bg-gray-50"
               >
                 E-posta
               </a>

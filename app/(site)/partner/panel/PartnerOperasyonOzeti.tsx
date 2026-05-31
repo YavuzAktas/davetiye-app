@@ -87,23 +87,23 @@ export default function PartnerOperasyonOzeti({
 
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-      <div className="border-b border-gray-100 bg-linear-to-br from-gray-950 via-purple-950 to-gray-950 px-5 py-6 text-white sm:px-7">
+      <div className="border-b border-gray-100 bg-linear-to-br from-purple-50 via-white to-rose-50 px-5 py-6 sm:px-7">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-200/80">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">
               Mekan Operasyon Paneli
             </p>
-            <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-gray-950 sm:text-3xl">
               {firmaAdi} için etkinlik teslim akışı
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-white/60">
+            <p className="mt-3 text-sm leading-relaxed text-gray-500">
               Partner tarafında yalnızca durum ve toplu operasyon bilgisi görünür; davetli listesi, RSVP yanıtları ve davetiye içeriği müşterinin hesabında kalır.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/40">Sıradaki İş</p>
-            <p className="mt-1 max-w-sm text-sm font-semibold leading-relaxed text-white">{anaAksiyon}</p>
+          <div className="rounded-2xl border border-purple-100 bg-white px-4 py-3 shadow-sm">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-gray-400">Sıradaki İş</p>
+            <p className="mt-1 max-w-sm text-sm font-semibold leading-relaxed text-gray-700">{anaAksiyon}</p>
           </div>
         </div>
       </div>

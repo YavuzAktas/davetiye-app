@@ -74,7 +74,7 @@ const PAKETLER: Paket[] = [
     ad: "Premium Etkinlik Deneyimi",
     kisa: "Satışta en güçlü paket",
     hedef: "Müşteriye tek kalemde premium dijital deneyim sunmak isteyen organizasyonlar",
-    vurgu: "from-gray-950 to-purple-950",
+    vurgu: "from-purple-600 to-pink-600",
     maddeler: [
       "Dijital davetiye ve lüks şablon deneyimi",
       "QR check-in, oturma planı ve RSVP takibi",
@@ -534,7 +534,7 @@ export default function PartnerTeklifOlusturucu({
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">
               WhatsApp / Teklif Metni
             </p>
-            <pre className="mt-3 max-h-[480px] overflow-auto whitespace-pre-wrap rounded-2xl bg-gray-950 p-4 text-xs leading-relaxed text-gray-100">
+            <pre className="mt-3 max-h-[480px] overflow-auto whitespace-pre-wrap rounded-2xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-700 border border-gray-200">
               {teklifMetni}
             </pre>
           </div>
@@ -558,7 +558,7 @@ export default function PartnerTeklifOlusturucu({
             <button
               type="button"
               onClick={pdfOlarakKaydet}
-              className="rounded-2xl bg-gray-950 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-gray-800"
+              className="rounded-2xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
             >
               PDF Kaydet
             </button>
