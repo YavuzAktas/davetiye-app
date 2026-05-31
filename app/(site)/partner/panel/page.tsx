@@ -121,10 +121,10 @@ export default async function PartnerPanelPage({
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-14">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-white/30 text-xs mb-8">
-            <Link href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</Link>
-            <span>›</span>
-            <span className="text-white/50">Partner Paneli</span>
+          <div className="flex items-center gap-2 text-white/55 text-xs mb-8">
+            <Link href="/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
+            <span className="text-white/35">›</span>
+            <span className="text-white/70">Partner Paneli</span>
           </div>
 
           {/* Logo + firma adı + durum */}
