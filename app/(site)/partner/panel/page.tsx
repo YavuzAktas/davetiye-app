@@ -208,6 +208,9 @@ export default async function PartnerPanelPage({
             />
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
+              destekTelefonu={partner.destekTelefonu}
+              instagramUrl={partner.instagramUrl}
+              whatsappImzasi={partner.whatsappImzasi}
               abonelik={abonelik ? {
                 paketId: abonelik.paketId,
                 hakSayisi: abonelik.hakSayisi,

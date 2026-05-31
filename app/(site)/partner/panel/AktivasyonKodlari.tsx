@@ -105,10 +105,16 @@ function DurumAkisi({ durum }: { durum: string }) {
 
 export default function AktivasyonKodlari({
   firmaAdi,
+  destekTelefonu,
+  instagramUrl,
+  whatsappImzasi,
   abonelik,
   kodlar: ilkKodlar,
 }: {
   firmaAdi: string;
+  destekTelefonu?: string | null;
+  instagramUrl?: string | null;
+  whatsappImzasi?: string | null;
   abonelik: Abonelik;
   kodlar: Kod[];
 }) {
@@ -123,6 +129,8 @@ export default function AktivasyonKodlari({
   const [durumFiltresi, setDurumFiltresi] = useState<DurumFiltresi>("tum");
   const [sonOlusturulanKodlar, setSonOlusturulanKodlar] = useState<YeniKod[]>([]);
   const [topluKopyaDurumu, setTopluKopyaDurumu] = useState<string | null>(null);
+  const [teslimPaketiAcikKod, setTeslimPaketiAcikKod] = useState<string | null>(null);
+  const [teslimPaketiKopyalananKod, setTeslimPaketiKopyalananKod] = useState<string | null>(null);
 
   // WhatsApp mesaj şablonu
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
@@ -249,6 +257,62 @@ export default function AktivasyonKodlari({
         body: JSON.stringify({ action: "gonderildi" }),
       }).then(() => router.refresh()).catch(() => {});
     }
+  };
+
+  const teslimPaketiMetni = (kod: string) => {
+    const satirlar = [
+      `Merhaba, ${firmaAdi} dijital davetiye teslim paketiniz hazır.`,
+      "",
+      "Başlamak için size özel aktivasyon bağlantısı:",
+      aktivasyonUrl(kod),
+      "",
+      "Nasıl ilerleyeceksiniz?",
+      "1. Bağlantıyı açıp hesabınızla devam edin.",
+      "2. Davetiye şablonunuzu seçin.",
+      "3. Etkinlik tarihi, konum ve davetiye metinlerinizi girin.",
+      "4. Davetiyenizi yayına alıp link veya QR kod ile paylaşın.",
+      "",
+      "Gizlilik notu:",
+      "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri sizin hesabınızda yönetilir. Partner panelinde yalnızca aktivasyon süreci ve yayın durumu görünür.",
+    ];
+
+    if (destekTelefonu?.trim() || instagramUrl?.trim()) {
+      satirlar.push("", "Destek:");
+      if (destekTelefonu?.trim()) satirlar.push(`Telefon: ${destekTelefonu.trim()}`);
+      if (instagramUrl?.trim()) satirlar.push(`Instagram: ${instagramUrl.trim()}`);
+    }
+
+    if (whatsappImzasi?.trim()) {
+      satirlar.push("", whatsappImzasi.trim());
+    }
+
+    return satirlar.join("\n");
+  };
+
+  const teslimPaketiKopyala = async (kod: string) => {
+    try {
+      await navigator.clipboard.writeText(teslimPaketiMetni(kod));
+      setTeslimPaketiKopyalananKod(kod);
+      setTimeout(() => setTeslimPaketiKopyalananKod(null), 2000);
+    } catch {
+      setHata("Teslim paketi kopyalanamadı.");
+    }
+  };
+
+  const teslimPaketiWhatsappGonder = async (kod: string, mevcutDurum: string) => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(teslimPaketiMetni(kod))}`, "_blank", "noopener,noreferrer");
+    if (mevcutDurum === "olusturuldu") {
+      await fetch(`/api/partner/aktivasyon/${kod}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "gonderildi" }),
+      }).then(() => router.refresh()).catch(() => {});
+    }
+  };
+
+  const teslimPaketiMailUrl = (kod: string) => {
+    const konu = `${firmaAdi} dijital davetiye teslim paketiniz`;
+    return `mailto:?subject=${encodeURIComponent(konu)}&body=${encodeURIComponent(teslimPaketiMetni(kod))}`;
   };
 
   const notKaydet = async (kod: string) => {
@@ -549,6 +613,13 @@ export default function AktivasyonKodlari({
             </button>
             <button
               type="button"
+              onClick={() => setTeslimPaketiAcikKod(sonOlusturulanKodlar[0].kod)}
+              className="rounded-xl bg-purple-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-purple-700"
+            >
+              Teslim Paketini Aç
+            </button>
+            <button
+              type="button"
               onClick={() => topluLinkKopyala(sonOlusturulanKodlar, "yeni")}
               className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-green-700 ring-1 ring-green-200 transition-colors hover:bg-green-100"
             >
@@ -827,6 +898,12 @@ export default function AktivasyonKodlari({
                   >
                     {k.durum === "olusturuldu" ? "WhatsApp ile Gönder" : "WhatsApp"}
                   </button>
+                  <button
+                    onClick={() => setTeslimPaketiAcikKod(k.kod)}
+                    className="rounded-xl bg-gray-950 px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-gray-800 sm:rounded-lg sm:bg-purple-50 sm:py-1.5 sm:text-[11px] sm:text-purple-700 sm:hover:bg-purple-100"
+                  >
+                    Teslim Paketi
+                  </button>
                   {IPTAL_EDILEBILİR.has(k.durum) && (
                     <button
                       onClick={() => setIptalOnayKodu(k.kod)}
@@ -867,6 +944,86 @@ export default function AktivasyonKodlari({
             ))}
           </div>
         </details>
+      )}
+
+      {teslimPaketiAcikKod && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-gray-950/45 px-4 py-4 sm:items-center"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="teslim-paketi-baslik"
+        >
+          <div className="max-h-[92vh] w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+            <div className="border-b border-gray-100 px-5 py-5 sm:px-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-500">
+                    Müşteri Teslim Paketi
+                  </p>
+                  <h3 id="teslim-paketi-baslik" className="mt-1 text-xl font-black text-gray-950">
+                    Hazır paylaşım metni
+                  </h3>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-gray-500">
+                    Aktivasyon linki, kullanım adımları ve gizlilik notunu tek metinde gönderin. Bu metin kaydedilmez.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTeslimPaketiAcikKod(null)}
+                  className="rounded-full bg-gray-50 px-3 py-2 text-xs font-black text-gray-500 transition-colors hover:bg-gray-100"
+                  aria-label="Teslim paketi penceresini kapat"
+                >
+                  x
+                </button>
+              </div>
+            </div>
+
+            <div className="max-h-[58vh] overflow-auto p-5 sm:p-6">
+              <pre className="whitespace-pre-wrap rounded-2xl bg-gray-950 p-4 text-xs leading-relaxed text-gray-100 sm:text-sm">
+                {teslimPaketiMetni(teslimPaketiAcikKod)}
+              </pre>
+              <div className="mt-4 rounded-2xl border border-amber-100 bg-amber-50 p-4">
+                <p className="text-xs font-black text-amber-800">KVKK notu</p>
+                <p className="mt-1 text-xs leading-relaxed text-amber-700">
+                  Bu pakette müşteri adı, telefon veya e-posta saklanmaz. Partner yalnızca linki paylaşır; müşteri hesabındaki davetli ve anı verileri partner panelinde gösterilmez.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-2 border-t border-gray-100 p-4 sm:grid-cols-4 sm:p-5">
+              <button
+                type="button"
+                onClick={() => teslimPaketiKopyala(teslimPaketiAcikKod)}
+                className="rounded-xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
+              >
+                {teslimPaketiKopyalananKod === teslimPaketiAcikKod ? "Kopyalandı" : "Kopyala"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const kod = ilkKodlar.find(k => k.kod === teslimPaketiAcikKod);
+                  teslimPaketiWhatsappGonder(teslimPaketiAcikKod, kod?.durum ?? "olusturuldu");
+                }}
+                className="rounded-xl bg-green-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-green-700"
+              >
+                WhatsApp
+              </button>
+              <a
+                href={teslimPaketiMailUrl(teslimPaketiAcikKod)}
+                className="inline-flex items-center justify-center rounded-xl bg-gray-950 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-gray-800"
+              >
+                E-posta
+              </a>
+              <button
+                type="button"
+                onClick={() => setTeslimPaketiAcikKod(null)}
+                className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {iptalOnay && (
