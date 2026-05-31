@@ -24,7 +24,7 @@ export default async function AktivasyonPage({
     where: { kod },
     include: {
       abonelik: { select: { aktif: true, bitisAt: true, paketId: true } },
-      partner: { select: { firmaAdi: true, durum: true } },
+      partner: { select: { firmaAdi: true, logoUrl: true, durum: true } },
     },
   });
 
@@ -86,15 +86,20 @@ export default async function AktivasyonPage({
 
   return (
     <PageShell>
-      <AktivasyonSayfasi kod={kod} firmaAdi={aktivasyon.partner.firmaAdi} dahilKodlar={dahilKodlar} />
+      <AktivasyonSayfasi
+        kod={kod}
+        firmaAdi={aktivasyon.partner.firmaAdi}
+        logoUrl={aktivasyon.partner.logoUrl}
+        dahilKodlar={dahilKodlar}
+      />
     </PageShell>
   );
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full">
+    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:py-12">
+      <div className="mx-auto w-full max-w-5xl rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8 lg:p-10">
         {children}
       </div>
     </div>
