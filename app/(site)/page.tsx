@@ -606,6 +606,52 @@ export default function Anasayfa() {
       </div>
 
       {/* ══════════════════════════════════════════
+          PARTNER CTA
+      ══════════════════════════════════════════ */}
+      <section className="border-b border-gray-100 bg-white px-4 py-12 sm:px-6">
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <span className="mb-4 inline-flex rounded-full border border-purple-100 bg-purple-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-purple-600">
+              Organizasyoncular İçin
+            </span>
+            <h2 className="max-w-2xl text-2xl font-black leading-tight text-gray-900 sm:text-3xl">
+              Müşterilerine dijital davetiye hakkı sunan partnerlerden biri ol
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
+              Düğün organizasyonu, fotoğrafçılık veya etkinlik planlama yapıyorsan; her müşteriye tek kullanımlık aktivasyon linki ver,
+              davetiye sürecini müşteri kendi hesabında yönetsin.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 md:w-[420px]">
+            {[
+              ["Aylık hak", "10-75 aktivasyon"],
+              ["Müşteri verisi", "Müşteride kalır"],
+              ["Panel", "Durum takibi"],
+            ].map(([baslik, metin]) => (
+              <div key={baslik} className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">{baslik}</p>
+                <p className="mt-1 text-sm font-black text-gray-900">{metin}</p>
+              </div>
+            ))}
+          </div>
+          <div className="md:col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Link
+              href="/partner"
+              className="inline-flex items-center justify-center rounded-2xl bg-gray-900 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700"
+            >
+              Partner Programını İncele →
+            </Link>
+            <Link
+              href="/partner/basvuru"
+              className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 transition-colors hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700"
+            >
+              Partner Başvurusu Yap
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           HOW IT WORKS
       ══════════════════════════════════════════ */}
       <NasilCalisir />

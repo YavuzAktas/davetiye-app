@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Partner Programı — Organizasyoncular İçin | Bekleriz",
+  title: "Organizasyoncular İçin Dijital Davetiye Partner Programı | Bekleriz",
   description:
-    "Düğün organizasyonu, etkinlik planlama veya fotoğrafçılık yapıyor musunuz? Müşterilerinize dijital davetiye hakkı sunun, siz yönetin.",
-  robots: { index: false },
+    "Düğün organizasyonu, etkinlik planlama, fotoğrafçılık ve mekan işletmeleri için aylık dijital davetiye aktivasyon hakkı. Müşterilerinize profesyonel davetiye sunun.",
+  alternates: { canonical: "/partner" },
 };
 
 const PAKETLER = [

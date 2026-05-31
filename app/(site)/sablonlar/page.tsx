@@ -1370,6 +1370,37 @@ export default function SablonlarSayfasi() {
         </div>
       </section>
 
+      <section className="border-t border-gray-100 bg-white px-4 py-12">
+        <div className="mx-auto grid max-w-5xl gap-6 rounded-3xl border border-purple-100 bg-purple-50/60 p-7 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-purple-600">
+              B2B Davetiye Çözümü
+            </p>
+            <h2 className="text-2xl font-black text-gray-900">
+              Bu şablonları müşterilerine sunmak ister misin?
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
+              Organizasyon firmaları, fotoğrafçılar ve mekanlar için partner paneliyle tek kullanımlık aktivasyon linkleri oluştur.
+              Müşteri kendi davetiyesini yönetir; sen yalnızca süreci ve kalan haklarını takip edersin.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+            <Link
+              href="/partner"
+              className="inline-flex items-center justify-center rounded-2xl bg-gray-900 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700"
+            >
+              Partner Programını İncele →
+            </Link>
+            <Link
+              href="/partner/basvuru"
+              className="inline-flex items-center justify-center rounded-2xl border border-purple-200 bg-white px-6 py-3 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-50"
+            >
+              Başvuru Yap
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="border-t border-gray-200 px-4 py-16 bg-white">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
           <div>
