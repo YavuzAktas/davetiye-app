@@ -130,6 +130,15 @@ export default function PanelIcerik({
         ? "border-red-300 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-100"
         : "border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
     }`;
+  const abonelikKalanHak = abonelik ? abonelik.hakSayisi - abonelik.kullanilanHak : 0;
+  const abonelikBitisDate = abonelik?.bitisAt ? new Date(abonelik.bitisAt) : null;
+  const abonelikKalanGun = abonelikBitisDate
+    ? Math.ceil((abonelikBitisDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+  const abonelikYakindaBitiyor = abonelikKalanGun !== null && abonelikKalanGun <= 5;
+  const abonelikHakTukendi = abonelik !== null && abonelikKalanHak <= 0;
+  const yenilemeAksiyonuGerekli = abonelikHakTukendi || abonelikYakindaBitiyor;
+  const paketPanelAcik = !abonelik || yenilemeFormAcik || yenilemeAksiyonuGerekli;
 
   return (
     <div className="space-y-6">
@@ -140,106 +149,66 @@ export default function PanelIcerik({
         </div>
       )}
 
-      {/* Mevcut abonelik */}
-      {abonelik && (() => {
-        const kalanHak = abonelik.hakSayisi - abonelik.kullanilanHak;
-        const dolulukYuzde = Math.min(100, (abonelik.kullanilanHak / abonelik.hakSayisi) * 100);
-        const bitisDate = abonelik.bitisAt ? new Date(abonelik.bitisAt) : null;
-        const kalanGun = bitisDate
-          ? Math.ceil((bitisDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-          : null;
-        const yakindaBitiyor = kalanGun !== null && kalanGun <= 5;
-        const hakDolmakUzere = kalanHak > 0 && kalanHak <= 3;
-        const hakTukendi = kalanHak <= 0;
-
-        return (
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
-            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Mevcut Abonelik</p>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-lg font-black text-gray-900">{paketGetir(abonelik.paketId)?.ad ?? abonelik.paketId} Paketi</p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {bitisDate
-                    ? `Yenileme: ${bitisDate.toLocaleDateString("tr-TR")}`
-                    : "Süresiz"}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-black text-gray-900">{abonelik.kullanilanHak}</p>
-                <p className="text-xs text-gray-400">/ {abonelik.hakSayisi} hak kullanıldı</p>
-              </div>
-            </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${
-                  hakTukendi
-                    ? "bg-red-400"
-                    : hakDolmakUzere
-                    ? "bg-amber-400"
-                    : "bg-linear-to-r from-purple-500 to-pink-500"
-                }`}
-                style={{ width: `${dolulukYuzde}%` }}
-              />
-            </div>
-
-            {hakTukendi && (
-              <div className="flex items-center justify-between bg-red-50 border border-red-100 rounded-2xl px-4 py-3">
-                <div>
-                  <p className="text-xs font-bold text-red-600">Tüm haklarınız doldu</p>
-                  <p className="text-[11px] text-red-400">Yeni aktivasyon kodu oluşturmak için paketinizi yenileyin.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => { setSecilenPaket(abonelik.paketId as PartnerPaketId); setYenilemeFormAcik(true); }}
-                  className="shrink-0 text-[11px] font-bold text-white bg-red-500 hover:bg-red-600 transition-colors px-3 py-1.5 rounded-xl ml-3"
-                >
-                  Yenile
-                </button>
-              </div>
-            )}
-
-            {hakDolmakUzere && (
-              <p className="text-[11px] text-amber-600 font-medium">
-                ⚠️ Yalnızca {kalanHak} hakkınız kaldı. Yakında yenilemeyi düşünün.
-              </p>
-            )}
-
-            {yakindaBitiyor && !hakTukendi && !yenilemeFormAcik && (
-              <div className="flex items-center justify-between bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3">
-                <p className="text-[11px] text-amber-600 font-medium">
-                  ⚠️ Aboneliğiniz {kalanGun} gün içinde sona eriyor.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setYenilemeFormAcik(true)}
-                  className="shrink-0 text-[11px] font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors px-3 py-1.5 rounded-xl ml-3"
-                >
-                  Şimdi Yenile
-                </button>
-              </div>
-            )}
-
-            {!hakTukendi && !hakDolmakUzere && (
-              <p className="text-xs text-gray-400">{kalanHak} hak kaldı</p>
-            )}
+      {abonelik && yenilemeAksiyonuGerekli && !yenilemeFormAcik && (
+        <div className={`flex flex-col gap-3 rounded-3xl border px-5 py-4 sm:flex-row sm:items-center sm:justify-between ${
+          abonelikHakTukendi ? "border-red-100 bg-red-50" : "border-amber-100 bg-amber-50"
+        }`}>
+          <div>
+            <p className={`text-sm font-black ${abonelikHakTukendi ? "text-red-700" : "text-amber-700"}`}>
+              {abonelikHakTukendi ? "Aktivasyon hakkınız bitti" : "Paket süreniz yakında bitiyor"}
+            </p>
+            <p className={`mt-1 text-xs leading-relaxed ${abonelikHakTukendi ? "text-red-500" : "text-amber-600"}`}>
+              {abonelikHakTukendi
+                ? "Yeni müşteri linki oluşturmak için paketinizi yenileyin."
+                : `Paketiniz ${abonelikKalanGun} gün içinde sona eriyor; kesinti yaşamamak için yenileyebilirsiniz.`}
+            </p>
           </div>
-        );
-      })()}
+          <button
+            type="button"
+            onClick={() => {
+              setSecilenPaket(abonelik.paketId as PartnerPaketId);
+              setYenilemeFormAcik(true);
+            }}
+            className={`rounded-xl px-4 py-2.5 text-xs font-black text-white transition-colors ${
+              abonelikHakTukendi ? "bg-red-500 hover:bg-red-600" : "bg-amber-500 hover:bg-amber-600"
+            }`}
+          >
+            Paketi Yenile
+          </button>
+        </div>
+      )}
 
       {/* Paket seçimi / yenileme */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-        <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">
-          {abonelik ? "Paket Yenile" : "Paket Seç"}
-        </p>
+      <details
+        open={paketPanelAcik}
+        className="group rounded-3xl border border-gray-100 bg-white shadow-sm"
+      >
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5">
+          <div>
+            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">
+              {abonelik ? "Paket ve Ödeme" : "Paket Seç"}
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {abonelik
+                ? `${paketGetir(abonelik.paketId)?.ad ?? abonelik.paketId} paketi aktif`
+                : "Partner paketinizi seçip aktivasyon hakkı alın."}
+            </p>
+          </div>
+          <span className="rounded-full bg-gray-50 px-3 py-1.5 text-xs font-bold text-gray-400 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+
+        <div className="border-t border-gray-100 px-6 pb-6 pt-5">
 
         {abonelik && !yenilemeFormAcik ? (
           /* Aktif abonelik varken satın alımı engelle */
-          <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4 text-center">
-            <p className="text-sm font-bold text-blue-700 mb-1">Aktif aboneliğiniz devam ediyor</p>
+          <div className="rounded-2xl bg-blue-50 border border-blue-100 px-5 py-4">
+            <p className="text-sm font-bold text-blue-700 mb-1">Aktif paketiniz devam ediyor</p>
             <p className="text-xs text-blue-500 leading-relaxed">
               {abonelik.bitisAt
-                ? <>Mevcut aboneliğiniz <strong>{new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</strong> tarihinde sona eriyor. Yeni paket bu tarihten itibaren alınabilir.</>
-                : "Mevcut aboneliğiniz aktif olduğu sürece yeni paket satın alınamaz."}
+                ? <>Paketiniz <strong>{new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</strong> tarihine kadar geçerli. Yenileme, bitişe 5 gün kala veya haklar bitince açılır.</>
+                : "Paketiniz aktif olduğu sürece yeni paket satın alınamaz."}
             </p>
           </div>
         ) : (
@@ -406,13 +375,22 @@ export default function PanelIcerik({
         )}
           </>
         )}
-      </div>
+        </div>
+      </details>
 
       {/* Ödeme Geçmişi */}
       {odemeGecmisi.length > 0 && (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-4">Ödeme Geçmişi</p>
-          <div className="space-y-3">
+        <details className="group rounded-3xl border border-gray-100 bg-white shadow-sm">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5">
+            <div>
+              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Ödeme Geçmişi</p>
+              <p className="mt-1 text-sm text-gray-500">{odemeGecmisi.length} ödeme kaydı</p>
+            </div>
+            <span className="rounded-full bg-gray-50 px-3 py-1.5 text-xs font-bold text-gray-400 transition-transform group-open:rotate-180">
+              ▼
+            </span>
+          </summary>
+          <div className="space-y-3 border-t border-gray-100 px-6 pb-6 pt-5">
             {odemeGecmisi.map(kayit => {
               const fk = kayit.fiyatKirilimi as { paketAd?: string; tutar?: number; hakSayisi?: number } | null;
               const paketAd = fk?.paketAd ?? paketGetir(kayit.planId)?.ad ?? kayit.planId;
@@ -447,7 +425,7 @@ export default function PanelIcerik({
               );
             })}
           </div>
-        </div>
+        </details>
       )}
 
       {/* iyzico modal */}
