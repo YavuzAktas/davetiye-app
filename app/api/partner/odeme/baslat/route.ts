@@ -125,7 +125,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       conversationId,
       callbackUrl,
       pricingPlanReferenceCode,
-      subscriptionInitialStatus: "ACTIVE",
+      subscriptionInitialStatus: "PENDING",
       customer: {
         name: ad,
         surname: soyad,

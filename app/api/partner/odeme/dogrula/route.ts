@@ -26,6 +26,36 @@ function abonelikAktifMi(result: any): boolean {
   return durum === "ACTIVE";
 }
 
+function abonelikBeklemedeMi(result: any): boolean {
+  const durum = ilkDoluString(
+    result.subscriptionStatus,
+    result.data?.subscriptionStatus,
+    result.subscription?.subscriptionStatus,
+    result.data?.subscription?.subscriptionStatus
+  )?.toUpperCase();
+
+  return durum === "PENDING";
+}
+
+async function aboneligiAktifEt(subscriptionReferenceCode: string): Promise<boolean> {
+  const result = await new Promise<any>((resolve, reject) => {
+    (iyzipay as any).subscription.activate({ subscriptionReferenceCode }, (err: unknown, res: any) => {
+      if (err) reject(err);
+      else resolve(res);
+    });
+  }).catch((err: unknown) => {
+    console.error("[partner/odeme/dogrula] Abonelik activate hatası:", err);
+    return null;
+  });
+
+  if (!result || result.status !== "success") {
+    console.warn("[partner/odeme/dogrula] Abonelik activate başarısız:", JSON.stringify(result));
+    return false;
+  }
+
+  return true;
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.formData();
   const token = (body.get("token") ?? body.get("checkoutFormToken")) as string | null;
@@ -57,8 +87,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return isNaN(d.getTime()) ? null : d;
   })();
 
-  if (!subscriptionReferenceCode || !abonelikAktifMi(result)) {
+  if (!subscriptionReferenceCode) {
     console.warn("[partner/odeme/dogrula] Abonelik aktif değil:", JSON.stringify({
+      token,
+      status: result.status,
+      subscriptionStatus: result.subscriptionStatus ?? result.data?.subscriptionStatus,
+      referenceCode: subscriptionReferenceCode,
+    }));
+    return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+  }
+
+  const abonelikAktif = abonelikAktifMi(result) || (abonelikBeklemedeMi(result) && await aboneligiAktifEt(subscriptionReferenceCode));
+  if (!abonelikAktif) {
+    console.warn("[partner/odeme/dogrula] Abonelik aktif edilemedi:", JSON.stringify({
       token,
       status: result.status,
       subscriptionStatus: result.subscriptionStatus ?? result.data?.subscriptionStatus,
