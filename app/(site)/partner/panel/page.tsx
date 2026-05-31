@@ -172,7 +172,12 @@ export default async function PartnerPanelPage({
           <div className="space-y-6">
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
-              abonelik={abonelik ? { hakSayisi: abonelik.hakSayisi, kullanilanHak: abonelik.kullanilanHak } : null}
+              abonelik={abonelik ? {
+                paketId: abonelik.paketId,
+                hakSayisi: abonelik.hakSayisi,
+                kullanilanHak: abonelik.kullanilanHak,
+                bitisAt: abonelik.bitisAt,
+              } : null}
               kodlar={kodlar}
             />
             <PanelIcerik

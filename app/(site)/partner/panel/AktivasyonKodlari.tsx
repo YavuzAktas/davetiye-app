@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { paketGetir } from "@/lib/partner-paketler";
 
 type Kod = {
   id: string;
@@ -13,8 +14,10 @@ type Kod = {
 };
 
 type Abonelik = {
+  paketId: string;
   hakSayisi: number;
   kullanilanHak: number;
+  bitisAt: string | null;
 } | null;
 
 type YeniKod = {
@@ -112,6 +115,19 @@ export default function AktivasyonKodlari({
   const kalanHak = abonelik ? abonelik.hakSayisi - abonelik.kullanilanHak : 0;
   const olusturulabilir = abonelik !== null && kalanHak > 0;
   const maxAdet = Math.min(5, kalanHak);
+  const paket = abonelik ? paketGetir(abonelik.paketId) : null;
+  const hakYuzdesi = abonelik
+    ? Math.min(100, Math.max(0, (abonelik.kullanilanHak / abonelik.hakSayisi) * 100))
+    : 0;
+  const bitisDate = abonelik?.bitisAt ? new Date(abonelik.bitisAt) : null;
+  const kalanGun = bitisDate
+    ? Math.ceil((bitisDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+  const hakDurumu =
+    kalanHak <= 0 ? "tukendi" :
+    kalanHak <= 3 ? "azaldi" :
+    kalanGun !== null && kalanGun <= 5 ? "yakinda" :
+    "normal";
 
   const aktivasyonUrl = (kod: string) => {
     const base = process.env.NEXT_PUBLIC_URL ?? (typeof window !== "undefined" ? window.location.origin : "");
@@ -272,7 +288,7 @@ export default function AktivasyonKodlari({
           <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Aktivasyon Kodları</p>
           {abonelik && (
             <p className="text-xs text-gray-400 mt-0.5">
-              {kalanHak} / {abonelik.hakSayisi} hak kaldı
+              {paket?.ad ?? abonelik.paketId} paketi
             </p>
           )}
         </div>
@@ -310,6 +326,79 @@ export default function AktivasyonKodlari({
           </button>
         </div>
       </div>
+
+      {abonelik && (
+        <div className={`rounded-3xl border p-4 sm:p-5 ${
+          hakDurumu === "tukendi"
+            ? "border-red-100 bg-red-50"
+            : hakDurumu === "azaldi" || hakDurumu === "yakinda"
+            ? "border-amber-100 bg-amber-50"
+            : "border-purple-100 bg-purple-50"
+        }`}>
+          <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`rounded-full px-2.5 py-1 text-[11px] font-black ${
+                  hakDurumu === "tukendi"
+                    ? "bg-red-100 text-red-700"
+                    : hakDurumu === "azaldi" || hakDurumu === "yakinda"
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-purple-100 text-purple-700"
+                }`}>
+                  Hak Bakiyesi
+                </span>
+                <span className="text-xs font-semibold text-gray-500">
+                  {paket?.ad ?? abonelik.paketId} paketi
+                </span>
+              </div>
+              <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/80">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    hakDurumu === "tukendi"
+                      ? "bg-red-500"
+                      : hakDurumu === "azaldi" || hakDurumu === "yakinda"
+                      ? "bg-amber-500"
+                      : "bg-linear-to-r from-purple-500 to-pink-500"
+                  }`}
+                  style={{ width: `${hakYuzdesi}%` }}
+                />
+              </div>
+              <p className={`mt-2 text-xs leading-relaxed ${
+                hakDurumu === "tukendi"
+                  ? "text-red-600"
+                  : hakDurumu === "azaldi" || hakDurumu === "yakinda"
+                  ? "text-amber-700"
+                  : "text-purple-700"
+              }`}>
+                {hakDurumu === "tukendi"
+                  ? "Yeni aktivasyon oluşturmak için paketinizi yenileyin."
+                  : hakDurumu === "azaldi"
+                  ? `Yalnızca ${kalanHak} hakkınız kaldı. Yeni müşterilerden önce yenileme planı yapın.`
+                  : hakDurumu === "yakinda"
+                  ? `Paketiniz ${kalanGun} gün içinde sona eriyor.`
+                  : "Müşteri linki oluşturup WhatsApp ile paylaşmaya hazırsınız."}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 sm:min-w-64">
+              <div className="rounded-2xl bg-white/80 px-3 py-3 text-center">
+                <p className="text-xl font-black text-gray-900 tabular-nums">{kalanHak}</p>
+                <p className="mt-0.5 text-[10px] font-semibold text-gray-400">Kalan</p>
+              </div>
+              <div className="rounded-2xl bg-white/80 px-3 py-3 text-center">
+                <p className="text-xl font-black text-gray-900 tabular-nums">{abonelik.kullanilanHak}</p>
+                <p className="mt-0.5 text-[10px] font-semibold text-gray-400">Kullanılan</p>
+              </div>
+              <div className="rounded-2xl bg-white/80 px-3 py-3 text-center">
+                <p className="text-xl font-black text-gray-900 tabular-nums">
+                  {kalanGun === null ? "-" : Math.max(0, kalanGun)}
+                </p>
+                <p className="mt-0.5 text-[10px] font-semibold text-gray-400">Gün</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* İstatistikler */}
       {ilkKodlar.length > 0 && (
