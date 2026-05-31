@@ -344,6 +344,52 @@ export default function AktivasyonKodlari({
         <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{hata}</p>
       )}
 
+      {ilkKodlar.length === 0 && abonelik && (
+        <div className="overflow-hidden rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-rose-50">
+          <div className="p-5 sm:p-6">
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-400">İlk aktivasyon</p>
+              <h3 className="mt-2 text-lg font-black text-gray-900 sm:text-xl">
+                İlk müşteri linkinizi oluşturun
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                Partner müşteriniz davetiyesini bu link üzerinden ücretsiz başlatır. Panelde yalnızca kod durumu görünür; müşteri bilgisi paylaşılmaz.
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {[
+                ["1", "Kod oluştur", "Tek kullanımlık aktivasyon linki hazırlanır."],
+                ["2", "WhatsApp ile gönder", "Hazır mesajla müşteriye hızlıca iletilir."],
+                ["3", "Durumu takip et", "Kayıt, süreç ve yayın durumları panelde görünür."],
+              ].map(([sira, baslik, aciklama]) => (
+                <div key={sira} className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-xs font-black text-purple-700">
+                    {sira}
+                  </span>
+                  <p className="mt-3 text-sm font-black text-gray-900">{baslik}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500">{aciklama}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-purple-100 bg-white/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs leading-relaxed text-gray-500">
+                Kalan hakkınız: <strong className="text-purple-700">{kalanHak}</strong>. Kod etiketi alanında müşteri adı, telefon veya e-posta tutmayın.
+              </p>
+              <button
+                type="button"
+                onClick={olustur}
+                disabled={!olusturulabilir || olusturuluyor}
+                className="inline-flex items-center justify-center rounded-xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50 sm:shrink-0"
+              >
+                {olusturuluyor ? "Oluşturuluyor..." : "İlk Kodu Oluştur"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {sonOlusturulanKodlar.length > 0 && (
         <div className="rounded-2xl border border-green-200 bg-green-50 p-4">
           <div className="flex items-start justify-between gap-3">
@@ -619,11 +665,6 @@ export default function AktivasyonKodlari({
         </details>
       )}
 
-      {ilkKodlar.length === 0 && abonelik && (
-        <p className="text-sm text-gray-400 text-center py-4">
-          Henüz aktivasyon kodu oluşturulmamış.
-        </p>
-      )}
     </div>
   );
 }
