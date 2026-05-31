@@ -165,7 +165,7 @@ function DressCodeSection({ dressKod, dressKodRenkler }: { dressKod: string; dre
 /* ─────────────────────────────────────────
    ANA BİLEŞEN
 ───────────────────────────────────────── */
-export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) {
+export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }: SablonProps) {
   const [acildi, setAcildi] = useState(previewModu ?? false);
   const [animating, setAnimating] = useState(false);
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
@@ -528,7 +528,7 @@ export default function NisanLuksSablon({ davetiye, previewModu }: SablonProps) 
 
             <div style={{ height:1, background:`linear-gradient(to right,transparent,${GOLD}60,transparent)`, marginBottom:30 }}/>
 
-            <RsvpFormKrem davetiyeId={davetiye.id}/>
+            {previewModu ? <RsvpFormKrem davetiyeId={davetiye.id}/> : rsvpBileseni}
           </div>
         </div>
       </section>

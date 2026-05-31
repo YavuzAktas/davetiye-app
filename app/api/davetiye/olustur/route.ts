@@ -15,7 +15,7 @@ import { getSiteUrl } from "@/lib/site-url";
 const SABLON_IDLERI = new Set(SABLONLAR.map((s) => s.id));
 const MUZIK_URLLERI = new Set(MUZIK_KUTUPHANESI.map((m) => m.url));
 const FONT_IDLERI = new Set(["font-sans", "font-serif", "font-mono"]);
-const RSVP_SORU_IDLERI = ["sarki", "yemek", "ulasim", "cocuk", "alerji", "ozel"] as const;
+const RSVP_SORU_IDLERI = ["sarki", "yemek", "ulasim", "cocuk", "alerji", "ozel", "kisiSayisi"] as const;
 const HEX_RENK = /^#[0-9a-fA-F]{6}$/;
 const TARIH_DESENI = /^\d{4}-\d{2}-\d{2}$/;
 const SAAT_DESENI = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -28,6 +28,7 @@ const rsvpSoruSemasi = z.object({
   id: z.enum(RSVP_SORU_IDLERI),
   aktif: z.boolean(),
   soru: z.string().trim().max(200).optional(),
+  maxKisi: z.number().int().min(1).max(20).optional(),
 });
 
 const davetiyeOlusturSemasi = z.object({
@@ -65,7 +66,7 @@ const davetiyeOlusturSemasi = z.object({
         return false;
       }
     }, "Geçersiz dress code renkleri."),
-  rsvpSorular: z.array(rsvpSoruSemasi).max(6).optional().nullable()
+  rsvpSorular: z.array(rsvpSoruSemasi).max(7).optional().nullable()
     .refine((sorular) => {
       if (!sorular) return true;
       return new Set(sorular.map((s) => s.id)).size === sorular.length;
