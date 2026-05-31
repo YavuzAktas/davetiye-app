@@ -60,10 +60,12 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async jwt({ token, user, trigger }) {
+      // İsAdmin her zaman güncel listeden hesapla (DB yok, ucuz)
+      token.isAdmin = isAdmin(token.email as string | null | undefined);
+
       if (user) {
-        token.id           = user.id;
-        token.kvkkOnay     = (user as any).kvkkOnay ?? false;
-        token.isAdmin      = isAdmin(user.email);
+        token.id       = user.id;
+        token.kvkkOnay = (user as any).kvkkOnay ?? false;
         const partner = await prisma.partner.findUnique({
           where: { userId: user.id },
           select: { durum: true },
@@ -71,14 +73,14 @@ export const authOptions: NextAuthOptions = {
         token.partnerDurum = partner?.durum ?? null;
       }
 
-      // Eski token'larda (bu alan eklenmeden önce oluşturulmuş) bir kez doldur
-      if (token.id && token.partnerDurum === undefined) {
+      // partnerDurum henüz "aktif" değilse (onay bekliyor/yeni kayıt) her refresh'te DB'den çek
+      // "aktif" olduktan sonra tekrar sorgulamaz → yük oluşturmaz
+      if (token.id && token.partnerDurum !== "aktif" && !user) {
         const partner = await prisma.partner.findUnique({
           where: { userId: token.id as string },
           select: { durum: true },
         });
         token.partnerDurum = partner?.durum ?? null;
-        token.isAdmin      = isAdmin(token.email as string | null | undefined);
       }
 
       if (trigger === "update" && token.id) {
