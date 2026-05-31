@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
+import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -96,7 +97,7 @@ export default async function PartnerPanelPage({
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 py-6">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
             {partner.durum === "aktif" && <LogoYukle mevcutLogo={partner.logoUrl ?? null} />}
             <div>
@@ -114,7 +115,7 @@ export default async function PartnerPanelPage({
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="max-w-5xl mx-auto px-4 py-10">
         {partner.durum === "beklemede" && (
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-lg mx-auto">
             <div className="text-center mb-8">
@@ -173,6 +174,16 @@ export default async function PartnerPanelPage({
 
         {partner.durum === "aktif" && (
           <div className="space-y-6">
+            <PartnerOperasyonOzeti
+              firmaAdi={partner.firmaAdi}
+              abonelik={abonelik ? {
+                paketId: abonelik.paketId,
+                hakSayisi: abonelik.hakSayisi,
+                kullanilanHak: abonelik.kullanilanHak,
+                bitisAt: abonelik.bitisAt,
+              } : null}
+              kodlar={kodlar}
+            />
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
               abonelik={abonelik ? {
