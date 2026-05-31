@@ -472,7 +472,7 @@ export default function AktivasyonKodlari({
             const notDuzenlemede = notDuzenlemeKod === k.kod;
             const yeni = yeniKodSet.has(k.kod);
             return (
-              <div key={k.id} className={`rounded-2xl border p-4 space-y-2.5 ${
+              <div key={k.id} className={`rounded-2xl border p-4 space-y-3 ${
                 yeni ? "border-green-200 bg-green-50/30 ring-1 ring-green-100" : "border-gray-100 bg-white"
               }`}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -510,7 +510,7 @@ export default function AktivasyonKodlari({
                 {/* Kod etiketi alanı */}
                 {notDuzenlemede ? (
                   <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
                       <input
                         autoFocus
                         value={notDeger}
@@ -518,18 +518,18 @@ export default function AktivasyonKodlari({
                         onKeyDown={e => { if (e.key === "Enter") notKaydet(k.kod); if (e.key === "Escape") setNotDuzenlemeKod(null); }}
                         maxLength={60}
                         placeholder="Kod etiketi: örn. Salon A-12"
-                        className="flex-1 text-xs border border-purple-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-300"
+                        className="col-span-2 min-w-0 rounded-xl border border-purple-200 px-3 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-purple-300 sm:flex-1 sm:rounded-lg sm:py-1.5"
                       />
                       <button
                         onClick={() => notKaydet(k.kod)}
                         disabled={notKaydediliyor}
-                        className="text-[11px] font-bold text-white bg-purple-600 px-3 py-1.5 rounded-lg disabled:opacity-50"
+                        className="rounded-xl bg-purple-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50 sm:rounded-lg sm:py-1.5 sm:text-[11px]"
                       >
                         {notKaydediliyor ? "…" : "Kaydet"}
                       </button>
                       <button
                         onClick={() => setNotDuzenlemeKod(null)}
-                        className="text-[11px] text-gray-400 hover:text-gray-600 px-2 py-1.5"
+                        className="rounded-xl px-3 py-2 text-xs font-semibold text-gray-400 hover:text-gray-600 sm:rounded-lg sm:px-2 sm:py-1.5 sm:text-[11px]"
                       >
                         İptal
                       </button>
@@ -556,21 +556,24 @@ export default function AktivasyonKodlari({
                 )}
 
                 {/* Link */}
-                <div className="flex items-center gap-1.5 bg-gray-50 rounded-xl px-3 py-2 min-w-0">
-                  <span className="text-[11px] text-gray-400 font-mono truncate flex-1 min-w-0">{url}</span>
+                <div className="rounded-xl bg-gray-50 px-3 py-2 min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-300 sm:hidden">
+                    Aktivasyon Linki
+                  </p>
+                  <span className="block truncate font-mono text-[11px] text-gray-400 sm:text-[11px]">{url}</span>
                 </div>
 
                 {/* Aksiyonlar */}
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
                   <button
                     onClick={() => kopyala(k.kod)}
-                    className="text-[11px] font-bold text-purple-600 bg-purple-50 hover:bg-purple-100 transition-colors px-3 py-1.5 rounded-lg"
+                    className="rounded-xl bg-purple-50 px-3 py-2.5 text-xs font-bold text-purple-600 transition-colors hover:bg-purple-100 sm:rounded-lg sm:py-1.5 sm:text-[11px]"
                   >
                     {kopyalananKod === k.kod ? "✓ Kopyalandı" : "Kopyala"}
                   </button>
                   <button
                     onClick={() => whatsappGonder(k.kod, k.durum)}
-                    className="text-[11px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors px-3 py-1.5 rounded-lg"
+                    className="rounded-xl bg-green-600 px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-green-700 sm:rounded-lg sm:bg-green-50 sm:py-1.5 sm:text-[11px] sm:text-green-700 sm:hover:bg-green-100"
                   >
                     {k.durum === "olusturuldu" ? "WhatsApp ile Gönder" : "WhatsApp"}
                   </button>
@@ -578,7 +581,7 @@ export default function AktivasyonKodlari({
                     <button
                       onClick={() => iptalEt(k.kod)}
                       disabled={iptalEdilenKod === k.kod}
-                      className="text-[11px] font-bold text-red-500 bg-red-50 hover:bg-red-100 transition-colors px-3 py-1.5 rounded-lg disabled:opacity-50"
+                      className="col-span-2 rounded-xl bg-red-50 px-3 py-2.5 text-xs font-bold text-red-500 transition-colors hover:bg-red-100 disabled:opacity-50 sm:col-span-1 sm:rounded-lg sm:py-1.5 sm:text-[11px]"
                     >
                       {iptalEdilenKod === k.kod ? "…" : "İptal Et"}
                     </button>
