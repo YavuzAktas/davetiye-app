@@ -169,6 +169,11 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
   const [acildi, setAcildi] = useState(previewModu ?? false);
   const [animating, setAnimating] = useState(false);
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
+  const [muzikBaslat, setMuzikBaslat] = useState(false);
+
+  useEffect(() => {
+    if (acildi) document.dispatchEvent(new CustomEvent("davetiye-acildi"));
+  }, [acildi]);
 
   /* Tarih bilgileri */
   const tarihObj = davetiye.tarih ? new Date(davetiye.tarih) : null;
@@ -261,7 +266,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
 
           <div className="relative z-10 flex flex-col items-center"
             style={{ opacity: animating ? 0 : 1, transition:"opacity 0.55s ease" }}>
-            <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
+            <RoseSeal size={240} onClick={() => { setMuzikBaslat(true); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
 
             <div className="mt-10 text-center">
               {tarihKisa && (
@@ -298,7 +303,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
       {/* ══ AÇIK DURUM ══ */}
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} />}
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} autoplay={muzikBaslat} />}
 
       {/* ════════════════════════════════════
           BÖLÜM 1 — BİZ (Hero kemer)

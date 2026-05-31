@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
-interface Props { muzikUrl: string; renk?: string }
+interface Props { muzikUrl: string; renk?: string; autoplay?: boolean }
 
 /* ── Ortak toggle butonu ── */
 function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
@@ -40,8 +40,9 @@ function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
 }
 
 /* ── Local / preview audio ── */
-function useAudio(src: string) {
+function useAudio(src: string, autoplay = false) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const autoplayRef = useRef(autoplay);
   const [caliyor, setCaliyor] = useState(false);
   const pathname = usePathname();
 
@@ -56,7 +57,8 @@ function useAudio(src: string) {
 
     const tryPlay = () => audio.play().catch(() => {});
 
-    // Sadece mühür tıklamasında başla — asla otomatik çalma
+    if (autoplayRef.current) tryPlay();
+
     const handleBaslat = () => { if (audio.paused) tryPlay(); };
     document.addEventListener("muzik-baslat", handleBaslat);
 
@@ -100,7 +102,7 @@ function useAudio(src: string) {
 }
 
 /* ── Dispatch ── */
-export default function MuzikCalar({ muzikUrl, renk = "#7C3AED" }: Props) {
-  const { caliyor, toggle } = useAudio(muzikUrl);
+export default function MuzikCalar({ muzikUrl, renk = "#7C3AED", autoplay = false }: Props) {
+  const { caliyor, toggle } = useAudio(muzikUrl, autoplay);
   return <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} />;
 }

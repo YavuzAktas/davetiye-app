@@ -282,9 +282,9 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
   if (adim === "form") {
     return (
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-start gap-3 mb-5">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 mt-0.5"
             style={{ backgroundColor: renk }}
           >
             {katilim ? "✓" : "✗"}

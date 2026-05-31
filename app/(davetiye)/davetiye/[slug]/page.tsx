@@ -10,6 +10,7 @@ import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { davetiyeCacheTag } from "@/lib/cache-tags";
 import BeklerizWatermark from "@/components/BeklerizWatermark";
+import EtkilesimButonuBekle from "./EtkilesimButonuBekle";
 import { type RsvpSorular } from "@/lib/rsvp-sorular";
 
 interface Props {
@@ -220,15 +221,26 @@ export default async function DavetiyeSayfasi({ params, searchParams }: Props) {
     <>
       <DavetiyeGoruntulenmeKaydedici slug={davetiye.slug} />
       {sablon}
-      {sablonTipi !== "vintage-nisan" && <BeklerizWatermark />}
-      <EtkilesimButonu
-        slug={davetiye.slug}
-        renk={temaRenk}
-        albumAktif={albumAktif}
-        aniDefteriAktif={aniDefteriAktif}
-        canliDuvarAktif={canliDuvarAktif}
-        sesliAniAktif={sesliAniAktif}
-      />
+      {!["vintage-nisan", "nisan-luks"].includes(sablonTipi) && <BeklerizWatermark />}
+      {sablonTipi === "nisan-luks" ? (
+        <EtkilesimButonuBekle
+          slug={davetiye.slug}
+          renk={temaRenk}
+          albumAktif={albumAktif}
+          aniDefteriAktif={aniDefteriAktif}
+          canliDuvarAktif={canliDuvarAktif}
+          sesliAniAktif={sesliAniAktif}
+        />
+      ) : (
+        <EtkilesimButonu
+          slug={davetiye.slug}
+          renk={temaRenk}
+          albumAktif={albumAktif}
+          aniDefteriAktif={aniDefteriAktif}
+          canliDuvarAktif={canliDuvarAktif}
+          sesliAniAktif={sesliAniAktif}
+        />
+      )}
     </>
   );
 }
