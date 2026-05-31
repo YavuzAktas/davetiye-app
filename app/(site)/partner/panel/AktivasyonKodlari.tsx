@@ -91,6 +91,7 @@ export default function AktivasyonKodlari({
   const router = useRouter();
   const [olusturuluyor, setOlusturuluyor] = useState(false);
   const [iptalEdilenKod, setIptalEdilenKod] = useState<string | null>(null);
+  const [iptalOnayKodu, setIptalOnayKodu] = useState<string | null>(null);
   const [kopyalananKod, setKopyalananKod] = useState<string | null>(null);
   const [hata, setHata] = useState("");
   const [adet, setAdet] = useState(1);
@@ -151,14 +152,15 @@ export default function AktivasyonKodlari({
   };
 
   const iptalEt = async (kod: string) => {
-    if (!confirm("Bu aktivasyon kodunu iptal etmek istediğinizden emin misiniz?")) return;
     setIptalEdilenKod(kod);
+    setHata("");
     try {
       const res = await fetch(`/api/partner/aktivasyon/${kod}`, { method: "PATCH" });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
         setHata(d.error ?? "İptal edilemedi.");
       } else {
+        setIptalOnayKodu(null);
         router.refresh();
       }
     } catch {
@@ -260,6 +262,7 @@ export default function AktivasyonKodlari({
     { key: "yayinda", label: "Yayında", count: yayindaKodlar.length },
   ];
   const yeniKodSet = new Set(sonOlusturulanKodlar.map(k => k.kod));
+  const iptalOnay = ilkKodlar.find(k => k.kod === iptalOnayKodu) ?? null;
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
@@ -625,7 +628,7 @@ export default function AktivasyonKodlari({
                   </button>
                   {IPTAL_EDILEBILİR.has(k.durum) && (
                     <button
-                      onClick={() => iptalEt(k.kod)}
+                      onClick={() => setIptalOnayKodu(k.kod)}
                       disabled={iptalEdilenKod === k.kod}
                       className="col-span-2 rounded-xl bg-red-50 px-3 py-2.5 text-xs font-bold text-red-500 transition-colors hover:bg-red-100 disabled:opacity-50 sm:col-span-1 sm:rounded-lg sm:py-1.5 sm:text-[11px]"
                     >
@@ -663,6 +666,62 @@ export default function AktivasyonKodlari({
             ))}
           </div>
         </details>
+      )}
+
+      {iptalOnay && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-gray-950/45 px-4 py-4 sm:items-center"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="aktivasyon-iptal-baslik"
+        >
+          <div className="w-full max-w-md rounded-3xl bg-white p-5 shadow-2xl sm:p-6">
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-lg">
+                !
+              </div>
+              <div className="min-w-0">
+                <h3 id="aktivasyon-iptal-baslik" className="text-lg font-black text-gray-900">
+                  Aktivasyon kodu iptal edilsin mi?
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed text-gray-500">
+                  Bu link artık müşteri tarafından kullanılamaz. Kod henüz kullanılmadıysa hak bakiyenize geri eklenir.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                İptal edilecek link
+              </p>
+              <p className="mt-1 truncate font-mono text-xs text-gray-600">
+                {aktivasyonUrl(iptalOnay.kod)}
+              </p>
+              {iptalOnay.not && (
+                <p className="mt-2 text-xs font-semibold text-gray-500">{iptalOnay.not}</p>
+              )}
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setIptalOnayKodu(null)}
+                disabled={iptalEdilenKod === iptalOnay.kod}
+                className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+              >
+                Vazgeç
+              </button>
+              <button
+                type="button"
+                onClick={() => iptalEt(iptalOnay.kod)}
+                disabled={iptalEdilenKod === iptalOnay.kod}
+                className="rounded-xl bg-red-500 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+              >
+                {iptalEdilenKod === iptalOnay.kod ? "İptal ediliyor..." : "Evet, iptal et"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>
