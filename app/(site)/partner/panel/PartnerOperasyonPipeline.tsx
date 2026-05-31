@@ -253,7 +253,15 @@ export default function PartnerOperasyonPipeline({ kodlar }: { kodlar: Kod[] }) 
           {odakIsler.length === 0 && (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-5 py-8 text-center lg:col-span-2">
               <p className="text-sm font-semibold text-gray-700">Acil takip işi yok</p>
-              <p className="mt-1 text-xs text-gray-400">Yeni aktivasyon oluşturduğunuzda işler burada görünür.</p>
+              <p className="mt-1 text-xs text-gray-400">
+                İlk aktivasyon linkini oluşturduğunda takip edilecek işler otomatik olarak burada görünür.
+              </p>
+              <a
+                href="#aktivasyon-kodlari"
+                className="mt-4 inline-flex rounded-xl bg-purple-600 px-4 py-2.5 text-xs font-black text-white transition-colors hover:bg-purple-700"
+              >
+                İlk kodu oluştur
+              </a>
             </div>
           )}
 

@@ -194,7 +194,15 @@ export default function PartnerDonusumMetrikleri({
             {sonAktiviteler.length === 0 && (
               <div className="rounded-xl border border-dashed border-gray-200 px-4 py-6 text-center">
                 <p className="text-sm font-semibold text-gray-700">Henüz hareket yok</p>
-                <p className="mt-1 text-xs text-gray-400">Müşteri linki kullandığında burada görünür.</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Müşteriye aktivasyon linki gönderdiğinde burada takip edilecek.
+                </p>
+                <a
+                  href="#aktivasyon-kodlari"
+                  className="mt-3 inline-flex rounded-xl bg-purple-50 px-3 py-2 text-xs font-black text-purple-700 transition-colors hover:bg-purple-100"
+                >
+                  Aktivasyon kodlarına git
+                </a>
               </div>
             )}
             {sonAktiviteler.map(kod => (
