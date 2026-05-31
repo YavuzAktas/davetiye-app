@@ -29,6 +29,42 @@ function adSoyadBol(adSoyad: string) {
   return { ad: p.slice(0, -1).join(" ") || p[0] || "Ad", soyad: p.at(-1) || "Soyad" };
 }
 
+function maskele(deger: string | null | undefined): string {
+  if (!deger) return "yok";
+  if (deger.length <= 8) return "***";
+  return `${deger.slice(0, 4)}...${deger.slice(-4)}`;
+}
+
+function guvenliIyzicoDebug(input: {
+  paketId: string;
+  callbackUrl: string;
+  pricingPlanReferenceCode: string;
+  conversationId: string;
+  telefon: string;
+  sehir: string;
+  kurumsal: boolean;
+}) {
+  const baseUrl = process.env.IYZICO_BASE_URL ?? "";
+  return {
+    paketId: input.paketId,
+    baseUrl: baseUrl || "yok",
+    sandbox: baseUrl.includes("sandbox"),
+    callbackUrl: input.callbackUrl,
+    callbackUrlDogrulaMi: input.callbackUrl.endsWith("/api/partner/odeme/dogrula"),
+    siteUrl: getSiteUrl(),
+    apiKeyVar: Boolean(process.env.IYZICO_API_KEY),
+    secretKeyVar: Boolean(process.env.IYZICO_SECRET_KEY),
+    merchantIdVar: Boolean(process.env.IYZICO_MERCHANT_ID),
+    pricingPlanReferenceCode: maskele(input.pricingPlanReferenceCode),
+    conversationId: input.conversationId,
+    telefonFormatGecerli: /^\+90\d{10}$/.test(input.telefon),
+    telefonBaslangic: input.telefon.slice(0, 4),
+    sehirVar: Boolean(input.sehir),
+    faturaTipi: input.kurumsal ? "kurumsal" : "bireysel",
+    subscriptionInitialStatus: "PENDING",
+  };
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const clientIp = ipAlNextRequest(req);
   if (!(await ipIzinVer("partner-odeme-ip", clientIp, 5, 15 * 60_000))) {
@@ -118,6 +154,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const callbackUrl = `${getSiteUrl()}/api/partner/odeme/dogrula`;
+  const iyzicoDebug = guvenliIyzicoDebug({
+    paketId,
+    callbackUrl,
+    pricingPlanReferenceCode,
+    conversationId,
+    telefon,
+    sehir,
+    kurumsal,
+  });
+  console.info("[partner/odeme/baslat] iyzipay initialize debug:", JSON.stringify(iyzicoDebug));
 
   const result = await new Promise<any>((resolve, reject) => {
     (iyzipay as any).subscriptionCheckoutForm.initialize({
@@ -148,7 +194,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   if (result.status !== "success") {
-    console.error("[partner/odeme/baslat] iyzipay başarısız:", JSON.stringify(result));
+    console.error("[partner/odeme/baslat] iyzipay başarısız:", JSON.stringify({
+      result,
+      debug: iyzicoDebug,
+    }));
     return NextResponse.json({ hata: result.errorMessage ?? "Ödeme başlatılamadı." }, { status: 500 });
   }
 
