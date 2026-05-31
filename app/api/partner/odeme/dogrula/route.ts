@@ -9,19 +9,29 @@ const BASARISIZ = `${getSiteUrl()}/partner/panel?odeme=basarisiz`;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.formData();
-  const token = body.get("token") as string;
-  if (!token) return NextResponse.redirect(BASARISIZ);
+  const token = (body.get("token") ?? body.get("checkoutFormToken")) as string | null;
+  if (!token) return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
 
   const result = await new Promise<any>((resolve, reject) => {
-    iyzipay.checkoutForm.retrieve({ token }, (err: unknown, res: any) => {
+    (iyzipay as any).subscriptionCheckoutForm.retrieve({ checkoutFormToken: token }, (err: unknown, res: any) => {
       if (err) reject(err);
       else resolve(res);
     });
   }).catch(() => null);
 
-  if (!result || result.status !== "success" || result.paymentStatus !== "SUCCESS") {
+  if (!result || result.status !== "success") {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
+
+  const subscriptionReferenceCode: string | null = result.subscriptionReferenceCode ?? result.data?.subscriptionReferenceCode ?? null;
+  const customerReferenceCode: string | null = result.customerReferenceCode ?? result.data?.customerReferenceCode ?? null;
+  const pricingPlanReferenceCode: string | null = result.pricingPlanReferenceCode ?? result.data?.pricingPlanReferenceCode ?? null;
+  const sonrakiTahsilatAt: Date | null = (() => {
+    const raw = result.nextPaymentDate ?? result.data?.nextPaymentDate ?? null;
+    if (!raw) return null;
+    const d = new Date(raw);
+    return isNaN(d.getTime()) ? null : d;
+  })();
 
   const odemeToken = await prisma.odemeToken.findUnique({
     where: { token },
@@ -69,7 +79,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const simdi = new Date();
-  const bitisAt = new Date(simdi.getTime() + 30 * 24 * 60 * 60 * 1000);
+  // bitisAt = sonraki tahsilat tarihi veya fallback 30 gün
+  const bitisAt = sonrakiTahsilatAt ?? new Date(simdi.getTime() + 30 * 24 * 60 * 60 * 1000);
 
   await prisma.$transaction([
     // Mevcut aktif aboneliği kapat
@@ -87,9 +98,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         baslangicAt: simdi,
         bitisAt,
         aktif: true,
+        otomatikYenileme: !!subscriptionReferenceCode,
+        abonelikDurumu: subscriptionReferenceCode ? "aktif" : "manuel",
+        iyzicoSubscriptionReferenceCode: subscriptionReferenceCode,
+        iyzicoCustomerReferenceCode: customerReferenceCode,
+        iyzicoPricingPlanReferenceCode: pricingPlanReferenceCode,
+        sonTahsilatAt: simdi,
+        sonrakiTahsilatAt: sonrakiTahsilatAt,
       },
     }),
   ]);
+
+  const fk = odemeToken.fiyatKirilimi as { tutar?: number } | null;
+  const paketTutar = fk?.tutar ?? paket.aylikTutar;
 
   await prisma.odemeKaydi.create({
     data: {
@@ -99,12 +120,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       urunTipi: "partner-paket",
       fiyatKirilimi: odemeToken.fiyatKirilimi as any,
       token,
-      paymentId: result.paymentId ? String(result.paymentId) : null,
+      paymentId: result.paymentId ? String(result.paymentId) : subscriptionReferenceCode,
       conversationId: result.conversationId ? String(result.conversationId) : null,
-      price: result.price ? String(result.price) : null,
-      paidPrice: result.paidPrice ? String(result.paidPrice) : null,
-      currency: result.currency ?? "TRY",
-      paymentStatus: result.paymentStatus ?? null,
+      price: String(paketTutar),
+      paidPrice: String(paketTutar),
+      currency: "TRY",
+      paymentStatus: "SUCCESS",
       aliciAdSoyad: odemeToken.aliciAdSoyad,
       aliciTelefon: odemeToken.aliciTelefon,
       aliciKimlikVergiNo: odemeToken.aliciKimlikVergiNo,

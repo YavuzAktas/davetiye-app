@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
-import { paketGetir } from "@/lib/partner-paketler";
+import { paketGetir, pricingPlanKoduGetir } from "@/lib/partner-paketler";
 import { getSiteUrl } from "@/lib/site-url";
 
 function temizle(v: unknown, max = 200): string {
@@ -104,44 +104,44 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const iyzicoAdres = kurumsal ? adres : `${sehir} - Bireysel dijital hizmet alımı`;
   const { ad, soyad } = adSoyadBol(adSoyad);
   const tutar = paket.aylikTutar;
-  const tutarStr = tutar.toFixed(2);
   const conversationId = `partner-${partner.id}-${paketId}-${Date.now()}`;
+
+  const pricingPlanReferenceCode = pricingPlanKoduGetir(paketId);
+  if (!pricingPlanReferenceCode) {
+    return NextResponse.json({ hata: "Bu paket için ödeme planı henüz tanımlanmamış." }, { status: 500 });
+  }
 
   const request = {
     locale: "tr",
     conversationId,
-    price: tutarStr,
-    paidPrice: tutarStr,
-    currency: "TRY",
-    basketId: `partner-${partner.id}`,
-    paymentGroup: "PRODUCT",
     callbackUrl: `${getSiteUrl()}/api/partner/odeme/dogrula`,
-    enabledInstallments: [1, 2, 3, 6, 9],
-    buyer: {
-      id: user.id,
+    pricingPlanReferenceCode,
+    subscriptionInitialStatus: "ACTIVE",
+    customer: {
       name: ad,
       surname: soyad,
-      gsmNumber: telefon,
-      email: user.email!,
       identityNumber: iyzicoKimlikNo,
-      registrationAddress: iyzicoAdres,
-      ip: clientIp,
-      city: sehir,
-      country: "Turkey",
+      email: user.email!,
+      gsmNumber: telefon,
+      billingAddress: {
+        contactName: adSoyad,
+        address: iyzicoAdres,
+        city: sehir,
+        country: "Turkey",
+        district: "",
+      },
+      shippingAddress: {
+        contactName: adSoyad,
+        address: iyzicoAdres,
+        city: sehir,
+        country: "Turkey",
+        district: "",
+      },
     },
-    shippingAddress: { contactName: adSoyad, city: sehir, country: "Turkey", address: iyzicoAdres },
-    billingAddress:  { contactName: adSoyad, city: sehir, country: "Turkey", address: iyzicoAdres },
-    basketItems: [{
-      id: `partner-${paketId}`,
-      name: `Partner Paketi – ${paket.ad} (1 Ay)`,
-      category1: "Partner",
-      itemType: "VIRTUAL",
-      price: tutarStr,
-    }],
   };
 
   const result = await new Promise<any>((resolve, reject) => {
-    iyzipay.checkoutFormInitialize.create(request as any, (err: unknown, res: any) => {
+    (iyzipay as any).subscriptionCheckoutForm.initialize(request, (err: unknown, res: any) => {
       if (err) reject(err);
       else resolve(res);
     });
@@ -151,9 +151,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 });
   }
 
+  const checkoutToken: string = result.checkoutFormToken ?? result.token;
+  if (!checkoutToken) {
+    return NextResponse.json({ hata: "Ödeme token alınamadı." }, { status: 500 });
+  }
+
   await prisma.odemeToken.create({
     data: {
-      token: result.token,
+      token: checkoutToken,
       userId: user.id,
       planId: paketId,
       urunTipi: "partner-paket",
@@ -168,5 +173,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     },
   });
 
-  return NextResponse.json({ checkoutFormContent: result.checkoutFormContent, token: result.token });
+  return NextResponse.json({ checkoutFormContent: result.checkoutFormContent, token: checkoutToken });
 }

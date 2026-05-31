@@ -77,6 +77,9 @@ export default async function PartnerPanelPage({
         kullanilanHak: abonelikHam.kullanilanHak,
         baslangicAt: abonelikHam.baslangicAt.toISOString(),
         bitisAt: abonelikHam.bitisAt?.toISOString() ?? null,
+        otomatikYenileme: abonelikHam.otomatikYenileme,
+        abonelikDurumu: abonelikHam.abonelikDurumu,
+        sonrakiTahsilatAt: abonelikHam.sonrakiTahsilatAt?.toISOString() ?? null,
       }
     : null;
 

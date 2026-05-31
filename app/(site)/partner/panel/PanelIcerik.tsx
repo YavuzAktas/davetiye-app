@@ -10,6 +10,9 @@ type Abonelik = {
   kullanilanHak: number;
   baslangicAt: string;
   bitisAt: string | null;
+  otomatikYenileme: boolean;
+  abonelikDurumu: string;
+  sonrakiTahsilatAt: string | null;
 } | null;
 
 type OdemeKayit = {
@@ -65,6 +68,10 @@ export default function PanelIcerik({
   const [onay, setOnay] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [checkoutHtml, setCheckoutHtml] = useState<string | null>(null);
+  const [iptalOnay, setIptalOnay] = useState(false);
+  const [iptalYukleniyor, setIptalYukleniyor] = useState(false);
+  const [kartYukleniyor, setKartYukleniyor] = useState(false);
+  const [abonelikMesaj, setAbonelikMesaj] = useState<{ tip: "hata" | "basari"; metin: string } | null>(null);
 
   useEffect(() => {
     if (!checkoutHtml) return;
@@ -124,6 +131,43 @@ export default function PanelIcerik({
     }
   };
 
+  const abonelikIptal = async () => {
+    setIptalYukleniyor(true);
+    setAbonelikMesaj(null);
+    try {
+      const res = await fetch("/api/partner/abonelik/iptal", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setAbonelikMesaj({ tip: "basari", metin: "Otomatik yenileme iptal edildi. Aboneliğiniz dönem sonuna kadar aktif kalır." });
+        setIptalOnay(false);
+      } else {
+        setAbonelikMesaj({ tip: "hata", metin: data.hata ?? "İptal işlemi başarısız oldu." });
+      }
+    } catch {
+      setAbonelikMesaj({ tip: "hata", metin: "Sunucuya bağlanılamadı." });
+    } finally {
+      setIptalYukleniyor(false);
+    }
+  };
+
+  const kartGuncelle = async () => {
+    setKartYukleniyor(true);
+    setAbonelikMesaj(null);
+    try {
+      const res = await fetch("/api/partner/abonelik/kart-guncelle", { method: "POST" });
+      const data = await res.json();
+      if (data.checkoutFormContent) {
+        setCheckoutHtml(data.checkoutFormContent);
+      } else {
+        setAbonelikMesaj({ tip: "hata", metin: data.hata ?? "Kart güncelleme başlatılamadı." });
+      }
+    } catch {
+      setAbonelikMesaj({ tip: "hata", metin: "Sunucuya bağlanılamadı." });
+    } finally {
+      setKartYukleniyor(false);
+    }
+  };
+
   const inputCls = (alan: string) =>
     `w-full border rounded-2xl px-4 py-3 text-sm outline-none transition-all ${
       hatalar[alan]
@@ -146,6 +190,96 @@ export default function PanelIcerik({
       {odemeBasarili && (
         <div className="bg-green-50 border border-green-200 rounded-2xl px-5 py-4 text-sm text-green-700 font-semibold">
           ✅ Ödeme başarılı! Aboneliğiniz aktive edildi.
+        </div>
+      )}
+
+      {/* Abonelik yönetimi: otomatik yenileme */}
+      {abonelik && abonelik.otomatikYenileme && abonelik.abonelikDurumu === "aktif" && (
+        <div className="rounded-3xl border border-gray-100 bg-white shadow-sm px-6 py-5">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-1">Otomatik Yenileme</p>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
+                <p className="text-sm font-bold text-green-700">Aktif</p>
+              </div>
+              {abonelik.sonrakiTahsilatAt && (
+                <p className="text-xs text-gray-500">
+                  Sonraki tahsilat:{" "}
+                  <strong>
+                    {new Date(abonelik.sonrakiTahsilatAt).toLocaleDateString("tr-TR", {
+                      day: "numeric", month: "long", year: "numeric",
+                    })}
+                  </strong>
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={kartGuncelle}
+                disabled={kartYukleniyor}
+                className="text-xs font-bold px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60"
+              >
+                {kartYukleniyor ? "…" : "Kartı Güncelle"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setIptalOnay(true); setAbonelikMesaj(null); }}
+                className="text-xs font-bold px-4 py-2 rounded-xl border border-red-100 text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Aboneliği İptal Et
+              </button>
+            </div>
+          </div>
+
+          {iptalOnay && (
+            <div className="mt-4 bg-red-50 border border-red-100 rounded-2xl px-4 py-4">
+              <p className="text-sm font-bold text-red-700 mb-1">Emin misiniz?</p>
+              <p className="text-xs text-red-500 mb-3 leading-relaxed">
+                Otomatik yenileme iptal edilecek. Aboneliğiniz mevcut dönem sonuna kadar geçerliliğini korur; yenilenmeyecek.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={abonelikIptal}
+                  disabled={iptalYukleniyor}
+                  className="text-xs font-black px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60"
+                >
+                  {iptalYukleniyor ? "İptal ediliyor…" : "Evet, İptal Et"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIptalOnay(false)}
+                  className="text-xs font-semibold px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Vazgeç
+                </button>
+              </div>
+            </div>
+          )}
+
+          {abonelikMesaj && (
+            <div className={`mt-3 rounded-xl px-4 py-3 text-xs font-semibold ${
+              abonelikMesaj.tip === "basari"
+                ? "bg-green-50 text-green-700 border border-green-100"
+                : "bg-red-50 text-red-600 border border-red-100"
+            }`}>
+              {abonelikMesaj.metin}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* İptal edilmiş otomatik yenileme bildirimi */}
+      {abonelik && !abonelik.otomatikYenileme && abonelik.abonelikDurumu === "iptal" && (
+        <div className="rounded-3xl border border-orange-100 bg-orange-50 px-6 py-4">
+          <p className="text-sm font-bold text-orange-700 mb-1">Otomatik yenileme kapalı</p>
+          <p className="text-xs text-orange-600 leading-relaxed">
+            Aboneliğiniz{abonelik.bitisAt
+              ? ` ${new Date(abonelik.bitisAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })} tarihinde`
+              : ""} sona erecek ve otomatik yenilenmeyecek.
+          </p>
         </div>
       )}
 
@@ -349,7 +483,7 @@ export default function PanelIcerik({
                       <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="text-purple-600 hover:underline">Mesafeli Satış Sözleşmesi</Link>
                       {" ve "}
                       <Link href="/partner/sozlesme" target="_blank" className="text-purple-600 hover:underline">Partner Sözleşmesi</Link>
-                      {"'ni okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor ve cayma hakkı istisnası hakkında bilgilendirildiğimi kabul ediyorum."}
+                      {"'ni okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor, cayma hakkı istisnası hakkında bilgilendirildiğimi ve seçilen paketin aylık olarak kayıtlı kartımdan otomatik tahsil edileceğini kabul ediyorum. Otomatik yenilemeyi istediğim zaman iptal edebilirim."}
                     </span>
                   </label>
                   {hatalar.onay && <p className="text-[11px] text-red-500">{hatalar.onay}</p>}
