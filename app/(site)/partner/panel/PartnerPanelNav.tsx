@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 const NAV_LINKLERI = [
   { href: "#kurulum", label: "Kurulum" },
   { href: "#aktivasyon-kodlari", label: "Aktivasyon" },
-  { href: "#ozet", label: "Özet" },
-  { href: "#pipeline", label: "Pipeline" },
-  { href: "#donusum", label: "Dönüşüm" },
+  { href: "#operasyon", label: "Operasyon" },
   { href: "#satis", label: "Satış" },
   { href: "#marka", label: "Marka" },
   { href: "#teklif", label: "Teklif" },

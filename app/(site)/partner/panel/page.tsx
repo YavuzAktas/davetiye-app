@@ -7,11 +7,9 @@ import Link from "next/link";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
-import PartnerDonusumMetrikleri from "./PartnerDonusumMetrikleri";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
-import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
-import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
+import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
@@ -246,23 +244,9 @@ export default async function PartnerPanelPage({
                     kodlar={kodlar}
                   />
                 </div>
-                <div id="ozet" className="scroll-mt-24">
-                  <PartnerOperasyonOzeti
+                <div id="operasyon" className="scroll-mt-24">
+                  <PartnerOperasyonMerkezi
                     firmaAdi={partner.firmaAdi}
-                    abonelik={{
-                      paketId: abonelik.paketId,
-                      hakSayisi: abonelik.hakSayisi,
-                      kullanilanHak: abonelik.kullanilanHak,
-                      bitisAt: abonelik.bitisAt,
-                    }}
-                    kodlar={kodlar}
-                  />
-                </div>
-                <div id="pipeline" className="scroll-mt-24">
-                  <PartnerOperasyonPipeline kodlar={kodlar} />
-                </div>
-                <div id="donusum" className="scroll-mt-24">
-                  <PartnerDonusumMetrikleri
                     abonelik={{
                       paketId: abonelik.paketId,
                       hakSayisi: abonelik.hakSayisi,
