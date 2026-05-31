@@ -9,6 +9,7 @@ import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
 import PartnerOperasyonPipeline from "./PartnerOperasyonPipeline";
+import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 
 export const dynamic = "force-dynamic";
@@ -188,6 +189,7 @@ export default async function PartnerPanelPage({
               kodlar={kodlar}
             />
             <PartnerOperasyonPipeline kodlar={kodlar} />
+            <PartnerSatisRehberi />
             <PartnerMarkaAyarlari
               firmaAdi={partner.firmaAdi}
               marka={{
