@@ -99,6 +99,15 @@ const ETKINLIK_TURLERI = [
   "Özel davet",
 ];
 
+function htmlKacir(deger: string) {
+  return deger
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function paraFormatla(deger: string) {
   const sayi = Number(deger.replace(/[^\d]/g, ""));
   if (!sayi) return "";
@@ -111,9 +120,17 @@ function paraFormatla(deger: string) {
 
 export default function PartnerTeklifOlusturucu({
   firmaAdi,
+  markaRenk,
+  markaSlogani,
+  destekTelefonu,
+  instagramUrl,
   whatsappImzasi,
 }: {
   firmaAdi: string;
+  markaRenk?: string | null;
+  markaSlogani?: string | null;
+  destekTelefonu?: string | null;
+  instagramUrl?: string | null;
   whatsappImzasi?: string | null;
 }) {
   const [paketId, setPaketId] = useState<PaketId>("tam");
@@ -127,6 +144,12 @@ export default function PartnerTeklifOlusturucu({
   const tutarMetni = paraFormatla(tutar);
   const temizReferans = referans.trim();
   const temizNot = not.trim();
+  const kurumsalRenk = /^#[0-9a-f]{6}$/i.test(markaRenk ?? "") ? markaRenk! : "#7c3aed";
+  const bugun = new Date().toLocaleDateString("tr-TR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 
   const teklifMetni = useMemo(() => {
     const satirlar = [
@@ -175,6 +198,228 @@ export default function PartnerTeklifOlusturucu({
   };
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(teklifMetni)}`;
+
+  const pdfOlarakKaydet = () => {
+    const pencere = window.open("", "_blank", "width=900,height=1200");
+    if (!pencere) {
+      alert("PDF penceresi açılamadı. Tarayıcınız açılır pencereyi engellemiş olabilir.");
+      return;
+    }
+
+    const maddelerHtml = paket.maddeler
+      .map(madde => `<li>${htmlKacir(madde)}</li>`)
+      .join("");
+    const teslimatlarHtml = paket.teslimatlar
+      .map(teslimat => `<li>${htmlKacir(teslimat)}</li>`)
+      .join("");
+    const destekHtml = [
+      destekTelefonu?.trim() ? `Telefon: ${htmlKacir(destekTelefonu.trim())}` : "",
+      instagramUrl?.trim() ? `Instagram: ${htmlKacir(instagramUrl.trim())}` : "",
+    ].filter(Boolean);
+
+    pencere.document.write(`<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${htmlKacir(firmaAdi)} - Teklif</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f4f4f5;
+      color: #111827;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    .sayfa {
+      width: min(820px, calc(100vw - 32px));
+      margin: 24px auto;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+    }
+    .hero {
+      padding: 38px 42px;
+      background: linear-gradient(135deg, ${kurumsalRenk}, #111827);
+      color: white;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.78;
+    }
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .slogan {
+      margin: 12px 0 0;
+      max-width: 620px;
+      color: rgba(255,255,255,0.82);
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .govde {
+      padding: 34px 42px 42px;
+    }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .meta div, .blok {
+      border: 1px solid #eef0f4;
+      border-radius: 18px;
+      background: #fafafa;
+      padding: 16px;
+    }
+    .etiket {
+      margin: 0 0 5px;
+      color: #6b7280;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .deger {
+      margin: 0;
+      color: #111827;
+      font-size: 14px;
+      font-weight: 850;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 19px;
+      line-height: 1.2;
+    }
+    .blok {
+      margin-top: 16px;
+      background: #fff;
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    li {
+      margin: 8px 0;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .not {
+      margin-top: 18px;
+      border-left: 4px solid ${kurumsalRenk};
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .alt {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .aksiyon {
+      width: min(820px, calc(100vw - 32px));
+      margin: 0 auto 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    button {
+      border: 0;
+      border-radius: 14px;
+      background: #111827;
+      color: white;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    @media print {
+      body { background: white; }
+      .sayfa {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .aksiyon { display: none; }
+    }
+    @media (max-width: 640px) {
+      .hero, .govde { padding: 26px 22px; }
+      .meta { grid-template-columns: 1fr; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sayfa">
+    <section class="hero">
+      <p class="eyebrow">Dijital Etkinlik Hizmet Teklifi</p>
+      <h1>${htmlKacir(paket.ad)}</h1>
+      ${markaSlogani?.trim() ? `<p class="slogan">${htmlKacir(markaSlogani.trim())}</p>` : ""}
+    </section>
+    <section class="govde">
+      <div class="meta">
+        <div>
+          <p class="etiket">Firma</p>
+          <p class="deger">${htmlKacir(firmaAdi)}</p>
+        </div>
+        <div>
+          <p class="etiket">Etkinlik</p>
+          <p class="deger">${htmlKacir(etkinlikTuru)}</p>
+        </div>
+        <div>
+          <p class="etiket">Tarih</p>
+          <p class="deger">${htmlKacir(bugun)}</p>
+        </div>
+      </div>
+
+      <div class="blok">
+        <h2>Paket kapsamı</h2>
+        <ul>${maddelerHtml}</ul>
+      </div>
+
+      <div class="blok">
+        <h2>Teslim edilecekler</h2>
+        <ul>${teslimatlarHtml}</ul>
+      </div>
+
+      ${tutarMetni ? `<div class="not"><strong>Teklif tutarı:</strong> ${htmlKacir(tutarMetni)}</div>` : ""}
+      ${temizReferans ? `<div class="not"><strong>İç referans:</strong> ${htmlKacir(temizReferans)}</div>` : ""}
+      ${temizNot ? `<div class="not"><strong>Not:</strong> ${htmlKacir(temizNot)}</div>` : ""}
+
+      <p class="alt">
+        Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri müşterinin kendi hesabında yönetilir.
+        Uygun görürseniz size özel aktivasyon bağlantısı paylaşılır.
+        ${destekHtml.length ? `<br />${destekHtml.join(" · ")}` : ""}
+      </p>
+    </section>
+  </main>
+  <div class="aksiyon">
+    <button onclick="window.print()">PDF olarak kaydet / yazdır</button>
+  </div>
+</body>
+</html>`);
+    pencere.document.close();
+    pencere.focus();
+  };
 
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
@@ -287,14 +532,14 @@ export default function PartnerTeklifOlusturucu({
           <div className="rounded-2xl bg-white p-4 shadow-sm">
             <div className={`mb-4 h-2 rounded-full bg-linear-to-r ${paket.vurgu}`} />
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">
-              WhatsApp / PDF Metni
+              WhatsApp / Teklif Metni
             </p>
             <pre className="mt-3 max-h-[480px] overflow-auto whitespace-pre-wrap rounded-2xl bg-gray-950 p-4 text-xs leading-relaxed text-gray-100">
               {teklifMetni}
             </pre>
           </div>
 
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
             <button
               type="button"
               onClick={kopyala}
@@ -310,7 +555,17 @@ export default function PartnerTeklifOlusturucu({
             >
               WhatsApp&apos;ta Aç
             </a>
+            <button
+              type="button"
+              onClick={pdfOlarakKaydet}
+              className="rounded-2xl bg-gray-950 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-gray-800"
+            >
+              PDF Kaydet
+            </button>
           </div>
+          <p className="mt-3 text-xs leading-relaxed text-gray-400">
+            PDF çıktısı tarayıcıda hazırlanır; teklif bilgileri sunucuya kaydedilmez.
+          </p>
         </div>
       </div>
     </section>

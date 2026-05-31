@@ -200,6 +200,10 @@ export default async function PartnerPanelPage({
             />
             <PartnerTeklifOlusturucu
               firmaAdi={partner.firmaAdi}
+              markaRenk={partner.markaRenk}
+              markaSlogani={partner.markaSlogani}
+              destekTelefonu={partner.destekTelefonu}
+              instagramUrl={partner.instagramUrl}
               whatsappImzasi={partner.whatsappImzasi}
             />
             <AktivasyonKodlari
