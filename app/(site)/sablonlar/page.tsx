@@ -1370,33 +1370,53 @@ export default function SablonlarSayfasi() {
         </div>
       </section>
 
-      <section className="border-t border-gray-100 bg-white px-4 py-12">
-        <div className="mx-auto grid max-w-5xl gap-6 rounded-3xl border border-purple-100 bg-purple-50/60 p-7 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-purple-600">
-              B2B Davetiye Çözümü
-            </p>
-            <h2 className="text-2xl font-black text-gray-900">
-              Bu şablonları müşterilerine sunmak ister misin?
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
-              Organizasyon firmaları, fotoğrafçılar ve mekanlar için partner paneliyle tek kullanımlık aktivasyon linkleri oluştur.
-              Müşteri kendi davetiyesini yönetir; sen yalnızca süreci ve kalan haklarını takip edersin.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-            <Link
-              href="/partner"
-              className="inline-flex items-center justify-center rounded-2xl bg-gray-900 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700"
-            >
-              Partner Programını İncele →
-            </Link>
-            <Link
-              href="/partner/basvuru"
-              className="inline-flex items-center justify-center rounded-2xl border border-purple-200 bg-white px-6 py-3 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-50"
-            >
-              Başvuru Yap
-            </Link>
+      <section className="relative bg-[#080112] px-4 py-16 sm:px-6 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-85 rounded-full opacity-[0.09] blur-[110px]" style={{ background: "radial-gradient(ellipse, #7c3aed 0%, #be185d 60%, transparent 100%)" }} />
+        </div>
+        <div className="relative mx-auto max-w-5xl">
+          <div className="rounded-3xl border border-purple-500/[0.14] bg-[#0f0820] p-8 sm:p-10 lg:flex lg:items-center lg:gap-12">
+            <div className="flex-1">
+              <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.28em] text-purple-400/70">
+                B2B Davetiye Çözümü
+              </p>
+              <h2 className="text-2xl font-black leading-tight sm:text-3xl">
+                <span style={{ background: "linear-gradient(90deg, #e2d9fa, #f9a8d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Bu şablonları müşterilerine sunmak ister misin?
+                </span>
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-7 text-purple-200/40">
+                Organizasyon firmaları, fotoğrafçılar ve mekanlar için partner paneliyle
+                tek kullanımlık aktivasyon linkleri oluştur. Müşteri kendi davetiyesini yönetir;
+                sen yalnızca süreci ve kalan haklarını takip edersin.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                  href="/partner"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-7 py-3.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+                >
+                  Partner Programını İncele →
+                </Link>
+                <Link
+                  href="/partner/basvuru"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-purple-500/20 px-7 py-3.5 text-sm font-semibold text-purple-300 transition-colors hover:border-purple-400/40 hover:text-white"
+                >
+                  Başvuru Yap
+                </Link>
+              </div>
+            </div>
+            <div className="mt-8 lg:mt-0 grid grid-cols-1 gap-3 lg:w-52 lg:shrink-0">
+              {[
+                ["10–75", "aylık aktivasyon hakkı"],
+                ["Müşteride", "tüm müşteri verisi"],
+                ["Tek panel", "hak ve durum takibi"],
+              ].map(([sayi, etiket]) => (
+                <div key={etiket} className="rounded-2xl border border-purple-500/[0.14] bg-[#080112] px-4 py-4">
+                  <p className="text-base font-black text-white">{sayi}</p>
+                  <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-purple-400/60">{etiket}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
