@@ -108,7 +108,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const pricingPlanReferenceCode = pricingPlanKoduGetir(paketId);
   if (!pricingPlanReferenceCode) {
-    return NextResponse.json({ hata: "Bu paket için ödeme planı henüz tanımlanmamış." }, { status: 500 });
+    console.error(`[partner/odeme/baslat] Eksik env var: IYZICO_PARTNER_SUBSCRIPTION_PLAN_${paketId.toUpperCase()}`);
+    return NextResponse.json({ hata: "Ödeme planı tanımlanmamış, lütfen destek ekibiyle iletişime geçin." }, { status: 503 });
   }
 
   const request = {
@@ -145,10 +146,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       if (err) reject(err);
       else resolve(res);
     });
+  }).catch((err: unknown) => {
+    console.error("[partner/odeme/baslat] iyzipay hatası:", err);
+    return null;
   });
 
+  if (!result) {
+    return NextResponse.json({ hata: "Ödeme servisiyle iletişim kurulamadı." }, { status: 502 });
+  }
+
   if (result.status !== "success") {
-    return NextResponse.json({ hata: "Ödeme başlatılamadı." }, { status: 500 });
+    console.error("[partner/odeme/baslat] iyzipay başarısız:", JSON.stringify(result));
+    return NextResponse.json({ hata: result.errorMessage ?? "Ödeme başlatılamadı." }, { status: 500 });
   }
 
   const checkoutToken: string = result.checkoutFormToken ?? result.token;
