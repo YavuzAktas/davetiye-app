@@ -36,7 +36,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ hata: "Giriş gerekli." }, { status: 401 });
   }
 
-  if (!(await ipIzinVer("partner-odeme-kullanici", session.user.id, 3, 60 * 60_000))) {
+  if (!(await ipIzinVer("partner-odeme-kullanici", session.user.id, 20, 60 * 60_000))) {
     return NextResponse.json({ hata: "Saatlik deneme sınırına ulaşıldı." }, { status: 429 });
   }
 
