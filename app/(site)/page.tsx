@@ -606,61 +606,6 @@ export default function Anasayfa() {
       </div>
 
       {/* ══════════════════════════════════════════
-          PARTNER CTA
-      ══════════════════════════════════════════ */}
-      <section className="relative bg-[#080112] px-4 py-16 sm:px-6 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-100 rounded-full opacity-[0.09] blur-[120px]" style={{ background: "radial-gradient(ellipse, #7c3aed 0%, #be185d 60%, transparent 100%)" }} />
-        </div>
-        <div className="relative mx-auto max-w-5xl">
-          <div className="rounded-3xl border border-purple-500/[0.14] bg-[#0f0820] p-8 sm:p-10">
-            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.28em] text-purple-400/70">
-                  Organizasyoncular İçin
-                </p>
-                <h2 className="text-2xl font-black leading-tight sm:text-3xl">
-                  <span style={{ background: "linear-gradient(90deg, #e2d9fa, #f9a8d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                    Müşterilerine dijital davetiye hakkı sunan partnerlerden biri ol
-                  </span>
-                </h2>
-                <p className="mt-3 max-w-xl text-sm leading-7 text-purple-200/40">
-                  Düğün organizasyonu, fotoğrafçılık veya etkinlik planlama yapıyorsan; her müşteriye
-                  tek kullanımlık aktivasyon linki ver, davetiye sürecini müşteri kendi hesabında yönetsin.
-                </p>
-              </div>
-              <div className="grid grid-cols-3 gap-3 lg:w-[320px]">
-                {[
-                  ["10–75", "aylık aktivasyon"],
-                  ["Müşteride", "müşteri verisi"],
-                  ["Tek panel", "durum takibi"],
-                ].map(([sayi, etiket]) => (
-                  <div key={etiket} className="rounded-2xl border border-purple-500/[0.14] bg-[#080112] px-3 py-4 text-center">
-                    <p className="text-sm font-black text-white">{sayi}</p>
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-purple-400/60">{etiket}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/partner"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-7 py-3.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
-              >
-                Partner Programını İncele →
-              </Link>
-              <Link
-                href="/partner/basvuru"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-purple-500/20 px-7 py-3.5 text-sm font-semibold text-purple-300 transition-colors hover:border-purple-400/40 hover:text-white"
-              >
-                Başvuru Yap
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           HOW IT WORKS
       ══════════════════════════════════════════ */}
       <NasilCalisir />
@@ -1488,6 +1433,61 @@ export default function Anasayfa() {
             <Link href="/fiyatlar" className="text-purple-500 text-sm font-medium hover:text-purple-700 transition-colors">
               Tüm özellikler ve fiyatlar →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          PARTNER CTA
+      ══════════════════════════════════════════ */}
+      <section className="relative bg-[#080112] px-4 py-16 sm:px-6 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-100 rounded-full opacity-[0.09] blur-[120px]" style={{ background: "radial-gradient(ellipse, #7c3aed 0%, #be185d 60%, transparent 100%)" }} />
+        </div>
+        <div className="relative mx-auto max-w-5xl">
+          <div className="rounded-3xl border border-purple-500/[0.14] bg-[#0f0820] p-8 sm:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.28em] text-purple-400/70">
+                  Organizasyoncular İçin
+                </p>
+                <h2 className="text-2xl font-black leading-tight sm:text-3xl">
+                  <span style={{ background: "linear-gradient(90deg, #e2d9fa, #f9a8d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    Müşterilerine dijital davetiye hakkı sunan partnerlerden biri ol
+                  </span>
+                </h2>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-purple-200/40">
+                  Düğün organizasyonu, fotoğrafçılık veya etkinlik planlama yapıyorsan; her müşteriye
+                  tek kullanımlık aktivasyon linki ver, davetiye sürecini müşteri kendi hesabında yönetsin.
+                </p>
+              </div>
+              <div className="grid grid-cols-3 gap-3 lg:w-[320px]">
+                {[
+                  ["10–75", "aylık aktivasyon"],
+                  ["Müşteride", "müşteri verisi"],
+                  ["Tek panel", "durum takibi"],
+                ].map(([sayi, etiket]) => (
+                  <div key={etiket} className="rounded-2xl border border-purple-500/[0.14] bg-[#080112] px-3 py-4 text-center">
+                    <p className="text-sm font-black text-white">{sayi}</p>
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-purple-400/60">{etiket}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href="/partner"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-7 py-3.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              >
+                Partner Programını İncele →
+              </Link>
+              <Link
+                href="/partner/basvuru"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-purple-500/20 px-7 py-3.5 text-sm font-semibold text-purple-300 transition-colors hover:border-purple-400/40 hover:text-white"
+              >
+                Başvuru Yap
+              </Link>
+            </div>
           </div>
         </div>
       </section>
