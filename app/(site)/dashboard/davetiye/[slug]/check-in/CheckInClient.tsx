@@ -27,10 +27,14 @@ export default function CheckInClient({
   slug,
   toplam,
   baslangicGiris,
+  apiPath,
+  personelModu = false,
 }: {
   slug: string;
   toplam: number;
   baslangicGiris: number;
+  apiPath?: string;
+  personelModu?: boolean;
 }) {
   const [kod, setKod] = useState("");
   const [girisYapan, setGirisYapan] = useState(baslangicGiris);
@@ -53,7 +57,7 @@ export default function CheckInClient({
     setHata("");
     setSonuc(null);
     try {
-      const res = await fetch(`/api/dashboard/davetiye/${slug}/check-in`, {
+      const res = await fetch(apiPath ?? `/api/dashboard/davetiye/${slug}/check-in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kod: temiz }),
@@ -161,6 +165,14 @@ export default function CheckInClient({
 
   return (
     <div className="space-y-4">
+      {personelModu && (
+        <div className="rounded-3xl border border-amber-100 bg-amber-50 px-5 py-4">
+          <p className="text-sm font-black text-amber-900">Personel erişimi</p>
+          <p className="mt-1 text-xs leading-relaxed text-amber-700">
+            Bu ekran yalnızca QR check-in için yetkilidir. Davetli listesi, RSVP yönetimi ve davetiye ayarları görüntülenmez.
+          </p>
+        </div>
+      )}
 
       {/* ── Sayaç kartı ── */}
       <div className="bg-white border border-gray-100 rounded-3xl p-6">

@@ -86,25 +86,25 @@ model RateLimitKaydi {
 }
 
 model Davetiye {
-  id                  String             @id @default(cuid())
-  slug                String             @unique
+  id                  String                   @id @default(cuid())
+  slug                String                   @unique
   baslik              String
   etkinlikTur         String
   tarih               DateTime?
   mekan               String?
   mesaj               String?
-  sablon              String             @default("klasik")
+  sablon              String                   @default("klasik")
   muzik               String?
-  aktif               Boolean            @default(true)
-  goruntulenme        Int                @default(0)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  aktif               Boolean                  @default(true)
+  goruntulenme        Int                      @default(0)
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
   userId              String
-  font                String             @default("font-sans")
+  font                String                   @default("font-sans")
   ozelRenk            String?
   kisi1               String?
   kisi2               String?
-  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   davetliler          Davetli[]
   rsvplar             RSVP[]
   albumFotolar        AlbumFoto[]
@@ -113,27 +113,28 @@ model Davetiye {
   polaroid1           String?
   polaroid2           String?
   polaroid3           String?
-  sesliAniAktif       Boolean            @default(false)
-  canliDuvarAktif     Boolean            @default(false)
-  aniDefteriAktif     Boolean            @default(false)
-  oturmaPlanAktif     Boolean            @default(false)
-  checkInAktif        Boolean            @default(false)
+  sesliAniAktif       Boolean                  @default(false)
+  canliDuvarAktif     Boolean                  @default(false)
+  aniDefteriAktif     Boolean                  @default(false)
+  oturmaPlanAktif     Boolean                  @default(false)
+  checkInAktif        Boolean                  @default(false)
   sesliAnilar         SesliAni[]
   dressKod            String?
   dressKodRenkler     String?
-  albumAktif          Boolean            @default(true)
-  aniKitabiAktif      Boolean            @default(false)
+  albumAktif          Boolean                  @default(true)
+  aniKitabiAktif      Boolean                  @default(false)
   kapasiteLimiti      Int?
   etkinlikProgrami    EtkinlikProgrami[]
-  odemeDurumu         String             @default("ucretsiz")
+  odemeDurumu         String                   @default("ucretsiz")
   fiyatSnapshot       Json?
-  hatirlatiMail30dk   Boolean            @default(false)
-  hatirlatiMail24saat Boolean            @default(false)
+  hatirlatiMail30dk   Boolean                  @default(false)
+  hatirlatiMail24saat Boolean                  @default(false)
   rsvpSorular         Json?
   siparisler          Siparis[]
   odemeTokenlar       OdemeToken[]
   odemeKayitlari      OdemeKaydi[]
   aktivasyonKodu      AktivasyonKodu?
+  personelErisimleri  DavetiyePersonelErisim[]
 
   @@index([userId, aktif])
   @@index([userId, createdAt])
@@ -571,4 +572,23 @@ model AktivasyonKodu {
   @@index([abonelikId])
   @@index([musteriUserId])
   @@index([expiresAt])
+}
+
+model DavetiyePersonelErisim {
+  id         String    @id @default(cuid())
+  davetiyeId String
+  rol        String
+  etiket     String?   @db.VarChar(80)
+  tokenHash  String    @unique
+  aktif      Boolean   @default(true)
+  expiresAt  DateTime?
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  davetiye   Davetiye  @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+
+  @@index([davetiyeId, aktif])
+  @@index([rol, aktif])
+  @@index([expiresAt])
+  @@index([createdAt])
 }

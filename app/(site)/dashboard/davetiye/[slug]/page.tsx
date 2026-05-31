@@ -467,6 +467,7 @@ export default async function DavetiyeDetay({ params }: Props) {
           <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar px-4 sm:px-6 pr-10 sm:pr-12">
             {[
               { href: `/dashboard/davetiye/${davetiye.slug}/davetliler`, icon: <Users className="w-4 h-4" />, label: "Davetliler", color: "text-gray-500 bg-gray-50" },
+              { href: `/dashboard/davetiye/${davetiye.slug}/personel`, icon: <CheckCircle2 className="w-4 h-4" />, label: "Personel", color: "text-amber-600 bg-amber-50", border: "border-amber-100" },
               { href: `/dashboard/davetiye/${davetiye.slug}/qr-kiti`, icon: <QrCode className="w-4 h-4" />, label: "QR Kiti", color: "text-purple-600 bg-purple-50", border: "border-purple-100" },
               { href: `/dashboard/davetiye/${davetiye.slug}/check-in`,   icon: <QrCode className="w-4 h-4" />, label: "Check-in",  color: "text-emerald-600 bg-emerald-50", border: "border-emerald-100" },
               { href: `/dashboard/davetiye/${davetiye.slug}/rsvp-sorular`, icon: <ClipboardList className="w-4 h-4" />, label: "RSVP", color: "text-gray-500 bg-gray-50" },
@@ -748,6 +749,22 @@ export default async function DavetiyeDetay({ params }: Props) {
                     <span className="text-gray-300 group-hover:text-purple-400 transition-colors text-sm">→</span>
                   </Link>
                 )}
+
+                <Link
+                  href={`/dashboard/davetiye/${davetiye.slug}/personel`}
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl border border-amber-100 hover:border-amber-200 hover:bg-amber-50/50 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-amber-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <CheckCircle2 className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Personel Erişimi</span>
+                      <span className="ml-2 text-[10px] font-semibold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md">Yetki</span>
+                    </div>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-amber-500 transition-colors text-sm">→</span>
+                </Link>
 
               </div>
             </div>
