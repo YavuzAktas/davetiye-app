@@ -17,6 +17,11 @@ type Abonelik = {
   kullanilanHak: number;
 } | null;
 
+type YeniKod = {
+  id: string;
+  kod: string;
+};
+
 type DurumFiltresi = "tum" | "aksiyon" | "surecte" | "yayinda";
 
 const DURUM_ETIKET: Record<string, { label: string; cls: string }> = {
@@ -91,6 +96,8 @@ export default function AktivasyonKodlari({
   const [adet, setAdet] = useState(1);
   const [arama, setArama] = useState("");
   const [durumFiltresi, setDurumFiltresi] = useState<DurumFiltresi>("tum");
+  const [sonOlusturulanKodlar, setSonOlusturulanKodlar] = useState<YeniKod[]>([]);
+  const [topluKopyalandi, setTopluKopyalandi] = useState(false);
 
   // WhatsApp mesaj şablonu
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
@@ -128,6 +135,11 @@ export default function AktivasyonKodlari({
         const d = await res.json().catch(() => ({}));
         setHata(d.error ?? "Kod oluşturulamadı.");
       } else {
+        const d = await res.json().catch(() => ({}));
+        const yeniKodlar = Array.isArray(d.kodlar) ? d.kodlar as YeniKod[] : [];
+        setSonOlusturulanKodlar(yeniKodlar);
+        setArama("");
+        setDurumFiltresi("tum");
         setAdet(1);
         router.refresh();
       }
@@ -163,6 +175,20 @@ export default function AktivasyonKodlari({
       setTimeout(() => setKopyalananKod(null), 2000);
     } catch {
       setHata("Kopyalanamadı.");
+    }
+  };
+
+  const yeniKodlariKopyala = async () => {
+    if (sonOlusturulanKodlar.length === 0) return;
+
+    try {
+      await navigator.clipboard.writeText(
+        sonOlusturulanKodlar.map(k => aktivasyonUrl(k.kod)).join("\n")
+      );
+      setTopluKopyalandi(true);
+      setTimeout(() => setTopluKopyalandi(false), 2000);
+    } catch {
+      setHata("Linkler kopyalanamadı.");
     }
   };
 
@@ -233,6 +259,7 @@ export default function AktivasyonKodlari({
     { key: "surecte", label: "Süreçte", count: surecteKodlar.length },
     { key: "yayinda", label: "Yayında", count: yayindaKodlar.length },
   ];
+  const yeniKodSet = new Set(sonOlusturulanKodlar.map(k => k.kod));
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
@@ -317,6 +344,50 @@ export default function AktivasyonKodlari({
         <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{hata}</p>
       )}
 
+      {sonOlusturulanKodlar.length > 0 && (
+        <div className="rounded-2xl border border-green-200 bg-green-50 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-black text-green-800">
+                {sonOlusturulanKodlar.length} yeni aktivasyon kodu hazır
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-green-700">
+                Linkleri hemen müşterinize gönderebilir veya toplu kopyalayabilirsiniz.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSonOlusturulanKodlar([])}
+              className="shrink-0 rounded-full px-2 py-1 text-xs font-bold text-green-700 hover:bg-green-100"
+              aria-label="Yeni kod bildirimi kapat"
+            >
+              x
+            </button>
+          </div>
+          <div className="mt-3 rounded-xl bg-white/70 px-3 py-2">
+            <p className="truncate font-mono text-[11px] text-green-800">
+              {aktivasyonUrl(sonOlusturulanKodlar[0].kod)}
+            </p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => whatsappGonder(sonOlusturulanKodlar[0].kod, "olusturuldu")}
+              className="rounded-xl bg-green-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-green-700"
+            >
+              İlk Kodu WhatsApp ile Gönder
+            </button>
+            <button
+              type="button"
+              onClick={yeniKodlariKopyala}
+              className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-green-700 ring-1 ring-green-200 transition-colors hover:bg-green-100"
+            >
+              {topluKopyalandi ? "Linkler Kopyalandı" : "Tüm Yeni Linkleri Kopyala"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {aktifKodlar.length > 0 && (
         <div className="space-y-3">
           <div className="relative">
@@ -399,12 +470,22 @@ export default function AktivasyonKodlari({
             const etiket = DURUM_ETIKET[k.durum] ?? DURUM_ETIKET.olusturuldu;
             const url = aktivasyonUrl(k.kod);
             const notDuzenlemede = notDuzenlemeKod === k.kod;
+            const yeni = yeniKodSet.has(k.kod);
             return (
-              <div key={k.id} className="border border-gray-100 rounded-2xl p-4 space-y-2.5">
+              <div key={k.id} className={`rounded-2xl border p-4 space-y-2.5 ${
+                yeni ? "border-green-200 bg-green-50/30 ring-1 ring-green-100" : "border-gray-100 bg-white"
+              }`}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${etiket.cls}`}>
-                    {etiket.label}
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {yeni && (
+                      <span className="rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-bold text-green-700">
+                        Yeni
+                      </span>
+                    )}
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${etiket.cls}`}>
+                      {etiket.label}
+                    </span>
+                  </div>
                   <span className="text-[11px] text-gray-400">
                     {new Date(k.createdAt).toLocaleDateString("tr-TR")}
                   </span>
