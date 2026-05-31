@@ -7,6 +7,7 @@ import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
 import PartnerOperasyonOzeti from "./PartnerOperasyonOzeti";
+import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -184,6 +185,7 @@ export default async function PartnerPanelPage({
               } : null}
               kodlar={kodlar}
             />
+            <PartnerTeklifOlusturucu firmaAdi={partner.firmaAdi} />
             <AktivasyonKodlari
               firmaAdi={partner.firmaAdi}
               abonelik={abonelik ? {
