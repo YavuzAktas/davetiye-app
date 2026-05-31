@@ -10,6 +10,20 @@ function temizle(v: unknown, max = 200): string {
   return typeof v === "string" ? v.trim().replace(/\s+/g, " ").slice(0, max) : "";
 }
 
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Giriş yapmalısınız." }, { status: 401 });
+  }
+
+  const partner = await prisma.partner.findUnique({
+    where: { userId: session.user.id },
+    select: { id: true, firmaAdi: true, durum: true, createdAt: true },
+  });
+
+  return NextResponse.json({ partner });
+}
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -18,9 +32,13 @@ export async function POST(req: Request) {
 
   const mevcutPartner = await prisma.partner.findUnique({
     where: { userId: session.user.id },
+    select: { id: true, firmaAdi: true, durum: true },
   });
   if (mevcutPartner) {
-    return NextResponse.json({ error: "Bu hesap için zaten bir başvuru mevcut." }, { status: 409 });
+    return NextResponse.json(
+      { error: "Bu hesap için zaten bir partner kaydı mevcut.", partner: mevcutPartner },
+      { status: 409 }
+    );
   }
 
   const body = await req.json().catch(() => ({}));
@@ -41,7 +59,21 @@ export async function POST(req: Request) {
       durum: "beklemede",
       basvuruDetay: { telefon, firmaTuru, aylikMusteriSayisi, basvuruNotu },
     },
+  }).catch((err: any) => {
+    if (err?.code === "P2002") return null;
+    throw err;
   });
+
+  if (!partner) {
+    const mevcut = await prisma.partner.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true, firmaAdi: true, durum: true },
+    });
+    return NextResponse.json(
+      { error: "Bu hesap için zaten bir partner kaydı mevcut.", partner: mevcut },
+      { status: 409 }
+    );
+  }
 
   await partnerBasvuruAdminBildir({
     partnerAdi: session.user.name ?? session.user.email ?? "",

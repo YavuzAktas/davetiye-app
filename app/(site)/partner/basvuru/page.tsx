@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Metadata } from "next";
 
 const FIRMA_TURLERI = [
   "Düğün organizasyon firması",
@@ -17,11 +17,15 @@ const FIRMA_TURLERI = [
 
 const MUSTERI_SAYILARI = ["1-5 müşteri/ay", "5-15 müşteri/ay", "15-30 müşteri/ay", "30+ müşteri/ay"];
 
-type Durum = "form" | "gonderiliyor" | "basarili" | "zatenVar" | "hata";
+type PartnerDurumu = "aktif" | "beklemede" | "askida" | "reddedildi" | string;
+type Durum = "kontrol" | "form" | "gonderiliyor" | "basarili" | "zatenVar" | "aktif" | "askida" | "hata";
 
 export default function PartnerBasvuruPage() {
+  const router = useRouter();
   const { data: session, status } = useSession();
-  const [durum, setDurum] = useState<Durum>("form");
+  const [durum, setDurum] = useState<Durum>("kontrol");
+  const [partnerDurumu, setPartnerDurumu] = useState<PartnerDurumu | null>(null);
+  const [firmaAdi, setFirmaAdi] = useState("");
   const [hata, setHata] = useState("");
   const [form, setForm] = useState({
     firmaAdi: "",
@@ -34,6 +38,44 @@ export default function PartnerBasvuruPage() {
   const degistir = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
+    let iptal = false;
+    setDurum("kontrol");
+
+    fetch("/api/partner/basvuru", { method: "GET" })
+      .then(async res => {
+        if (res.status === 404) return { partner: null };
+        if (!res.ok) throw new Error("Partner durumu alınamadı.");
+        return res.json();
+      })
+      .then(data => {
+        if (iptal) return;
+        const partner = data.partner as { durum?: PartnerDurumu; firmaAdi?: string } | null;
+        if (!partner) {
+          setDurum("form");
+          return;
+        }
+
+        setPartnerDurumu(partner.durum ?? null);
+        setFirmaAdi(partner.firmaAdi ?? "");
+
+        if (partner.durum === "aktif") {
+          setDurum("aktif");
+          router.replace("/partner/panel");
+          return;
+        }
+
+        setDurum(partner.durum === "askida" ? "askida" : "zatenVar");
+      })
+      .catch(() => {
+        if (!iptal) setDurum("form");
+      });
+
+    return () => { iptal = true; };
+  }, [router, status]);
+
   const gonder = async (e: React.FormEvent) => {
     e.preventDefault();
     setDurum("gonderiliyor");
@@ -44,7 +86,19 @@ export default function PartnerBasvuruPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      if (res.status === 409) { setDurum("zatenVar"); return; }
+      if (res.status === 409) {
+        const d = await res.json().catch(() => ({}));
+        const partner = d.partner as { durum?: PartnerDurumu; firmaAdi?: string } | null;
+        setPartnerDurumu(partner?.durum ?? null);
+        setFirmaAdi(partner?.firmaAdi ?? "");
+        if (partner?.durum === "aktif") {
+          setDurum("aktif");
+          router.replace("/partner/panel");
+          return;
+        }
+        setDurum(partner?.durum === "askida" ? "askida" : "zatenVar");
+        return;
+      }
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
         setHata(d.error ?? "Bir hata oluştu.");
@@ -89,6 +143,14 @@ export default function PartnerBasvuruPage() {
     );
   }
 
+  if (durum === "kontrol") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full border-2 border-purple-600 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
   if (durum === "basarili") {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -115,12 +177,55 @@ export default function PartnerBasvuruPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">⏳</div>
-          <h1 className="text-2xl font-black text-gray-900 mb-2">Başvurunuz İnceleniyor</h1>
+          <h1 className="text-2xl font-black text-gray-900 mb-2">
+            {partnerDurumu === "reddedildi" ? "Başvuru Durumu" : "Başvurunuz İnceleniyor"}
+          </h1>
           <p className="text-sm text-gray-500 mb-8 leading-relaxed">
-            Bu hesap için daha önce bir başvuru yapılmış. Ekibimiz en kısa sürede sizinle iletişime geçecek.
+            {firmaAdi ? <><strong>{firmaAdi}</strong> için partner kaydınız mevcut. </> : null}
+            {partnerDurumu === "reddedildi"
+              ? "Bu hesapla yeni başvuru oluşturulamaz. Detay için bizimle iletişime geçebilirsiniz."
+              : "Bu hesap için daha önce bir başvuru yapılmış. Ekibimiz en kısa sürede sizinle iletişime geçecek."}
           </p>
           <Link href="/partner" className="text-sm text-purple-600 hover:underline">
             ← Partner Programına Dön
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (durum === "aktif") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">✅</div>
+          <h1 className="text-2xl font-black text-gray-900 mb-2">Partner hesabınız aktif</h1>
+          <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+            {firmaAdi ? <><strong>{firmaAdi}</strong> için </> : null}
+            tekrar başvuru oluşturmanıza gerek yok. Partner panelinize yönlendiriliyorsunuz.
+          </p>
+          <Link
+            href="/partner/panel"
+            className="inline-block bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-8 py-3 rounded-2xl hover:opacity-90 transition-opacity text-sm"
+          >
+            Partner Paneline Git
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (durum === "askida") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">⚠️</div>
+          <h1 className="text-2xl font-black text-gray-900 mb-2">Partner hesabınız askıda</h1>
+          <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+            Bu hesap için partner kaydı bulunduğu için yeni başvuru oluşturulamaz. Hesabı tekrar açmak için bizimle iletişime geçebilirsiniz.
+          </p>
+          <Link href="/iletisim" className="text-sm text-purple-600 hover:underline">
+            İletişime Geç
           </Link>
         </div>
       </div>
