@@ -1,12 +1,12 @@
 const NAV_LINKLERI = [
   { href: "#kurulum", label: "Kurulum" },
+  { href: "#aktivasyon-kodlari", label: "Aktivasyon" },
   { href: "#ozet", label: "Özet" },
-  { href: "#donusum", label: "Dönüşüm" },
   { href: "#pipeline", label: "Pipeline" },
+  { href: "#donusum", label: "Dönüşüm" },
   { href: "#satis", label: "Satış" },
   { href: "#marka", label: "Marka" },
   { href: "#teklif", label: "Teklif" },
-  { href: "#aktivasyon-kodlari", label: "Aktivasyon" },
   { href: "#odeme", label: "Ödeme" },
 ];
 
