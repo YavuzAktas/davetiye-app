@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-const TARIH = "30 Mayıs 2025";
+const TARIH = "31 Mayıs 2026";
 
 export default function PartnerSozlesmePage() {
   return (
@@ -49,7 +49,7 @@ export default function PartnerSozlesmePage() {
             <ul className="space-y-2 text-gray-600 list-disc pl-5">
               <li>Satın aldığı paket kapsamında aktivasyon linki oluşturmak ve müşterilerine iletmek.</li>
               <li>Partner panelinde şu bilgileri görüntülemek: aktivasyon kodu durumu (aktivasyon gönderildi / kayıt olundu / davetiye oluşturuldu / yayında), kullanılan ve kalan aktivasyon hakkı sayısı ve partnerin kişisel veri içermeden eklediği dahili kod etiketi.</li>
-              <li>Paket yenilemek veya üst pakete geçmek.</li>
+              <li>Paket yenilemek, üst pakete geçmek, kayıtlı ödeme kartını güncellemek veya otomatik yenilemeyi iptal etmek.</li>
             </ul>
           </section>
 
@@ -111,6 +111,10 @@ export default function PartnerSozlesmePage() {
               <li>Kullanılmayan haklar iade edilmez.</li>
               <li>Aktivasyon linki müşteri tarafından bir kez kullanılabilir; bir kez kullanıldıktan sonra geçersiz hale gelir.</li>
               <li>Paket ücreti aylık peşin olarak tahsil edilir.</li>
+              <li>Partner paketi, ödeme ekranında açıkça onay verilmesi halinde aylık otomatik yenilenen abonelik olarak başlatılır.</li>
+              <li>Otomatik yenileme aktifse ilgili aylık paket bedeli bir sonraki dönem başında kayıtlı karttan tahsil edilir.</li>
+              <li>Partner, panel üzerinden otomatik yenilemeyi istediği zaman kapatabilir; iptal mevcut ücretli dönemin sonuna kadar hizmet kullanımını etkilemez.</li>
+              <li>Kart güncelleme işlemi iyzico güvenli ödeme altyapısı üzerinden yürütülür; kart bilgileri Platform tarafından saklanmaz.</li>
             </ul>
           </section>
 

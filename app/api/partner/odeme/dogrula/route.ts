@@ -7,6 +7,25 @@ import { getSiteUrl } from "@/lib/site-url";
 const PANEL_URL = `${getSiteUrl()}/partner/panel`;
 const BASARISIZ = `${getSiteUrl()}/partner/panel?odeme=basarisiz`;
 
+function ilkDoluString(...degerler: unknown[]): string | null {
+  for (const deger of degerler) {
+    if (typeof deger === "string" && deger.trim()) return deger.trim();
+  }
+  return null;
+}
+
+function abonelikAktifMi(result: any): boolean {
+  const durum = ilkDoluString(
+    result.subscriptionStatus,
+    result.data?.subscriptionStatus,
+    result.subscription?.subscriptionStatus,
+    result.data?.subscription?.subscriptionStatus,
+    result.status
+  )?.toUpperCase();
+
+  return durum === "ACTIVE";
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.formData();
   const token = (body.get("token") ?? body.get("checkoutFormToken")) as string | null;
@@ -23,15 +42,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
-  const subscriptionReferenceCode: string | null = result.subscriptionReferenceCode ?? result.data?.subscriptionReferenceCode ?? null;
-  const customerReferenceCode: string | null = result.customerReferenceCode ?? result.data?.customerReferenceCode ?? null;
-  const pricingPlanReferenceCode: string | null = result.pricingPlanReferenceCode ?? result.data?.pricingPlanReferenceCode ?? null;
+  const subscriptionReferenceCode = ilkDoluString(
+    result.subscriptionReferenceCode,
+    result.referenceCode,
+    result.data?.subscriptionReferenceCode,
+    result.data?.referenceCode
+  );
+  const customerReferenceCode = ilkDoluString(result.customerReferenceCode, result.data?.customerReferenceCode);
+  const pricingPlanReferenceCode = ilkDoluString(result.pricingPlanReferenceCode, result.data?.pricingPlanReferenceCode);
   const sonrakiTahsilatAt: Date | null = (() => {
     const raw = result.nextPaymentDate ?? result.data?.nextPaymentDate ?? null;
     if (!raw) return null;
     const d = new Date(raw);
     return isNaN(d.getTime()) ? null : d;
   })();
+
+  if (!subscriptionReferenceCode || !abonelikAktifMi(result)) {
+    console.warn("[partner/odeme/dogrula] Abonelik aktif değil:", JSON.stringify({
+      token,
+      status: result.status,
+      subscriptionStatus: result.subscriptionStatus ?? result.data?.subscriptionStatus,
+      referenceCode: subscriptionReferenceCode,
+    }));
+    return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+  }
 
   const odemeToken = await prisma.odemeToken.findUnique({
     where: { token },
@@ -98,8 +132,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         baslangicAt: simdi,
         bitisAt,
         aktif: true,
-        otomatikYenileme: !!subscriptionReferenceCode,
-        abonelikDurumu: subscriptionReferenceCode ? "aktif" : "manuel",
+        otomatikYenileme: true,
+        abonelikDurumu: "aktif",
         iyzicoSubscriptionReferenceCode: subscriptionReferenceCode,
         iyzicoCustomerReferenceCode: customerReferenceCode,
         iyzicoPricingPlanReferenceCode: pricingPlanReferenceCode,

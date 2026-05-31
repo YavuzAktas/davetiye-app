@@ -4,7 +4,11 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
-import { paketGetir, pricingPlanKoduGetir } from "@/lib/partner-paketler";
+import { paketGetir } from "@/lib/partner-paketler";
+import {
+  PARTNER_ABONELIK_PLAN_ENV_KEYS,
+  partnerAbonelikPlanReferenceCodeGetir,
+} from "@/lib/partner-abonelik-planlari";
 import { getSiteUrl } from "@/lib/site-url";
 
 function temizle(v: unknown, max = 200): string {
@@ -106,9 +110,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const tutar = paket.aylikTutar;
   const conversationId = `partner-${partner.id}-${paketId}-${Date.now()}`;
 
-  const pricingPlanReferenceCode = pricingPlanKoduGetir(paketId);
+  const pricingPlanReferenceCode = partnerAbonelikPlanReferenceCodeGetir(paketId);
   if (!pricingPlanReferenceCode) {
-    console.error(`[partner/odeme/baslat] Eksik env var: IYZICO_PARTNER_SUBSCRIPTION_PLAN_${paketId.toUpperCase()}`);
+    const envKey = PARTNER_ABONELIK_PLAN_ENV_KEYS[paketId as keyof typeof PARTNER_ABONELIK_PLAN_ENV_KEYS];
+    console.error(`[partner/odeme/baslat] Eksik env var: ${envKey ?? paketId}`);
     return NextResponse.json({ hata: "Ödeme planı tanımlanmamış." }, { status: 503 });
   }
 
@@ -120,7 +125,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       conversationId,
       callbackUrl,
       pricingPlanReferenceCode,
-      subscriptionInitialStatus: "PENDING",
+      subscriptionInitialStatus: "ACTIVE",
       customer: {
         name: ad,
         surname: soyad,

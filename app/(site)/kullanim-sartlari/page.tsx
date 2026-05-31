@@ -92,7 +92,11 @@ export default function KullanimSartlariSayfasi() {
           baslik: "Ücretlendirme ve Ödeme",
           icerik: (
             <>
-              <p>Platformumuzda ücretlendirme davetiye bazlıdır; abonelik veya otomatik yenileme yoktur.</p>
+              <p>
+                Son kullanıcı davetiye ödemelerinde ücretlendirme davetiye bazlıdır; bu alımlarda
+                abonelik veya otomatik yenileme yoktur. Partner programı ise ayrı bir ticari hizmettir
+                ve aylık otomatik yenilenen abonelik modeliyle çalışabilir.
+              </p>
               <ul>
                 <li>Davetiye ve ek özellik ödemeleri <strong>iyzico</strong> güvenceli ödeme altyapısı üzerinden işlenir.</li>
                 <li>Her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır.</li>

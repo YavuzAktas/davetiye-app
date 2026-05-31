@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
+import { createHash, createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { paketGetir } from "@/lib/partner-paketler";
 
 function dogrulaImza(payload: string, gelen: string): boolean {
-  const secret = process.env.IYZICO_SECRET_KEY ?? "";
+  const secret = process.env.IYZICO_WEBHOOK_SECRET ?? process.env.IYZICO_SECRET_KEY ?? "";
+  if (!secret || !gelen) return false;
   const beklenen = createHmac("sha1", secret).update(payload).digest("base64");
   try {
     return timingSafeEqual(Buffer.from(beklenen), Buffer.from(gelen));
@@ -20,11 +21,45 @@ function timingSafeEqual(a: Buffer, b: Buffer): boolean {
   return diff === 0;
 }
 
+function ilkDoluString(...degerler: unknown[]): string | null {
+  for (const deger of degerler) {
+    if (typeof deger === "string" && deger.trim()) return deger.trim();
+    if (typeof deger === "number") return String(deger);
+  }
+  return null;
+}
+
+function bodyHash(rawBody: string): string {
+  return createHash("sha256").update(rawBody).digest("hex");
+}
+
+function eventAnahtari(event: any, data: any, eventType: string, rawBody: string): string {
+  const kaynakId = ilkDoluString(
+    event.iyziEventId,
+    event.eventId,
+    event.id,
+    data.orderReferenceCode,
+    data.paymentId,
+    data.conversationId,
+    data.referenceCode
+  );
+  return kaynakId ? `${eventType}:${kaynakId}` : `${eventType}:${bodyHash(rawBody)}`;
+}
+
+function tarihOku(...degerler: unknown[]): Date | null {
+  for (const deger of degerler) {
+    if (typeof deger !== "string" || !deger.trim()) continue;
+    const tarih = new Date(deger);
+    if (!isNaN(tarih.getTime())) return tarih;
+  }
+  return null;
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const rawBody = await req.text();
 
-  const imza = req.headers.get("x-iyzi-signature") ?? "";
-  if (imza && !dogrulaImza(rawBody, imza)) {
+  const imza = req.headers.get("x-iyzi-signature") ?? req.headers.get("x-iyzico-signature") ?? "";
+  if (!imza || !dogrulaImza(rawBody, imza)) {
     return NextResponse.json({ hata: "Geçersiz imza." }, { status: 401 });
   }
 
@@ -37,17 +72,41 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const eventType: string = event.iyziEventType ?? event.eventType ?? "";
   const data = event.data ?? event;
+  const eventKey = eventAnahtari(event, data, eventType || "unknown", rawBody);
 
+  try {
+    await prisma.iyzicoWebhookEvent.create({
+      data: {
+        eventKey,
+        eventType: eventType || "unknown",
+        bodyHash: bodyHash(rawBody),
+      },
+    });
+  } catch (err: any) {
+    if (err?.code === "P2002") return NextResponse.json({ ok: true, tekrar: true });
+    console.error("[partner/webhook/iyzico] Event kaydı oluşturulamadı:", err);
+    return NextResponse.json({ hata: "Webhook kaydı oluşturulamadı." }, { status: 500 });
+  }
+
+  try {
   // Otomatik yenileme başarılı: hakları sıfırla + tarihleri güncelle
   if (eventType === "SUBSCRIPTION_ORDER_SUCCESS" || eventType === "subscription.order.success") {
-    const subRef: string | undefined = data.subscriptionReferenceCode;
-    const pricingPlanRef: string | undefined = data.pricingPlanReferenceCode;
+    const subRef = ilkDoluString(data.subscriptionReferenceCode, data.referenceCode);
+    const pricingPlanRef = ilkDoluString(data.pricingPlanReferenceCode);
+    const customerRef = ilkDoluString(data.customerReferenceCode);
 
     if (!subRef) return NextResponse.json({ ok: true });
 
-    const abonelik = await prisma.partnerAbonelik.findUnique({
+    const abonelik = await prisma.partnerAbonelik.findFirst({
       where: { iyzicoSubscriptionReferenceCode: subRef },
-      select: { id: true, paketId: true, partnerId: true },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        paketId: true,
+        partnerId: true,
+        iyzicoCustomerReferenceCode: true,
+        iyzicoPricingPlanReferenceCode: true,
+      },
     });
     if (!abonelik) return NextResponse.json({ ok: true });
 
@@ -55,20 +114,60 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (!paket) return NextResponse.json({ ok: true });
 
     const simdi = new Date();
-    const sonrakiTahsilatAt = new Date(simdi.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const sonrakiTahsilatAt =
+      tarihOku(data.nextPaymentDate, data.nextPaymentDateTime, data.subscriptionEndDate) ??
+      new Date(simdi.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-    await prisma.partnerAbonelik.update({
-      where: { id: abonelik.id },
-      data: {
-        kullanilanHak: 0,
-        hakSayisi: paket.hakSayisi,
-        baslangicAt: simdi,
-        bitisAt: sonrakiTahsilatAt,
-        aktif: true,
-        sonTahsilatAt: simdi,
-        sonrakiTahsilatAt,
-        iyzicoPricingPlanReferenceCode: pricingPlanRef ?? undefined,
-      },
+    await prisma.$transaction([
+      prisma.partnerAbonelik.updateMany({
+        where: { partnerId: abonelik.partnerId, aktif: true },
+        data: { aktif: false },
+      }),
+      prisma.partnerAbonelik.create({
+        data: {
+          partnerId: abonelik.partnerId,
+          paketId: abonelik.paketId,
+          hakSayisi: paket.hakSayisi,
+          kullanilanHak: 0,
+          baslangicAt: simdi,
+          bitisAt: sonrakiTahsilatAt,
+          aktif: true,
+          otomatikYenileme: true,
+          abonelikDurumu: "aktif",
+          iyzicoSubscriptionReferenceCode: subRef,
+          iyzicoCustomerReferenceCode: customerRef ?? abonelik.iyzicoCustomerReferenceCode,
+          iyzicoPricingPlanReferenceCode: pricingPlanRef ?? abonelik.iyzicoPricingPlanReferenceCode,
+          sonTahsilatAt: simdi,
+          sonrakiTahsilatAt,
+        },
+      }),
+    ]);
+
+    const paymentId = ilkDoluString(data.paymentId, data.orderReferenceCode);
+    if (paymentId) {
+      const partner = await prisma.partner.findUnique({
+        where: { id: abonelik.partnerId },
+        select: { userId: true, user: { select: { email: true } } },
+      });
+      await prisma.odemeKaydi.create({
+        data: {
+          userId: partner?.userId,
+          userEmail: partner?.user.email,
+          planId: abonelik.paketId,
+          urunTipi: "partner-paket-yenileme",
+          fiyatKirilimi: { paketId: abonelik.paketId, paketAd: paket.ad, tutar: paket.aylikTutar, hakSayisi: paket.hakSayisi },
+          paymentId,
+          price: String(paket.aylikTutar),
+          paidPrice: String(paket.aylikTutar),
+          currency: "TRY",
+          paymentStatus: "SUCCESS",
+        },
+      });
+    }
+
+    await prisma.iyzicoWebhookEvent.update({
+      where: { eventKey },
+      data: { processedAt: simdi },
     });
 
     return NextResponse.json({ ok: true });
@@ -78,14 +177,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (
     eventType === "SUBSCRIPTION_CANCELED" ||
     eventType === "subscription.canceled" ||
-    eventType === "SUBSCRIPTION_UPGRADED" ||
     eventType === "SUBSCRIPTION_DEACTIVATED"
   ) {
-    const subRef: string | undefined = data.subscriptionReferenceCode;
+    const subRef = ilkDoluString(data.subscriptionReferenceCode, data.referenceCode);
     if (!subRef) return NextResponse.json({ ok: true });
 
-    const abonelik = await prisma.partnerAbonelik.findUnique({
+    const abonelik = await prisma.partnerAbonelik.findFirst({
       where: { iyzicoSubscriptionReferenceCode: subRef },
+      orderBy: { createdAt: "desc" },
       select: { id: true },
     });
     if (!abonelik) return NextResponse.json({ ok: true });
@@ -99,8 +198,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
 
+    await prisma.iyzicoWebhookEvent.update({
+      where: { eventKey },
+      data: { processedAt: new Date() },
+    });
+
     return NextResponse.json({ ok: true });
   }
 
   return NextResponse.json({ ok: true });
+  } catch (err) {
+    await prisma.iyzicoWebhookEvent.delete({ where: { eventKey } }).catch(() => null);
+    console.error("[partner/webhook/iyzico] Event işlenemedi:", err);
+    return NextResponse.json({ hata: "Webhook işlenemedi." }, { status: 500 });
+  }
 }

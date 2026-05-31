@@ -66,12 +66,3 @@ export const PARTNER_PAKET_DAHIL: Record<string, string[]> = {
 export function dahilKodlarGetir(paketId: string): string[] {
   return PARTNER_PAKET_DAHIL[paketId] ?? ["temel-davetiye"];
 }
-
-export function pricingPlanKoduGetir(paketId: string): string {
-  const MAP: Record<string, string> = {
-    baslangic:   process.env.IYZICO_PARTNER_SUBSCRIPTION_PLAN_BASLANGIC   ?? "",
-    profesyonel: process.env.IYZICO_PARTNER_SUBSCRIPTION_PLAN_PROFESYONEL ?? "",
-    kurumsal:    process.env.IYZICO_PARTNER_SUBSCRIPTION_PLAN_KURUMSAL    ?? "",
-  };
-  return MAP[paketId] ?? "";
-}

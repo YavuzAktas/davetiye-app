@@ -521,7 +521,7 @@ model PartnerAbonelik {
   aktif                           Boolean          @default(true)
   otomatikYenileme                Boolean          @default(false)
   abonelikDurumu                  String           @default("manuel")
-  iyzicoSubscriptionReferenceCode String?          @unique
+  iyzicoSubscriptionReferenceCode String?
   iyzicoCustomerReferenceCode     String?
   iyzicoPricingPlanReferenceCode  String?
   sonTahsilatAt                   DateTime?
@@ -533,8 +533,21 @@ model PartnerAbonelik {
 
   @@index([partnerId, aktif])
   @@index([otomatikYenileme, abonelikDurumu])
+  @@index([iyzicoSubscriptionReferenceCode])
   @@index([iyzicoCustomerReferenceCode])
   @@index([sonrakiTahsilatAt])
+}
+
+model IyzicoWebhookEvent {
+  id          String    @id @default(cuid())
+  eventKey    String    @unique
+  eventType   String
+  bodyHash    String
+  createdAt   DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([eventType, createdAt])
+  @@index([createdAt])
 }
 
 model AktivasyonKodu {
