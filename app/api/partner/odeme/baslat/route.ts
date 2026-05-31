@@ -107,49 +107,87 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const conversationId = `partner-${partner.id}-${paketId}-${Date.now()}`;
 
   const pricingPlanReferenceCode = pricingPlanKoduGetir(paketId);
-  if (!pricingPlanReferenceCode) {
-    console.error(`[partner/odeme/baslat] Eksik env var: IYZICO_PARTNER_SUBSCRIPTION_PLAN_${paketId.toUpperCase()}`);
-    return NextResponse.json({ hata: "Ödeme planı tanımlanmamış, lütfen destek ekibiyle iletişime geçin." }, { status: 503 });
+  const abonelikModu = !!pricingPlanReferenceCode;
+  const tutarStr = tutar.toFixed(2);
+  const callbackUrl = `${getSiteUrl()}/api/partner/odeme/dogrula`;
+
+  let result: any;
+
+  if (abonelikModu) {
+    // iyzico subscription checkout (otomatik yenileme)
+    result = await new Promise<any>((resolve, reject) => {
+      (iyzipay as any).subscriptionCheckoutForm.initialize({
+        locale: "tr",
+        conversationId,
+        callbackUrl,
+        pricingPlanReferenceCode,
+        subscriptionInitialStatus: "ACTIVE",
+        customer: {
+          name: ad,
+          surname: soyad,
+          identityNumber: iyzicoKimlikNo,
+          email: user.email!,
+          gsmNumber: telefon,
+          billingAddress: { contactName: adSoyad, address: iyzicoAdres, city: sehir, country: "Turkey", district: "" },
+          shippingAddress: { contactName: adSoyad, address: iyzicoAdres, city: sehir, country: "Turkey", district: "" },
+        },
+      }, (err: unknown, res: any) => {
+        if (err) reject(err); else resolve(res);
+      });
+    }).catch((err: unknown) => {
+      console.error("[partner/odeme/baslat] subscription iyzipay hatası:", err);
+      return null;
+    });
+
+    if (!result || result.status !== "success") {
+      console.error("[partner/odeme/baslat] subscription başarısız, tek seferliğe fallback:", JSON.stringify(result));
+      // Subscription kurulmamışsa tek seferlik ödemeye düş
+      result = null;
+    }
   }
 
-  const request = {
-    locale: "tr",
-    conversationId,
-    callbackUrl: `${getSiteUrl()}/api/partner/odeme/dogrula`,
-    pricingPlanReferenceCode,
-    subscriptionInitialStatus: "ACTIVE",
-    customer: {
-      name: ad,
-      surname: soyad,
-      identityNumber: iyzicoKimlikNo,
-      email: user.email!,
-      gsmNumber: telefon,
-      billingAddress: {
-        contactName: adSoyad,
-        address: iyzicoAdres,
-        city: sehir,
-        country: "Turkey",
-        district: "",
-      },
-      shippingAddress: {
-        contactName: adSoyad,
-        address: iyzicoAdres,
-        city: sehir,
-        country: "Turkey",
-        district: "",
-      },
-    },
-  };
-
-  const result = await new Promise<any>((resolve, reject) => {
-    (iyzipay as any).subscriptionCheckoutForm.initialize(request, (err: unknown, res: any) => {
-      if (err) reject(err);
-      else resolve(res);
+  // Subscription yoksa veya başarısız olduysa: tek seferlik checkout
+  if (!result) {
+    result = await new Promise<any>((resolve, reject) => {
+      iyzipay.checkoutFormInitialize.create({
+        locale: "tr",
+        conversationId,
+        price: tutarStr,
+        paidPrice: tutarStr,
+        currency: "TRY",
+        basketId: `partner-${partner.id}`,
+        paymentGroup: "PRODUCT",
+        callbackUrl,
+        enabledInstallments: [1, 2, 3, 6, 9],
+        buyer: {
+          id: user.id,
+          name: ad,
+          surname: soyad,
+          gsmNumber: telefon,
+          email: user.email!,
+          identityNumber: iyzicoKimlikNo,
+          registrationAddress: iyzicoAdres,
+          ip: clientIp,
+          city: sehir,
+          country: "Turkey",
+        },
+        shippingAddress: { contactName: adSoyad, city: sehir, country: "Turkey", address: iyzicoAdres },
+        billingAddress:  { contactName: adSoyad, city: sehir, country: "Turkey", address: iyzicoAdres },
+        basketItems: [{
+          id: `partner-${paketId}`,
+          name: `Partner Paketi – ${paket.ad} (1 Ay)`,
+          category1: "Partner",
+          itemType: "VIRTUAL",
+          price: tutarStr,
+        }],
+      } as any, (err: unknown, res: any) => {
+        if (err) reject(err); else resolve(res);
+      });
+    }).catch((err: unknown) => {
+      console.error("[partner/odeme/baslat] tek seferlik iyzipay hatası:", err);
+      return null;
     });
-  }).catch((err: unknown) => {
-    console.error("[partner/odeme/baslat] iyzipay hatası:", err);
-    return null;
-  });
+  }
 
   if (!result) {
     return NextResponse.json({ hata: "Ödeme servisiyle iletişim kurulamadı." }, { status: 502 });

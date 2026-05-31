@@ -12,21 +12,38 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const token = (body.get("token") ?? body.get("checkoutFormToken")) as string | null;
   if (!token) return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
 
-  const result = await new Promise<any>((resolve, reject) => {
+  // Önce subscription retrieve dene, başarısız olursa tek seferlik retrieve'e fallback
+  let result = await new Promise<any>((resolve, reject) => {
     (iyzipay as any).subscriptionCheckoutForm.retrieve({ checkoutFormToken: token }, (err: unknown, res: any) => {
       if (err) reject(err);
       else resolve(res);
     });
   }).catch(() => null);
 
+  let tekSeferlik = false;
+  if (!result || result.status !== "success") {
+    result = await new Promise<any>((resolve, reject) => {
+      iyzipay.checkoutForm.retrieve({ token } as any, (err: unknown, res: any) => {
+        if (err) reject(err);
+        else resolve(res);
+      });
+    }).catch(() => null);
+    tekSeferlik = true;
+  }
+
   if (!result || result.status !== "success") {
     return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
   }
 
-  const subscriptionReferenceCode: string | null = result.subscriptionReferenceCode ?? result.data?.subscriptionReferenceCode ?? null;
-  const customerReferenceCode: string | null = result.customerReferenceCode ?? result.data?.customerReferenceCode ?? null;
-  const pricingPlanReferenceCode: string | null = result.pricingPlanReferenceCode ?? result.data?.pricingPlanReferenceCode ?? null;
+  if (tekSeferlik && result.paymentStatus !== "SUCCESS") {
+    return new NextResponse(null, { status: 302, headers: { Location: BASARISIZ } });
+  }
+
+  const subscriptionReferenceCode: string | null = tekSeferlik ? null : (result.subscriptionReferenceCode ?? result.data?.subscriptionReferenceCode ?? null);
+  const customerReferenceCode: string | null = tekSeferlik ? null : (result.customerReferenceCode ?? result.data?.customerReferenceCode ?? null);
+  const pricingPlanReferenceCode: string | null = tekSeferlik ? null : (result.pricingPlanReferenceCode ?? result.data?.pricingPlanReferenceCode ?? null);
   const sonrakiTahsilatAt: Date | null = (() => {
+    if (tekSeferlik) return null;
     const raw = result.nextPaymentDate ?? result.data?.nextPaymentDate ?? null;
     if (!raw) return null;
     const d = new Date(raw);
