@@ -50,6 +50,27 @@ const AKIS_ADIMLARI = [
 const VARSAYILAN_MESAJ = (firma: string) =>
   `Merhaba! ${firma} aracılığıyla size özel bir dijital davetiye hakkı sunuyoruz.\n\nDavetiyenizi oluşturmak için:\n{{link}}\n\nBu bağlantı yalnızca size özeldir.`;
 
+const WHATSAPP_MESAJ_SABLONLARI = (firma: string) => [
+  {
+    id: "standart",
+    label: "Standart",
+    aciklama: "Genel kullanım için dengeli ve net.",
+    metin: VARSAYILAN_MESAJ(firma),
+  },
+  {
+    id: "kisa",
+    label: "Kısa",
+    aciklama: "Hızlı paylaşım ve yoğun günler için.",
+    metin: `Merhaba! ${firma} size özel dijital davetiye linkinizi hazırladı.\n\nDavetiyenizi buradan oluşturabilirsiniz:\n{{link}}`,
+  },
+  {
+    id: "premium",
+    label: "Premium",
+    aciklama: "Daha özenli ve marka dili güçlü.",
+    metin: `Merhaba,\n\n${firma} olarak size özel dijital davetiye hakkınızı tanımladık. Davetiyenizi birkaç adımda hazırlayıp yayına alabilirsiniz.\n\nBaşlamak için bağlantınız:\n{{link}}\n\nBu bağlantı size özeldir.`,
+  },
+] as const;
+
 function akisIndex(durum: string) {
   if (durum === "olusturuldu") return 0;
   if (durum === "gonderildi") return 1;
@@ -105,6 +126,7 @@ export default function AktivasyonKodlari({
 
   // WhatsApp mesaj şablonu
   const [mesajSablonu, setMesajSablonu] = useState(() => VARSAYILAN_MESAJ(firmaAdi));
+  const [aktifMesajSablonu, setAktifMesajSablonu] = useState("standart");
   const [mesajAcik, setMesajAcik] = useState(false);
 
   // Satır içi kod etiketi düzenleme
@@ -136,7 +158,11 @@ export default function AktivasyonKodlari({
 
   const whatsappMesaji = (kod: string) => {
     const url = aktivasyonUrl(kod);
-    return encodeURIComponent(mesajSablonu.replace("{{link}}", url));
+    const temizMesaj = mesajSablonu.trim();
+    const mesaj = temizMesaj.includes("{{link}}")
+      ? temizMesaj.replace("{{link}}", url)
+      : `${temizMesaj}\n\n${url}`;
+    return encodeURIComponent(mesaj);
   };
 
   const olustur = async () => {
@@ -279,6 +305,7 @@ export default function AktivasyonKodlari({
   ];
   const yeniKodSet = new Set(sonOlusturulanKodlar.map(k => k.kod));
   const iptalOnay = ilkKodlar.find(k => k.kod === iptalOnayKodu) ?? null;
+  const whatsappSablonlari = WHATSAPP_MESAJ_SABLONLARI(firmaAdi);
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
@@ -567,33 +594,65 @@ export default function AktivasyonKodlari({
 
       {/* WhatsApp mesaj şablonu editörü */}
       {ilkKodlar.length > 0 && (
-        <div className="border border-dashed border-gray-200 rounded-2xl p-3">
+        <div className="rounded-2xl border border-dashed border-gray-200 p-3">
           <button
             type="button"
             onClick={() => setMesajAcik(v => !v)}
-            className="w-full flex items-center justify-between text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between text-xs text-gray-400 transition-colors hover:text-gray-600"
           >
             <span>WhatsApp mesajını özelleştir</span>
             <span className="text-[10px]">{mesajAcik ? "▲" : "▼"}</span>
           </button>
           {mesajAcik && (
-            <div className="mt-3 space-y-2">
+            <div className="mt-3 space-y-3">
+              <div className="grid gap-2 sm:grid-cols-3">
+                {whatsappSablonlari.map(sablon => {
+                  const secili = aktifMesajSablonu === sablon.id;
+                  return (
+                    <button
+                      key={sablon.id}
+                      type="button"
+                      onClick={() => {
+                        setAktifMesajSablonu(sablon.id);
+                        setMesajSablonu(sablon.metin);
+                      }}
+                      className={`rounded-2xl border p-3 text-left transition-colors ${
+                        secili
+                          ? "border-purple-200 bg-purple-50 text-purple-800"
+                          : "border-gray-100 bg-gray-50 text-gray-500 hover:border-purple-100 hover:bg-white"
+                      }`}
+                    >
+                      <p className="text-xs font-black">{sablon.label}</p>
+                      <p className="mt-1 text-[11px] leading-relaxed opacity-80">{sablon.aciklama}</p>
+                    </button>
+                  );
+                })}
+              </div>
               <textarea
                 value={mesajSablonu}
-                onChange={e => setMesajSablonu(e.target.value)}
+                onChange={e => {
+                  setMesajSablonu(e.target.value);
+                  setAktifMesajSablonu("ozel");
+                }}
                 rows={5}
-                className="w-full text-xs text-gray-700 border border-gray-200 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-purple-100"
+                className="w-full resize-none rounded-xl border border-gray-200 p-3 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-100"
               />
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] text-gray-400">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-[10px] leading-relaxed text-gray-400">
                   <code className="bg-gray-100 px-1 rounded">{"{{link}}"}</code> → aktivasyon bağlantısı
+                  {!mesajSablonu.includes("{{link}}") && (
+                    <span className="ml-1 font-semibold text-amber-600">Link gönderimde otomatik eklenecek.</span>
+                  )}
                 </p>
                 <button
                   type="button"
-                  onClick={() => setMesajSablonu(VARSAYILAN_MESAJ(firmaAdi))}
-                  className="text-[10px] text-purple-500 hover:text-purple-700 transition-colors"
+                  onClick={() => {
+                    setAktifMesajSablonu("standart");
+                    setMesajSablonu(VARSAYILAN_MESAJ(firmaAdi));
+                  }}
+                  className="self-start rounded-lg bg-purple-50 px-2.5 py-1.5 text-[10px] font-bold text-purple-600 transition-colors hover:bg-purple-100 sm:self-auto"
                 >
-                  Sıfırla
+                  Standarta dön
                 </button>
               </div>
             </div>
