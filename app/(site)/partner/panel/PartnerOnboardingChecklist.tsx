@@ -205,9 +205,6 @@ export default function PartnerOnboardingChecklist({
           >
             {siradaki.cta}
           </a>
-          <p className="mt-4 text-xs leading-relaxed text-gray-400">
-            Checklist yalnızca mevcut durumları kullanır; müşteri kişisel verisi göstermez veya kaydetmez.
-          </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
