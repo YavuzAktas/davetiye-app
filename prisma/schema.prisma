@@ -406,6 +406,7 @@ model ImhaKaydi {
 model YasalOnayKaydi {
   id             String    @id @default(cuid())
   userId         String?
+  partnerId      String?
   davetiyeId     String?
   siparisId      String?
   emailHash      String?
@@ -416,6 +417,7 @@ model YasalOnayKaydi {
   createdAt      DateTime  @default(now())
 
   @@index([userId])
+  @@index([partnerId])
   @@index([davetiyeId])
   @@index([siparisId])
   @@index([emailHash])

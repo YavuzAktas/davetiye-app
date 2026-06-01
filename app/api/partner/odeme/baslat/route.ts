@@ -10,6 +10,7 @@ import {
   partnerAbonelikPlanReferenceCodeGetir,
 } from "@/lib/partner-abonelik-planlari";
 import { getSiteUrl } from "@/lib/site-url";
+import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 
 function temizle(v: unknown, max = 200): string {
   return typeof v === "string" ? v.trim().replace(/\s+/g, " ").slice(0, max) : "";
@@ -228,6 +229,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       aliciSehir: sehir,
       aliciAdres: kurumsal ? adres : null,
     },
+  });
+
+  await yasalOnayKaydiOlustur({
+    userId: user.id,
+    partnerId: partner.id,
+    email: user.email,
+    onayTipi: "partner-abonelik-on-bilgilendirme-sozlesme-ve-otomatik-yenileme",
+    kaynak: `partner-odeme-baslat:${paketId}`,
   });
 
   return NextResponse.json({ checkoutFormContent: result.checkoutFormContent, token: checkoutToken });
