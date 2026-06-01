@@ -16,7 +16,7 @@ async function davetiyeAlbumBul(slug: string) {
   });
 }
 
-/* GET — onaylı fotoğrafları oylama sayısıyla birlikte döndür */
+/* GET — onaylı fotoğrafları oylama sayısıyla döndür */
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -36,7 +36,7 @@ export async function GET(
   return NextResponse.json(fotolar);
 }
 
-/* POST — oy kaydet */
+/* POST — turnuva şampiyonunu kaydet (oturum başına 1 oy, değiştirilebilir) */
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -44,11 +44,8 @@ export async function POST(
   const { slug } = await params;
 
   const ip = ipAlNextRequest(req);
-  if (
-    !(await ipIzinVer("foto-oylama-ip",  ip,    120, 60 * 60_000)) ||
-    !(await ipIzinVer("foto-oylama-min", ip,     30,      60_000))
-  ) {
-    return NextResponse.json({ hata: "Çok fazla oy. Biraz bekleyin." }, { status: 429 });
+  if (!(await ipIzinVer("foto-oylama-ip", ip, 60, 60 * 60_000))) {
+    return NextResponse.json({ hata: "Çok fazla istek. Biraz bekleyin." }, { status: 429 });
   }
 
   const sonuc = oylamaSemasi.safeParse(await req.json().catch(() => null));
@@ -58,31 +55,50 @@ export async function POST(
   if (!davetiye || !davetiye.aktif) return NextResponse.json({ hata: "Bulunamadı." }, { status: 404 });
   if (!davetiyeOzelligiAktif(davetiye, "album")) return NextResponse.json({ hata: "Albüm aktif değil." }, { status: 403 });
 
-  // Fotoğrafın bu davete ait ve onaylı olduğunu doğrula
   const foto = await prisma.albumFoto.findFirst({
     where: { id: sonuc.data.kazananId, davetiyeId: davetiye.id, onaylandi: true },
     select: { id: true },
   });
   if (!foto) return NextResponse.json({ hata: "Fotoğraf bulunamadı." }, { status: 404 });
 
-  // Oturum başına max 200 oy (tüm zaman)
-  const oturumOySayisi = await prisma.albumFotoOylama.count({
-    where: { oturumId: sonuc.data.oturumId, davetiyeId: davetiye.id },
+  // Mevcut oyu bul (bu oturum daha önce oy verdiyse)
+  const mevcutOy = await prisma.albumFotoOylama.findUnique({
+    where: { davetiyeId_oturumId: { davetiyeId: davetiye.id, oturumId: sonuc.data.oturumId } },
+    select: { fotoId: true },
   });
-  if (oturumOySayisi >= 200) {
-    return NextResponse.json({ hata: "Oturum oy limitine ulaşıldı." }, { status: 429 });
-  }
 
-  // Atomic increment + yeni oy kaydı
-  await prisma.$transaction([
-    prisma.albumFoto.update({
-      where: { id: foto.id },
-      data: { oylamaSayisi: { increment: 1 } },
-    }),
-    prisma.albumFotoOylama.create({
-      data: { fotoId: foto.id, davetiyeId: davetiye.id, oturumId: sonuc.data.oturumId },
-    }),
-  ]);
+  if (mevcutOy) {
+    if (mevcutOy.fotoId === foto.id) {
+      // Aynı fotoğrafa tekrar oy — işlem yok
+      return NextResponse.json({ tamam: true });
+    }
+    // Farklı fotoğrafa geçiş: eski -1, yeni +1
+    await prisma.$transaction([
+      prisma.albumFoto.update({
+        where: { id: mevcutOy.fotoId },
+        data: { oylamaSayisi: { decrement: 1 } },
+      }),
+      prisma.albumFoto.update({
+        where: { id: foto.id },
+        data: { oylamaSayisi: { increment: 1 } },
+      }),
+      prisma.albumFotoOylama.update({
+        where: { davetiyeId_oturumId: { davetiyeId: davetiye.id, oturumId: sonuc.data.oturumId } },
+        data: { fotoId: foto.id },
+      }),
+    ]);
+  } else {
+    // İlk oy
+    await prisma.$transaction([
+      prisma.albumFoto.update({
+        where: { id: foto.id },
+        data: { oylamaSayisi: { increment: 1 } },
+      }),
+      prisma.albumFotoOylama.create({
+        data: { fotoId: foto.id, davetiyeId: davetiye.id, oturumId: sonuc.data.oturumId },
+      }),
+    ]);
+  }
 
   return NextResponse.json({ tamam: true });
 }

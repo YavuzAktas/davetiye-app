@@ -189,9 +189,9 @@ model AlbumFotoOylama {
   createdAt  DateTime @default(now())
   foto       AlbumFoto @relation(fields: [fotoId], references: [id], onDelete: Cascade)
 
+  @@unique([davetiyeId, oturumId])
   @@index([davetiyeId, createdAt])
   @@index([fotoId])
-  @@index([oturumId, davetiyeId])
 }
 
 model AniDefteri {

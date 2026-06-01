@@ -4,13 +4,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 type Foto = { id: string; yukleyenAd: string; dosyaUrl: string; oylamaSayisi: number };
-type Cift = [Foto, Foto];
-type Faz = "yukleniyor" | "oyun" | "bitti";
+type Faz = "bekle" | "mac" | "sampiyonluk" | "siralama" | "yetersiz";
 
-const MADALYA = ["🥇", "🥈", "🥉"];
+/* ── Turnuva state ─────────────────────────────────── */
+type Turnuva = {
+  kuyruk:   Foto[];   // mevcut tur kuyruğu (önden ikisi aktif maç)
+  kazananlar: Foto[]; // bu turdan kazananlar, sonraki tura geçecek
+  turNo:    number;
+  toplam:   number;   // başlangıç foto sayısı
+};
 
-function karistir<T>(dizi: T[]): T[] {
-  const k = [...dizi];
+function karistir<T>(d: T[]): T[] {
+  const k = [...d];
   for (let i = k.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [k[i], k[j]] = [k[j], k[i]];
@@ -18,21 +23,73 @@ function karistir<T>(dizi: T[]): T[] {
   return k;
 }
 
-function ciftler(fotolar: Foto[]): Cift[] {
-  const k = karistir(fotolar);
-  const sonuc: Cift[] = [];
-  for (let i = 0; i + 1 < k.length; i += 2) sonuc.push([k[i], k[i + 1]]);
-  return sonuc;
+function turBaslat(fotolar: Foto[]): Turnuva {
+  return { kuyruk: karistir(fotolar), kazananlar: [], turNo: 1, toplam: fotolar.length };
+}
+
+function secimYap(t: Turnuva, kazanan: Foto): { sonrakiTurnuva: Turnuva; sampiyonMu: boolean } {
+  const yeniKuyruk    = t.kuyruk.slice(2);      // aktif çifti kaldır
+  const yeniKazananlar = [...t.kazananlar, kazanan];
+
+  // Kuyruğun son teki varsa bye — otomatik geçiş
+  const byeVar = yeniKuyruk.length === 1;
+  const tumKazananlar = byeVar
+    ? [...yeniKazananlar, yeniKuyruk[0]]
+    : yeniKazananlar;
+  const bitisKuyrugu = byeVar ? [] : yeniKuyruk;
+
+  // Bu tur bitti mi?
+  const turBitti = bitisKuyrugu.length === 0;
+
+  if (turBitti) {
+    if (tumKazananlar.length === 1) {
+      // Şampiyon!
+      return {
+        sonrakiTurnuva: { ...t, kuyruk: [], kazananlar: tumKazananlar },
+        sampiyonMu: true,
+      };
+    }
+    // Yeni tur
+    return {
+      sonrakiTurnuva: {
+        kuyruk: karistir(tumKazananlar),
+        kazananlar: [],
+        turNo: t.turNo + 1,
+        toplam: t.toplam,
+      },
+      sampiyonMu: false,
+    };
+  }
+
+  // Tur devam ediyor
+  return {
+    sonrakiTurnuva: { ...t, kuyruk: bitisKuyrugu, kazananlar: yeniKazananlar },
+    sampiyonMu: false,
+  };
+}
+
+/* Toplam tur tahmini: ceil(log2(n)) */
+function toplamTur(n: number): number {
+  return n <= 1 ? 1 : Math.ceil(Math.log2(n));
+}
+
+/* Mevcut turda kaç maç var */
+function turMacSayisi(kuyrukBaslangic: number): number {
+  return Math.floor(kuyrukBaslangic / 2);
 }
 
 function oturumIdAl(): string {
-  const ANAHTAR = "foto-oylama-oturum";
-  const mevcut = localStorage.getItem(ANAHTAR);
-  if (mevcut) return mevcut;
-  const yeni = crypto.randomUUID();
-  localStorage.setItem(ANAHTAR, yeni);
-  return yeni;
+  const KEY = "foto-oylama-oturum";
+  const v = localStorage.getItem(KEY);
+  if (v) return v;
+  const u = crypto.randomUUID();
+  localStorage.setItem(KEY, u);
+  return u;
 }
+
+const MADALYA = ["🥇", "🥈", "🥉"];
+
+/* ──────────────────────────────────────────────────── */
 
 export default function FotoSecimi({
   slug, baslik, baslangicFotolar,
@@ -41,102 +98,118 @@ export default function FotoSecimi({
   baslik: string;
   baslangicFotolar: Foto[];
 }) {
-  const [faz, setFaz] = useState<Faz>("yukleniyor");
-  const [tümCiftler, setTumCiftler] = useState<Cift[]>([]);
-  const [siradaki, setSiradaki] = useState(0);
-  const [tamamlanan, setTamamlanan] = useState(0);
-  const [fotolar, setFotolar] = useState<Foto[]>(baslangicFotolar);
-  const [secilen, setSecilen] = useState<string | null>(null);
+  const [faz, setFaz]         = useState<Faz>("bekle");
+  const [turnuva, setTurnuva] = useState<Turnuva | null>(null);
+  const [sampiyonFotolar, setSampiyonFotolar] = useState<Foto[]>([]);
+  const [secilen, setSecilen]   = useState<string | null>(null);
   const [animasyon, setAnimasyon] = useState(false);
-  const oturumRef = useRef<string>("");
+  // tur başındaki kuyruk uzunluğu (maç sayısı için)
+  const turBaslangicRef = useRef<number>(0);
+  const oturumRef       = useRef<string>("");
 
   useEffect(() => {
     oturumRef.current = oturumIdAl();
-    if (baslangicFotolar.length < 2) { setFaz("bitti"); return; }
-    const c = ciftler(baslangicFotolar);
-    setTumCiftler(c);
-    setFaz("oyun");
+    if (baslangicFotolar.length < 2) { setFaz("yetersiz"); return; }
+    const t = turBaslat(baslangicFotolar);
+    turBaslangicRef.current = t.kuyruk.length;
+    setTurnuva(t);
+    setFaz("mac");
   }, [baslangicFotolar]);
 
-  const oy = useCallback(async (kazananId: string) => {
-    if (animasyon || secilen) return;
-    setSecilen(kazananId);
+  const sec = useCallback(async (kazanan: Foto) => {
+    if (animasyon || secilen || !turnuva) return;
+    setSecilen(kazanan.id);
     setAnimasyon(true);
-
-    // Optimistic: local sayacı artır
-    setFotolar(prev =>
-      prev.map(f => f.id === kazananId ? { ...f, oylamaSayisi: f.oylamaSayisi + 1 } : f)
-    );
-
-    fetch(`/api/davetiye/${slug}/foto-oylama`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kazananId, oturumId: oturumRef.current }),
-    }).catch(() => {/* sessiz hata */});
-
-    await new Promise(r => setTimeout(r, 600));
-
-    setTamamlanan(t => t + 1);
+    await new Promise(r => setTimeout(r, 580));
     setSecilen(null);
     setAnimasyon(false);
 
-    if (siradaki + 1 >= tümCiftler.length) {
-      // Tüm çiftler bitti → leaderboard için güncel verileri çek
+    const { sonrakiTurnuva, sampiyonMu } = secimYap(turnuva, kazanan);
+
+    if (sampiyonMu) {
+      const sampiyon = sonrakiTurnuva.kazananlar[0];
+      // Oy gönder
+      fetch(`/api/davetiye/${slug}/foto-oylama`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kazananId: sampiyon.id, oturumId: oturumRef.current }),
+      }).catch(() => {});
+      // Güncel sıralamayı çek
       fetch(`/api/davetiye/${slug}/foto-oylama`)
         .then(r => r.json())
-        .then((d: Foto[]) => { if (Array.isArray(d)) setFotolar(d); })
-        .catch(() => {})
-        .finally(() => setFaz("bitti"));
+        .then((d: Foto[]) => { if (Array.isArray(d)) setSampiyonFotolar(d); })
+        .catch(() => setSampiyonFotolar(baslangicFotolar));
+      setTurnuva(sonrakiTurnuva);
+      setFaz("sampiyonluk");
     } else {
-      setSiradaki(s => s + 1);
+      // Tur değişti mi?
+      if (sonrakiTurnuva.turNo !== turnuva.turNo) {
+        turBaslangicRef.current = sonrakiTurnuva.kuyruk.length;
+      }
+      setTurnuva(sonrakiTurnuva);
     }
-  }, [animasyon, secilen, siradaki, tümCiftler.length, slug]);
+  }, [animasyon, secilen, turnuva, slug, baslangicFotolar]);
 
-  const sifirla = useCallback(() => {
-    const c = ciftler(fotolar);
-    setTumCiftler(c);
-    setSiradaki(0);
-    setTamamlanan(0);
-    setFaz("oyun");
-  }, [fotolar]);
+  const yenidenBaslat = useCallback(() => {
+    const t = turBaslat(baslangicFotolar);
+    turBaslangicRef.current = t.kuyruk.length;
+    setTurnuva(t);
+    setSampiyonFotolar([]);
+    setFaz("mac");
+  }, [baslangicFotolar]);
+
+  /* ── Hesaplamalar ─────────────────────────────── */
+  const aktifCift = turnuva && turnuva.kuyruk.length >= 2
+    ? [turnuva.kuyruk[0], turnuva.kuyruk[1]] as const
+    : null;
+
+  const macNo = turnuva
+    ? turnuva.kazananlar.length + 1
+    : 0;
+  const macSayisi = turMacSayisi(turBaslangicRef.current);
+  const turSayisi = toplamTur(baslangicFotolar.length);
+
+  const sampiyon = faz === "sampiyonluk" && turnuva
+    ? turnuva.kazananlar[0]
+    : null;
 
   const lider = useMemo(
-    () => [...fotolar].sort((a, b) => b.oylamaSayisi - a.oylamaSayisi).slice(0, 10),
-    [fotolar],
+    () => [...sampiyonFotolar].sort((a, b) => b.oylamaSayisi - a.oylamaSayisi).slice(0, 10),
+    [sampiyonFotolar],
   );
 
-  if (faz === "yukleniyor") {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-white/15 border-t-purple-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const kalanFoto = turnuva
+    ? turnuva.kuyruk.length + turnuva.kazananlar.length
+    : baslangicFotolar.length;
 
-  const cifSayisi = tümCiftler.length;
-  const ilerleme = cifSayisi > 0 ? Math.round((tamamlanan / cifSayisi) * 100) : 100;
-  const mevcutCift = tümCiftler[siradaki];
-
+  /* ── Render ───────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col select-none">
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col select-none overflow-hidden">
       <style>{`
-        @keyframes seçildi { 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
-        @keyframes elendi  { 0%{opacity:1;transform:scale(1)} 100%{opacity:0.25;transform:scale(0.94)} }
-        .foto-secildi { animation: seçildi 0.5s ease-out forwards; }
-        .foto-elendi  { animation: elendi  0.5s ease-out forwards; }
+        @keyframes secildi { 0%{transform:scale(1)} 40%{transform:scale(1.05)} 100%{transform:scale(1)} }
+        @keyframes elendi  { 0%{opacity:1;filter:grayscale(0);transform:scale(1)} 100%{opacity:.15;filter:grayscale(1);transform:scale(.93)} }
+        @keyframes konfeti { 0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(80px) rotate(720deg);opacity:0} }
+        .foto-secildi { animation:secildi .55s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .foto-elendi  { animation:elendi  .55s ease-out forwards; }
+        .konfeti-parcasi { animation:konfeti 1.2s ease-in forwards; }
       `}</style>
 
       {/* Header */}
       <header className="shrink-0 flex items-center justify-between px-5 py-4 bg-black/50 backdrop-blur-sm border-b border-white/8">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-400/60">Foto Seçimi</p>
+          <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-400/60">Turnuva</p>
           <h1 className="text-lg font-black text-white leading-tight">{baslik}</h1>
         </div>
         <div className="flex items-center gap-3">
-          {faz === "oyun" && (
-            <span className="text-xs font-bold text-white/40 tabular-nums">
-              {tamamlanan}/{cifSayisi}
-            </span>
+          {faz === "mac" && turnuva && (
+            <div className="text-right">
+              <p className="text-xs font-black text-white/60">
+                Tur {turnuva.turNo}/{turSayisi}
+              </p>
+              <p className="text-[10px] text-white/30">
+                {kalanFoto} foto kaldı
+              </p>
+            </div>
           )}
           <a href={`/davetiye/${slug}/canli-duvar`}
             className="rounded-full border border-white/15 px-3 py-1.5 text-[11px] font-semibold text-white/60 hover:border-white/30 hover:text-white/90 transition-colors">
@@ -145,33 +218,48 @@ export default function FotoSecimi({
         </div>
       </header>
 
-      {/* Oyun alanı */}
-      {faz === "oyun" && mevcutCift && (
+      {/* ── MAÇ EKRANI ─────────────────────────── */}
+      {faz === "mac" && aktifCift && (
         <div className="flex-1 flex flex-col">
-          {/* Soru */}
-          <div className="text-center pt-6 pb-4 px-4">
-            <p className="text-2xl font-black text-white">Hangisi daha güzel?</p>
-            <p className="mt-1 text-sm text-white/40">Beğendiğin fotoğrafa dokunarak oy ver</p>
+          {/* Tur rozeti */}
+          <div className="text-center pt-5 pb-3 px-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 mb-3">
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                Tur {turnuva!.turNo}
+              </span>
+              {macSayisi > 0 && (
+                <>
+                  <span className="text-white/20">·</span>
+                  <span className="text-[10px] font-bold text-white/40">
+                    Maç {macNo}/{macSayisi}
+                  </span>
+                </>
+              )}
+            </div>
+            <p className="text-xl font-black text-white">Hangisini elemeyelim?</p>
+            <p className="mt-1 text-xs text-white/40">
+              Favori fotoğrafını seç — diğeri elenir
+            </p>
           </div>
 
-          {/* Kart çifti */}
-          <div className="flex-1 grid grid-cols-2 gap-3 px-3 pb-3">
-            {mevcutCift.map((foto, idx) => {
+          {/* Fotoğraf çifti */}
+          <div className="flex-1 grid grid-cols-2 gap-2 px-3 pb-2" style={{ minHeight: 0 }}>
+            {aktifCift.map((foto, idx) => {
               const kazandi = secilen === foto.id;
               const elendi  = secilen !== null && secilen !== foto.id;
               return (
                 <button
                   key={foto.id}
-                  onClick={() => oy(foto.id)}
+                  onClick={() => sec(foto)}
                   disabled={animasyon}
-                  className={`relative overflow-hidden rounded-2xl border-2 transition-all focus:outline-none ${
-                    kazandi ? "border-purple-400 foto-secildi" :
-                    elendi  ? "border-transparent foto-elendi" :
+                  className={`relative overflow-hidden rounded-2xl border-2 focus:outline-none transition-colors ${
+                    kazandi ? "border-emerald-400 foto-secildi" :
+                    elendi  ? "border-red-500/60 foto-elendi" :
                     "border-white/10 hover:border-white/30 active:scale-[0.98]"
                   }`}
                 >
-                  {/* Fotoğraf */}
-                  <div className="relative w-full" style={{ paddingBottom: "133%" }}>
+                  {/* Fotoğraf — 4:5 oran */}
+                  <div className="relative w-full" style={{ paddingBottom: "125%" }}>
                     <Image
                       src={foto.dosyaUrl}
                       alt={foto.yukleyenAd}
@@ -182,22 +270,26 @@ export default function FotoSecimi({
                     />
                   </div>
 
-                  {/* Overlay: isim + oy butonu */}
-                  <div className="absolute inset-0 flex flex-col justify-end">
-                    <div className="bg-linear-to-t from-black/80 via-black/20 to-transparent p-3 pt-8">
-                      <p className="text-xs font-semibold text-white/80 truncate">{foto.yukleyenAd}</p>
+                  {/* İsim + seç butonu overlay */}
+                  <div className="absolute inset-0 flex flex-col justify-end pointer-events-none">
+                    <div className="bg-linear-to-t from-black/85 via-black/20 to-transparent p-3 pt-10">
+                      <p className="text-xs font-semibold text-white/80 truncate leading-tight">
+                        {foto.yukleyenAd}
+                      </p>
                       <div className={`mt-2 rounded-xl py-2 text-xs font-black text-center transition-all ${
-                        kazandi ? "bg-purple-500 text-white" : "bg-white/15 text-white"
+                        kazandi ? "bg-emerald-500 text-white"
+                        : elendi  ? "bg-red-500/70 text-white"
+                        : "bg-white/15 text-white"
                       }`}>
-                        {kazandi ? "✓ Seçildi!" : idx === 0 ? "← Bu" : "Bu →"}
+                        {kazandi ? "✓ Devam ediyor" : elendi ? "✗ Elendi" : idx === 0 ? "← Bunu seç" : "Bunu seç →"}
                       </div>
                     </div>
                   </div>
 
-                  {/* VS rozetçiği ortada */}
+                  {/* VS rozeti — sol kartın sağ kenarında */}
                   {idx === 0 && !animasyon && (
-                    <div className="pointer-events-none absolute inset-y-0 -right-4 flex items-center z-10">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-950 border border-white/15 text-[11px] font-black text-white/60">
+                    <div className="pointer-events-none absolute inset-y-0 -right-4 z-10 flex items-center">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-950 border border-white/15 text-[11px] font-black text-white/50">
                         VS
                       </span>
                     </div>
@@ -207,109 +299,159 @@ export default function FotoSecimi({
             })}
           </div>
 
-          {/* İlerleme */}
-          <div className="shrink-0 px-5 pb-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold text-white/30">{tamamlanan} karşılaşma tamamlandı</span>
-              <span className="text-[11px] font-bold text-white/30">{cifSayisi - tamamlanan} kaldı</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-linear-to-r from-purple-500 to-pink-500 transition-all duration-500"
-                style={{ width: `${ilerleme}%` }}
-              />
-            </div>
-            {tamamlanan > 0 && (
-              <button onClick={() => setFaz("bitti")}
-                className="mt-3 w-full rounded-xl border border-white/10 py-2 text-xs font-semibold text-white/40 hover:text-white/70 hover:border-white/20 transition-colors">
-                Sıralamayı gör →
-              </button>
+          {/* Tur ilerleme barı */}
+          <div className="shrink-0 px-4 py-3">
+            {macSayisi > 0 && (
+              <>
+                <div className="h-1 rounded-full bg-white/8 overflow-hidden mb-3">
+                  <div
+                    className="h-full rounded-full bg-linear-to-r from-purple-500 to-pink-500 transition-all duration-500"
+                    style={{ width: `${Math.round(((macNo - 1) / macSayisi) * 100)}%` }}
+                  />
+                </div>
+              </>
             )}
+            {/* Mini turnuva ağacı özeti */}
+            <div className="flex justify-center gap-1.5">
+              {Array.from({ length: turSayisi }).map((_, i) => (
+                <div key={i} className="flex items-center gap-1.5">
+                  <div className={`h-1.5 rounded-full transition-all ${
+                    i + 1 < turnuva!.turNo  ? "w-8 bg-emerald-500" :
+                    i + 1 === turnuva!.turNo ? "w-8 bg-purple-500 animate-pulse" :
+                    "w-4 bg-white/10"
+                  }`} />
+                  {i < turSayisi - 1 && <span className="text-white/20 text-[9px]">→</span>}
+                </div>
+              ))}
+              <span className="ml-1 text-[11px]">🏆</span>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Bitti → Sıralama */}
-      {faz === "bitti" && (
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="max-w-lg mx-auto">
+      {/* ── ŞAMPİYON EKRANI ───────────────────── */}
+      {faz === "sampiyonluk" && sampiyon && (
+        <div className="flex-1 flex flex-col items-center justify-start overflow-y-auto">
+          {/* Konfeti efekti */}
+          <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
+            {Array.from({ length: 18 }).map((_, i) => (
+              <div
+                key={i}
+                className="konfeti-parcasi absolute"
+                style={{
+                  left: `${5 + (i * 5.5) % 92}%`,
+                  top: "-10px",
+                  animationDelay: `${(i * 0.07).toFixed(2)}s`,
+                  animationDuration: `${1.1 + (i % 5) * 0.18}s`,
+                  width: 8, height: 8,
+                  borderRadius: i % 3 === 0 ? "50%" : 2,
+                  background: ["#a855f7","#ec4899","#f59e0b","#10b981","#3b82f6"][i % 5],
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="w-full max-w-sm px-4 pt-8 pb-6">
             <div className="text-center mb-6">
-              <p className="text-4xl mb-2">🏆</p>
-              <h2 className="text-2xl font-black text-white">En Beğenilen Fotoğraflar</h2>
-              <p className="mt-1 text-sm text-white/40">
-                {fotolar.length} fotoğrafın toplu sıralaması
+              <p className="text-5xl mb-3">🏆</p>
+              <h2 className="text-2xl font-black text-white">Senin Favorin!</h2>
+              <p className="mt-1 text-sm text-white/50">
+                Tüm rakiplerini geride bıraktı
               </p>
             </div>
 
-            {lider.length === 0 ? (
-              <div className="text-center text-white/30 py-12">
-                <p className="text-5xl mb-3">📸</p>
-                <p className="font-semibold">Henüz oy kullanılmadı</p>
+            {/* Şampiyon fotoğrafı */}
+            <div className="relative overflow-hidden rounded-3xl border-2 border-amber-400/60 shadow-2xl shadow-amber-900/40 mb-6">
+              <div className="relative w-full" style={{ paddingBottom: "100%" }}>
+                <Image
+                  src={sampiyon.dosyaUrl}
+                  alt={sampiyon.yukleyenAd}
+                  fill
+                  className="object-cover"
+                  sizes="400px"
+                  priority
+                />
               </div>
-            ) : (
-              <div className="space-y-2">
-                {lider.map((foto, i) => (
-                  <div
-                    key={foto.id}
-                    className={`flex items-center gap-3 rounded-2xl p-3 ${
-                      i === 0 ? "bg-amber-500/15 border border-amber-500/30" :
-                      i === 1 ? "bg-white/8 border border-white/10" :
-                      i === 2 ? "bg-white/6 border border-white/8" :
-                      "bg-white/4 border border-white/5"
-                    }`}
-                  >
-                    <span className="text-xl w-8 text-center shrink-0">
-                      {MADALYA[i] ?? `${i + 1}`}
-                    </span>
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
-                      <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover" sizes="48px" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-sm font-bold text-white">{foto.yukleyenAd}</p>
-                      <p className="text-xs text-white/40">{foto.oylamaSayisi} oy</p>
-                    </div>
-                    {i < 3 && (
-                      <div className={`shrink-0 rounded-xl px-2.5 py-1 text-[11px] font-black ${
-                        i === 0 ? "bg-amber-500/30 text-amber-300" :
-                        i === 1 ? "bg-white/15 text-white/70" :
-                        "bg-white/10 text-white/50"
-                      }`}>
-                        #{i + 1}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="absolute top-3 left-3 flex items-center gap-2 rounded-xl bg-amber-500/90 px-3 py-1.5">
+                <span className="text-base">🥇</span>
+                <span className="text-xs font-black text-white">Şampiyonun</span>
               </div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-3 left-3 right-3">
+                <p className="text-sm font-bold text-white">{sampiyon.yukleyenAd}</p>
+              </div>
+            </div>
+
+            {/* Oylar güncellendiğinde göster */}
+            {lider.length > 0 && (
+              <button
+                onClick={() => setFaz("siralama")}
+                className="w-full rounded-2xl border border-white/15 py-3 text-sm font-bold text-white/60 hover:border-white/30 hover:text-white transition-colors mb-3"
+              >
+                Tüm sıralamayı gör →
+              </button>
             )}
 
-            <div className="mt-6 flex flex-col gap-3">
-              {baslangicFotolar.length >= 2 && (
-                <button
-                  onClick={sifirla}
-                  className="w-full rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 py-3.5 text-sm font-black text-white shadow-lg shadow-purple-900/40 hover:opacity-90 transition-opacity"
-                >
-                  Tekrar Oyna →
-                </button>
-              )}
-              <a
-                href={`/davetiye/${slug}/canli-duvar`}
-                className="w-full rounded-2xl border border-white/15 py-3.5 text-center text-sm font-bold text-white/70 hover:border-white/30 hover:text-white transition-colors"
-              >
-                Canlı Duvara Bak
-              </a>
-            </div>
+            <button
+              onClick={yenidenBaslat}
+              className="w-full rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 py-3.5 text-sm font-black text-white shadow-lg shadow-purple-900/40 hover:opacity-90 transition-opacity"
+            >
+              Tekrar Oyna
+            </button>
           </div>
         </div>
       )}
 
-      {/* Yeterli foto yoksa */}
-      {faz === "bitti" && baslangicFotolar.length < 2 && (
+      {/* ── SIRALAMA EKRANI ───────────────────── */}
+      {faz === "siralama" && (
+        <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="max-w-lg mx-auto">
+            <button
+              onClick={() => setFaz("sampiyonluk")}
+              className="flex items-center gap-2 text-white/40 hover:text-white/70 text-sm font-semibold mb-4 transition-colors"
+            >
+              ← Geri
+            </button>
+            <h2 className="text-xl font-black text-white mb-4">🏆 Genel Sıralama</h2>
+            <div className="space-y-2">
+              {lider.map((foto, i) => (
+                <div key={foto.id}
+                  className={`flex items-center gap-3 rounded-2xl p-3 ${
+                    i === 0 ? "bg-amber-500/15 border border-amber-500/30" :
+                    i === 1 ? "bg-white/8 border border-white/10" :
+                    i === 2 ? "bg-white/6 border border-white/8" :
+                    "bg-white/4 border border-white/5"
+                  }`}
+                >
+                  <span className="text-xl w-8 text-center shrink-0">
+                    {MADALYA[i] ?? <span className="text-sm font-black text-white/30">{i + 1}</span>}
+                  </span>
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                    <Image src={foto.dosyaUrl} alt={foto.yukleyenAd} fill className="object-cover" sizes="48px" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="truncate text-sm font-bold text-white">{foto.yukleyenAd}</p>
+                    <p className="text-xs text-white/40">{foto.oylamaSayisi} oy</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={yenidenBaslat}
+              className="mt-6 w-full rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 py-3.5 text-sm font-black text-white hover:opacity-90 transition-opacity"
+            >
+              Tekrar Oyna
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── YETERSİZ FOTO ────────────────────── */}
+      {faz === "yetersiz" && (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
           <span className="text-5xl">📸</span>
           <p className="text-lg font-black text-white">Yeterli fotoğraf yok</p>
-          <p className="text-sm text-white/40">
-            Oylama için en az 2 onaylı fotoğraf gerekli.
-          </p>
+          <p className="text-sm text-white/40">Turnuva için en az 2 onaylı fotoğraf gerekli.</p>
           <a href={`/davetiye/${slug}`}
             className="mt-2 rounded-2xl border border-white/20 px-6 py-3 text-sm font-bold text-white/70 hover:text-white transition-colors">
             Geri Dön
