@@ -129,7 +129,8 @@ export default function CanliDuvarGorunumu({ slug, baslik, tarihStr }: Props) {
             className="flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] sm:text-xs font-black transition-colors"
             style={{ background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.4)", color: "#c084fc" }}
           >
-            🏆 <span className="hidden sm:inline">Oy Ver</span>
+            ⚔️ <span className="sm:hidden">Düello</span>
+            <span className="hidden sm:inline">Foto Düellosu</span>
           </a>
 
           <div className="flex items-center gap-1.5 rounded-full px-2 py-1.5"
