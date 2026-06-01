@@ -13,6 +13,7 @@ import PartnerLeadCRM from "./PartnerLeadCRM";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
+import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
@@ -285,6 +286,40 @@ export default async function PartnerPanelPage({
                       etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
                       kisiSayisi: lead.kisiSayisi,
                       durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                    }))}
+                  />
+                </div>
+                <div id="analitik" className="scroll-mt-24">
+                  <PartnerSatisAnalitigi
+                    abonelik={{
+                      paketId: abonelik.paketId,
+                      hakSayisi: abonelik.hakSayisi,
+                      kullanilanHak: abonelik.kullanilanHak,
+                      bitisAt: abonelik.bitisAt,
+                    }}
+                    kodlar={kodlar.map(kod => ({
+                      id: kod.id,
+                      durum: kod.durum,
+                      createdAt: kod.createdAt,
+                      kullanilanAt: kod.kullanilanAt,
+                    }))}
+                    leadler={partnerLeadleriHam.map(lead => ({
+                      id: lead.id,
+                      baslik: lead.baslik,
+                      etkinlikTuru: lead.etkinlikTuru,
+                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                      kisiSayisi: lead.kisiSayisi,
+                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                      createdAt: lead.createdAt.toISOString(),
+                      updatedAt: lead.updatedAt.toISOString(),
+                    }))}
+                    odemeGecmisi={odemeKayitlariHam.map(k => ({
+                      id: k.id,
+                      createdAt: k.createdAt.toISOString(),
+                      planId: k.planId,
+                      paidPrice: k.paidPrice,
+                      currency: k.currency,
+                      fiyatKirilimi: k.fiyatKirilimi,
                     }))}
                   />
                 </div>
