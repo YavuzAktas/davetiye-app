@@ -478,9 +478,9 @@ export default function PanelIcerik({
                       className="mt-0.5 w-4 h-4 accent-purple-600 cursor-pointer shrink-0"
                     />
                     <span className="text-[11px] leading-relaxed text-gray-500">
-                      <Link href="/on-bilgilendirme" target="_blank" className="text-purple-600 hover:underline">Ön Bilgilendirme</Link>
+                      <Link href="/partner/on-bilgilendirme" target="_blank" className="text-purple-600 hover:underline">Partner Ön Bilgilendirme</Link>
                       {", "}
-                      <Link href="/mesafeli-satis-sozlesmesi" target="_blank" className="text-purple-600 hover:underline">Mesafeli Satış Sözleşmesi</Link>
+                      <Link href="/partner/abonelik-sozlesmesi" target="_blank" className="text-purple-600 hover:underline">Partner Abonelik Sözleşmesi</Link>
                       {" ve "}
                       <Link href="/partner/sozlesme" target="_blank" className="text-purple-600 hover:underline">Partner Sözleşmesi</Link>
                       {"'ni okudum; dijital hizmetin ödeme sonrası hemen başlamasını talep ediyor, cayma hakkı istisnası hakkında bilgilendirildiğimi ve seçilen paketin aylık olarak kayıtlı kartımdan otomatik tahsil edileceğini kabul ediyorum. Otomatik yenilemeyi istediğim zaman iptal edebilirim."}
