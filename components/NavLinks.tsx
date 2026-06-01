@@ -63,7 +63,9 @@ export default function NavLinks() {
                   { href: "/sablonlar", label: "Yeni Davetiye" },
                   { href: "/fiyatlar", label: "Fiyatlar" },
                   { href: "/dashboard/ayarlar", label: "Ayarlar" },
-                  ...(session.user?.partnerDurum === "aktif" ? [{ href: "/partner/panel", label: "Partner Paneli" }] : []),
+                  ...(session.user?.partnerDurum === "aktif" || session.user?.partnerDurum === "beklemede" || session.user?.partnerDurum === "askida"
+                    ? [{ href: "/partner/panel", label: "Partner Paneli" }]
+                    : [{ href: "/partner/basvuru", label: "Partner Başvurusu" }]),
                   ...(session.user?.isAdmin ? [{ href: "/admin/partnerler", label: "⚙️ Admin" }] : []),
                 ].map(({ href, label }) => (
                   <Link key={href} href={href} onClick={() => setProfilAcik(false)}
@@ -132,10 +134,15 @@ export default function NavLinks() {
                   className="flex items-center py-3.5 text-gray-600 hover:text-gray-900 text-sm border-b border-gray-50 transition-colors">
                   Ayarlar
                 </Link>
-                {session.user?.partnerDurum === "aktif" && (
+                {(session.user?.partnerDurum === "aktif" || session.user?.partnerDurum === "beklemede" || session.user?.partnerDurum === "askida") ? (
                   <Link href="/partner/panel" onClick={() => setMobMenuAcik(false)}
                     className="flex items-center py-3.5 text-purple-600 text-sm font-medium border-b border-gray-50">
                     Partner Paneli
+                  </Link>
+                ) : (
+                  <Link href="/partner/basvuru" onClick={() => setMobMenuAcik(false)}
+                    className="flex items-center py-3.5 text-gray-600 hover:text-gray-900 text-sm border-b border-gray-50 transition-colors">
+                    Partner Başvurusu
                   </Link>
                 )}
                 {session.user?.isAdmin && (
