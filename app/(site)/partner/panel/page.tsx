@@ -25,6 +25,7 @@ import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 import PartnerWhatsappAsistani from "./PartnerWhatsappAsistani";
 import PartnerTebrikEkrani from "./PartnerTebrikEkrani";
+import PartnerIsAkisi from "./PartnerIsAkisi";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -351,6 +352,18 @@ export default async function PartnerPanelPage({
                   instagramUrl: partner.instagramUrl,
                   whatsappImzasi: partner.whatsappImzasi,
                 }}
+              />
+              <PartnerIsAkisi
+                abonelik={abonelik ? {
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                } : null}
+                kodlar={kodlar}
+                leadler={partnerLeadleriHam.map(lead => ({
+                  id: lead.id,
+                  baslik: lead.baslik,
+                  durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                }))}
               />
               <div id="kurulum" className="scroll-mt-24">
                 <PartnerOnboardingChecklist

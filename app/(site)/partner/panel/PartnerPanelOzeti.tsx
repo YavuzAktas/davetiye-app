@@ -49,6 +49,7 @@ type Aksiyon = {
 };
 
 const SICAK_LEAD_DURUMLARI = new Set<LeadDurum>(["teklif_gonderildi", "kapora_bekliyor"]);
+const KAPORA_LEAD_DURUMLARI = new Set<LeadDurum>(["kapora_bekliyor", "kazandi"]);
 const AKTIF_LEAD_DURUMLARI = new Set<LeadDurum>(["yeni", "gorusuldu", "teklif_gonderildi", "kapora_bekliyor"]);
 const BASLAYAN_KOD_DURUMLARI = new Set(["kayit_oldu", "odeme_bekliyor", "davetiye_olusturuldu", "yayinda"]);
 
@@ -110,6 +111,7 @@ export default function PartnerPanelOzeti({
   const yayinda = aktifKodlar.filter(kod => kod.durum === "yayinda").length;
   const aktifLead = leadler.filter(lead => AKTIF_LEAD_DURUMLARI.has(lead.durum));
   const sicakLead = leadler.filter(lead => SICAK_LEAD_DURUMLARI.has(lead.durum));
+  const kaporaLead = leadler.filter(lead => KAPORA_LEAD_DURUMLARI.has(lead.durum));
   const takipBekleyen = aktifLead.filter(lead => gunOnce(lead.updatedAt) >= 7);
   const aktifEkipLinki = ekipErisimleri.filter(erisim =>
     erisim.aktif && !erisim.revokedAt && !tarihGectiMi(erisim.expiresAt)
@@ -151,12 +153,19 @@ export default function PartnerPanelOzeti({
       cta: "Teklife git",
       onem: "normal" as const,
     }] : []),
-    ...(sicakLead.length > 0 ? [{
-      baslik: "Sıcak fırsatları kapat",
-      aciklama: `${sicakLead.length} müşteri teklif/kapora aşamasında.`,
-      href: "#segmentler",
-      cta: "Segmentlere bak",
+    ...(kaporaLead.length > 0 ? [{
+      baslik: `${kaporaLead.length} müşteri için aktivasyon linki oluştur`,
+      aciklama: "Kapora/anlaşma sağlandı. Şimdi teslim linkini üretin ve müşteriye gönderin.",
+      href: "#aktivasyon-kodlari",
+      cta: "Teslim Linkini Oluştur",
       onem: "bugun" as const,
+    }] : []),
+    ...(sicakLead.filter(l => !KAPORA_LEAD_DURUMLARI.has(l.durum)).length > 0 ? [{
+      baslik: "Teklif aşamasını takip et",
+      aciklama: `${sicakLead.filter(l => !KAPORA_LEAD_DURUMLARI.has(l.durum)).length} müşteri teklif sürecinde.`,
+      href: "#lead-crm",
+      cta: "CRM'e bak",
+      onem: "normal" as const,
     }] : []),
     ...(gonderilmeyenKod > 0 ? [{
       baslik: "Teslim linklerini gönder",
