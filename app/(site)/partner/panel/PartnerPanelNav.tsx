@@ -6,6 +6,7 @@ const NAV_LINKLERI = [
   { href: "#kurulum", label: "Kurulum", abonelikGerekli: false },
   { href: "#lead-crm", label: "Lead CRM", abonelikGerekli: true },
   { href: "#paketler", label: "Paketler", abonelikGerekli: true },
+  { href: "#whatsapp-asistani", label: "WhatsApp", abonelikGerekli: true },
   { href: "#aktivasyon-kodlari", label: "Aktivasyon", abonelikGerekli: true },
   { href: "#operasyon", label: "Operasyon", abonelikGerekli: true },
   { href: "#satis", label: "Satış", abonelikGerekli: true },

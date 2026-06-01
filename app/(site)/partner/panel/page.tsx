@@ -15,6 +15,7 @@ import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
+import PartnerWhatsappAsistani from "./PartnerWhatsappAsistani";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -275,6 +276,22 @@ export default async function PartnerPanelPage({
                 </div>
                 <div id="paketler" className="scroll-mt-24">
                   <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
+                </div>
+                <div id="whatsapp-asistani" className="scroll-mt-24">
+                  <PartnerWhatsappAsistani
+                    firmaAdi={partner.firmaAdi}
+                    whatsappImzasi={partner.whatsappImzasi}
+                    leadler={partnerLeadleriHam.map(lead => ({
+                      id: lead.id,
+                      baslik: lead.baslik,
+                      ilgiliKisi: lead.ilgiliKisi,
+                      telefon: lead.telefon,
+                      etkinlikTuru: lead.etkinlikTuru,
+                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                      kisiSayisi: lead.kisiSayisi,
+                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                    }))}
+                  />
                 </div>
                 <div id="aktivasyon-kodlari" className="scroll-mt-24">
                   <AktivasyonKodlari
