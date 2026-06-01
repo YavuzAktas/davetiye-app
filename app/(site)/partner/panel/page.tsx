@@ -16,6 +16,7 @@ import PartnerMusteriSegmentleri from "./PartnerMusteriSegmentleri";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
+import PanelAracGrubu from "./PanelAracGrubu";
 import PartnerPanelOzeti from "./PartnerPanelOzeti";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
@@ -410,93 +411,107 @@ export default async function PartnerPanelPage({
                       }))}
                     />
                   </div>
-                  <div id="segmentler" className="scroll-mt-24">
-                    <PartnerMusteriSegmentleri
-                      leadler={partnerLeadleriHam.map(lead => ({
-                        id: lead.id,
-                        baslik: lead.baslik,
-                        etkinlikTuru: lead.etkinlikTuru,
-                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                        kisiSayisi: lead.kisiSayisi,
-                        kaynak: lead.kaynak,
-                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                        createdAt: lead.createdAt.toISOString(),
-                        updatedAt: lead.updatedAt.toISOString(),
-                      }))}
-                    />
-                  </div>
-                  <div id="paketler" className="scroll-mt-24">
-                    <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
-                  </div>
-                  <div id="whatsapp-asistani" className="scroll-mt-24">
-                    <PartnerWhatsappAsistani
-                      firmaAdi={partner.firmaAdi}
-                      whatsappImzasi={partner.whatsappImzasi}
-                      leadler={partnerLeadleriHam.map(lead => ({
-                        id: lead.id,
-                        baslik: lead.baslik,
-                        ilgiliKisi: lead.ilgiliKisi,
-                        telefon: lead.telefon,
-                        etkinlikTuru: lead.etkinlikTuru,
-                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                        kisiSayisi: lead.kisiSayisi,
-                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                      }))}
-                    />
-                  </div>
-                  <div id="teklif" className="scroll-mt-24">
-                    <PartnerTeklifOlusturucu
-                      firmaAdi={partner.firmaAdi}
-                      markaRenk={partner.markaRenk}
-                      markaSlogani={partner.markaSlogani}
-                      destekTelefonu={partner.destekTelefonu}
-                      instagramUrl={partner.instagramUrl}
-                      whatsappImzasi={partner.whatsappImzasi}
-                      teklifHazir={partner.teklifHazir}
-                      teklifNotlari={
-                        Array.isArray(partner.teklifNotlari)
-                          ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
-                          : []
-                      }
-                    />
-                  </div>
-                  <div id="analitik" className="scroll-mt-24">
-                    <PartnerSatisAnalitigi
-                      abonelik={{
-                        paketId: abonelik.paketId,
-                        hakSayisi: abonelik.hakSayisi,
-                        kullanilanHak: abonelik.kullanilanHak,
-                        bitisAt: abonelik.bitisAt,
-                      }}
-                      kodlar={kodlar.map(kod => ({
-                        id: kod.id,
-                        durum: kod.durum,
-                        createdAt: kod.createdAt,
-                        kullanilanAt: kod.kullanilanAt,
-                      }))}
-                      leadler={partnerLeadleriHam.map(lead => ({
-                        id: lead.id,
-                        baslik: lead.baslik,
-                        etkinlikTuru: lead.etkinlikTuru,
-                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                        kisiSayisi: lead.kisiSayisi,
-                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                        createdAt: lead.createdAt.toISOString(),
-                        updatedAt: lead.updatedAt.toISOString(),
-                      }))}
-                      odemeGecmisi={odemeKayitlariHam.map(k => ({
-                        id: k.id,
-                        createdAt: k.createdAt.toISOString(),
-                        planId: k.planId,
-                        paidPrice: k.paidPrice,
-                        currency: k.currency,
-                        fiyatKirilimi: k.fiyatKirilimi,
-                      }))}
-                    />
-                  </div>
-                  <div id="satis" className="scroll-mt-24">
-                    <PartnerSatisRehberi />
-                  </div>
+                  <PanelAracGrubu
+                    id="satis-takip-grubu"
+                    baslik="Müşteri takibi ve raporlar"
+                    aciklama="Müşteri grupları ile satış raporlarını gerektiğinde açın; ana ekran daha sakin kalır."
+                    hedefler={["segmentler", "analitik"]}
+                  >
+                    <div id="segmentler" className="scroll-mt-24">
+                      <PartnerMusteriSegmentleri
+                        leadler={partnerLeadleriHam.map(lead => ({
+                          id: lead.id,
+                          baslik: lead.baslik,
+                          etkinlikTuru: lead.etkinlikTuru,
+                          etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                          kisiSayisi: lead.kisiSayisi,
+                          kaynak: lead.kaynak,
+                          durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                          createdAt: lead.createdAt.toISOString(),
+                          updatedAt: lead.updatedAt.toISOString(),
+                        }))}
+                      />
+                    </div>
+                    <div id="analitik" className="scroll-mt-24">
+                      <PartnerSatisAnalitigi
+                        abonelik={{
+                          paketId: abonelik.paketId,
+                          hakSayisi: abonelik.hakSayisi,
+                          kullanilanHak: abonelik.kullanilanHak,
+                          bitisAt: abonelik.bitisAt,
+                        }}
+                        kodlar={kodlar.map(kod => ({
+                          id: kod.id,
+                          durum: kod.durum,
+                          createdAt: kod.createdAt,
+                          kullanilanAt: kod.kullanilanAt,
+                        }))}
+                        leadler={partnerLeadleriHam.map(lead => ({
+                          id: lead.id,
+                          baslik: lead.baslik,
+                          etkinlikTuru: lead.etkinlikTuru,
+                          etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                          kisiSayisi: lead.kisiSayisi,
+                          durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                          createdAt: lead.createdAt.toISOString(),
+                          updatedAt: lead.updatedAt.toISOString(),
+                        }))}
+                        odemeGecmisi={odemeKayitlariHam.map(k => ({
+                          id: k.id,
+                          createdAt: k.createdAt.toISOString(),
+                          planId: k.planId,
+                          paidPrice: k.paidPrice,
+                          currency: k.currency,
+                          fiyatKirilimi: k.fiyatKirilimi,
+                        }))}
+                      />
+                    </div>
+                  </PanelAracGrubu>
+                  <PanelAracGrubu
+                    id="satis-araclari-grubu"
+                    baslik="Teklif ve mesaj araçları"
+                    aciklama="Hazır paket, WhatsApp metni, teklif oluşturucu ve satış rehberi bu yardımcı grupta."
+                    hedefler={["paketler", "whatsapp-asistani", "teklif", "satis"]}
+                  >
+                    <div id="paketler" className="scroll-mt-24">
+                      <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
+                    </div>
+                    <div id="whatsapp-asistani" className="scroll-mt-24">
+                      <PartnerWhatsappAsistani
+                        firmaAdi={partner.firmaAdi}
+                        whatsappImzasi={partner.whatsappImzasi}
+                        leadler={partnerLeadleriHam.map(lead => ({
+                          id: lead.id,
+                          baslik: lead.baslik,
+                          ilgiliKisi: lead.ilgiliKisi,
+                          telefon: lead.telefon,
+                          etkinlikTuru: lead.etkinlikTuru,
+                          etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                          kisiSayisi: lead.kisiSayisi,
+                          durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        }))}
+                      />
+                    </div>
+                    <div id="teklif" className="scroll-mt-24">
+                      <PartnerTeklifOlusturucu
+                        firmaAdi={partner.firmaAdi}
+                        markaRenk={partner.markaRenk}
+                        markaSlogani={partner.markaSlogani}
+                        destekTelefonu={partner.destekTelefonu}
+                        instagramUrl={partner.instagramUrl}
+                        whatsappImzasi={partner.whatsappImzasi}
+                        teklifHazir={partner.teklifHazir}
+                        teklifNotlari={
+                          Array.isArray(partner.teklifNotlari)
+                            ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
+                            : []
+                        }
+                      />
+                    </div>
+                    <div id="satis" className="scroll-mt-24">
+                      <PartnerSatisRehberi />
+                    </div>
+                  </PanelAracGrubu>
                 </PanelBolum>
 
                 <PanelBolum
@@ -524,12 +539,19 @@ export default async function PartnerPanelPage({
                       kodlar={kodlar}
                     />
                   </div>
-                  <div id="teslim-raporu" className="scroll-mt-24">
-                    <PartnerTeslimRaporu
-                      firmaAdi={partner.firmaAdi}
-                      kodlar={teslimRaporuKodlari}
-                    />
-                  </div>
+                  <PanelAracGrubu
+                    id="teslim-raporu-grubu"
+                    baslik="Teslim sonrası başarı raporu"
+                    aciklama="Müşteriye gönderilecek özet raporu yalnızca gerektiğinde açın."
+                    hedefler={["teslim-raporu"]}
+                  >
+                    <div id="teslim-raporu" className="scroll-mt-24">
+                      <PartnerTeslimRaporu
+                        firmaAdi={partner.firmaAdi}
+                        kodlar={teslimRaporuKodlari}
+                      />
+                    </div>
+                  </PanelAracGrubu>
                 </PanelBolum>
 
                 <PanelBolum
@@ -556,37 +578,44 @@ export default async function PartnerPanelPage({
                       }))}
                     />
                   </div>
-                  <div id="ekip" className="scroll-mt-24">
-                    <PartnerEkipErisimleri
-                      baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
-                        id: erisim.id,
-                        rol: erisim.rol,
-                        rolEtiketi:
-                          erisim.rol === "satis" ? "Satış" :
-                          erisim.rol === "operasyon" ? "Operasyon" :
-                          erisim.rol === "teslim" ? "Teslim" :
-                          "Ekip",
-                        etiket: erisim.etiket,
-                        aktif: erisim.aktif,
-                        expiresAt: erisim.expiresAt?.toISOString() ?? null,
-                        lastUsedAt: erisim.lastUsedAt?.toISOString() ?? null,
-                        revokedAt: erisim.revokedAt?.toISOString() ?? null,
-                        createdAt: erisim.createdAt.toISOString(),
-                      }))}
-                    />
-                  </div>
-                  <div id="operasyon" className="scroll-mt-24">
-                    <PartnerOperasyonMerkezi
-                      firmaAdi={partner.firmaAdi}
-                      abonelik={{
-                        paketId: abonelik.paketId,
-                        hakSayisi: abonelik.hakSayisi,
-                        kullanilanHak: abonelik.kullanilanHak,
-                        bitisAt: abonelik.bitisAt,
-                      }}
-                      kodlar={kodlar}
-                    />
-                  </div>
+                  <PanelAracGrubu
+                    id="operasyon-detaylari-grubu"
+                    baslik="Ekip erişimi ve iş takibi"
+                    aciklama="Personel linkleri ile yayın sonrası operasyon kontrolünü bu grupta tutun."
+                    hedefler={["ekip", "operasyon"]}
+                  >
+                    <div id="ekip" className="scroll-mt-24">
+                      <PartnerEkipErisimleri
+                        baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
+                          id: erisim.id,
+                          rol: erisim.rol,
+                          rolEtiketi:
+                            erisim.rol === "satis" ? "Satış" :
+                            erisim.rol === "operasyon" ? "Operasyon" :
+                            erisim.rol === "teslim" ? "Teslim" :
+                            "Ekip",
+                          etiket: erisim.etiket,
+                          aktif: erisim.aktif,
+                          expiresAt: erisim.expiresAt?.toISOString() ?? null,
+                          lastUsedAt: erisim.lastUsedAt?.toISOString() ?? null,
+                          revokedAt: erisim.revokedAt?.toISOString() ?? null,
+                          createdAt: erisim.createdAt.toISOString(),
+                        }))}
+                      />
+                    </div>
+                    <div id="operasyon" className="scroll-mt-24">
+                      <PartnerOperasyonMerkezi
+                        firmaAdi={partner.firmaAdi}
+                        abonelik={{
+                          paketId: abonelik.paketId,
+                          hakSayisi: abonelik.hakSayisi,
+                          kullanilanHak: abonelik.kullanilanHak,
+                          bitisAt: abonelik.bitisAt,
+                        }}
+                        kodlar={kodlar}
+                      />
+                    </div>
+                  </PanelAracGrubu>
                 </PanelBolum>
               </>
             )}
@@ -612,22 +641,30 @@ export default async function PartnerPanelPage({
                   }}
                 />
               </div>
-              <div id="odeme" className="scroll-mt-24">
-                <PanelIcerik
-                  partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
-                  abonelik={abonelik}
-                  odemeBasarili={odemeBasarili}
-                  odemeGecmisi={odemeKayitlariHam.map(k => ({
-                    id: k.id,
-                    createdAt: k.createdAt.toISOString(),
-                    planId: k.planId,
-                    paidPrice: k.paidPrice,
-                    currency: k.currency,
-                    paymentId: k.paymentId,
-                    fiyatKirilimi: k.fiyatKirilimi,
-                  }))}
-                />
-              </div>
+              <PanelAracGrubu
+                id="odeme-grubu"
+                baslik="Abonelik ve ödeme işlemleri"
+                aciklama="Paket satın alma, abonelik durumu ve ödeme geçmişini gerektiğinde açın."
+                hedefler={["odeme"]}
+                varsayilanAcik={!abonelik || odemeBasarili}
+              >
+                <div id="odeme" className="scroll-mt-24">
+                  <PanelIcerik
+                    partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
+                    abonelik={abonelik}
+                    odemeBasarili={odemeBasarili}
+                    odemeGecmisi={odemeKayitlariHam.map(k => ({
+                      id: k.id,
+                      createdAt: k.createdAt.toISOString(),
+                      planId: k.planId,
+                      paidPrice: k.paidPrice,
+                      currency: k.currency,
+                      paymentId: k.paymentId,
+                      fiyatKirilimi: k.fiyatKirilimi,
+                    }))}
+                  />
+                </div>
+              </PanelAracGrubu>
             </PanelBolum>
           </div>
         )}
