@@ -106,6 +106,7 @@ export default function PartnerBasvuruPage() {
         return;
       }
       setDurum("basarili");
+      router.push("/partner/panel");
     } catch {
       setHata("Sunucuya bağlanılamadı.");
       setDurum("hata");
@@ -155,18 +156,11 @@ export default function PartnerBasvuruPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">✅</div>
+          <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-6 h-6 rounded-full border-2 border-purple-600 border-t-transparent animate-spin" />
+          </div>
           <h1 className="text-2xl font-black text-gray-900 mb-2">Başvurunuz Alındı!</h1>
-          <p className="text-sm text-gray-500 mb-2 leading-relaxed">
-            24 saat içinde {session?.user?.email} adresine dönüş yapacağız.
-          </p>
-          <p className="text-xs text-gray-400 mb-8">Onay sonrası partner paneliniz aktive edilecektir.</p>
-          <Link
-            href="/"
-            className="inline-block bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-8 py-3 rounded-2xl hover:opacity-90 transition-opacity text-sm"
-          >
-            Ana Sayfaya Dön
-          </Link>
+          <p className="text-sm text-gray-500 leading-relaxed">Partner panelinize yönlendiriliyorsunuz…</p>
         </div>
       </div>
     );

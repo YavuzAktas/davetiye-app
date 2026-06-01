@@ -24,6 +24,7 @@ import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 import PartnerWhatsappAsistani from "./PartnerWhatsappAsistani";
+import PartnerTebrikEkrani from "./PartnerTebrikEkrani";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -313,6 +314,7 @@ export default async function PartnerPanelPage({
 
         {partner.durum === "aktif" && (
           <div className="space-y-6">
+            <PartnerTebrikEkrani partnerId={partner.id} firmaAdi={partner.firmaAdi} />
             <PartnerPanelNav abonelikVar={Boolean(abonelik)} />
             <PanelBolum
               id="ozet"
