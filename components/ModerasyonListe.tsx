@@ -3,6 +3,21 @@
 import { useState } from "react";
 import Image from "next/image";
 
+async function fotografIndir(url: string, dosyaAdi: string) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = dosyaAdi;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  } catch {
+    // fallback: yeni sekmede aç
+    window.open(url, "_blank");
+  }
+}
+
 type FotoItem = {
   id: string;
   yukleyenAd: string;
@@ -162,9 +177,28 @@ function FotoListesi({
   renk: string;
 }) {
   const [lightbox, setLightbox] = useState<FotoItem | null>(null);
+  const [zipIniyor, setZipIniyor] = useState(false);
 
   const bekleyen = liste.filter((f) => !f.onaylandi);
   const onaylanan = liste.filter((f) => f.onaylandi);
+
+  async function tumunuIndir() {
+    setZipIniyor(true);
+    try {
+      const res = await fetch(`/api/dashboard/davetiye/${slug}/album/indir`);
+      if (!res.ok) { alert("ZIP oluşturulamadı."); return; }
+      const blob = await res.blob();
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${slug}-fotolar.zip`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch {
+      alert("İndirme başarısız oldu.");
+    } finally {
+      setZipIniyor(false);
+    }
+  }
 
   async function toggle(id: string, simdikiDurum: boolean) {
     const res = await fetch(`/api/dashboard/davetiye/${slug}/album/${id}`, {
@@ -211,9 +245,34 @@ function FotoListesi({
           <div className="relative max-w-[95vw] max-h-[85dvh] w-full h-full" onClick={(e) => e.stopPropagation()}>
             <Image src={lightbox.dosyaUrl} alt={lightbox.yukleyenAd} fill className="object-contain" sizes="95vw" />
           </div>
-          <div className="absolute bottom-4 left-0 right-0 text-center">
+          <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-3">
             <p className="text-white/80 text-sm font-medium">{lightbox.yukleyenAd}</p>
+            <button
+              onClick={(e) => { e.stopPropagation(); fotografIndir(lightbox.dosyaUrl, `${lightbox.yukleyenAd}.webp`); }}
+              className="flex items-center gap-2 rounded-full bg-white/15 hover:bg-white/25 px-4 py-2 text-white text-xs font-semibold transition-colors"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Fotoğrafı İndir
+            </button>
           </div>
+        </div>
+      )}
+
+      {onaylanan.length > 0 && (
+        <div className="flex items-center justify-between gap-2 border-b border-gray-50 px-4 py-2.5">
+          <p className="text-xs text-gray-400">{onaylanan.length} onaylı fotoğraf</p>
+          <button
+            onClick={tumunuIndir}
+            disabled={zipIniyor}
+            className="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            {zipIniyor ? "ZIP hazırlanıyor…" : "Tümünü İndir (.zip)"}
+          </button>
         </div>
       )}
 
@@ -288,6 +347,16 @@ function FotoKart({
           style={!foto.onaylandi ? { backgroundColor: renk } : {}}
         >
           {yukleniyor ? "..." : foto.onaylandi ? "Geri Al" : "Onayla"}
+        </button>
+        <button
+          onClick={() => fotografIndir(foto.dosyaUrl, `${foto.yukleyenAd}.webp`)}
+          disabled={yukleniyor}
+          title="İndir"
+          className="flex w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white py-2 text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-800 disabled:opacity-40"
+        >
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
         </button>
         <button onClick={onSil} disabled={yukleniyor} className="flex-1 text-xs font-semibold py-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-all">
           Sil
