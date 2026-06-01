@@ -272,6 +272,8 @@ export default function AktivasyonKodlari({
       "3. Etkinlik tarihi, konum ve davetiye metinlerinizi girin.",
       "4. Davetiyenizi yayına alıp link veya QR kod ile paylaşın.",
       "",
+      "Bu bağlantı daha sonra da müşteri teslim portalınız olarak çalışır; davetiyeniz oluştuğunda aynı linkten panelinize ve davetiyenize ulaşabilirsiniz.",
+      "",
       "Gizlilik notu:",
       "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri sizin hesabınızda yönetilir. Partner panelinde yalnızca aktivasyon süreci ve yayın durumu görünür.",
     ];
