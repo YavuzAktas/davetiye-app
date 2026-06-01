@@ -208,9 +208,12 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tarihObj?.getTime()]);
 
-  /* İsimler — yalnızca ad (soyad gösterilmez) */
-  const isim1 = (davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik).split(" ")[0];
-  const isim2 = (davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null)?.split(" ")[0] ?? null;
+  /* İsimler — son kelime (soyad) atılır, geri kalan gösterilir */
+  const soyadSiz = (s: string) => { const p = s.trim().split(/\s+/); return p.length > 1 ? p.slice(0, -1).join(" ") : s; };
+  const raw1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
+  const raw2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
+  const isim1 = soyadSiz(raw1);
+  const isim2 = raw2 ? soyadSiz(raw2) : null;
 
   return (
     <>

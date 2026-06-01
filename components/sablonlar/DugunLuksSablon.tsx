@@ -136,8 +136,11 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tarihObj?.getTime()]);
 
-  const isim1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
-  const isim2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
+  const soyadSiz = (s: string) => { const p = s.trim().split(/\s+/); return p.length > 1 ? p.slice(0, -1).join(" ") : s; };
+  const raw1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
+  const raw2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
+  const isim1 = soyadSiz(raw1);
+  const isim2 = raw2 ? soyadSiz(raw2) : null;
   const fullName = isim2 ? `${isim1} & ${isim2}` : isim1;
 
   const whatsapp = encodeURIComponent(

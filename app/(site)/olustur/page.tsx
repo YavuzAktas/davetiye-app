@@ -430,7 +430,8 @@ function OlusturIcerigi() {
     setYukleniyor(true); setHata("");
     const kisi1 = `${kisi1Ad.trim()} ${kisi1Soyad.trim()}`.trim();
     const kisi2 = `${kisi2Ad.trim()} ${kisi2Soyad.trim()}`.trim();
-    const gonderilecekBaslik = nisanVeyaDugun ? `${kisi1} & ${kisi2}` : form.baslik;
+    // Başlıkta soyadlar yer almaz — yalnızca ad(lar) kullanılır
+    const gonderilecekBaslik = nisanVeyaDugun ? `${kisi1Ad.trim()} & ${kisi2Ad.trim()}` : form.baslik;
     try {
       const res = await fetch("/api/davetiye/olustur", {
         method: "POST",
@@ -480,7 +481,7 @@ function OlusturIcerigi() {
   const previewVeri: DavetiyeVeri = {
     id: "preview", slug: "preview",
     baslik: nisanVeyaDugun
-      ? `${kisi1Preview} & ${kisi2Preview}`
+      ? `${kisi1Ad || "Kişi 1"} & ${kisi2Ad || "Kişi 2"}`
       : form.baslik || "Davetiye Başlığı",
     etkinlikTur:     sablon.kategori,
     tarih:           form.tarih ? new Date(`${form.tarih}T${form.saat || "12:00"}`) : null,
