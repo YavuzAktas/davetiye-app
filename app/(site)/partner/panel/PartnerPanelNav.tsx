@@ -57,7 +57,7 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
   }
 
   return (
-    <nav className="sticky top-16 z-40 -mx-4 border-b border-gray-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-sm">
+    <nav className="sticky top-16 z-40 -mx-4 border-b border-gray-100 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-xl">
       <div className="mx-auto max-w-5xl">
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {navLinkleri.map(link => {
@@ -68,7 +68,7 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
                 href={link.href}
                 className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-black shadow-sm transition-colors ${
                   isAktif
-                    ? "border-purple-200 bg-purple-600 text-white"
+                    ? "border-transparent bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-sm shadow-purple-200"
                     : "border-gray-200 bg-white text-gray-600 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700"
                 }`}
               >

@@ -239,10 +239,10 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
               setFormAcik(true);
             }
           }}
-          className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition-colors ${
+          className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition-all ${
             formGorunur
               ? "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
-              : "bg-gray-950 text-white hover:bg-purple-700"
+              : "bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-sm shadow-purple-200 hover:opacity-90"
           }`}
         >
           {formGorunur ? "Vazgeç" : "+ Müşteri ekle"}
@@ -413,7 +413,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
               type="button"
               onClick={kaydet}
               disabled={kaydediliyor}
-              className="w-full rounded-2xl bg-gray-950 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-4 py-3 text-sm font-black text-white shadow-sm shadow-purple-200 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {kaydediliyor ? "Kaydediliyor..." : duzenlenenId ? "Lead'i güncelle" : "Lead ekle"}
             </button>
@@ -430,7 +430,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
           <button
             type="button"
             onClick={() => { setForm(BOS_FORM); setDuzenlenenId(null); setFormAcik(true); }}
-            className="mt-5 rounded-2xl bg-gray-950 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
+            className="mt-5 rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-5 py-3 text-sm font-black text-white shadow-sm shadow-purple-200 transition-opacity hover:opacity-90"
           >
             İlk müşteriyi ekle
           </button>

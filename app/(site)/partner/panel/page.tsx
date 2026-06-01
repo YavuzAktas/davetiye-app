@@ -207,29 +207,29 @@ export default async function PartnerPanelPage({
   }));
 
   const durumRenk =
-    partner.durum === "aktif"    ? "bg-emerald-400/15 text-emerald-300 border border-emerald-400/25" :
-    partner.durum === "beklemede" ? "bg-yellow-400/15 text-yellow-300 border border-yellow-400/25" :
-                                    "bg-red-400/15 text-red-300 border border-red-400/25";
+    partner.durum === "aktif"    ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+    partner.durum === "beklemede" ? "bg-yellow-50 text-yellow-700 border-yellow-200" :
+                                    "bg-red-50 text-red-700 border-red-200";
   const durumLabel =
     partner.durum === "aktif"    ? "Aktif" :
     partner.durum === "beklemede" ? "İnceleniyor" :
                                     "Askıda";
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
 
-      {/* ── Dark hero header ── */}
-      <div className="relative bg-[#080112] overflow-hidden">
-        <div className="absolute top-0 left-1/3 w-72 h-72 bg-purple-700 opacity-20 blur-[90px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-56 h-56 bg-pink-700 opacity-15 blur-[70px] rounded-full pointer-events-none" />
-        <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      {/* ── Light hero header ── */}
+      <div className="relative overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-linear-to-br from-purple-50/70 via-white to-pink-50/30 pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #7c3aed 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-purple-200/60 to-transparent" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-14">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-12">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-white/55 text-xs mb-8">
-            <Link href="/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
-            <span className="text-white/35">›</span>
-            <span className="text-white/70">Partner Paneli</span>
+          <div className="flex items-center gap-2 text-gray-400 text-xs mb-8">
+            <Link href="/dashboard" className="hover:text-purple-600 transition-colors font-semibold">Dashboard</Link>
+            <span className="text-gray-300">›</span>
+            <span className="text-gray-600 font-semibold">Partner Paneli</span>
           </div>
 
           {/* Logo + firma adı + durum */}
@@ -240,20 +240,18 @@ export default async function PartnerPanelPage({
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold tracking-[0.26em] uppercase text-purple-300/70 mb-1">
+              <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-purple-600/70 mb-1.5">
                 Partner Paneli
               </p>
-              <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
                 {partner.firmaAdi}
               </h1>
             </div>
-            <span className={`text-xs font-bold px-3 py-1.5 rounded-full shrink-0 ${durumRenk}`}>
+            <span className={`text-xs font-bold px-3 py-1.5 rounded-full shrink-0 border ${durumRenk}`}>
               {durumLabel}
             </span>
           </div>
         </div>
-
-        <div className="h-10 bg-linear-to-b from-transparent to-gray-50 pointer-events-none" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -659,11 +657,11 @@ function PanelBolum({
   return (
     <section id={id} className="scroll-mt-24 space-y-4">
       <div className="flex items-center gap-3 px-1">
-        <span className="shrink-0 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-purple-600">
+        <span className="shrink-0 rounded-full bg-linear-to-r from-purple-600 to-pink-600 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-white shadow-sm shadow-purple-200/50">
           {etiket}
         </span>
-        <h2 className="text-sm font-black text-gray-600">{baslik}</h2>
-        <div className="h-px flex-1 bg-gray-100" />
+        <h2 className="text-sm font-black text-gray-700">{baslik}</h2>
+        <div className="h-px flex-1 bg-linear-to-r from-gray-100 to-transparent" />
       </div>
       {children}
     </section>

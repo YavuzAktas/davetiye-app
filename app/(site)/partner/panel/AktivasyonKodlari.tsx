@@ -413,7 +413,7 @@ export default function AktivasyonKodlari({
           <button
             onClick={olustur}
             disabled={!olusturulabilir || olusturuluyor}
-            className="flex items-center gap-1.5 text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 transition-colors px-4 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 text-xs font-bold text-white bg-linear-to-r from-purple-600 to-pink-600 shadow-sm shadow-purple-200 transition-opacity hover:opacity-90 px-4 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {olusturuluyor ? (
               <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
@@ -571,7 +571,7 @@ export default function AktivasyonKodlari({
                 type="button"
                 onClick={olustur}
                 disabled={!olusturulabilir || olusturuluyor}
-                className="inline-flex items-center justify-center rounded-xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50 sm:shrink-0"
+                className="inline-flex items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-pink-600 shadow-sm shadow-purple-200 px-4 py-3 text-sm font-black text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:shrink-0"
               >
                 {olusturuluyor ? "Oluşturuluyor..." : "İlk Kodu Oluştur"}
               </button>

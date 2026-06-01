@@ -193,24 +193,24 @@ export default function PartnerPanelOzeti({
 
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-      <div className="border-b border-gray-100 bg-linear-to-br from-gray-950 via-purple-950 to-gray-900 px-5 py-6 text-white sm:px-7">
+      <div className="border-b border-gray-100 bg-linear-to-br from-purple-50/80 via-white to-pink-50/30 px-5 py-6 sm:px-7">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-200/80">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-purple-600/70">
               Özet
             </p>
-            <h2 className="mt-2 text-xl font-black sm:text-2xl">
+            <h2 className="mt-2 text-xl font-black text-gray-900 sm:text-2xl">
               Bugün ne yapılacak?
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">
               Satış, teslim ve ekip işleri için en önemli uyarılar burada.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:w-[420px] sm:grid-cols-4">
-            <OzetKarti baslik="Kalan hak" deger={kalanHak.toString()} />
+            <OzetKarti baslik="Kalan hak" deger={kalanHak.toString()} vurgu={kalanHak <= 2} />
             <OzetKarti baslik="Aktif müşteri" deger={aktifLead.length.toString()} />
-            <OzetKarti baslik="Sıcak fırsat" deger={sicakLead.length.toString()} />
-            <OzetKarti baslik="Yayında" deger={yayinda.toString()} />
+            <OzetKarti baslik="Sıcak fırsat" deger={sicakLead.length.toString()} vurgu={sicakLead.length > 0} />
+            <OzetKarti baslik="Yayında" deger={yayinda.toString()} basari={yayinda > 0} />
           </div>
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function PartnerPanelOzeti({
         <div>
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-black text-gray-950">Öncelikli aksiyon</h3>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-black text-gray-500">
+            <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-bold text-gray-500 shadow-sm">
               {gosterilecekAksiyonlar.length} iş
             </span>
           </div>
@@ -230,13 +230,13 @@ export default function PartnerPanelOzeti({
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <span className="rounded-full bg-white/80 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] shadow-sm">
+                <span className="rounded-full border border-white/50 bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-700 shadow-sm">
                   {aksiyonEtiketi(anaAksiyon.onem)}
                 </span>
                 <p className="mt-3 text-lg font-black">{anaAksiyon.baslik}</p>
                 <p className="mt-2 text-sm font-semibold leading-relaxed opacity-75">{anaAksiyon.aciklama}</p>
               </div>
-              <span className="inline-flex w-fit shrink-0 items-center justify-center rounded-2xl bg-gray-950 px-4 py-3 text-sm font-black text-white shadow-sm">
+              <span className="inline-flex w-fit shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-4 py-3 text-sm font-black text-white shadow-sm shadow-purple-200">
                 {anaAksiyon.cta}
               </span>
             </div>
@@ -258,7 +258,7 @@ export default function PartnerPanelOzeti({
                       <p className="text-sm font-black">{aksiyon.baslik}</p>
                       <p className="mt-1 text-xs font-semibold leading-relaxed opacity-65">{aksiyon.aciklama}</p>
                     </div>
-                    <span className="w-fit rounded-xl bg-gray-50 px-3 py-2 text-xs font-black text-gray-700">
+                    <span className="w-fit shrink-0 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-bold text-gray-600 shadow-sm">
                       {aksiyon.cta}
                     </span>
                   </div>
@@ -268,10 +268,10 @@ export default function PartnerPanelOzeti({
           )}
         </div>
 
-        <aside className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
+        <aside className="rounded-3xl border border-purple-100/60 bg-linear-to-b from-purple-50/40 to-pink-50/20 p-4">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-black text-gray-950">Hızlı işlemler</h3>
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-gray-400">Kısayol</span>
+            <h3 className="text-sm font-black text-gray-900">Hızlı işlemler</h3>
+            <span className="rounded-full bg-white border border-gray-100 px-3 py-1 text-[11px] font-bold text-gray-400">Kısayol</span>
           </div>
           <div className="mt-3 grid gap-2">
             <HizliIslem href={abonelik ? "#lead-crm" : "#odeme"} label="Müşteri adayı ekle" variant="primary" />
@@ -281,9 +281,9 @@ export default function PartnerPanelOzeti({
             <HizliIslem href={abonelik ? "#ekip" : "#odeme"} label="Ekip linki oluştur" />
           </div>
 
-          <div className="mt-4 rounded-2xl border border-white bg-white px-4 py-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-gray-400">Ekip erişimi</p>
-            <p className="mt-1 text-2xl font-black tabular-nums text-gray-950">{aktifEkipLinki}</p>
+          <div className="mt-4 rounded-2xl border border-white bg-white/80 px-4 py-3 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">Ekip erişimi</p>
+            <p className="mt-1 text-2xl font-black tabular-nums text-gray-900">{aktifEkipLinki}</p>
             <p className="mt-1 text-xs font-semibold text-gray-500">aktif sınırlı link</p>
           </div>
         </aside>
@@ -292,11 +292,19 @@ export default function PartnerPanelOzeti({
   );
 }
 
-function OzetKarti({ baslik, deger }: { baslik: string; deger: string }) {
+function OzetKarti({ baslik, deger, vurgu, basari }: { baslik: string; deger: string; vurgu?: boolean; basari?: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/10 px-3 py-2">
-      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-white/40">{baslik}</p>
-      <p className="mt-1 text-xl font-black tabular-nums text-white">{deger}</p>
+    <div className={`rounded-2xl border px-3 py-2.5 ${
+      vurgu ? "border-purple-200 bg-purple-50" :
+      basari ? "border-emerald-100 bg-emerald-50" :
+      "border-gray-100 bg-white shadow-sm"
+    }`}>
+      <p className={`text-[10px] font-black uppercase tracking-[0.12em] ${
+        vurgu ? "text-purple-500" : basari ? "text-emerald-500" : "text-gray-400"
+      }`}>{baslik}</p>
+      <p className={`mt-1 text-xl font-black tabular-nums ${
+        vurgu ? "text-purple-700" : basari ? "text-emerald-700" : "text-gray-900"
+      }`}>{deger}</p>
     </div>
   );
 }
@@ -311,8 +319,8 @@ function HizliIslem({
   variant?: "primary" | "secondary";
 }) {
   const className = variant === "primary"
-    ? "flex items-center justify-between gap-3 rounded-2xl border border-purple-200 bg-purple-600 px-4 py-3 text-sm font-black text-white shadow-sm transition-colors hover:bg-purple-700"
-    : "flex items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm font-black text-gray-700 shadow-sm transition-colors hover:border-purple-100 hover:bg-purple-50 hover:text-purple-800";
+    ? "flex items-center justify-between gap-3 rounded-2xl border border-transparent bg-linear-to-r from-purple-600 to-pink-600 px-4 py-3 text-sm font-black text-white shadow-sm shadow-purple-200 transition-opacity hover:opacity-90"
+    : "flex items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm font-black text-gray-700 shadow-sm transition-colors hover:border-purple-100 hover:bg-purple-50 hover:text-purple-700";
 
   return (
     <a href={href} className={className}>

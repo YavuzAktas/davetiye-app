@@ -169,7 +169,7 @@ export default function PartnerOnboardingChecklist({
           <p className="mt-2 text-sm leading-relaxed text-gray-500">{siradaki.aciklama}</p>
           <a
             href={siradaki.href}
-            className="mt-4 inline-flex rounded-xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
+            className="mt-4 inline-flex rounded-xl bg-linear-to-r from-purple-600 to-pink-600 px-4 py-3 text-sm font-black text-white shadow-sm shadow-purple-200 transition-opacity hover:opacity-90"
           >
             {siradaki.cta}
           </a>

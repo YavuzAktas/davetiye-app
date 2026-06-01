@@ -55,11 +55,11 @@ export default function PanelAracGrubu({
           <span className="block text-sm font-black text-gray-950">{baslik}</span>
           <span className="mt-1 block text-xs leading-relaxed text-gray-500">{aciklama}</span>
         </span>
-        <span className="grid size-9 shrink-0 place-items-center rounded-full border border-gray-100 bg-gray-50 text-lg font-black text-gray-400 transition-transform group-open:rotate-180">
+        <span className="grid size-9 shrink-0 place-items-center rounded-full border border-purple-100 bg-purple-50/50 text-lg font-black text-purple-400 transition-transform group-open:rotate-180">
           ⌄
         </span>
       </summary>
-      <div className="space-y-4 border-t border-gray-100 bg-gray-50/40 p-3 sm:p-4">
+      <div className="space-y-4 border-t border-purple-100/50 bg-purple-50/20 p-3 sm:p-4">
         {children}
       </div>
     </details>
