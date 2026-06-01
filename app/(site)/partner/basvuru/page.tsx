@@ -61,7 +61,7 @@ export default function PartnerBasvuruPage() {
         setPartnerDurumu(partner.durum ?? null);
         setFirmaAdi(partner.firmaAdi ?? "");
 
-        if (partner.durum === "aktif") {
+        if (partner.durum === "aktif" || partner.durum === "beklemede") {
           setDurum("aktif");
           router.replace("/partner/panel");
           return;
@@ -91,7 +91,7 @@ export default function PartnerBasvuruPage() {
         const partner = d.partner as { durum?: PartnerDurumu; firmaAdi?: string } | null;
         setPartnerDurumu(partner?.durum ?? null);
         setFirmaAdi(partner?.firmaAdi ?? "");
-        if (partner?.durum === "aktif") {
+        if (partner?.durum === "aktif" || partner?.durum === "beklemede") {
           setDurum("aktif");
           router.replace("/partner/panel");
           return;
