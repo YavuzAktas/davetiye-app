@@ -163,19 +163,35 @@ model SesliAni {
 }
 
 model AlbumFoto {
-  id                   String    @id @default(cuid())
+  id                   String              @id @default(cuid())
   davetiyeId           String
-  davetiye             Davetiye  @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  davetiye             Davetiye            @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
   yukleyenAd           String
   dosyaUrl             String
-  onaylandi            Boolean   @default(false)
+  onaylandi            Boolean             @default(false)
   yayinIzniOnaylandiAt DateTime?
   yayinIzniMetinSurumu String?
-  createdAt            DateTime  @default(now())
+  oylamaSayisi         Int                 @default(0)
+  createdAt            DateTime            @default(now())
+  oylamalar            AlbumFotoOylama[]
 
   @@index([davetiyeId])
   @@index([davetiyeId, onaylandi, createdAt])
+  @@index([davetiyeId, onaylandi, oylamaSayisi])
   @@index([yayinIzniOnaylandiAt])
+}
+
+model AlbumFotoOylama {
+  id         String   @id @default(cuid())
+  fotoId     String
+  davetiyeId String
+  oturumId   String
+  createdAt  DateTime @default(now())
+  foto       AlbumFoto @relation(fields: [fotoId], references: [id], onDelete: Cascade)
+
+  @@index([davetiyeId, createdAt])
+  @@index([fotoId])
+  @@index([oturumId, davetiyeId])
 }
 
 model AniDefteri {

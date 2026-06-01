@@ -7,7 +7,10 @@ interface Foto {
   yukleyenAd: string;
   dosyaUrl: string;
   createdAt: string;
+  oylamaSayisi?: number;
 }
+
+const MADALYA = ["🥇", "🥈", "🥉"];
 
 interface Props {
   slug: string;
@@ -92,6 +95,13 @@ export default function CanliDuvarGorunumu({ slug, baslik, tarihStr }: Props) {
               <p className="text-[10px] text-white/30 uppercase tracking-widest mt-0.5">fotoğraf</p>
             </div>
           )}
+          <a
+            href={`/davetiye/${slug}/foto-secimi`}
+            className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black transition-colors"
+            style={{ background: "rgba(168,85,247,0.18)", border: "1px solid rgba(168,85,247,0.35)", color: "#c084fc" }}
+          >
+            🏆 Oy Ver
+          </a>
 
           <div className="flex items-center gap-2 rounded-full px-3 py-1.5"
             style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.28)" }}>
@@ -141,6 +151,26 @@ export default function CanliDuvarGorunumu({ slug, baslik, tarihStr }: Props) {
                   loading="lazy"
                   style={{ width: "100%", display: "block" }}
                 />
+                {/* Madalya rozeti — ilk 3 fotoğraf (oylamaSayisi sıralamasına göre) */}
+                {(() => {
+                  const sira = fotolar.findIndex(f => f.id === foto.id);
+                  const madalya = MADALYA[sira];
+                  const oyVar = (foto.oylamaSayisi ?? 0) > 0;
+                  if (!madalya || !oyVar) return null;
+                  return (
+                    <div style={{
+                      position: "absolute", top: 8, right: 8,
+                      background: sira === 0 ? "rgba(234,179,8,0.9)" : "rgba(0,0,0,0.65)",
+                      borderRadius: 8, padding: "3px 7px",
+                      display: "flex", alignItems: "center", gap: 4,
+                    }}>
+                      <span style={{ fontSize: 14 }}>{madalya}</span>
+                      <span style={{ fontSize: 11, fontWeight: 800, color: "#fff" }}>
+                        {foto.oylamaSayisi}
+                      </span>
+                    </div>
+                  );
+                })()}
                 <div style={{
                   position: "absolute", bottom: 0, left: 0, right: 0,
                   padding: "20px 10px 8px",

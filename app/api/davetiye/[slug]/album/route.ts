@@ -22,8 +22,8 @@ function onayliFotolariGetir(slug: string) {
 
       return prisma.albumFoto.findMany({
         where: { davetiyeId: davetiye.id, onaylandi: true },
-        orderBy: { createdAt: "desc" },
-        select: { id: true, yukleyenAd: true, dosyaUrl: true, createdAt: true },
+        orderBy: [{ oylamaSayisi: "desc" }, { createdAt: "desc" }],
+        select: { id: true, yukleyenAd: true, dosyaUrl: true, createdAt: true, oylamaSayisi: true },
       });
     },
     ["public-album-fotolari", slug],
