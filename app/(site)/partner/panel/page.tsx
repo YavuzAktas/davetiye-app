@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
+import PartnerEkipErisimleri from "./PartnerEkipErisimleri";
 import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerHazirPaketler from "./PartnerHazirPaketler";
@@ -43,6 +44,20 @@ export default async function PartnerPanelPage({
           where: { aktif: true },
           orderBy: { createdAt: "desc" },
           take: 1,
+        },
+        ekipErisimleri: {
+          orderBy: { createdAt: "desc" },
+          take: 30,
+          select: {
+            id: true,
+            rol: true,
+            etiket: true,
+            aktif: true,
+            expiresAt: true,
+            lastUsedAt: true,
+            revokedAt: true,
+            createdAt: true,
+          },
         },
       },
     }),
@@ -439,6 +454,25 @@ export default async function PartnerPanelPage({
                   <PartnerTeslimRaporu
                     firmaAdi={partner.firmaAdi}
                     kodlar={teslimRaporuKodlari}
+                  />
+                </div>
+                <div id="ekip" className="scroll-mt-24">
+                  <PartnerEkipErisimleri
+                    baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
+                      id: erisim.id,
+                      rol: erisim.rol,
+                      rolEtiketi:
+                        erisim.rol === "satis" ? "Satış" :
+                        erisim.rol === "operasyon" ? "Operasyon" :
+                        erisim.rol === "teslim" ? "Teslim" :
+                        "Ekip",
+                      etiket: erisim.etiket,
+                      aktif: erisim.aktif,
+                      expiresAt: erisim.expiresAt?.toISOString() ?? null,
+                      lastUsedAt: erisim.lastUsedAt?.toISOString() ?? null,
+                      revokedAt: erisim.revokedAt?.toISOString() ?? null,
+                      createdAt: erisim.createdAt.toISOString(),
+                    }))}
                   />
                 </div>
                 <div id="operasyon" className="scroll-mt-24">
