@@ -296,7 +296,7 @@ export default function PartnerMusteriSegmentleri({ leadler }: { leadler: Lead[]
               )) : (
                 <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center">
                   <p className="text-sm font-bold text-gray-500">Bu segmentte kayıt yok.</p>
-                  <p className="mt-1 text-xs text-gray-400">Lead CRM'e etkinlik türü, kişi sayısı ve tarih ekledikçe segmentler daha isabetli çalışır.</p>
+                  <p className="mt-1 text-xs text-gray-400">Müşteri kaydına etkinlik türü, kişi sayısı ve tarih ekledikçe öneriler daha isabetli çalışır.</p>
                 </div>
               )}
             </div>

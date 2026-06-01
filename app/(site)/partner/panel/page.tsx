@@ -319,8 +319,8 @@ export default async function PartnerPanelPage({
             <PanelBolum
               id="ozet"
               etiket="Özet"
-              baslik="Bugünün önceliği"
-              aciklama="Panele girince önce sıradaki işleri, hızlı işlemleri ve kurulum durumunu görün."
+              baslik="Bugün neye bakmalı?"
+              aciklama="Satış, teslim ve kurulumda bekleyen işleri tek ekranda görün."
               linkler={[{ href: "#kurulum", label: "Kurulum" }]}
             >
               <PartnerPanelOzeti
@@ -379,8 +379,8 @@ export default async function PartnerPanelPage({
                 <PanelBolum
                   id="satis-akisi"
                   etiket="Satış"
-                  baslik="Müşteri kazanma ve teklif akışı"
-                  aciklama="Müşteri adaylarını, satış paketlerini, mesajları, teklifleri ve raporları tek bölümde yönetin."
+                  baslik="Müşteri ve teklif takibi"
+                  aciklama="Aday müşterileri kaydedin, mesaj hazırlayın, teklif ve satış durumunu takip edin."
                   linkler={[
                     { href: "#lead-crm", label: "Müşteriler" },
                     { href: "#segmentler", label: "Müşteri grupları" },
@@ -413,8 +413,8 @@ export default async function PartnerPanelPage({
                   </div>
                   <PanelAracGrubu
                     id="satis-takip-grubu"
-                    baslik="Müşteri takibi ve raporlar"
-                    aciklama="Müşteri grupları ile satış raporlarını gerektiğinde açın; ana ekran daha sakin kalır."
+                    baslik="Müşteri grupları ve raporlar"
+                    aciklama="Hangi müşteri hangi aşamada, hızlıca kontrol edin."
                     hedefler={["segmentler", "analitik"]}
                   >
                     <div id="segmentler" className="scroll-mt-24">
@@ -470,7 +470,7 @@ export default async function PartnerPanelPage({
                   <PanelAracGrubu
                     id="satis-araclari-grubu"
                     baslik="Teklif ve mesaj araçları"
-                    aciklama="Hazır paket, WhatsApp metni, teklif oluşturucu ve satış rehberi bu yardımcı grupta."
+                    aciklama="Paket metni, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
                     hedefler={["paketler", "whatsapp-asistani", "teklif", "satis"]}
                   >
                     <div id="paketler" className="scroll-mt-24">
@@ -517,8 +517,8 @@ export default async function PartnerPanelPage({
                 <PanelBolum
                   id="teslim-akisi"
                   etiket="Teslim"
-                  baslik="Müşteriye teslim ve yayın akışı"
-                  aciklama="Aktivasyon linklerini, teslim metinlerini ve müşteriye gönderilecek başarı raporlarını buradan yönetin."
+                  baslik="Müşteriye teslim"
+                  aciklama="Aktivasyon linki oluşturun, müşteriye gönderin ve teslim sonucunu takip edin."
                   linkler={[
                     { href: "#aktivasyon-kodlari", label: "Teslim linkleri" },
                     { href: "#teslim-raporu", label: "Teslim raporu" },
@@ -541,8 +541,8 @@ export default async function PartnerPanelPage({
                   </div>
                   <PanelAracGrubu
                     id="teslim-raporu-grubu"
-                    baslik="Teslim sonrası başarı raporu"
-                    aciklama="Müşteriye gönderilecek özet raporu yalnızca gerektiğinde açın."
+                    baslik="Teslim raporu"
+                    aciklama="Müşteriye göndereceğiniz kısa başarı özetini hazırlayın."
                     hedefler={["teslim-raporu"]}
                   >
                     <div id="teslim-raporu" className="scroll-mt-24">
@@ -557,8 +557,8 @@ export default async function PartnerPanelPage({
                 <PanelBolum
                   id="operasyon-akisi"
                   etiket="Operasyon"
-                  baslik="Etkinlik günü ve ekip yönetimi"
-                  aciklama="Takvim, görevli erişimleri ve yayın sonrası takip işleri operasyon bölümünde toplanır."
+                  baslik="Takvim ve ekip"
+                  aciklama="Etkinlik günlerini, görevli erişimlerini ve yayın sonrası işleri yönetin."
                   linkler={[
                     { href: "#salon-takvimi", label: "Takvim" },
                     { href: "#ekip", label: "Ekip" },
@@ -580,8 +580,8 @@ export default async function PartnerPanelPage({
                   </div>
                   <PanelAracGrubu
                     id="operasyon-detaylari-grubu"
-                    baslik="Ekip erişimi ve iş takibi"
-                    aciklama="Personel linkleri ile yayın sonrası operasyon kontrolünü bu grupta tutun."
+                    baslik="Ekip linkleri ve iş takibi"
+                    aciklama="Personele sınırlı erişim verin, açık işleri kontrol edin."
                     hedefler={["ekip", "operasyon"]}
                   >
                     <div id="ekip" className="scroll-mt-24">
@@ -622,8 +622,8 @@ export default async function PartnerPanelPage({
             <PanelBolum
               id="ayarlar-akisi"
               etiket="Ayarlar"
-              baslik="Marka ve ödeme ayarları"
-              aciklama="Müşteriye görünen marka bilgileri ile partner aboneliği/ödeme işlemleri bu bölümde yer alır."
+              baslik="Marka ve abonelik"
+              aciklama="Müşteriye görünen marka bilgilerini ve partner aboneliğinizi yönetin."
               linkler={[
                 { href: "#marka", label: "Marka" },
                 { href: "#odeme", label: "Ödeme" },
@@ -643,8 +643,8 @@ export default async function PartnerPanelPage({
               </div>
               <PanelAracGrubu
                 id="odeme-grubu"
-                baslik="Abonelik ve ödeme işlemleri"
-                aciklama="Paket satın alma, abonelik durumu ve ödeme geçmişini gerektiğinde açın."
+                baslik="Abonelik ve ödeme"
+                aciklama="Paket, kart ve ödeme geçmişi işlemlerini buradan yönetin."
                 hedefler={["odeme"]}
                 varsayilanAcik={!abonelik || odemeBasarili}
               >

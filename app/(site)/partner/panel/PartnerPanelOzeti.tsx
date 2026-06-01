@@ -118,63 +118,63 @@ export default function PartnerPanelOzeti({
   const aksiyonlar: Aksiyon[] = [
     ...(!abonelik ? [{
       baslik: "Partner paketini seç",
-      aciklama: "Müşteriye teslim linki oluşturmak için aktif paket gerekir.",
+      aciklama: "Müşteriye link verebilmek için aktif paket gerekir.",
       href: "#odeme",
       cta: "Paketlere git",
       onem: "kritik" as const,
     }] : []),
     ...(abonelik && kalanHak <= 2 ? [{
       baslik: "Aktivasyon hakkı azalıyor",
-      aciklama: `${kalanHak} hakkınız kaldı. Satış akışı kesilmeden yenilemeyi planlayın.`,
+      aciklama: `${kalanHak} hakkınız kaldı. Yeni satış için paketi yenileyin.`,
       href: "#odeme",
       cta: "Ödeme alanı",
       onem: "bugun" as const,
     }] : []),
     ...(!markaTamamMi(marka) ? [{
       baslik: "Marka bilgisini tamamla",
-      aciklama: "Logo, slogan veya destek bilgisi müşteri teslim ekranını daha güvenilir gösterir.",
+      aciklama: "Logo, slogan veya destek bilgisi güven verir.",
       href: "#marka",
       cta: "Markayı düzenle",
       onem: "normal" as const,
     }] : []),
     ...(leadler.length === 0 ? [{
       baslik: "İlk müşteri adayını ekle",
-      aciklama: "Satış takibi ve segmentler lead kayıtlarıyla anlamlı hale gelir.",
+      aciklama: "Görüşmeleri ve teklifleri buradan takip edin.",
       href: "#lead-crm",
       cta: "Müşteri ekle",
       onem: "normal" as const,
     }] : []),
     ...(!teklifHazir && abonelik ? [{
       baslik: "Teklif metnini hazırla",
-      aciklama: "Paket kapsamını tek metin/PDF olarak anlatmak satış görüşmesini hızlandırır.",
+      aciklama: "Paket kapsamını tek metinle anlatın.",
       href: "#teklif",
       cta: "Teklife git",
       onem: "normal" as const,
     }] : []),
     ...(sicakLead.length > 0 ? [{
       baslik: "Sıcak fırsatları kapat",
-      aciklama: `${sicakLead.length} müşteri teklif veya kapora aşamasında.`,
+      aciklama: `${sicakLead.length} müşteri teklif/kapora aşamasında.`,
       href: "#segmentler",
       cta: "Segmentlere bak",
       onem: "bugun" as const,
     }] : []),
     ...(gonderilmeyenKod > 0 ? [{
       baslik: "Teslim linklerini gönder",
-      aciklama: `${gonderilmeyenKod} aktivasyon linki oluşturulmuş ama müşteriye gönderilmemiş.`,
+      aciklama: `${gonderilmeyenKod} link hazır, müşteri bekliyor.`,
       href: "#aktivasyon-kodlari",
       cta: "Linkleri aç",
       onem: "bugun" as const,
     }] : []),
     ...(teslimEdildiBaslamadi > 0 ? [{
       baslik: "Müşteriye hatırlatma yap",
-      aciklama: `${teslimEdildiBaslamadi} müşteri linki almış ama kuruluma başlamamış.`,
+      aciklama: `${teslimEdildiBaslamadi} müşteri link aldı, başlamadı.`,
       href: "#whatsapp-asistani",
       cta: "Mesaj hazırla",
       onem: "bugun" as const,
     }] : []),
     ...(takipBekleyen.length > 0 ? [{
       baslik: "Takip bekleyenleri güncelle",
-      aciklama: `${takipBekleyen.length} aktif müşteri adayı 7 gündür güncellenmedi.`,
+      aciklama: `${takipBekleyen.length} müşteri 7 gündür güncellenmedi.`,
       href: "#lead-crm",
       cta: "Müşterilere git",
       onem: "normal" as const,
@@ -183,7 +183,7 @@ export default function PartnerPanelOzeti({
 
   const gosterilecekAksiyonlar = aksiyonlar.length > 0 ? aksiyonlar : [{
     baslik: "Panel düzenli görünüyor",
-    aciklama: "Bugün acil iş yok. Satış raporlarını ve teslim durumlarını kontrol edebilirsiniz.",
+    aciklama: "Acil iş yok. Satış ve teslim durumlarını kontrol edebilirsiniz.",
     href: "#analitik",
     cta: "Raporlara bak",
     onem: "normal" as const,
@@ -203,7 +203,7 @@ export default function PartnerPanelOzeti({
               Bugün ne yapılacak?
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">
-              En önemli satış, teslim ve operasyon işlerini tek yerde toplayarak paneli daha hızlı kullanmanızı sağlar.
+              Satış, teslim ve ekip işleri için en önemli uyarılar burada.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:w-[420px] sm:grid-cols-4">

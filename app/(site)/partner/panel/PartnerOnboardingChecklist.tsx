@@ -56,42 +56,42 @@ export default function PartnerOnboardingChecklist({
   const adimlar = [
     {
       baslik: "Aktif partner paketini hazırla",
-      aciklama: "Müşteriye aktivasyon hakkı verebilmek için aktif abonelik gerekir.",
+      aciklama: "Müşteriye link verebilmek için aktif paket gerekir.",
       tamam: Boolean(abonelik),
       href: "#odeme",
       cta: abonelik ? "Paket aktif" : "Paket seç",
     },
     {
       baslik: "Marka görünümünü tamamla",
-      aciklama: "Logo, slogan, destek telefonu veya imza müşteriye daha profesyonel görünür.",
+      aciklama: "Logo, slogan ve destek bilgisi güven verir.",
       tamam: markaTamam,
       href: "#marka",
       cta: markaTamam ? "Marka hazır" : "Markayı düzenle",
     },
     {
       baslik: "İlk teklif metnini hazırla",
-      aciklama: "Satış metni veya PDF çıktısı ile müşteriye paketi net anlat.",
+      aciklama: "Paketi müşteriye kısa ve net anlatın.",
       tamam: teklifHazir,
       href: abonelik ? "#teklif" : "#odeme",
       cta: teklifHazir ? "Teklif hazır" : abonelik ? "Teklife git" : "Paket seç",
     },
     {
       baslik: "İlk aktivasyon linkini oluştur",
-      aciklama: "Müşteriye özel, tek kullanımlık teslim linki üret.",
+      aciklama: "Müşteriye özel tek kullanımlık link üretin.",
       tamam: ilkKodVar,
       href: abonelik ? "#aktivasyon-kodlari" : "#odeme",
       cta: ilkKodVar ? "Link hazır" : abonelik ? "Link oluştur" : "Paket seç",
     },
     {
       baslik: "Teslim paketini müşteriye gönder",
-      aciklama: "Hazır metinle kullanım adımları ve gizlilik notunu birlikte paylaş.",
+      aciklama: "Linki ve kullanım notunu müşteriye iletin.",
       tamam: gonderilenVar,
       href: abonelik ? "#aktivasyon-kodlari" : "#odeme",
       cta: gonderilenVar ? "Gönderildi" : abonelik ? "Teslim paketini aç" : "Paket seç",
     },
     {
       baslik: "İlk yayına çıkan işi takip et",
-      aciklama: "Yayına çıkan müşteri varsa QR kiti ve etkinlik günü kullanımını hatırlat.",
+      aciklama: "Yayındaki iş için QR ve ekip kontrolü yapın.",
       tamam: yayindaVar,
       href: abonelik ? "#operasyon" : "#odeme",
       cta: yayindaVar ? "Yayın var" : abonelik ? "Operasyona bak" : "Paket seç",
@@ -115,7 +115,7 @@ export default function PartnerOnboardingChecklist({
               Panel satış ve teslim için hazır
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-emerald-800/75">
-              Marka, teklif, aktivasyon ve ilk yayın adımları tamamlandı. Günlük kullanımda dönüşüm, pipeline ve aktivasyon bölümlerini takip edin.
+              Marka, teklif ve teslim adımları hazır. Günlük işlerde satış ve teslim durumlarını takip edin.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export default function PartnerOnboardingChecklist({
               Partner panelini satışa hazır hale getir
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">
-              İlk müşteriyi daha hızlı teslim etmek için tamamlanması gereken pratik adımlar.
+              İlk müşteriyi sorunsuz teslim etmek için bu adımları tamamlayın.
             </p>
           </div>
 

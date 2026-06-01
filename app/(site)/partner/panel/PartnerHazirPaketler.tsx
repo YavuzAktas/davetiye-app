@@ -49,7 +49,7 @@ const PAKETLER: Paket[] = [
     renk: "from-pink-600 to-rose-500",
     dahil: ["Fotoğraf albümü", "Anı defteri", "Sesli anı", "Canlı duvar"],
     teslim: ["Masa QR yönlendirmesi", "Canlı duvar linki", "Etkinlik sonrası anı arşivi"],
-    fiyatNotu: "Duygusal değeri yüksek paket; premium paketle birlikte sunulduğunda dönüşüm artar.",
+    fiyatNotu: "Duygusal değeri yüksek paket; premium paketle birlikte daha güçlü satılır.",
     takipAksiyonu: "Etkinlik öncesi masa QR kartlarını ve canlı duvar ekranını test ettirin.",
   },
   {
