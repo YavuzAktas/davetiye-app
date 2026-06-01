@@ -59,12 +59,12 @@ async function metadataTemizle(
       output = await sharp(input, { failOn: "warning", animated: false })
         .rotate()
         .resize({
-          width: 1600,
-          height: 1600,
+          width: 2400,
+          height: 2400,
           fit: "inside",
           withoutEnlargement: true,
         })
-        .webp({ quality: 82, effort: 5 })
+        .webp({ quality: 88, effort: 5 })
         .toBuffer();
     } else {
       output = input;
