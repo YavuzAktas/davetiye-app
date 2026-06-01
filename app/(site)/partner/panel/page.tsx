@@ -359,6 +359,7 @@ export default async function PartnerPanelPage({
                   kullanilanHak: abonelik.kullanilanHak,
                 } : null}
                 kodlar={kodlar}
+                teklifHazir={partner.teklifHazir}
                 leadler={partnerLeadleriHam.map(lead => ({
                   id: lead.id,
                   baslik: lead.baslik,

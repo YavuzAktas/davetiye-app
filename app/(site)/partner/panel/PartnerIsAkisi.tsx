@@ -27,10 +27,12 @@ export default function PartnerIsAkisi({
   abonelik,
   leadler,
   kodlar,
+  teklifHazir,
 }: {
   abonelik: { hakSayisi: number; kullanilanHak: number } | null;
   leadler: Lead[];
   kodlar: Kod[];
+  teklifHazir: boolean;
 }) {
   const aktifKodlar = kodlar.filter(k => k.durum !== "iptal");
   const kaporaLeadler = leadler.filter(l => ["kapora_bekliyor", "kazandi"].includes(l.durum));
@@ -62,8 +64,8 @@ export default function PartnerIsAkisi({
       aciklama: "Paket kapsamını anlat ve yazılı teklif ilet.",
       href: "#teklif",
       cta: "Teklif hazırla",
-      tamam: teklifLeadler.length > 0,
-      aktif: leadler.length > 0 && teklifLeadler.length === 0,
+      tamam: teklifHazir || teklifLeadler.length > 0,
+      aktif: leadler.length > 0 && !teklifHazir && teklifLeadler.length === 0,
       aktifLeadler: teklifLeadler.filter(l => l.durum === "teklif_gonderildi").slice(0, 3),
     },
     {
