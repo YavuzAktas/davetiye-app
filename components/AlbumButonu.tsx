@@ -311,17 +311,10 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
 
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yüklediğiniz fotoğraf davet sahibinin moderasyonuna iletilir; onaylanırsa
-                        davetiye albümünde görünür. Silme talepleri için{" "}
+                        Adınız ve fotoğrafınız davet sahibine iletilir; onaylanırsa albümde görünür. Silme:{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
-                        </a>{" "}
-                        adresine yazabilir ya da{" "}
-                        <a href="/kvkk" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-gray-600">
-                          KVKK Aydınlatma Metni
                         </a>
-                        'ni inceleyebilirsiniz.
                       </p>
                     </div>
                     <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
@@ -333,8 +326,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                         style={{ accentColor: renk }}
                       />
                       <span className="text-[11px] leading-relaxed text-gray-500">
-                        Yayın izni veriyorum; adımın ve fotoğrafımın davet sahibine iletilmesini,
-                        onaylanırsa davetiye albümünde yayınlanmasını kabul ediyorum.
+                        Adımın ve fotoğrafımın onay sonrası yayınlanmasına izin veriyorum.
                       </span>
                     </label>
 
@@ -429,19 +421,12 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                     </div>
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yazdığınız anı davet sahibinin moderasyonuna iletilir; onaylanırsa
-                        anı defterinde görünür. Silme talepleri için{" "}
+                        Göndererek adınızın ve mesajınızın davet sahibine iletilmesini ve onay sonrası anı defterinde görünmesini kabul edersiniz. Silme:{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
-                        </a>{" "}
-                        adresine yazabilirsiniz.
+                        </a>
                       </p>
                     </div>
-                    <p className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 text-[11px] leading-relaxed text-gray-500">
-                      Göndererek adınızın ve mesajınızın davet sahibine iletilmesini, davet sahibi onaylarsa
-                      anı defterinde yayınlanmasını kabul etmiş olursunuz.
-                    </p>
                     {aniHata && <p className="text-xs text-red-500">{aniHata}</p>}
                     <button
                       type="submit"

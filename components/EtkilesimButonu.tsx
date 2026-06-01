@@ -551,14 +551,10 @@ export default function EtkilesimButonu({
                     <input ref={dosyaInputRef} type="file" accept="image/*" multiple className="hidden" onChange={dosyaSec} />
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yüklediğiniz fotoğraf davet sahibine iletilir; davet sahibi onaylarsa
-                        fotoğrafınız davetiye sayfasında görünür.{" "}
-                        Silme talepleri için{" "}
+                        Adınız ve fotoğrafınız davet sahibine iletilir; onaylanırsa albüm/canlı duvarda görünür. Silme:{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
-                        </a>{" "}
-                        adresine yazabilirsiniz.
+                        </a>
                       </p>
                     </div>
                     <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
@@ -570,8 +566,7 @@ export default function EtkilesimButonu({
                         style={{ accentColor: renk }}
                       />
                       <span className="text-[11px] leading-relaxed text-gray-500">
-                        Yayın izni veriyorum; adımın ve fotoğrafımın davet sahibine iletilmesini,
-                        onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
+                        Adımın ve fotoğrafımın onay sonrası yayınlanmasına izin veriyorum.
                       </span>
                     </label>
                     {fotoHata && (
@@ -651,19 +646,12 @@ export default function EtkilesimButonu({
                     </div>
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız ve yazdığınız anı davet sahibine iletilir; onaylanırsa anı defterinde görünür.
-                        Silme talepleri için{" "}
+                        Göndererek adınızın ve mesajınızın davet sahibine iletilmesini ve onay sonrası anı defterinde görünmesini kabul edersiniz. Silme:{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
-                        </a>{" "}
-                        adresine yazabilirsiniz.
+                        </a>
                       </p>
                     </div>
-                    <p className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 text-[11px] leading-relaxed text-gray-500">
-                      Göndererek adınızın ve mesajınızın davet sahibine iletilmesini, davet sahibi onaylarsa
-                      anı defterinde yayınlanmasını kabul etmiş olursunuz.
-                    </p>
                     {aniHata && <p className="text-xs text-red-500">{aniHata}</p>}
                     <button type="submit" disabled={aniYukleniyor || !aniAd.trim() || !aniIcerik.trim()}
                       className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40"
@@ -722,14 +710,10 @@ export default function EtkilesimButonu({
                       className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-400 bg-white" />
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
-                        Adınız, ses kaydınız ve kayıt süreniz davet sahibinin moderasyonuna iletilir; onaylanırsa
-                        davetiye sayfasında dinlenebilir. Mikrofon izni yalnızca kayıt oluşturmak için kullanılır.
-                        Silme talepleri için{" "}
+                        Adınız ve ses kaydınız davet sahibine iletilir; onaylanırsa dinlenebilir. Silme:{" "}
                         <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
                           kvkk@bekleriz.com
-                        </a>{" "}
-                        adresine yazabilirsiniz.
+                        </a>
                       </p>
                     </div>
                     <label className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-3.5 py-2.5 cursor-pointer">
@@ -741,8 +725,7 @@ export default function EtkilesimButonu({
                         style={{ accentColor: renk }}
                       />
                       <span className="text-[11px] leading-relaxed text-gray-500">
-                        Yayın izni veriyorum; adımın ve ses kaydımın davet sahibine iletilmesini,
-                        onaylanırsa davetiye sayfasında yayınlanmasını kabul ediyorum.
+                        Adımın ve ses kaydımın onay sonrası yayınlanmasına izin veriyorum.
                       </span>
                     </label>
                     {izinReddedildi ? (
