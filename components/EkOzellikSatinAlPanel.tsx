@@ -123,6 +123,7 @@ export default function EkOzellikSatinAlPanel({
           davetiyeId,
           ozellikler: Array.from(secili),
           faturaBilgileri: fatura,
+          yasalOnay: true,
         }),
       });
       const data = await res.json();

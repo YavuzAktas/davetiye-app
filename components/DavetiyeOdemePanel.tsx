@@ -118,7 +118,7 @@ export default function DavetiyeOdemePanel({
       const res = await fetch("/api/odeme/baslat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ davetiyeId, faturaBilgileri: fatura }),
+        body: JSON.stringify({ davetiyeId, faturaBilgileri: fatura, yasalOnay: true }),
       });
       const data = await res.json();
       if (data.checkoutFormContent) {

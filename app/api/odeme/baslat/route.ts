@@ -114,6 +114,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
   const { davetiyeId, krediUygula } = body;
 
+  if (body?.yasalOnay !== true) {
+    return NextResponse.json(
+      { hata: "Ödeme öncesi yasal bilgilendirme ve cayma hakkı istisnası onayı gereklidir." },
+      { status: 400 },
+    );
+  }
+
   if (typeof davetiyeId !== "string" || !davetiyeId) {
     return NextResponse.json(
       { hata: "Ödeme yalnızca oluşturulmuş bir davetiye için başlatılabilir." },

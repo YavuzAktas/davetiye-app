@@ -104,7 +104,12 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
       const res = await fetch("/api/odeme/baslat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ davetiyeId, faturaBilgileri: fatura, krediUygula: krediUygula && kredi > 0 }),
+        body: JSON.stringify({
+          davetiyeId,
+          faturaBilgileri: fatura,
+          krediUygula: krediUygula && kredi > 0,
+          yasalOnay: true,
+        }),
       });
       const data = await res.json();
       if (data.checkoutFormContent) {

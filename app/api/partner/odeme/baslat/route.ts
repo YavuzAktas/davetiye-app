@@ -125,6 +125,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const paket = paketGetir(paketId);
   if (!paket) return NextResponse.json({ hata: "Geçersiz paket." }, { status: 400 });
 
+  if (body?.yasalOnay !== true) {
+    return NextResponse.json(
+      { hata: "Ödeme öncesi partner abonelik sözleşmesi ve otomatik yenileme onayı gereklidir." },
+      { status: 400 },
+    );
+  }
+
   const fb = body.faturaBilgileri ?? {};
   const faturaTipi: "bireysel" | "kurumsal" = fb.faturaTipi === "kurumsal" ? "kurumsal" : "bireysel";
   const adSoyad = temizle(fb.adSoyad, 120);

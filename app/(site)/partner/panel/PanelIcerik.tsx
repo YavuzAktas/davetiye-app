@@ -116,7 +116,7 @@ export default function PanelIcerik({
       const res = await fetch("/api/partner/odeme/baslat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paketId: secilenPaket, faturaBilgileri: fatura }),
+        body: JSON.stringify({ paketId: secilenPaket, faturaBilgileri: fatura, yasalOnay: true }),
       });
       const data = await res.json();
       if (data.checkoutFormContent) {

@@ -69,6 +69,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { davetiyeId, ozellikler, faturaBilgileri: fatura } = body;
 
+  if (body?.yasalOnay !== true) {
+    return NextResponse.json(
+      { hata: "Ödeme öncesi yasal bilgilendirme ve cayma hakkı istisnası onayı gereklidir." },
+      { status: 400 },
+    );
+  }
+
   if (typeof davetiyeId !== "string" || !davetiyeId) {
     return NextResponse.json({ hata: "davetiyeId gerekli." }, { status: 400 });
   }
