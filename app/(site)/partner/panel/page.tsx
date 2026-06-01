@@ -136,6 +136,8 @@ export default async function PartnerPanelPage({
         kaynak: true,
         durum: true,
         not: true,
+        seansBaslangic: true,
+        seansBitis: true,
         sonGorusmeAt: true,
         createdAt: true,
         updatedAt: true,
@@ -407,6 +409,8 @@ export default async function PartnerPanelPage({
                         kaynak: lead.kaynak,
                         durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
                         not: lead.not,
+                        seansBaslangic: lead.seansBaslangic,
+                        seansBitis: lead.seansBitis,
                         sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
                         createdAt: lead.createdAt.toISOString(),
                         updatedAt: lead.updatedAt.toISOString(),
@@ -566,6 +570,8 @@ export default async function PartnerPanelPage({
                         etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
                         kisiSayisi: lead.kisiSayisi,
                         durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        seansBaslangic: lead.seansBaslangic,
+                        seansBitis: lead.seansBitis,
                       }))}
                     />
                   </div>

@@ -29,6 +29,8 @@ type Lead = {
   kaynak: string | null;
   durum: LeadDurum;
   not: string | null;
+  seansBaslangic: string | null;
+  seansBitis: string | null;
   sonGorusmeAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -45,6 +47,8 @@ type FormState = {
   kaynak: string;
   durum: LeadDurum;
   not: string;
+  seansBaslangic: string;
+  seansBitis: string;
 };
 
 const DURUMLAR: { id: LeadDurum; label: string; renk: string }[] = [
@@ -60,6 +64,7 @@ const BOS_FORM: FormState = {
   baslik: "", ilgiliKisi: "", telefon: "", eposta: "",
   etkinlikTuru: "", etkinlikTarihi: "", kisiSayisi: "",
   kaynak: "", durum: "yeni", not: "",
+  seansBaslangic: "", seansBitis: "",
 };
 
 function tarihKisa(d: string | null) {
@@ -76,6 +81,7 @@ function leadFormu(l: Lead): FormState {
     etkinlikTarihi: inputTarihi(l.etkinlikTarihi),
     kisiSayisi: l.kisiSayisi ? String(l.kisiSayisi) : "",
     kaynak: l.kaynak ?? "", durum: l.durum, not: l.not ?? "",
+    seansBaslangic: l.seansBaslangic ?? "", seansBitis: l.seansBitis ?? "",
   };
 }
 
@@ -85,6 +91,8 @@ function payloadHazirla(f: FormState) {
     eposta: f.eposta, etkinlikTuru: f.etkinlikTuru, etkinlikTarihi: f.etkinlikTarihi,
     kisiSayisi: f.kisiSayisi ? Number(f.kisiSayisi) : null,
     kaynak: f.kaynak, durum: f.durum, not: f.not,
+    seansBaslangic: f.seansBaslangic || null,
+    seansBitis: f.seansBitis || null,
   };
 }
 
@@ -99,12 +107,22 @@ function GripIkon() {
   );
 }
 
+function seansSaati(baslangic: string | null, bitis: string | null) {
+  if (!baslangic) return "Tüm gün";
+  return bitis ? `${baslangic} – ${bitis}` : `${baslangic}'den itibaren`;
+}
+
 /* ── Shared card body (reused in DraggableKart and DragOverlay) ─ */
 function KartDetay({ lead }: { lead: Lead }) {
   return (
     <div className="mt-1.5 space-y-1 text-xs font-semibold text-gray-500">
       {lead.ilgiliKisi && <p>{lead.ilgiliKisi}</p>}
       <p>{lead.etkinlikTuru || "Etkinlik türü yok"} · {tarihKisa(lead.etkinlikTarihi)}</p>
+      {lead.etkinlikTarihi && (
+        <p className="font-bold text-gray-600">
+          🕐 {seansSaati(lead.seansBaslangic, lead.seansBitis)}
+        </p>
+      )}
       {lead.kisiSayisi && <p>{lead.kisiSayisi} kişi</p>}
       {lead.kaynak && <p>Kaynak: {lead.kaynak}</p>}
     </div>
@@ -444,6 +462,47 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
                   className="mt-1 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100" />
               </label>
             </div>
+
+            {/* Seans saatleri */}
+            {form.etkinlikTarihi && (
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-3.5">
+                <div className="mb-2.5 flex items-start gap-2">
+                  <span className="mt-0.5 text-base leading-none">🕐</span>
+                  <div>
+                    <p className="text-xs font-black text-gray-800">Seans saatleri <span className="font-semibold text-gray-400">(opsiyonel)</span></p>
+                    <p className="mt-0.5 text-[11px] leading-relaxed text-gray-500">
+                      Boş bırakırsanız tüm gün kapalı sayılır. Aynı güne birden fazla seans ekleyecekseniz her seansı ayrı lead olarak girin — çakışma kontrolü saate göre yapılır.
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="block">
+                    <span className="text-[11px] font-bold text-gray-500">Başlangıç</span>
+                    <input
+                      type="time"
+                      value={form.seansBaslangic}
+                      onChange={e => guncelle("seansBaslangic", e.target.value)}
+                      className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-[11px] font-bold text-gray-500">Bitiş</span>
+                    <input
+                      type="time"
+                      value={form.seansBitis}
+                      onChange={e => guncelle("seansBitis", e.target.value)}
+                      className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100"
+                    />
+                  </label>
+                </div>
+                {form.seansBaslangic && !form.seansBitis && (
+                  <p className="mt-2 text-[11px] font-semibold text-amber-600">Bitiş saati girilmezse çakışma tespiti için tüm gün kapalı sayılır.</p>
+                )}
+                {form.seansBaslangic && form.seansBitis && form.seansBitis <= form.seansBaslangic && (
+                  <p className="mt-2 text-[11px] font-semibold text-red-600">Bitiş saati başlangıç saatinden büyük olmalı.</p>
+                )}
+              </div>
+            )}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="text-xs font-bold text-gray-500">Etkinlik türü</span>

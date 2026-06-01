@@ -7,6 +7,8 @@ import { ipIzinVer } from "@/lib/rate-limit";
 
 const DURUMLAR = ["yeni", "gorusuldu", "teklif_gonderildi", "kapora_bekliyor", "kazandi", "kaybedildi"] as const;
 
+const saatFormatr = z.string().trim().regex(/^\d{2}:\d{2}$/).optional().nullable();
+
 const leadSemasi = z.object({
   baslik: z.string().trim().min(2).max(120),
   ilgiliKisi: z.string().trim().max(120).optional().nullable(),
@@ -18,6 +20,8 @@ const leadSemasi = z.object({
   kaynak: z.string().trim().max(60).optional().nullable(),
   durum: z.enum(DURUMLAR).default("yeni"),
   not: z.string().trim().max(500).optional().nullable(),
+  seansBaslangic: saatFormatr,
+  seansBitis: saatFormatr,
 }).strict();
 
 const leadGuncelleSemasi = leadSemasi.partial().extend({
@@ -75,6 +79,8 @@ function leadSecimi() {
     kaynak: true,
     durum: true,
     not: true,
+    seansBaslangic: true,
+    seansBitis: true,
     sonGorusmeAt: true,
     createdAt: true,
     updatedAt: true,
@@ -93,6 +99,8 @@ function leadJson(lead: {
   kaynak: string | null;
   durum: string;
   not: string | null;
+  seansBaslangic: string | null;
+  seansBitis: string | null;
   sonGorusmeAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -138,6 +146,8 @@ export async function POST(req: NextRequest) {
       kaynak: bosIseNull(sonuc.data.kaynak),
       durum: sonuc.data.durum,
       not: bosIseNull(sonuc.data.not),
+      seansBaslangic: bosIseNull(sonuc.data.seansBaslangic),
+      seansBitis: bosIseNull(sonuc.data.seansBitis),
       sonGorusmeAt: new Date(),
     },
     select: leadSecimi(),
@@ -173,6 +183,8 @@ export async function PATCH(req: NextRequest) {
       ...(sonuc.data.kaynak !== undefined && { kaynak: bosIseNull(sonuc.data.kaynak) }),
       ...(sonuc.data.durum !== undefined && { durum: sonuc.data.durum, sonGorusmeAt: new Date() }),
       ...(sonuc.data.not !== undefined && { not: bosIseNull(sonuc.data.not) }),
+      ...(sonuc.data.seansBaslangic !== undefined && { seansBaslangic: bosIseNull(sonuc.data.seansBaslangic) }),
+      ...(sonuc.data.seansBitis !== undefined && { seansBitis: bosIseNull(sonuc.data.seansBitis) }),
     },
   });
 

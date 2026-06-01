@@ -533,6 +533,8 @@ model PartnerLead {
   kaynak         String?   @db.VarChar(60)
   durum          String    @default("yeni") @db.VarChar(40)
   not            String?   @db.VarChar(500)
+  seansBaslangic String?   @db.VarChar(5)
+  seansBitis     String?   @db.VarChar(5)
   sonGorusmeAt   DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt

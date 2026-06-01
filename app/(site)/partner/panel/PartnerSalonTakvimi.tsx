@@ -12,6 +12,8 @@ type Lead = {
   etkinlikTarihi: string | null;
   kisiSayisi: number | null;
   durum: LeadDurum;
+  seansBaslangic: string | null;
+  seansBitis: string | null;
 };
 
 const DURUM_LABEL: Record<LeadDurum, string> = {
@@ -57,6 +59,30 @@ function tarihUzun(str: string) {
     { day: "numeric", month: "long", year: "numeric" });
 }
 
+function saatDk(saat: string | null): number {
+  if (!saat) return -1;
+  const [h, m] = saat.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function seansEtiketi(baslangic: string | null, bitis: string | null): string {
+  if (!baslangic) return "Tüm gün";
+  return bitis ? `${baslangic}–${bitis}` : `${baslangic}+`;
+}
+
+function cakisiyorMu(a: Lead, b: Lead): boolean {
+  const aB = saatDk(a.seansBaslangic);
+  const aBit = saatDk(a.seansBitis);
+  const bB = saatDk(b.seansBaslangic);
+  const bBit = saatDk(b.seansBitis);
+  // Herhangi biri tüm gün → kesin çakışma
+  if (aB === -1 || bB === -1) return true;
+  // İkisi de bitiş saati yok → sadece başlangıca bakılamaz, tüm gün say
+  if (aBit === -1 || bBit === -1) return true;
+  // Zaman dilimi örtüşmesi: A başlamadan B bitmiş mi? değilse çakışıyor
+  return aB < bBit && bB < aBit;
+}
+
 export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
   const bugun = bugunStr();
   const now = new Date();
@@ -86,8 +112,21 @@ export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
     () => tarihliLeadler.filter(l => l.etkinlikTarihi!.startsWith(ayPrefix)),
     [tarihliLeadler, ayPrefix],
   );
-  const cakismaGun = [...gunMap.entries()]
-    .filter(([k, v]) => v.length > 1 && k.startsWith(ayPrefix)).length;
+  const cakismaGunSet = useMemo(() => {
+    const set = new Set<string>();
+    gunMap.forEach((gunLeadler, tarih) => {
+      if (gunLeadler.length < 2) return;
+      for (let i = 0; i < gunLeadler.length; i++) {
+        for (let j = i + 1; j < gunLeadler.length; j++) {
+          if (cakisiyorMu(gunLeadler[i], gunLeadler[j])) { set.add(tarih); break; }
+        }
+        if (set.has(tarih)) break;
+      }
+    });
+    return set;
+  }, [gunMap]);
+
+  const cakismaGun = [...cakismaGunSet].filter(k => k.startsWith(ayPrefix)).length;
 
   const yaklasan = useMemo(
     () => tarihliLeadler
@@ -172,7 +211,7 @@ export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
               const gunLeadler = gunMap.get(gStr) ?? [];
               const isToday   = gStr === bugun;
               const isSecili  = gStr === seciliGun;
-              const cakisma   = gunLeadler.length > 1;
+              const cakisma   = cakismaGunSet.has(gStr);
               const hasLead   = gunLeadler.length > 0;
 
               return (
@@ -204,8 +243,11 @@ export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
                   <div className="space-y-0.5">
                     {gunLeadler.slice(0, 2).map(lead => (
                       <div key={lead.id}
-                        className={`truncate rounded-md px-1 py-0.5 text-[9px] font-black leading-tight ${DURUM_CHIP[lead.durum]}`}>
-                        {lead.baslik}
+                        className={`rounded-md px-1 py-0.5 text-[9px] font-black leading-tight ${DURUM_CHIP[lead.durum]}`}>
+                        <p className="truncate">{lead.baslik}</p>
+                        <p className="truncate font-semibold opacity-80">
+                          {seansEtiketi(lead.seansBaslangic, lead.seansBitis)}
+                        </p>
                       </div>
                     ))}
                     {gunLeadler.length > 2 && (
@@ -224,20 +266,23 @@ export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
             <div className="mt-4 rounded-3xl border border-purple-100 bg-purple-50/40 p-4">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="text-sm font-black text-gray-950">{tarihUzun(seciliGun)}</p>
-                {seciliLeadler.length > 1 && (
+                {cakismaGunSet.has(seciliGun) && (
                   <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[10px] font-black text-red-700">
-                    Çakışma kontrolü
+                    ⚠ Saat çakışması
                   </span>
                 )}
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
                 {seciliLeadler.map(lead => (
-                  <div key={lead.id} className="flex items-center justify-between gap-2 rounded-2xl bg-white p-3 shadow-sm">
+                  <div key={lead.id} className="flex items-start justify-between gap-2 rounded-2xl bg-white p-3 shadow-sm">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-black text-gray-950">{lead.baslik}</p>
                       <p className="mt-0.5 text-xs font-semibold text-gray-500">
                         {lead.etkinlikTuru || "Etkinlik türü yok"}
                         {lead.kisiSayisi ? ` · ${lead.kisiSayisi} kişi` : ""}
+                      </p>
+                      <p className="mt-1 text-[11px] font-black text-gray-700">
+                        🕐 {seansEtiketi(lead.seansBaslangic, lead.seansBitis)}
                       </p>
                     </div>
                     <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-black ${DURUM_CHIP[lead.durum]}`}>
@@ -246,6 +291,14 @@ export default function PartnerSalonTakvimi({ leadler }: { leadler: Lead[] }) {
                   </div>
                 ))}
               </div>
+              {cakismaGunSet.has(seciliGun) && (
+                <div className="mt-3 rounded-2xl border border-red-100 bg-red-50 p-3">
+                  <p className="text-xs font-black text-red-800">Saat aralıkları örtüşüyor</p>
+                  <p className="mt-0.5 text-[11px] leading-relaxed text-red-700">
+                    Bu güne ait seanslar çakışıyor. CRM'de saat aralıklarını kontrol edin veya bir seansı iptal edin.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
