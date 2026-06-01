@@ -4,21 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 
 const NAV_LINKLERI = [
   { href: "#ozet", label: "Özet", abonelikGerekli: false },
-  { href: "#kurulum", label: "Kurulum", abonelikGerekli: false },
-  { href: "#lead-crm", label: "Müşteriler", abonelikGerekli: true },
-  { href: "#segmentler", label: "Müşteri Grupları", abonelikGerekli: true },
-  { href: "#salon-takvimi", label: "Takvim", abonelikGerekli: true },
-  { href: "#analitik", label: "Raporlar", abonelikGerekli: true },
-  { href: "#paketler", label: "Satış Paketleri", abonelikGerekli: true },
-  { href: "#whatsapp-asistani", label: "Mesaj Asistanı", abonelikGerekli: true },
-  { href: "#aktivasyon-kodlari", label: "Teslim Linkleri", abonelikGerekli: true },
-  { href: "#teslim-raporu", label: "Teslim Raporu", abonelikGerekli: true },
-  { href: "#ekip", label: "Ekip", abonelikGerekli: true },
-  { href: "#operasyon", label: "İş Takibi", abonelikGerekli: true },
-  { href: "#satis", label: "Satış Rehberi", abonelikGerekli: true },
-  { href: "#marka", label: "Marka", abonelikGerekli: false },
-  { href: "#teklif", label: "Teklif", abonelikGerekli: true },
-  { href: "#odeme", label: "Ödeme", abonelikGerekli: false },
+  { href: "#satis-akisi", label: "Satış", abonelikGerekli: true },
+  { href: "#teslim-akisi", label: "Teslim", abonelikGerekli: true },
+  { href: "#operasyon-akisi", label: "Operasyon", abonelikGerekli: true },
+  { href: "#ayarlar-akisi", label: "Ayarlar", abonelikGerekli: false },
 ];
 
 export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean }) {

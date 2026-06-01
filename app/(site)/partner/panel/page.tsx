@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
@@ -314,7 +315,13 @@ export default async function PartnerPanelPage({
         {partner.durum === "aktif" && (
           <div className="space-y-6">
             <PartnerPanelNav abonelikVar={Boolean(abonelik)} />
-            <div id="ozet" className="scroll-mt-24">
+            <PanelBolum
+              id="ozet"
+              etiket="Özet"
+              baslik="Bugünün önceliği"
+              aciklama="Panele girince önce sıradaki işleri, hızlı işlemleri ve kurulum durumunu görün."
+              linkler={[{ href: "#kurulum", label: "Kurulum" }]}
+            >
               <PartnerPanelOzeti
                 abonelik={abonelik ? {
                   paketId: abonelik.paketId,
@@ -346,233 +353,327 @@ export default async function PartnerPanelPage({
                   whatsappImzasi: partner.whatsappImzasi,
                 }}
               />
-            </div>
-            <div id="kurulum" className="scroll-mt-24">
-              <PartnerOnboardingChecklist
-                abonelik={abonelik ? {
-                  paketId: abonelik.paketId,
-                  hakSayisi: abonelik.hakSayisi,
-                  kullanilanHak: abonelik.kullanilanHak,
-                  bitisAt: abonelik.bitisAt,
-                } : null}
-                kodlar={kodlar}
-                teklifHazir={partner.teklifHazir}
-                marka={{
-                  logoUrl: partner.logoUrl,
-                  markaSlogani: partner.markaSlogani,
-                  destekTelefonu: partner.destekTelefonu,
-                  instagramUrl: partner.instagramUrl,
-                  whatsappImzasi: partner.whatsappImzasi,
-                }}
-              />
-            </div>
+              <div id="kurulum" className="scroll-mt-24">
+                <PartnerOnboardingChecklist
+                  abonelik={abonelik ? {
+                    paketId: abonelik.paketId,
+                    hakSayisi: abonelik.hakSayisi,
+                    kullanilanHak: abonelik.kullanilanHak,
+                    bitisAt: abonelik.bitisAt,
+                  } : null}
+                  kodlar={kodlar}
+                  teklifHazir={partner.teklifHazir}
+                  marka={{
+                    logoUrl: partner.logoUrl,
+                    markaSlogani: partner.markaSlogani,
+                    destekTelefonu: partner.destekTelefonu,
+                    instagramUrl: partner.instagramUrl,
+                    whatsappImzasi: partner.whatsappImzasi,
+                  }}
+                />
+              </div>
+            </PanelBolum>
             {abonelik && (
               <>
-                <div id="lead-crm" className="scroll-mt-24">
-                  <PartnerLeadCRM
-                    leadler={partnerLeadleriHam.map(lead => ({
-                      id: lead.id,
-                      baslik: lead.baslik,
-                      ilgiliKisi: lead.ilgiliKisi,
-                      telefon: lead.telefon,
-                      eposta: lead.eposta,
-                      etkinlikTuru: lead.etkinlikTuru,
-                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                      kisiSayisi: lead.kisiSayisi,
-                      kaynak: lead.kaynak,
-                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                      not: lead.not,
-                      sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
-                      createdAt: lead.createdAt.toISOString(),
-                      updatedAt: lead.updatedAt.toISOString(),
-                    }))}
-                  />
-                </div>
-                <div id="segmentler" className="scroll-mt-24">
-                  <PartnerMusteriSegmentleri
-                    leadler={partnerLeadleriHam.map(lead => ({
-                      id: lead.id,
-                      baslik: lead.baslik,
-                      etkinlikTuru: lead.etkinlikTuru,
-                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                      kisiSayisi: lead.kisiSayisi,
-                      kaynak: lead.kaynak,
-                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                      createdAt: lead.createdAt.toISOString(),
-                      updatedAt: lead.updatedAt.toISOString(),
-                    }))}
-                  />
-                </div>
-                <div id="salon-takvimi" className="scroll-mt-24">
-                  <PartnerSalonTakvimi
-                    leadler={partnerLeadleriHam.map(lead => ({
-                      id: lead.id,
-                      baslik: lead.baslik,
-                      ilgiliKisi: lead.ilgiliKisi,
-                      etkinlikTuru: lead.etkinlikTuru,
-                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                      kisiSayisi: lead.kisiSayisi,
-                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                    }))}
-                  />
-                </div>
-                <div id="analitik" className="scroll-mt-24">
-                  <PartnerSatisAnalitigi
-                    abonelik={{
-                      paketId: abonelik.paketId,
-                      hakSayisi: abonelik.hakSayisi,
-                      kullanilanHak: abonelik.kullanilanHak,
-                      bitisAt: abonelik.bitisAt,
-                    }}
-                    kodlar={kodlar.map(kod => ({
-                      id: kod.id,
-                      durum: kod.durum,
-                      createdAt: kod.createdAt,
-                      kullanilanAt: kod.kullanilanAt,
-                    }))}
-                    leadler={partnerLeadleriHam.map(lead => ({
-                      id: lead.id,
-                      baslik: lead.baslik,
-                      etkinlikTuru: lead.etkinlikTuru,
-                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                      kisiSayisi: lead.kisiSayisi,
-                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                      createdAt: lead.createdAt.toISOString(),
-                      updatedAt: lead.updatedAt.toISOString(),
-                    }))}
-                    odemeGecmisi={odemeKayitlariHam.map(k => ({
-                      id: k.id,
-                      createdAt: k.createdAt.toISOString(),
-                      planId: k.planId,
-                      paidPrice: k.paidPrice,
-                      currency: k.currency,
-                      fiyatKirilimi: k.fiyatKirilimi,
-                    }))}
-                  />
-                </div>
-                <div id="paketler" className="scroll-mt-24">
-                  <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
-                </div>
-                <div id="whatsapp-asistani" className="scroll-mt-24">
-                  <PartnerWhatsappAsistani
-                    firmaAdi={partner.firmaAdi}
-                    whatsappImzasi={partner.whatsappImzasi}
-                    leadler={partnerLeadleriHam.map(lead => ({
-                      id: lead.id,
-                      baslik: lead.baslik,
-                      ilgiliKisi: lead.ilgiliKisi,
-                      telefon: lead.telefon,
-                      etkinlikTuru: lead.etkinlikTuru,
-                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
-                      kisiSayisi: lead.kisiSayisi,
-                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
-                    }))}
-                  />
-                </div>
-                <div id="aktivasyon-kodlari" className="scroll-mt-24">
-                  <AktivasyonKodlari
-                    firmaAdi={partner.firmaAdi}
-                    destekTelefonu={partner.destekTelefonu}
-                    instagramUrl={partner.instagramUrl}
-                    whatsappImzasi={partner.whatsappImzasi}
-                    abonelik={{
-                      paketId: abonelik.paketId,
-                      hakSayisi: abonelik.hakSayisi,
-                      kullanilanHak: abonelik.kullanilanHak,
-                      bitisAt: abonelik.bitisAt,
-                    }}
-                    kodlar={kodlar}
-                  />
-                </div>
-                <div id="teslim-raporu" className="scroll-mt-24">
-                  <PartnerTeslimRaporu
-                    firmaAdi={partner.firmaAdi}
-                    kodlar={teslimRaporuKodlari}
-                  />
-                </div>
-                <div id="ekip" className="scroll-mt-24">
-                  <PartnerEkipErisimleri
-                    baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
-                      id: erisim.id,
-                      rol: erisim.rol,
-                      rolEtiketi:
-                        erisim.rol === "satis" ? "Satış" :
-                        erisim.rol === "operasyon" ? "Operasyon" :
-                        erisim.rol === "teslim" ? "Teslim" :
-                        "Ekip",
-                      etiket: erisim.etiket,
-                      aktif: erisim.aktif,
-                      expiresAt: erisim.expiresAt?.toISOString() ?? null,
-                      lastUsedAt: erisim.lastUsedAt?.toISOString() ?? null,
-                      revokedAt: erisim.revokedAt?.toISOString() ?? null,
-                      createdAt: erisim.createdAt.toISOString(),
-                    }))}
-                  />
-                </div>
-                <div id="operasyon" className="scroll-mt-24">
-                  <PartnerOperasyonMerkezi
-                    firmaAdi={partner.firmaAdi}
-                    abonelik={{
-                      paketId: abonelik.paketId,
-                      hakSayisi: abonelik.hakSayisi,
-                      kullanilanHak: abonelik.kullanilanHak,
-                      bitisAt: abonelik.bitisAt,
-                    }}
-                    kodlar={kodlar}
-                  />
-                </div>
-                <div id="satis" className="scroll-mt-24">
-                  <PartnerSatisRehberi />
-                </div>
-                <div id="teklif" className="scroll-mt-24">
-                  <PartnerTeklifOlusturucu
-                    firmaAdi={partner.firmaAdi}
-                    markaRenk={partner.markaRenk}
-                    markaSlogani={partner.markaSlogani}
-                    destekTelefonu={partner.destekTelefonu}
-                    instagramUrl={partner.instagramUrl}
-                    whatsappImzasi={partner.whatsappImzasi}
-                    teklifHazir={partner.teklifHazir}
-                    teklifNotlari={
-                      Array.isArray(partner.teklifNotlari)
-                        ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
-                        : []
-                    }
-                  />
-                </div>
+                <PanelBolum
+                  id="satis-akisi"
+                  etiket="Satış"
+                  baslik="Müşteri kazanma ve teklif akışı"
+                  aciklama="Müşteri adaylarını, satış paketlerini, mesajları, teklifleri ve raporları tek bölümde yönetin."
+                  linkler={[
+                    { href: "#lead-crm", label: "Müşteriler" },
+                    { href: "#segmentler", label: "Müşteri grupları" },
+                    { href: "#paketler", label: "Satış paketleri" },
+                    { href: "#whatsapp-asistani", label: "Mesaj asistanı" },
+                    { href: "#teklif", label: "Teklif" },
+                    { href: "#analitik", label: "Raporlar" },
+                    { href: "#satis", label: "Satış rehberi" },
+                  ]}
+                >
+                  <div id="lead-crm" className="scroll-mt-24">
+                    <PartnerLeadCRM
+                      leadler={partnerLeadleriHam.map(lead => ({
+                        id: lead.id,
+                        baslik: lead.baslik,
+                        ilgiliKisi: lead.ilgiliKisi,
+                        telefon: lead.telefon,
+                        eposta: lead.eposta,
+                        etkinlikTuru: lead.etkinlikTuru,
+                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                        kisiSayisi: lead.kisiSayisi,
+                        kaynak: lead.kaynak,
+                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        not: lead.not,
+                        sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
+                        createdAt: lead.createdAt.toISOString(),
+                        updatedAt: lead.updatedAt.toISOString(),
+                      }))}
+                    />
+                  </div>
+                  <div id="segmentler" className="scroll-mt-24">
+                    <PartnerMusteriSegmentleri
+                      leadler={partnerLeadleriHam.map(lead => ({
+                        id: lead.id,
+                        baslik: lead.baslik,
+                        etkinlikTuru: lead.etkinlikTuru,
+                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                        kisiSayisi: lead.kisiSayisi,
+                        kaynak: lead.kaynak,
+                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        createdAt: lead.createdAt.toISOString(),
+                        updatedAt: lead.updatedAt.toISOString(),
+                      }))}
+                    />
+                  </div>
+                  <div id="paketler" className="scroll-mt-24">
+                    <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
+                  </div>
+                  <div id="whatsapp-asistani" className="scroll-mt-24">
+                    <PartnerWhatsappAsistani
+                      firmaAdi={partner.firmaAdi}
+                      whatsappImzasi={partner.whatsappImzasi}
+                      leadler={partnerLeadleriHam.map(lead => ({
+                        id: lead.id,
+                        baslik: lead.baslik,
+                        ilgiliKisi: lead.ilgiliKisi,
+                        telefon: lead.telefon,
+                        etkinlikTuru: lead.etkinlikTuru,
+                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                        kisiSayisi: lead.kisiSayisi,
+                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                      }))}
+                    />
+                  </div>
+                  <div id="teklif" className="scroll-mt-24">
+                    <PartnerTeklifOlusturucu
+                      firmaAdi={partner.firmaAdi}
+                      markaRenk={partner.markaRenk}
+                      markaSlogani={partner.markaSlogani}
+                      destekTelefonu={partner.destekTelefonu}
+                      instagramUrl={partner.instagramUrl}
+                      whatsappImzasi={partner.whatsappImzasi}
+                      teklifHazir={partner.teklifHazir}
+                      teklifNotlari={
+                        Array.isArray(partner.teklifNotlari)
+                          ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
+                          : []
+                      }
+                    />
+                  </div>
+                  <div id="analitik" className="scroll-mt-24">
+                    <PartnerSatisAnalitigi
+                      abonelik={{
+                        paketId: abonelik.paketId,
+                        hakSayisi: abonelik.hakSayisi,
+                        kullanilanHak: abonelik.kullanilanHak,
+                        bitisAt: abonelik.bitisAt,
+                      }}
+                      kodlar={kodlar.map(kod => ({
+                        id: kod.id,
+                        durum: kod.durum,
+                        createdAt: kod.createdAt,
+                        kullanilanAt: kod.kullanilanAt,
+                      }))}
+                      leadler={partnerLeadleriHam.map(lead => ({
+                        id: lead.id,
+                        baslik: lead.baslik,
+                        etkinlikTuru: lead.etkinlikTuru,
+                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                        kisiSayisi: lead.kisiSayisi,
+                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        createdAt: lead.createdAt.toISOString(),
+                        updatedAt: lead.updatedAt.toISOString(),
+                      }))}
+                      odemeGecmisi={odemeKayitlariHam.map(k => ({
+                        id: k.id,
+                        createdAt: k.createdAt.toISOString(),
+                        planId: k.planId,
+                        paidPrice: k.paidPrice,
+                        currency: k.currency,
+                        fiyatKirilimi: k.fiyatKirilimi,
+                      }))}
+                    />
+                  </div>
+                  <div id="satis" className="scroll-mt-24">
+                    <PartnerSatisRehberi />
+                  </div>
+                </PanelBolum>
+
+                <PanelBolum
+                  id="teslim-akisi"
+                  etiket="Teslim"
+                  baslik="Müşteriye teslim ve yayın akışı"
+                  aciklama="Aktivasyon linklerini, teslim metinlerini ve müşteriye gönderilecek başarı raporlarını buradan yönetin."
+                  linkler={[
+                    { href: "#aktivasyon-kodlari", label: "Teslim linkleri" },
+                    { href: "#teslim-raporu", label: "Teslim raporu" },
+                  ]}
+                >
+                  <div id="aktivasyon-kodlari" className="scroll-mt-24">
+                    <AktivasyonKodlari
+                      firmaAdi={partner.firmaAdi}
+                      destekTelefonu={partner.destekTelefonu}
+                      instagramUrl={partner.instagramUrl}
+                      whatsappImzasi={partner.whatsappImzasi}
+                      abonelik={{
+                        paketId: abonelik.paketId,
+                        hakSayisi: abonelik.hakSayisi,
+                        kullanilanHak: abonelik.kullanilanHak,
+                        bitisAt: abonelik.bitisAt,
+                      }}
+                      kodlar={kodlar}
+                    />
+                  </div>
+                  <div id="teslim-raporu" className="scroll-mt-24">
+                    <PartnerTeslimRaporu
+                      firmaAdi={partner.firmaAdi}
+                      kodlar={teslimRaporuKodlari}
+                    />
+                  </div>
+                </PanelBolum>
+
+                <PanelBolum
+                  id="operasyon-akisi"
+                  etiket="Operasyon"
+                  baslik="Etkinlik günü ve ekip yönetimi"
+                  aciklama="Takvim, görevli erişimleri ve yayın sonrası takip işleri operasyon bölümünde toplanır."
+                  linkler={[
+                    { href: "#salon-takvimi", label: "Takvim" },
+                    { href: "#ekip", label: "Ekip" },
+                    { href: "#operasyon", label: "İş takibi" },
+                  ]}
+                >
+                  <div id="salon-takvimi" className="scroll-mt-24">
+                    <PartnerSalonTakvimi
+                      leadler={partnerLeadleriHam.map(lead => ({
+                        id: lead.id,
+                        baslik: lead.baslik,
+                        ilgiliKisi: lead.ilgiliKisi,
+                        etkinlikTuru: lead.etkinlikTuru,
+                        etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                        kisiSayisi: lead.kisiSayisi,
+                        durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                      }))}
+                    />
+                  </div>
+                  <div id="ekip" className="scroll-mt-24">
+                    <PartnerEkipErisimleri
+                      baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
+                        id: erisim.id,
+                        rol: erisim.rol,
+                        rolEtiketi:
+                          erisim.rol === "satis" ? "Satış" :
+                          erisim.rol === "operasyon" ? "Operasyon" :
+                          erisim.rol === "teslim" ? "Teslim" :
+                          "Ekip",
+                        etiket: erisim.etiket,
+                        aktif: erisim.aktif,
+                        expiresAt: erisim.expiresAt?.toISOString() ?? null,
+                        lastUsedAt: erisim.lastUsedAt?.toISOString() ?? null,
+                        revokedAt: erisim.revokedAt?.toISOString() ?? null,
+                        createdAt: erisim.createdAt.toISOString(),
+                      }))}
+                    />
+                  </div>
+                  <div id="operasyon" className="scroll-mt-24">
+                    <PartnerOperasyonMerkezi
+                      firmaAdi={partner.firmaAdi}
+                      abonelik={{
+                        paketId: abonelik.paketId,
+                        hakSayisi: abonelik.hakSayisi,
+                        kullanilanHak: abonelik.kullanilanHak,
+                        bitisAt: abonelik.bitisAt,
+                      }}
+                      kodlar={kodlar}
+                    />
+                  </div>
+                </PanelBolum>
               </>
             )}
-            <div id="marka" className="scroll-mt-24">
-              <PartnerMarkaAyarlari
-                firmaAdi={partner.firmaAdi}
-                marka={{
-                  markaRenk: partner.markaRenk,
-                  markaSlogani: partner.markaSlogani,
-                  destekTelefonu: partner.destekTelefonu,
-                  instagramUrl: partner.instagramUrl,
-                  whatsappImzasi: partner.whatsappImzasi,
-                }}
-              />
-            </div>
-            <div id="odeme" className="scroll-mt-24">
-              <PanelIcerik
-                partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
-                abonelik={abonelik}
-                odemeBasarili={odemeBasarili}
-                odemeGecmisi={odemeKayitlariHam.map(k => ({
-                  id: k.id,
-                  createdAt: k.createdAt.toISOString(),
-                  planId: k.planId,
-                  paidPrice: k.paidPrice,
-                  currency: k.currency,
-                  paymentId: k.paymentId,
-                  fiyatKirilimi: k.fiyatKirilimi,
-                }))}
-              />
-            </div>
+            <PanelBolum
+              id="ayarlar-akisi"
+              etiket="Ayarlar"
+              baslik="Marka ve ödeme ayarları"
+              aciklama="Müşteriye görünen marka bilgileri ile partner aboneliği/ödeme işlemleri bu bölümde yer alır."
+              linkler={[
+                { href: "#marka", label: "Marka" },
+                { href: "#odeme", label: "Ödeme" },
+              ]}
+            >
+              <div id="marka" className="scroll-mt-24">
+                <PartnerMarkaAyarlari
+                  firmaAdi={partner.firmaAdi}
+                  marka={{
+                    markaRenk: partner.markaRenk,
+                    markaSlogani: partner.markaSlogani,
+                    destekTelefonu: partner.destekTelefonu,
+                    instagramUrl: partner.instagramUrl,
+                    whatsappImzasi: partner.whatsappImzasi,
+                  }}
+                />
+              </div>
+              <div id="odeme" className="scroll-mt-24">
+                <PanelIcerik
+                  partner={{ id: partner.id, firmaAdi: partner.firmaAdi }}
+                  abonelik={abonelik}
+                  odemeBasarili={odemeBasarili}
+                  odemeGecmisi={odemeKayitlariHam.map(k => ({
+                    id: k.id,
+                    createdAt: k.createdAt.toISOString(),
+                    planId: k.planId,
+                    paidPrice: k.paidPrice,
+                    currency: k.currency,
+                    paymentId: k.paymentId,
+                    fiyatKirilimi: k.fiyatKirilimi,
+                  }))}
+                />
+              </div>
+            </PanelBolum>
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+function PanelBolum({
+  id,
+  etiket,
+  baslik,
+  aciklama,
+  linkler,
+  children,
+}: {
+  id: string;
+  etiket: string;
+  baslik: string;
+  aciklama: string;
+  linkler: { href: string; label: string }[];
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className="scroll-mt-24 space-y-4">
+      <div className="rounded-3xl border border-gray-100 bg-white px-5 py-5 shadow-sm sm:px-7">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">{etiket}</p>
+            <h2 className="mt-2 text-xl font-black text-gray-950 sm:text-2xl">{baslik}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">{aciklama}</p>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {linkler.map(link => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="shrink-0 rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-black text-gray-600 transition-colors hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+      {children}
+    </section>
   );
 }
