@@ -137,7 +137,7 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
       const res = await fetch(`/api/davetiye/${slug}/ani`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim() }),
+        body: JSON.stringify({ ad: aniAd.trim(), icerik: aniIcerik.trim(), yayinIzniOnay: true }),
       });
       const json = await res.json();
       if (!res.ok) { setAniHata(json.hata); return; }

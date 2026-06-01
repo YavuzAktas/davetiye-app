@@ -5,6 +5,7 @@ import { bildirimOlustur } from "@/lib/bildirim";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { ipAlNextRequest, ipIzinVer } from "@/lib/rate-limit";
 import { davetiyeAniCacheTag } from "@/lib/cache-tags";
+import { YASAL_METIN_SURUMU } from "@/lib/yasal-bilgiler";
 
 const PUBLIC_LISTE_CACHE_SN = 60;
 
@@ -74,6 +75,7 @@ export async function POST(
 
   const ad = (body.ad as string | undefined)?.trim();
   const icerik = (body.icerik as string | undefined)?.trim();
+  const yayinIzniOnay = body.yayinIzniOnay === true;
 
   if (!ad || ad.length < 2)
     return NextResponse.json({ hata: "Ad en az 2 karakter olmalı." }, { status: 400 });
@@ -81,6 +83,8 @@ export async function POST(
     return NextResponse.json({ hata: "Mesaj en az 5 karakter olmalı." }, { status: 400 });
   if (icerik.length > 600)
     return NextResponse.json({ hata: "Mesaj en fazla 600 karakter olabilir." }, { status: 400 });
+  if (!yayinIzniOnay)
+    return NextResponse.json({ hata: "Anı paylaşımı için bilgilendirme onayı gereklidir." }, { status: 400 });
 
   const ani = await prisma.aniDefteri.create({
     data: {
@@ -88,6 +92,8 @@ export async function POST(
       yazarAd: ad,
       icerik,
       onaylandi: false,
+      yayinIzniOnaylandiAt: new Date(),
+      yayinIzniMetinSurumu: YASAL_METIN_SURUMU,
     },
   });
 

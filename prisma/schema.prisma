@@ -179,16 +179,19 @@ model AlbumFoto {
 }
 
 model AniDefteri {
-  id         String   @id @default(cuid())
-  davetiyeId String
-  davetiye   Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
-  yazarAd    String
-  icerik     String   @db.Text
-  onaylandi  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id                   String   @id @default(cuid())
+  davetiyeId           String
+  davetiye             Davetiye @relation(fields: [davetiyeId], references: [id], onDelete: Cascade)
+  yazarAd              String
+  icerik               String   @db.Text
+  onaylandi            Boolean  @default(false)
+  yayinIzniOnaylandiAt DateTime?
+  yayinIzniMetinSurumu String?
+  createdAt            DateTime @default(now())
 
   @@index([davetiyeId])
   @@index([davetiyeId, onaylandi, createdAt])
+  @@index([yayinIzniOnaylandiAt])
 }
 
 model RSVP {
