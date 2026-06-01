@@ -169,7 +169,6 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
   const [acildi, setAcildi] = useState(previewModu ?? false);
   const [animating, setAnimating] = useState(false);
   const [aktifPolaroid, setAktifPolaroid] = useState<number | null>(null);
-  const [muzikBaslat, setMuzikBaslat] = useState(false);
 
   useEffect(() => {
     if (acildi) document.dispatchEvent(new CustomEvent("davetiye-acildi"));
@@ -210,10 +209,13 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
 
   /* İsimler — son kelime (soyad) atılır, geri kalan gösterilir */
   const soyadSiz = (s: string) => { const p = s.trim().split(/\s+/); return p.length > 1 ? p.slice(0, -1).join(" ") : s; };
+  const sadeceSoyad = (s: string) => { const p = s.trim().split(/\s+/); return p.at(-1) ?? s; };
   const raw1 = davetiye.kisi1 || davetiye.baslik.split(/[&ve]/i)[0]?.trim() || davetiye.baslik;
   const raw2 = davetiye.kisi2 || davetiye.baslik.split(/[&ve]/i)[1]?.trim() || null;
   const isim1 = soyadSiz(raw1);
   const isim2 = raw2 ? soyadSiz(raw2) : null;
+  const soyad1 = sadeceSoyad(raw1);
+  const soyad2 = raw2 ? sadeceSoyad(raw2) : null;
 
   return (
     <>
@@ -269,7 +271,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
 
           <div className="relative z-10 flex flex-col items-center"
             style={{ opacity: animating ? 0 : 1, transition:"opacity 0.55s ease" }}>
-            <RoseSeal size={240} onClick={() => { setMuzikBaslat(true); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
+            <RoseSeal size={240} onClick={() => { document.dispatchEvent(new CustomEvent("muzik-baslat")); setAnimating(true); setTimeout(() => setAcildi(true), 580); }} />
 
             <div className="mt-10 text-center">
               {tarihKisa && (
@@ -280,14 +282,14 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
                   textShadow: "0 2px 10px rgba(0,0,0,0.3)"
                 }}>{tarihKisa}</p>
               )}
-              {isim2 && (
+              {soyad2 && (
                 <p style={{
                   fontFamily:"var(--font-cormorant),serif",
                   fontSize:14, fontStyle:"italic",
                   color:`${CREAM}80`, letterSpacing:"0.14em",
                   marginBottom:16,
                 }}>
-                  {isim1} ve {isim2} aileleri
+                  {soyad1} ve {soyad2} aileleri
                 </p>
               )}
               <p style={{
@@ -303,10 +305,11 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
       </div>
       )}
 
+      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} gizle={!acildi} />}
+
       {/* ══ AÇIK DURUM ══ */}
       {acildi && (
       <div style={{ background:BG, minHeight:"100vh", overflowX:"hidden" }}>
-      {davetiye.muzik && <MuzikCalar muzikUrl={davetiye.muzik} renk={GOLD} autoplay={muzikBaslat} />}
 
       {/* ════════════════════════════════════
           BÖLÜM 1 — BİZ (Hero kemer)

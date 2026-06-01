@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
-interface Props { muzikUrl: string; renk?: string; autoplay?: boolean }
+interface Props { muzikUrl: string; renk?: string; autoplay?: boolean; gizle?: boolean }
 
 /* ── Ortak toggle butonu ── */
 function ToggleButon({ caliyor, onClick, renk, yukleniyor }: {
@@ -102,7 +102,8 @@ function useAudio(src: string, autoplay = false) {
 }
 
 /* ── Dispatch ── */
-export default function MuzikCalar({ muzikUrl, renk = "#7C3AED", autoplay = false }: Props) {
+export default function MuzikCalar({ muzikUrl, renk = "#7C3AED", autoplay = false, gizle = false }: Props) {
   const { caliyor, toggle } = useAudio(muzikUrl, autoplay);
+  if (gizle) return null;
   return <ToggleButon caliyor={caliyor} onClick={toggle} renk={renk} />;
 }
