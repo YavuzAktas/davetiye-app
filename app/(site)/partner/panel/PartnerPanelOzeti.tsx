@@ -73,7 +73,19 @@ function markaTamamMi(marka: Marka) {
 function aksiyonStili(onem: Aksiyon["onem"]) {
   if (onem === "kritik") return "border-red-100 bg-red-50 text-red-800";
   if (onem === "bugun") return "border-amber-100 bg-amber-50 text-amber-800";
-  return "border-purple-100 bg-purple-50 text-purple-800";
+  return "border-gray-100 bg-white text-gray-800";
+}
+
+function anaAksiyonStili(onem: Aksiyon["onem"]) {
+  if (onem === "kritik") return "border-red-100 bg-linear-to-br from-red-50 via-white to-rose-50 text-red-900";
+  if (onem === "bugun") return "border-amber-100 bg-linear-to-br from-amber-50 via-white to-orange-50 text-amber-900";
+  return "border-purple-100 bg-linear-to-br from-purple-50 via-white to-pink-50 text-purple-950";
+}
+
+function aksiyonEtiketi(onem: Aksiyon["onem"]) {
+  if (onem === "kritik") return "Acil";
+  if (onem === "bugun") return "Bugün";
+  return "Önerilen";
 }
 
 export default function PartnerPanelOzeti({
@@ -176,6 +188,8 @@ export default function PartnerPanelOzeti({
     cta: "Raporlara bak",
     onem: "normal" as const,
   }];
+  const anaAksiyon = gosterilecekAksiyonlar[0];
+  const digerAksiyonlar = gosterilecekAksiyonlar.slice(1);
 
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
@@ -204,37 +218,61 @@ export default function PartnerPanelOzeti({
       <div className="grid gap-5 p-5 lg:grid-cols-[1.15fr_0.85fr] sm:p-7">
         <div>
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-black text-gray-950">Sıradaki işler</h3>
+            <h3 className="text-sm font-black text-gray-950">Öncelikli aksiyon</h3>
             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-black text-gray-500">
               {gosterilecekAksiyonlar.length} iş
             </span>
           </div>
-          <div className="mt-3 space-y-3">
-            {gosterilecekAksiyonlar.map(aksiyon => (
-              <a
-                key={aksiyon.baslik}
-                href={aksiyon.href}
-                className={`block rounded-2xl border px-4 py-4 transition-transform hover:-translate-y-0.5 ${aksiyonStili(aksiyon.onem)}`}
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-black">{aksiyon.baslik}</p>
-                    <p className="mt-1 text-xs font-semibold leading-relaxed opacity-75">{aksiyon.aciklama}</p>
+
+          <a
+            href={anaAksiyon.href}
+            className={`mt-3 block rounded-3xl border px-5 py-5 shadow-sm transition-transform hover:-translate-y-0.5 ${anaAksiyonStili(anaAksiyon.onem)}`}
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <span className="rounded-full bg-white/80 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] shadow-sm">
+                  {aksiyonEtiketi(anaAksiyon.onem)}
+                </span>
+                <p className="mt-3 text-lg font-black">{anaAksiyon.baslik}</p>
+                <p className="mt-2 text-sm font-semibold leading-relaxed opacity-75">{anaAksiyon.aciklama}</p>
+              </div>
+              <span className="inline-flex w-fit shrink-0 items-center justify-center rounded-2xl bg-gray-950 px-4 py-3 text-sm font-black text-white shadow-sm">
+                {anaAksiyon.cta}
+              </span>
+            </div>
+          </a>
+
+          {digerAksiyonlar.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {digerAksiyonlar.map(aksiyon => (
+                <a
+                  key={aksiyon.baslik}
+                  href={aksiyon.href}
+                  className={`block rounded-2xl border px-4 py-3 transition-colors hover:border-purple-100 hover:bg-purple-50 ${aksiyonStili(aksiyon.onem)}`}
+                >
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm font-black">{aksiyon.baslik}</p>
+                      <p className="mt-1 text-xs font-semibold leading-relaxed opacity-65">{aksiyon.aciklama}</p>
+                    </div>
+                    <span className="w-fit rounded-xl bg-gray-50 px-3 py-2 text-xs font-black text-gray-700">
+                      {aksiyon.cta}
+                    </span>
                   </div>
-                  <span className="w-fit rounded-xl bg-white/80 px-3 py-2 text-xs font-black text-gray-900 shadow-sm">
-                    {aksiyon.cta}
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <aside className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
-          <h3 className="text-sm font-black text-gray-950">Hızlı işlemler</h3>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-black text-gray-950">Hızlı işlemler</h3>
+            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-gray-400">Kısayol</span>
+          </div>
           <div className="mt-3 grid gap-2">
-            <HizliIslem href={abonelik ? "#lead-crm" : "#odeme"} label="Müşteri adayı ekle" />
-            <HizliIslem href={abonelik ? "#aktivasyon-kodlari" : "#odeme"} label="Teslim linki oluştur" />
+            <HizliIslem href={abonelik ? "#lead-crm" : "#odeme"} label="Müşteri adayı ekle" variant="primary" />
+            <HizliIslem href={abonelik ? "#aktivasyon-kodlari" : "#odeme"} label="Teslim linki oluştur" variant="primary" />
             <HizliIslem href={abonelik ? "#whatsapp-asistani" : "#odeme"} label="WhatsApp mesajı hazırla" />
             <HizliIslem href={abonelik ? "#teklif" : "#odeme"} label="Teklif hazırla" />
             <HizliIslem href={abonelik ? "#ekip" : "#odeme"} label="Ekip linki oluştur" />
@@ -260,14 +298,23 @@ function OzetKarti({ baslik, deger }: { baslik: string; deger: string }) {
   );
 }
 
-function HizliIslem({ href, label }: { href: string; label: string }) {
+function HizliIslem({
+  href,
+  label,
+  variant = "secondary",
+}: {
+  href: string;
+  label: string;
+  variant?: "primary" | "secondary";
+}) {
+  const className = variant === "primary"
+    ? "flex items-center justify-between gap-3 rounded-2xl border border-purple-200 bg-purple-600 px-4 py-3 text-sm font-black text-white shadow-sm transition-colors hover:bg-purple-700"
+    : "flex items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm font-black text-gray-700 shadow-sm transition-colors hover:border-purple-100 hover:bg-purple-50 hover:text-purple-800";
+
   return (
-    <a
-      href={href}
-      className="flex items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm font-black text-gray-800 shadow-sm transition-colors hover:border-purple-100 hover:bg-purple-50 hover:text-purple-800"
-    >
+    <a href={href} className={className}>
       {label}
-      <span className="text-gray-300">→</span>
+      <span className={variant === "primary" ? "text-white/70" : "text-gray-300"}>→</span>
     </a>
   );
 }
