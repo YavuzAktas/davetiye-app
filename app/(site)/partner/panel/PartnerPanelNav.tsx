@@ -1,22 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const NAV_LINKLERI = [
-  { href: "#kurulum", label: "Kurulum" },
-  { href: "#aktivasyon-kodlari", label: "Aktivasyon" },
-  { href: "#operasyon", label: "Operasyon" },
-  { href: "#satis", label: "Satış" },
-  { href: "#marka", label: "Marka" },
-  { href: "#teklif", label: "Teklif" },
-  { href: "#odeme", label: "Ödeme" },
+  { href: "#kurulum", label: "Kurulum", abonelikGerekli: false },
+  { href: "#aktivasyon-kodlari", label: "Aktivasyon", abonelikGerekli: true },
+  { href: "#operasyon", label: "Operasyon", abonelikGerekli: true },
+  { href: "#satis", label: "Satış", abonelikGerekli: true },
+  { href: "#marka", label: "Marka", abonelikGerekli: false },
+  { href: "#teklif", label: "Teklif", abonelikGerekli: true },
+  { href: "#odeme", label: "Ödeme", abonelikGerekli: false },
 ];
 
-export default function PartnerPanelNav() {
+export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean }) {
   const [aktif, setAktif] = useState<string>("#kurulum");
+  const navLinkleri = useMemo(
+    () => NAV_LINKLERI.filter(link => !link.abonelikGerekli || abonelikVar),
+    [abonelikVar]
+  );
 
   useEffect(() => {
-    const ids = NAV_LINKLERI.map(l => l.href.slice(1));
+    if (!navLinkleri.some(link => link.href === aktif)) {
+      setAktif("#kurulum");
+    }
+  }, [aktif, navLinkleri]);
+
+  useEffect(() => {
+    const ids = navLinkleri.map(l => l.href.slice(1));
     const elementler = ids
       .map(id => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
@@ -35,13 +45,13 @@ export default function PartnerPanelNav() {
 
     elementler.forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [navLinkleri]);
 
   return (
     <nav className="sticky top-0 z-30 -mx-4 border-b border-gray-100 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm sm:top-0">
       <div className="mx-auto max-w-5xl">
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {NAV_LINKLERI.map(link => {
+          {navLinkleri.map(link => {
             const isAktif = aktif === link.href;
             return (
               <a

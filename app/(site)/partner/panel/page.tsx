@@ -208,7 +208,7 @@ export default async function PartnerPanelPage({
 
         {partner.durum === "aktif" && (
           <div className="space-y-6">
-            <PartnerPanelNav />
+            <PartnerPanelNav abonelikVar={Boolean(abonelik)} />
             <div id="kurulum" className="scroll-mt-24">
               <PartnerOnboardingChecklist
                 abonelik={abonelik ? {
