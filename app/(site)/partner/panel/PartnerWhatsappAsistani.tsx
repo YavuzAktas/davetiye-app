@@ -234,13 +234,12 @@ export default function PartnerWhatsappAsistani({
       <div className="border-b border-gray-100 px-5 py-5 sm:px-7">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">WhatsApp satış asistanı</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">Mesaj taslakları</p>
             <h2 className="mt-2 text-xl font-black text-gray-950 sm:text-2xl">
-              Lead'e göre güvenli mesaj taslağı üret
+              WhatsApp için hazır mesaj taslağı oluştur
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">
-              Mesajlar otomatik gönderilmez. Partner metni kontrol eder, gerekirse düzenler ve WhatsApp üzerinden manuel
-              gönderir.
+              Hiçbir mesaj otomatik gönderilmez. Taslağı siz kontrol eder, düzenler ve WhatsApp üzerinden manuel olarak gönderirsiniz.
             </p>
           </div>
           <a

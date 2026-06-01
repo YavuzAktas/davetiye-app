@@ -105,60 +105,26 @@ export default function PartnerOnboardingChecklist({
 
   if (kurulumTamamlandi) {
     return (
-      <section className="overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
-        <div className="grid gap-4 bg-emerald-50 px-5 py-5 sm:px-7 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-600">
-              İlk Kurulum Tamamlandı
-            </p>
-            <h2 className="mt-2 text-xl font-black text-gray-950">
-              Panel satış ve teslim için hazır
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-emerald-800/75">
-              Marka, teklif ve teslim adımları hazır. Günlük işlerde satış ve teslim durumlarını takip edin.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-emerald-100 bg-white px-4 py-3 shadow-sm lg:min-w-56">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-black text-gray-500">Tamamlanma</p>
-              <span className="text-sm font-black text-emerald-700">%100</span>
-            </div>
-            <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-gray-100">
-              <div className="h-full rounded-full bg-emerald-500" />
-            </div>
-            <p className="mt-2 text-xs font-semibold text-gray-500">
-              {tamamlanan}/{adimlar.length} adım tamamlandı
-            </p>
-          </div>
+      <details className="group overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50">
+        <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[11px] font-black text-white">✓</span>
+          <span className="flex-1 text-sm font-black text-emerald-800">İlk kurulum tamamlandı</span>
+          <span className="text-[11px] font-semibold text-emerald-600 group-open:hidden">Adımları göster</span>
+          <span className="text-xs text-emerald-500 transition-transform group-open:rotate-180">▼</span>
+        </summary>
+        <div className="grid gap-3 border-t border-emerald-100 bg-white p-4 sm:grid-cols-2">
+          {adimlar.map(adim => (
+            <a
+              key={adim.baslik}
+              href={adim.href}
+              className="flex items-start gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-emerald-800 transition-colors hover:bg-emerald-100"
+            >
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-black text-white">✓</span>
+              <p className="text-sm font-black">{adim.baslik}</p>
+            </a>
+          ))}
         </div>
-
-        <details className="group border-t border-emerald-100 bg-white">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-sm font-black text-gray-700 transition-colors hover:bg-gray-50 sm:px-7">
-            Kurulum adımlarını göster
-            <span className="text-xs text-gray-400 transition-transform group-open:rotate-180">▼</span>
-          </summary>
-          <div className="grid gap-3 px-5 pb-5 sm:grid-cols-2 sm:px-7">
-            {adimlar.map(adim => (
-              <a
-                key={adim.baslik}
-                href={adim.href}
-                className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-emerald-800 transition-colors hover:bg-emerald-100"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-xs font-black text-white">
-                    ✓
-                  </span>
-                  <div>
-                    <p className="text-sm font-black">{adim.baslik}</p>
-                    <p className="mt-1 text-xs leading-relaxed opacity-75">{adim.aciklama}</p>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </details>
-      </section>
+      </details>
     );
   }
 

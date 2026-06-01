@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type LeadDurum = "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi";
 
@@ -103,6 +103,17 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
   const [hata, setHata] = useState("");
   const [bilgi, setBilgi] = useState("");
   const [kaydediliyor, setKaydediliyor] = useState(false);
+  const [formAcik, setFormAcik] = useState(false);
+  const [notKapatildi, setNotKapatildi] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("crm-not-kapatildi") === "1") setNotKapatildi(true);
+  }, []);
+
+  const notiKapat = () => {
+    setNotKapatildi(true);
+    localStorage.setItem("crm-not-kapatildi", "1");
+  };
 
   const ozet = useMemo(() => {
     const aktif = leadler.filter(l => !["kazandi", "kaybedildi"].includes(l.durum)).length;
@@ -127,6 +138,15 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
     setForm(BOS_FORM);
     setDuzenlenenId(null);
     setHata("");
+    setFormAcik(false);
+  };
+
+  const duzenlemeBaslat = (lead: Lead) => {
+    setDuzenlenenId(lead.id);
+    setForm(leadFormu(lead));
+    setHata("");
+    setBilgi("");
+    setFormAcik(true);
   };
 
   const kaydet = async () => {
@@ -198,51 +218,76 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
     }
   };
 
+  const formGorunur = formAcik || duzenlenenId !== null;
+
   return (
     <section className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-7">
-      <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">Lead CRM</p>
           <h2 className="mt-2 text-2xl font-black text-gray-950">Müşteri adaylarını takip et</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">
-            Salon, davet evi veya organizasyon görüşmelerini teklif aşamasına kadar izleyin. Gereksiz kişisel veri,
-            TCKN veya özel nitelikli bilgi girmeyin.
-          </p>
-
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              { label: "Toplam lead", value: ozet.toplam },
-              { label: "Aktif takip", value: ozet.aktif },
-              { label: "Teklif süreci", value: ozet.teklif },
-              { label: "Kazanılan", value: ozet.kazanilan },
-            ].map(item => (
-              <div key={item.label} className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
-                <p className="text-2xl font-black text-gray-950">{item.value}</p>
-                <p className="mt-1 text-xs font-bold text-gray-500">{item.label}</p>
-              </div>
-            ))}
-          </div>
         </div>
-
-        <div className="rounded-2xl border border-purple-100 bg-purple-50/60 p-4 text-sm text-purple-900">
-          <p className="font-black">Güvenli kullanım notu</p>
-          <p className="mt-2 leading-relaxed">
-            Bu alan satış takibi içindir. Müşteriye ait hassas veri, kimlik numarası, sağlık bilgisi veya ödeme kartı
-            bilgisi kaydetmeyin. Telefon/e-posta yalnızca görüşme takibi için opsiyoneldir.
-          </p>
-        </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (formGorunur) {
+              formuTemizle();
+            } else {
+              setForm(BOS_FORM);
+              setDuzenlenenId(null);
+              setFormAcik(true);
+            }
+          }}
+          className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition-colors ${
+            formGorunur
+              ? "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              : "bg-gray-950 text-white hover:bg-purple-700"
+          }`}
+        >
+          {formGorunur ? "Vazgeç" : "+ Müşteri ekle"}
+        </button>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[360px_1fr]">
-        <div className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <p className="font-black text-gray-950">{duzenlenenId ? "Lead düzenle" : "Yeni lead"}</p>
-            {duzenlenenId && (
-              <button type="button" onClick={formuTemizle} className="text-xs font-black text-gray-400 hover:text-gray-700">
-                Vazgeç
-              </button>
-            )}
-          </div>
+      {/* Özet kartları */}
+      {leadler.length > 0 && (
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { label: "Toplam lead", value: ozet.toplam },
+            { label: "Aktif takip", value: ozet.aktif },
+            { label: "Teklif süreci", value: ozet.teklif },
+            { label: "Kazanılan", value: ozet.kazanilan },
+          ].map(item => (
+            <div key={item.label} className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+              <p className="text-2xl font-black text-gray-950">{item.value}</p>
+              <p className="mt-1 text-xs font-bold text-gray-500">{item.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Güvenli kullanım notu (dismissible) */}
+      {!notKapatildi && (
+        <div className="mt-4 flex items-start gap-3 rounded-2xl border border-purple-100 bg-purple-50/60 p-4 text-sm text-purple-900">
+          <p className="flex-1 leading-relaxed">
+            <span className="font-black">Güvenli kullanım: </span>
+            Bu alan satış takibi içindir. TCKN, sağlık bilgisi veya ödeme kartı verisi kaydetmeyin.
+          </p>
+          <button
+            type="button"
+            onClick={notiKapat}
+            className="mt-0.5 shrink-0 rounded-lg px-2 py-1 text-xs font-black text-purple-500 hover:bg-purple-100"
+            aria-label="Notu kapat"
+          >
+            Kapat
+          </button>
+        </div>
+      )}
+
+      {/* Form paneli */}
+      {formGorunur && (
+        <div className="mt-5 rounded-3xl border border-gray-100 bg-gray-50 p-4">
+          <p className="font-black text-gray-950">{duzenlenenId ? "Lead düzenle" : "Yeni lead"}</p>
 
           <div className="mt-4 space-y-3">
             <label className="block">
@@ -256,7 +301,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
               />
             </label>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="text-xs font-bold text-gray-500">İlgili kişi</span>
                 <input
@@ -279,7 +324,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
               </label>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="text-xs font-bold text-gray-500">Telefon</span>
                 <input
@@ -374,9 +419,28 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
             </button>
           </div>
         </div>
+      )}
 
-        <div className="min-w-0 overflow-x-auto pb-2">
-          <div className="grid min-w-[920px] grid-cols-6 gap-3">
+      {/* Boş durum */}
+      {leadler.length === 0 && !formGorunur && (
+        <div className="mt-6 rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-2xl">👥</div>
+          <h3 className="text-base font-black text-gray-900">Henüz müşteri adayı yok</h3>
+          <p className="mt-2 text-sm text-gray-500">Görüştüğünüz salonu veya organizasyonu ekleyerek takip etmeye başlayın.</p>
+          <button
+            type="button"
+            onClick={() => { setForm(BOS_FORM); setDuzenlenenId(null); setFormAcik(true); }}
+            className="mt-5 rounded-2xl bg-gray-950 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
+          >
+            İlk müşteriyi ekle
+          </button>
+        </div>
+      )}
+
+      {/* Kanban */}
+      {leadler.length > 0 && (
+        <div className="mt-5 overflow-x-auto pb-2">
+          <div className="grid min-w-230 grid-cols-6 gap-3">
             {kolonlar.map(kolon => (
               <div key={kolon.id} className="rounded-3xl border border-gray-100 bg-gray-50 p-3">
                 <div className="mb-3 flex items-center justify-between gap-2">
@@ -415,12 +479,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             type="button"
-                            onClick={() => {
-                              setDuzenlenenId(lead.id);
-                              setForm(leadFormu(lead));
-                              setHata("");
-                              setBilgi("");
-                            }}
+                            onClick={() => duzenlemeBaslat(lead)}
                             className="rounded-xl border border-gray-200 px-2 py-2 text-xs font-black text-gray-600 hover:border-purple-200 hover:text-purple-700"
                           >
                             Düzenle
@@ -441,7 +500,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
             ))}
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

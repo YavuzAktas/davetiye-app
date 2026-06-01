@@ -59,28 +59,7 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
   return (
     <nav className="sticky top-16 z-40 -mx-4 border-b border-gray-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-sm">
       <div className="mx-auto max-w-5xl">
-        <div className="sm:hidden">
-          <label htmlFor="partner-panel-bolum" className="mb-1.5 block text-[11px] font-black uppercase tracking-[0.16em] text-gray-400">
-            Panel bölümü
-          </label>
-          <div className="relative">
-            <select
-              id="partner-panel-bolum"
-              value={aktifLink.href}
-              onChange={event => bolumeGit(event.target.value)}
-              className="h-12 w-full appearance-none rounded-2xl border border-purple-100 bg-white px-4 pr-11 text-sm font-black text-gray-900 shadow-sm outline-none transition-colors focus:border-purple-300 focus:ring-4 focus:ring-purple-100"
-            >
-              {navLinkleri.map(link => (
-                <option key={link.href} value={link.href}>
-                  {link.label} - {link.aciklama}
-                </option>
-              ))}
-            </select>
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">⌄</span>
-          </div>
-        </div>
-
-        <div className="hidden gap-2 overflow-x-auto pb-1 sm:flex [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {navLinkleri.map(link => {
             const isAktif = aktif === link.href;
             return (

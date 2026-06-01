@@ -367,11 +367,11 @@ export default function AktivasyonKodlari({
     return [k.kod, k.not ?? "", durumLabel]
       .some(deger => deger.toLocaleLowerCase("tr-TR").includes(aramaMetni));
   });
-  const filtreler: { key: DurumFiltresi; label: string; count: number }[] = [
-    { key: "tum", label: "Tümü", count: aktifKodlar.length },
-    { key: "aksiyon", label: "Aksiyon", count: aksiyonKodlar.length },
-    { key: "surecte", label: "Süreçte", count: surecteKodlar.length },
-    { key: "yayinda", label: "Yayında", count: yayindaKodlar.length },
+  const filtreler: { key: DurumFiltresi; label: string; count: number; aciklama: string }[] = [
+    { key: "tum", label: "Tümü", count: aktifKodlar.length, aciklama: "Tüm aktif linkler" },
+    { key: "aksiyon", label: "İşlem Bekliyor", count: aksiyonKodlar.length, aciklama: "Müşteriye gönderilmemiş veya ödeme bekleyen linkler" },
+    { key: "surecte", label: "Kurulumda", count: surecteKodlar.length, aciklama: "Müşteri kaydoldu, davetiyesini henüz yayına almadı" },
+    { key: "yayinda", label: "Yayında", count: yayindaKodlar.length, aciklama: "Davetiye müşteri tarafından yayınlandı" },
   ];
   const gonderilecekKodlar = aktifKodlar.filter(k => k.durum === "olusturuldu");
   const yeniKodSet = new Set(sonOlusturulanKodlar.map(k => k.kod));
@@ -667,6 +667,11 @@ export default function AktivasyonKodlari({
               );
             })}
           </div>
+          {durumFiltresi !== "tum" && (
+            <p className="text-[11px] font-semibold text-gray-400">
+              {filtreler.find(f => f.key === durumFiltresi)?.aciklama}
+            </p>
+          )}
         </div>
       )}
 

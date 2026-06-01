@@ -320,8 +320,6 @@ export default async function PartnerPanelPage({
               id="ozet"
               etiket="Özet"
               baslik="Bugün neye bakmalı?"
-              aciklama="Satış, teslim ve kurulumda bekleyen işleri tek ekranda görün."
-              linkler={[{ href: "#kurulum", label: "Kurulum" }]}
             >
               <PartnerPanelOzeti
                 abonelik={abonelik ? {
@@ -380,16 +378,6 @@ export default async function PartnerPanelPage({
                   id="satis-akisi"
                   etiket="Satış"
                   baslik="Müşteri ve teklif takibi"
-                  aciklama="Aday müşterileri kaydedin, mesaj hazırlayın, teklif ve satış durumunu takip edin."
-                  linkler={[
-                    { href: "#lead-crm", label: "Müşteriler" },
-                    { href: "#segmentler", label: "Müşteri grupları" },
-                    { href: "#paketler", label: "Satış paketleri" },
-                    { href: "#whatsapp-asistani", label: "Mesaj asistanı" },
-                    { href: "#teklif", label: "Teklif" },
-                    { href: "#analitik", label: "Raporlar" },
-                    { href: "#satis", label: "Satış rehberi" },
-                  ]}
                 >
                   <div id="lead-crm" className="scroll-mt-24">
                     <PartnerLeadCRM
@@ -518,11 +506,6 @@ export default async function PartnerPanelPage({
                   id="teslim-akisi"
                   etiket="Teslim"
                   baslik="Müşteriye teslim"
-                  aciklama="Aktivasyon linki oluşturun, müşteriye gönderin ve teslim sonucunu takip edin."
-                  linkler={[
-                    { href: "#aktivasyon-kodlari", label: "Teslim linkleri" },
-                    { href: "#teslim-raporu", label: "Teslim raporu" },
-                  ]}
                 >
                   <div id="aktivasyon-kodlari" className="scroll-mt-24">
                     <AktivasyonKodlari
@@ -558,12 +541,6 @@ export default async function PartnerPanelPage({
                   id="operasyon-akisi"
                   etiket="Operasyon"
                   baslik="Takvim ve ekip"
-                  aciklama="Etkinlik günlerini, görevli erişimlerini ve yayın sonrası işleri yönetin."
-                  linkler={[
-                    { href: "#salon-takvimi", label: "Takvim" },
-                    { href: "#ekip", label: "Ekip" },
-                    { href: "#operasyon", label: "İş takibi" },
-                  ]}
                 >
                   <div id="salon-takvimi" className="scroll-mt-24">
                     <PartnerSalonTakvimi
@@ -623,11 +600,6 @@ export default async function PartnerPanelPage({
               id="ayarlar-akisi"
               etiket="Ayarlar"
               baslik="Marka ve abonelik"
-              aciklama="Müşteriye görünen marka bilgilerini ve partner aboneliğinizi yönetin."
-              linkler={[
-                { href: "#marka", label: "Marka" },
-                { href: "#odeme", label: "Ödeme" },
-              ]}
             >
               <div id="marka" className="scroll-mt-24">
                 <PartnerMarkaAyarlari
@@ -677,38 +649,21 @@ function PanelBolum({
   id,
   etiket,
   baslik,
-  aciklama,
-  linkler,
   children,
 }: {
   id: string;
   etiket: string;
   baslik: string;
-  aciklama: string;
-  linkler: { href: string; label: string }[];
   children: ReactNode;
 }) {
   return (
     <section id={id} className="scroll-mt-24 space-y-4">
-      <div className="rounded-3xl border border-gray-100 bg-white px-5 py-5 shadow-sm sm:px-7">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">{etiket}</p>
-            <h2 className="mt-2 text-xl font-black text-gray-950 sm:text-2xl">{baslik}</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">{aciklama}</p>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {linkler.map(link => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="shrink-0 rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-black text-gray-600 transition-colors hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
+      <div className="flex items-center gap-3 px-1">
+        <span className="shrink-0 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-purple-600">
+          {etiket}
+        </span>
+        <h2 className="text-sm font-black text-gray-600">{baslik}</h2>
+        <div className="h-px flex-1 bg-gray-100" />
       </div>
       {children}
     </section>

@@ -248,7 +248,10 @@ export default function PartnerPanelOzeti({
                 <a
                   key={aksiyon.baslik}
                   href={aksiyon.href}
-                  className={`block rounded-2xl border px-4 py-3 transition-colors hover:border-purple-100 hover:bg-purple-50 ${aksiyonStili(aksiyon.onem)}`}
+                  className={`block rounded-2xl border px-4 py-3 transition-colors hover:border-purple-100 hover:bg-purple-50 ${aksiyonStili(aksiyon.onem)} ${
+                    aksiyon.onem === "kritik" ? "border-l-4 border-l-red-400" :
+                    aksiyon.onem === "bugun" ? "border-l-4 border-l-amber-400" : ""
+                  }`}
                 >
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -272,7 +275,7 @@ export default function PartnerPanelOzeti({
           </div>
           <div className="mt-3 grid gap-2">
             <HizliIslem href={abonelik ? "#lead-crm" : "#odeme"} label="Müşteri adayı ekle" variant="primary" />
-            <HizliIslem href={abonelik ? "#aktivasyon-kodlari" : "#odeme"} label="Teslim linki oluştur" variant="primary" />
+            <HizliIslem href={abonelik ? "#aktivasyon-kodlari" : "#odeme"} label="Teslim linki oluştur" />
             <HizliIslem href={abonelik ? "#whatsapp-asistani" : "#odeme"} label="WhatsApp mesajı hazırla" />
             <HizliIslem href={abonelik ? "#teklif" : "#odeme"} label="Teklif hazırla" />
             <HizliIslem href={abonelik ? "#ekip" : "#odeme"} label="Ekip linki oluştur" />
