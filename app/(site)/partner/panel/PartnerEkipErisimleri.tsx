@@ -43,6 +43,18 @@ function tarih(deger: string | null) {
   return new Date(deger).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function erisimGecerliMi(erisim: EkipErisim) {
+  return erisim.aktif && !erisim.revokedAt && (!erisim.expiresAt || new Date(erisim.expiresAt) > new Date());
+}
+
+function erisimDurumu(erisim: EkipErisim) {
+  if (erisim.revokedAt || !erisim.aktif) return { label: "İptal", cls: "bg-gray-100 text-gray-500" };
+  if (erisim.expiresAt && new Date(erisim.expiresAt) <= new Date()) {
+    return { label: "Süresi doldu", cls: "bg-amber-50 text-amber-700" };
+  }
+  return { label: "Aktif", cls: "bg-emerald-50 text-emerald-700" };
+}
+
 export default function PartnerEkipErisimleri({
   baslangicErisimler,
 }: {
@@ -57,11 +69,16 @@ export default function PartnerEkipErisimleri({
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
 
-  const aktifErisimler = erisimler.filter(erisim => erisim.aktif && !erisim.revokedAt);
+  const aktifErisimler = erisimler.filter(erisimGecerliMi);
+  const limitDoldu = aktifErisimler.length >= 10;
 
   const olustur = async () => {
     setHata("");
     setLink("");
+    if (limitDoldu) {
+      setHata("Aktif ekip linki limitine ulaştınız. Önce kullanılmayan bir linki iptal edin.");
+      return;
+    }
     setYukleniyor(true);
     try {
       const res = await fetch("/api/partner/ekip", {
@@ -192,10 +209,10 @@ export default function PartnerEkipErisimleri({
             <button
               type="button"
               onClick={olustur}
-              disabled={yukleniyor}
+              disabled={yukleniyor || limitDoldu}
               className="w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700 disabled:opacity-60"
             >
-              {yukleniyor ? "Oluşturuluyor..." : "Sınırlı link oluştur"}
+              {limitDoldu ? "Aktif link limiti doldu" : yukleniyor ? "Oluşturuluyor..." : "Sınırlı link oluştur"}
             </button>
           </div>
 
@@ -216,17 +233,16 @@ export default function PartnerEkipErisimleri({
 
         <div className="space-y-3">
           {erisimler.length > 0 ? erisimler.map(erisim => {
-            const aktif = erisim.aktif && !erisim.revokedAt;
+            const durum = erisimDurumu(erisim);
+            const iptalEdilebilir = erisimGecerliMi(erisim);
             return (
               <div key={erisim.id} className="rounded-3xl border border-gray-100 bg-white p-4 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-black text-gray-950">{erisim.etiket || erisim.rolEtiketi}</p>
-                      <span className={`rounded-full px-3 py-1 text-[11px] font-black ${
-                        aktif ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-500"
-                      }`}>
-                        {aktif ? "Aktif" : "Pasif"}
+                      <span className={`rounded-full px-3 py-1 text-[11px] font-black ${durum.cls}`}>
+                        {durum.label}
                       </span>
                       <span className="rounded-full bg-purple-50 px-3 py-1 text-[11px] font-black text-purple-700">
                         {erisim.rolEtiketi}
@@ -236,7 +252,7 @@ export default function PartnerEkipErisimleri({
                       Oluşturma: {tarih(erisim.createdAt)} · Son kullanım: {tarih(erisim.lastUsedAt)} · Bitiş: {tarih(erisim.expiresAt)}
                     </p>
                   </div>
-                  {aktif && (
+                  {iptalEdilebilir && (
                     <button
                       type="button"
                       onClick={() => iptalEt(erisim)}

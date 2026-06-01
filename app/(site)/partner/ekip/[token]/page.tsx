@@ -70,7 +70,6 @@ export default async function PartnerEkipPage({ params }: Props) {
               durum: true,
               createdAt: true,
               kullanilanAt: true,
-              not: true,
               davetiye: {
                 select: {
                   slug: true,
@@ -187,14 +186,14 @@ export default async function PartnerEkipPage({ params }: Props) {
             <h2 className="text-lg font-black text-gray-950">Satış özeti</h2>
             <p className="mt-1 text-sm text-gray-500">Kişisel iletişim bilgisi olmadan sıcak fırsat ve segment takibi.</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {leadler.slice(0, 10).map((lead, index) => (
+              {leadler.length > 0 ? leadler.slice(0, 10).map((lead, index) => (
                 <KayitKart
                   key={`${lead.baslik}-${index}`}
                   baslik={lead.baslik}
                   etiket={DURUM_LABEL[lead.durum] ?? lead.durum}
                   detay={[lead.etkinlikTuru, lead.kisiSayisi ? `${lead.kisiSayisi} kişi` : null, lead.etkinlikTarihi ? tarih(lead.etkinlikTarihi) : null, lead.kaynak].filter(Boolean).join(" · ") || "Detay eklenmemiş"}
                 />
-              ))}
+              )) : <BosDurum metin="Görüntülenecek lead kaydı yok." />}
             </div>
           </section>
         )}
@@ -204,14 +203,14 @@ export default async function PartnerEkipPage({ params }: Props) {
             <h2 className="text-lg font-black text-gray-950">Operasyon akışı</h2>
             <p className="mt-1 text-sm text-gray-500">Aktivasyon, kurulum ve yayın durumları.</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {kodlar.slice(0, 12).map(kod => (
+              {kodlar.length > 0 ? kodlar.slice(0, 12).map(kod => (
                 <KayitKart
                   key={kod.kod}
-                  baslik={kod.not || kod.davetiye?.baslik || `Kod ${kod.kod.slice(0, 6)}`}
+                  baslik={kod.davetiye?.baslik || `Kod ${kod.kod.slice(0, 6)}`}
                   etiket={DURUM_LABEL[kod.durum] ?? kod.durum}
                   detay={`Oluşturma: ${tarih(kod.createdAt)} · Kullanım: ${tarih(kod.kullanilanAt)}`}
                 />
-              ))}
+              )) : <BosDurum metin="Görüntülenecek aktivasyon kaydı yok." />}
             </div>
           </section>
         )}
@@ -221,7 +220,7 @@ export default async function PartnerEkipPage({ params }: Props) {
             <h2 className="text-lg font-black text-gray-950">Teslim özetleri</h2>
             <p className="mt-1 text-sm text-gray-500">Müşteri teslim portalı, yayın linki ve toplam kullanım sayıları.</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {kodlar.filter(kod => kod.davetiye).slice(0, 10).map(kod => (
+              {kodlar.filter(kod => kod.davetiye).length > 0 ? kodlar.filter(kod => kod.davetiye).slice(0, 10).map(kod => (
                 <div key={kod.kod} className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -255,7 +254,7 @@ export default async function PartnerEkipPage({ params }: Props) {
                     )}
                   </div>
                 </div>
-              ))}
+              )) : <BosDurum metin="Henüz teslim özeti oluşmuş davetiye yok." />}
             </div>
             <div className="mt-4 rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3 text-xs font-semibold text-purple-900">
               Toplam RSVP: {toplamRsvp}. Bu ekranda davetli isimleri veya yanıt detayları gösterilmez.
@@ -293,6 +292,14 @@ function KayitKart({ baslik, etiket, detay }: { baslik: string; etiket: string; 
           {etiket}
         </span>
       </div>
+    </div>
+  );
+}
+
+function BosDurum({ metin }: { metin: string }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center md:col-span-2">
+      <p className="text-sm font-bold text-gray-500">{metin}</p>
     </div>
   );
 }
