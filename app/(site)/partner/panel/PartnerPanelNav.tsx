@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 const NAV_LINKLERI = [
   { href: "#kurulum", label: "Kurulum", abonelikGerekli: false },
   { href: "#lead-crm", label: "Lead CRM", abonelikGerekli: true },
+  { href: "#salon-takvimi", label: "Takvim", abonelikGerekli: true },
   { href: "#paketler", label: "Paketler", abonelikGerekli: true },
   { href: "#whatsapp-asistani", label: "WhatsApp", abonelikGerekli: true },
   { href: "#aktivasyon-kodlari", label: "Aktivasyon", abonelikGerekli: true },
