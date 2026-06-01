@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type LeadDurum = "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi";
 
@@ -97,7 +98,12 @@ function payloadHazirla(form: FormState) {
 }
 
 export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler: Lead[] }) {
+  const router = useRouter();
   const [leadler, setLeadler] = useState<Lead[]>(baslangicLeadler);
+
+  useEffect(() => {
+    setLeadler(baslangicLeadler);
+  }, [baslangicLeadler]);
   const [form, setForm] = useState<FormState>(BOS_FORM);
   const [duzenlenenId, setDuzenlenenId] = useState<string | null>(null);
   const [hata, setHata] = useState("");
@@ -174,6 +180,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
       });
       setBilgi(duzenlenenId ? "Lead güncellendi." : "Yeni lead eklendi.");
       formuTemizle();
+      router.refresh();
     } catch (err) {
       setHata(err instanceof Error ? err.message : "Lead kaydedilemedi.");
     } finally {
@@ -193,6 +200,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.hata || "Durum güncellenemedi.");
       setLeadler(prev => prev.map(l => (l.id === lead.id ? data.lead : l)));
+      router.refresh();
     } catch (err) {
       setHata(err instanceof Error ? err.message : "Durum güncellenemedi.");
     }
@@ -213,6 +221,7 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
       setLeadler(prev => prev.filter(l => l.id !== lead.id));
       if (duzenlenenId === lead.id) formuTemizle();
       setBilgi("Lead silindi.");
+      router.refresh();
     } catch (err) {
       setHata(err instanceof Error ? err.message : "Lead silinemedi.");
     }
