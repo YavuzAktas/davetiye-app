@@ -16,6 +16,7 @@ import PartnerPanelNav from "./PartnerPanelNav";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
+import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 import PartnerWhatsappAsistani from "./PartnerWhatsappAsistani";
 
@@ -55,6 +56,33 @@ export default async function PartnerPanelPage({
         createdAt: true,
         kullanilanAt: true,
         not: true,
+        davetiye: {
+          select: {
+            slug: true,
+            baslik: true,
+            aktif: true,
+            tarih: true,
+            goruntulenme: true,
+            albumAktif: true,
+            aniDefteriAktif: true,
+            sesliAniAktif: true,
+            canliDuvarAktif: true,
+            oturmaPlanAktif: true,
+            checkInAktif: true,
+            aniKitabiAktif: true,
+            updatedAt: true,
+            _count: {
+              select: {
+                davetliler: true,
+                rsvplar: true,
+                albumFotolar: true,
+                aniDefterleri: true,
+                sesliAnilar: true,
+                masalar: true,
+              },
+            },
+          },
+        },
       },
     }),
     prisma.odemeKaydi.findMany({
@@ -123,6 +151,40 @@ export default async function PartnerPanelPage({
     createdAt: k.createdAt.toISOString(),
     kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
     not: k.not ?? null,
+  }));
+
+  const teslimRaporuKodlari = aktivasyonKodlariHam.map(k => ({
+    id: k.id,
+    kod: k.kod,
+    durum: k.durum,
+    createdAt: k.createdAt.toISOString(),
+    kullanilanAt: k.kullanilanAt?.toISOString() ?? null,
+    not: k.not ?? null,
+    davetiye: k.davetiye
+      ? {
+          slug: k.davetiye.slug,
+          baslik: k.davetiye.baslik,
+          aktif: k.davetiye.aktif,
+          tarih: k.davetiye.tarih?.toISOString() ?? null,
+          goruntulenme: k.davetiye.goruntulenme,
+          albumAktif: k.davetiye.albumAktif,
+          aniDefteriAktif: k.davetiye.aniDefteriAktif,
+          sesliAniAktif: k.davetiye.sesliAniAktif,
+          canliDuvarAktif: k.davetiye.canliDuvarAktif,
+          oturmaPlanAktif: k.davetiye.oturmaPlanAktif,
+          checkInAktif: k.davetiye.checkInAktif,
+          aniKitabiAktif: k.davetiye.aniKitabiAktif,
+          updatedAt: k.davetiye.updatedAt.toISOString(),
+          sayilar: {
+            davetli: k.davetiye._count.davetliler,
+            rsvp: k.davetiye._count.rsvplar,
+            foto: k.davetiye._count.albumFotolar,
+            ani: k.davetiye._count.aniDefterleri,
+            sesliAni: k.davetiye._count.sesliAnilar,
+            masa: k.davetiye._count.masalar,
+          },
+        }
+      : null,
   }));
 
   const durumRenk =
@@ -355,6 +417,12 @@ export default async function PartnerPanelPage({
                       bitisAt: abonelik.bitisAt,
                     }}
                     kodlar={kodlar}
+                  />
+                </div>
+                <div id="teslim-raporu" className="scroll-mt-24">
+                  <PartnerTeslimRaporu
+                    firmaAdi={partner.firmaAdi}
+                    kodlar={teslimRaporuKodlari}
                   />
                 </div>
                 <div id="operasyon" className="scroll-mt-24">

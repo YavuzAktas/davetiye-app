@@ -10,6 +10,7 @@ const NAV_LINKLERI = [
   { href: "#paketler", label: "Paketler", abonelikGerekli: true },
   { href: "#whatsapp-asistani", label: "WhatsApp", abonelikGerekli: true },
   { href: "#aktivasyon-kodlari", label: "Aktivasyon", abonelikGerekli: true },
+  { href: "#teslim-raporu", label: "Teslim Raporu", abonelikGerekli: true },
   { href: "#operasyon", label: "Operasyon", abonelikGerekli: true },
   { href: "#satis", label: "Satış", abonelikGerekli: true },
   { href: "#marka", label: "Marka", abonelikGerekli: false },
