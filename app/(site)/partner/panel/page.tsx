@@ -15,6 +15,7 @@ import PartnerMusteriSegmentleri from "./PartnerMusteriSegmentleri";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
+import PartnerPanelOzeti from "./PartnerPanelOzeti";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
@@ -313,6 +314,39 @@ export default async function PartnerPanelPage({
         {partner.durum === "aktif" && (
           <div className="space-y-6">
             <PartnerPanelNav abonelikVar={Boolean(abonelik)} />
+            <div id="ozet" className="scroll-mt-24">
+              <PartnerPanelOzeti
+                abonelik={abonelik ? {
+                  paketId: abonelik.paketId,
+                  hakSayisi: abonelik.hakSayisi,
+                  kullanilanHak: abonelik.kullanilanHak,
+                  bitisAt: abonelik.bitisAt,
+                } : null}
+                kodlar={kodlar}
+                leadler={partnerLeadleriHam.map(lead => ({
+                  id: lead.id,
+                  baslik: lead.baslik,
+                  durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                  etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                  kisiSayisi: lead.kisiSayisi,
+                  updatedAt: lead.updatedAt.toISOString(),
+                }))}
+                ekipErisimleri={partner.ekipErisimleri.map(erisim => ({
+                  id: erisim.id,
+                  aktif: erisim.aktif,
+                  expiresAt: erisim.expiresAt?.toISOString() ?? null,
+                  revokedAt: erisim.revokedAt?.toISOString() ?? null,
+                }))}
+                teklifHazir={partner.teklifHazir}
+                marka={{
+                  logoUrl: partner.logoUrl,
+                  markaSlogani: partner.markaSlogani,
+                  destekTelefonu: partner.destekTelefonu,
+                  instagramUrl: partner.instagramUrl,
+                  whatsappImzasi: partner.whatsappImzasi,
+                }}
+              />
+            </div>
             <div id="kurulum" className="scroll-mt-24">
               <PartnerOnboardingChecklist
                 abonelik={abonelik ? {

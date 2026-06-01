@@ -3,25 +3,26 @@
 import { useEffect, useMemo, useState } from "react";
 
 const NAV_LINKLERI = [
+  { href: "#ozet", label: "Özet", abonelikGerekli: false },
   { href: "#kurulum", label: "Kurulum", abonelikGerekli: false },
-  { href: "#lead-crm", label: "Lead CRM", abonelikGerekli: true },
-  { href: "#segmentler", label: "Segmentler", abonelikGerekli: true },
+  { href: "#lead-crm", label: "Müşteriler", abonelikGerekli: true },
+  { href: "#segmentler", label: "Müşteri Grupları", abonelikGerekli: true },
   { href: "#salon-takvimi", label: "Takvim", abonelikGerekli: true },
-  { href: "#analitik", label: "Analitik", abonelikGerekli: true },
-  { href: "#paketler", label: "Paketler", abonelikGerekli: true },
-  { href: "#whatsapp-asistani", label: "WhatsApp", abonelikGerekli: true },
-  { href: "#aktivasyon-kodlari", label: "Aktivasyon", abonelikGerekli: true },
+  { href: "#analitik", label: "Raporlar", abonelikGerekli: true },
+  { href: "#paketler", label: "Satış Paketleri", abonelikGerekli: true },
+  { href: "#whatsapp-asistani", label: "Mesaj Asistanı", abonelikGerekli: true },
+  { href: "#aktivasyon-kodlari", label: "Teslim Linkleri", abonelikGerekli: true },
   { href: "#teslim-raporu", label: "Teslim Raporu", abonelikGerekli: true },
   { href: "#ekip", label: "Ekip", abonelikGerekli: true },
-  { href: "#operasyon", label: "Operasyon", abonelikGerekli: true },
-  { href: "#satis", label: "Satış", abonelikGerekli: true },
+  { href: "#operasyon", label: "İş Takibi", abonelikGerekli: true },
+  { href: "#satis", label: "Satış Rehberi", abonelikGerekli: true },
   { href: "#marka", label: "Marka", abonelikGerekli: false },
   { href: "#teklif", label: "Teklif", abonelikGerekli: true },
   { href: "#odeme", label: "Ödeme", abonelikGerekli: false },
 ];
 
 export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean }) {
-  const [aktif, setAktif] = useState<string>("#kurulum");
+  const [aktif, setAktif] = useState<string>("#ozet");
   const navLinkleri = useMemo(
     () => NAV_LINKLERI.filter(link => !link.abonelikGerekli || abonelikVar),
     [abonelikVar]
@@ -29,7 +30,7 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
 
   useEffect(() => {
     if (!navLinkleri.some(link => link.href === aktif)) {
-      setAktif("#kurulum");
+      setAktif("#ozet");
     }
   }, [aktif, navLinkleri]);
 
