@@ -8,6 +8,7 @@ import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
+import PartnerHazirPaketler from "./PartnerHazirPaketler";
 import PartnerLeadCRM from "./PartnerLeadCRM";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
@@ -271,6 +272,9 @@ export default async function PartnerPanelPage({
                       updatedAt: lead.updatedAt.toISOString(),
                     }))}
                   />
+                </div>
+                <div id="paketler" className="scroll-mt-24">
+                  <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
                 </div>
                 <div id="aktivasyon-kodlari" className="scroll-mt-24">
                   <AktivasyonKodlari
