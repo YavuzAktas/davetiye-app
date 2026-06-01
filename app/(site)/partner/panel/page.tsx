@@ -8,6 +8,7 @@ import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
+import PartnerLeadCRM from "./PartnerLeadCRM";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
@@ -28,7 +29,7 @@ export default async function PartnerPanelPage({
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/giris?callbackUrl=/partner/panel");
 
-  const [partner, aktivasyonKodlariHam, odemeKayitlariHam] = await Promise.all([
+  const [partner, aktivasyonKodlariHam, odemeKayitlariHam, partnerLeadleriHam] = await Promise.all([
     prisma.partner.findUnique({
       where: { userId: session.user.id },
       include: {
@@ -64,6 +65,27 @@ export default async function PartnerPanelPage({
         currency: true,
         paymentId: true,
         fiyatKirilimi: true,
+      },
+    }),
+    prisma.partnerLead.findMany({
+      where: { partner: { userId: session.user.id } },
+      orderBy: { updatedAt: "desc" },
+      take: 100,
+      select: {
+        id: true,
+        baslik: true,
+        ilgiliKisi: true,
+        telefon: true,
+        eposta: true,
+        etkinlikTuru: true,
+        etkinlikTarihi: true,
+        kisiSayisi: true,
+        kaynak: true,
+        durum: true,
+        not: true,
+        sonGorusmeAt: true,
+        createdAt: true,
+        updatedAt: true,
       },
     }),
   ]);
@@ -230,6 +252,26 @@ export default async function PartnerPanelPage({
             </div>
             {abonelik && (
               <>
+                <div id="lead-crm" className="scroll-mt-24">
+                  <PartnerLeadCRM
+                    leadler={partnerLeadleriHam.map(lead => ({
+                      id: lead.id,
+                      baslik: lead.baslik,
+                      ilgiliKisi: lead.ilgiliKisi,
+                      telefon: lead.telefon,
+                      eposta: lead.eposta,
+                      etkinlikTuru: lead.etkinlikTuru,
+                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                      kisiSayisi: lead.kisiSayisi,
+                      kaynak: lead.kaynak,
+                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                      not: lead.not,
+                      sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
+                      createdAt: lead.createdAt.toISOString(),
+                      updatedAt: lead.updatedAt.toISOString(),
+                    }))}
+                  />
+                </div>
                 <div id="aktivasyon-kodlari" className="scroll-mt-24">
                   <AktivasyonKodlari
                     firmaAdi={partner.firmaAdi}

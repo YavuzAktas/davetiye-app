@@ -516,6 +516,30 @@ model Partner {
   user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   abonelikler       PartnerAbonelik[]
   aktivasyonKodlari AktivasyonKodu[]
+  leadler           PartnerLead[]
+}
+
+model PartnerLead {
+  id             String    @id @default(cuid())
+  partnerId      String
+  baslik         String    @db.VarChar(120)
+  ilgiliKisi     String?   @db.VarChar(120)
+  telefon        String?   @db.VarChar(30)
+  eposta         String?   @db.VarChar(160)
+  etkinlikTuru   String?   @db.VarChar(60)
+  etkinlikTarihi DateTime?
+  kisiSayisi     Int?
+  kaynak         String?   @db.VarChar(60)
+  durum          String    @default("yeni") @db.VarChar(40)
+  not            String?   @db.VarChar(500)
+  sonGorusmeAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  partner        Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@index([partnerId, durum])
+  @@index([partnerId, etkinlikTarihi])
+  @@index([partnerId, updatedAt])
 }
 
 model PartnerAbonelik {
