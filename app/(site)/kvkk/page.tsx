@@ -159,12 +159,16 @@ export default function KvkkSayfasi() {
                   <tr><td>Ödeme kayıtları</td><td>10 yıl (Vergi Usul Kanunu)</td></tr>
                   <tr><td>Partner başvuru, abonelik ve aktivasyon kayıtları</td><td>Partner ilişkisi süresince; sona erdikten sonra uyuşmazlık ve yasal yükümlülükler için gerekli süre kadar</td></tr>
                   <tr><td>RSVP ve davetli listesi misafir bilgileri</td><td>Etkinlik tarihinden itibaren en geç 1 yıl; davetiye veya hesap silinirse daha erken</td></tr>
-                  <tr><td>Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri</td><td>Davetiye veya hesap silinene kadar; ilgili kişinin silme talebi halinde ayrıca değerlendirilir</td></tr>
+                  <tr><td>Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri</td><td>Davetiye veya hesap silinene kadar; ilgili kişinin silme talebi halinde ayrıca değerlendirilir. RSVP ve davetli listesi için uygulanan 1 yıllık otomatik imha kuralı medya/anı arşivine uygulanmaz.</td></tr>
                   <tr><td>Log ve güvenlik kayıtları</td><td>2 yıl</td></tr>
                   <tr><td>KVKK aydınlatma/kabul kayıtları</td><td>Hesap silinmesinden itibaren en fazla 3 yıl</td></tr>
                 </tbody>
               </table>
-              <p>Saklama süreleri dolduğunda veriler otomatik olarak silinir veya anonim hale getirilir.</p>
+              <p>
+                Saklama süresi dolan veriler otomatik olarak silinir veya anonim hale getirilir.
+                Medya ve anı arşivi, davet sahibinin davetiyeyi saklama tercihine bağlı olduğundan
+                davetiye veya hesap silindiğinde kaldırılır; ilgili kişi talepleri ayrıca değerlendirilir.
+              </p>
             </>
           ),
         },

@@ -164,6 +164,28 @@ export default function GizlilikSayfasi() {
           ),
         },
         {
+          baslik: "Saklama ve Silme",
+          icerik: (
+            <>
+              <p>
+                RSVP yanıtları ve davetli listesi kayıtları etkinlik tarihinden itibaren en geç
+                1 yıl içinde temizlenir. Etkinlik tarihi bulunmayan davetiyelerde bu süre davetiyenin
+                oluşturulma tarihine göre değerlendirilir.
+              </p>
+              <p>
+                Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri davetiye veya hesap silinene
+                kadar saklanabilir; çünkü bu içerikler davet sahibinin anı arşivi olarak kullanılır.
+                İlgili kişi silme talebini <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a>{" "}
+                adresinden iletebilir.
+              </p>
+              <p>
+                Ödeme ve yasal kabul kayıtları, mevzuattan doğan saklama ve ispat yükümlülükleri
+                kapsamında daha uzun süre tutulabilir.
+              </p>
+            </>
+          ),
+        },
+        {
           baslik: "Çerezler",
           icerik: (
             <>
@@ -208,7 +230,8 @@ export default function GizlilikSayfasi() {
             <>
               <p>
                 KVKK m.11 ve geçerli diğer mevzuat kapsamında; verilerinize erişim, düzeltme,
-                silme, taşınabilirlik ve itiraz haklarına sahipsiniz.
+                silme, işlenen verileriniz hakkında bilgi alma, kanunda öngörülen hallerde itiraz
+                ve zararın giderilmesini talep etme haklarına sahipsiniz.
               </p>
               <p>
                 Talepleriniz için <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine
