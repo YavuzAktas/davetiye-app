@@ -10,6 +10,7 @@ import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerHazirPaketler from "./PartnerHazirPaketler";
 import PartnerLeadCRM from "./PartnerLeadCRM";
+import PartnerMusteriSegmentleri from "./PartnerMusteriSegmentleri";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
 import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
@@ -333,6 +334,21 @@ export default async function PartnerPanelPage({
                       durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
                       not: lead.not,
                       sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
+                      createdAt: lead.createdAt.toISOString(),
+                      updatedAt: lead.updatedAt.toISOString(),
+                    }))}
+                  />
+                </div>
+                <div id="segmentler" className="scroll-mt-24">
+                  <PartnerMusteriSegmentleri
+                    leadler={partnerLeadleriHam.map(lead => ({
+                      id: lead.id,
+                      baslik: lead.baslik,
+                      etkinlikTuru: lead.etkinlikTuru,
+                      etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                      kisiSayisi: lead.kisiSayisi,
+                      kaynak: lead.kaynak,
+                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
                       createdAt: lead.createdAt.toISOString(),
                       updatedAt: lead.updatedAt.toISOString(),
                     }))}
