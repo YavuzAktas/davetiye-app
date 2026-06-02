@@ -58,6 +58,7 @@ export const metadata: Metadata = {
     description: "Düğün, nişan, doğum günü için dijital davetiye oluştur.",
   },
   icons: { icon: "/favicon.ico" },
+  manifest: "/manifest.json",
   robots: { index: true, follow: true },
 };
 
@@ -79,6 +80,18 @@ export default function RootLayout({
       contactType: "customer service",
       availableLanguage: "Turkish",
     },
+  };
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Bekleriz",
+    url: SITE_URL,
+    logo: `${SITE_URL}/opengraph-image`,
+    description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
+    email: "destek@bekleriz.com",
+    areaServed: { "@type": "Country", name: "Turkey" },
+    availableLanguage: { "@type": "Language", name: "Turkish" },
+    priceRange: "₺₺",
   };
   const webApplicationSchema = {
     "@context": "https://schema.org",
@@ -104,6 +117,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
         <script
           type="application/ld+json"

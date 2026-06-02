@@ -1,0 +1,16 @@
+{
+  "name": "Bekleriz — Online Davetiye",
+  "short_name": "Bekleriz",
+  "description": "Düğün, nişan ve doğum günü için dijital davetiye oluşturun.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06000f",
+  "theme_color": "#7C3AED",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
