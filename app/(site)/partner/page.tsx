@@ -130,6 +130,14 @@ const PARTNER_GURUPLARI = [
   { emoji: "🎵", label: "Müzik grupları & DJ'ler" },
 ];
 
+const SEKTOR_COZUMLERI = [
+  {
+    href: "/dugun-salonlari-icin-dijital-davetiye",
+    baslik: "Düğün salonları için çözüm",
+    aciklama: "LCV takip, QR check-in, canlı fotoğraf duvarı ve müşteri aktivasyon akışı.",
+  },
+];
+
 const GUVEN_NOKTALAR = [
   {
     icon: "🔒",
@@ -206,6 +214,25 @@ export default function PartnerPage() {
                 <span className="text-xl shrink-0">{g.emoji}</span>
                 <span className="text-sm font-medium text-gray-700">{g.label}</span>
               </div>
+            ))}
+          </div>
+          <div className="mt-8 grid gap-3">
+            {SEKTOR_COZUMLERI.map(cozum => (
+              <Link
+                key={cozum.href}
+                href={cozum.href}
+                className="group rounded-3xl border border-purple-100 bg-purple-50 px-5 py-4 transition hover:border-purple-200 hover:bg-purple-100/70"
+              >
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-black text-purple-800">{cozum.baslik}</p>
+                    <p className="mt-1 text-xs leading-5 text-purple-700/70">{cozum.aciklama}</p>
+                  </div>
+                  <span className="text-sm font-bold text-purple-700 transition group-hover:translate-x-1">
+                    İncele →
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
