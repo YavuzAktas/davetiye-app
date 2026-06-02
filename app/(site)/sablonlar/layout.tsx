@@ -30,7 +30,7 @@ export default function SablonlarLayout({ children }: { children: React.ReactNod
     description: "Düğün, nişan, doğum günü, kına ve özel etkinlikler için online davetiye şablonları.",
     isPartOf: {
       "@type": "WebSite",
-      name: "Bekleriz",
+      name: "DavetRota",
       url: SITE_URL,
     },
   };
@@ -52,7 +52,7 @@ export default function SablonlarLayout({ children }: { children: React.ReactNod
         name: "Dijital davetiye şablonları WhatsApp ile paylaşılır mı?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Evet. Bekleriz'de oluşturulan dijital davetiye şablonları link olarak paylaşılır ve WhatsApp üzerinden gönderilebilir.",
+          text: "Evet. DavetRota’da oluşturulan dijital davetiye şablonları link olarak paylaşılır ve WhatsApp üzerinden gönderilebilir.",
         },
       },
       {

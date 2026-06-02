@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function BeklerizWatermark() {
+export default function DavetRotaWatermark() {
   return (
     <div className="w-full flex justify-center py-6">
       <Link
@@ -22,9 +22,9 @@ export default function BeklerizWatermark() {
             boxShadow: "0 1px 6px rgba(124,58,237,0.45)",
           }}
         >
-          <span style={{ color: "white", fontSize: 9, fontWeight: 700, lineHeight: 1 }}>B</span>
+          <span style={{ color: "white", fontSize: 9, fontWeight: 700, lineHeight: 1 }}>D</span>
         </div>
-        <span>Bekleriz ile oluşturuldu</span>
+        <span>DavetRota ile oluşturuldu</span>
       </Link>
     </div>
   );

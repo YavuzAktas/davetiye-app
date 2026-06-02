@@ -5,7 +5,7 @@ import { YASAL_METIN_SURUMU } from "@/lib/yasal-bilgiler";
 function emailHashOlustur(email?: string | null) {
   if (!email) return null;
 
-  const secret = process.env.NEXTAUTH_SECRET ?? process.env.YASAL_ONAY_HASH_SECRET ?? "bekleriz-yasal-onay";
+  const secret = process.env.NEXTAUTH_SECRET ?? process.env.YASAL_ONAY_HASH_SECRET ?? "davetrota-yasal-onay";
   return createHmac("sha256", secret).update(email.trim().toLowerCase()).digest("hex");
 }
 

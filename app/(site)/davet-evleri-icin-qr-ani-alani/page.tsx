@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/davet-evleri-icin-qr-ani-alani" },
   openGraph: {
-    title: "Davet Evleri İçin QR Anı Alanı | Bekleriz",
+    title: "Davet Evleri İçin QR Anı Alanı | DavetRota",
     description:
       "Müşterilerinize QR ile fotoğraf, yazılı anı, sesli anı ve LCV takibi sunun. Davet evi paketlerinize dijital deneyim ekleyin.",
     url: `${SITE_URL}/davet-evleri-icin-qr-ani-alani`,
@@ -141,7 +141,7 @@ export default function DavetEvleriIcinQrAniAlaniPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Davet Evleri İçin QR Anı Alanı ve LCV Takip Sistemi",
-    provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
+    provider: { "@type": "Organization", name: "DavetRota", url: SITE_URL },
     areaServed: "TR",
     serviceType: "QR anı alanı, dijital davetiye, LCV takip ve canlı fotoğraf duvarı",
     audience: {
@@ -192,7 +192,7 @@ export default function DavetEvleriIcinQrAniAlaniPage() {
               </h1>
               <p className="mt-7 max-w-2xl text-base leading-8 text-white/62 sm:text-lg">
                 Müşterileriniz sadece davetiye paylaşmasın; misafirlerinden fotoğraf, yazılı anı ve sesli mesaj da toplasın.
-                Bekleriz partner paneliyle bu deneyimi paket hizmet olarak sunabilirsiniz.
+                DavetRota partner paneliyle bu deneyimi paket hizmet olarak sunabilirsiniz.
               </p>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Link

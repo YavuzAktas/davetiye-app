@@ -211,7 +211,7 @@ function BasariliIcerigi() {
               }}>
                 <span style={{ color:"#fff", fontWeight:700, fontSize:16 }}>D</span>
               </div>
-              <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:26, color:"#fff" }}>Bekleriz</span>
+              <span style={{ fontFamily:"var(--font-dancing),cursive", fontSize:26, color:"#fff" }}>DavetRota</span>
             </Link>
           </div>
 
@@ -350,8 +350,8 @@ function BasariliIcerigi() {
               animation:"float-up 0.6s 2s both",
             }}>
               Ödeme belgesi için{" "}
-              <a href="mailto:destek@bekleriz.com" style={{ color:"rgba(196,132,252,0.6)", textDecoration:"none" }}>
-                destek@bekleriz.com
+              <a href="mailto:destek@davetrota.com" style={{ color:"rgba(196,132,252,0.6)", textDecoration:"none" }}>
+                destek@davetrota.com
               </a>
             </p>
           </div>

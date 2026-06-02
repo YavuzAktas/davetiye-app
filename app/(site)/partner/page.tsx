@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 export const metadata: Metadata = {
-  title: "Organizasyoncular İçin Dijital Davetiye Partner Programı | Bekleriz",
+  title: "Organizasyoncular İçin Dijital Davetiye Partner Programı | DavetRota",
   description:
     "Düğün organizasyonu, etkinlik planlama, fotoğrafçılık ve mekan işletmeleri için aylık dijital davetiye aktivasyon hakkı. Müşterilerinize profesyonel davetiye sunun.",
   alternates: { canonical: "/partner" },

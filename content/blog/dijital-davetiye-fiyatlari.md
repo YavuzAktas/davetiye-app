@@ -24,7 +24,7 @@ Düğün, nişan veya doğum günü planlarken davetiye masrafları hızla artab
 
 ### 1. Temel davetiye
 
-Temel dijital davetiye; mobil uyumlu davetiye sayfası, paylaşım linki, RSVP alanı ve yönetim paneli gibi ana özellikleri kapsar. Bekleriz'de ücretlendirme abonelik şeklinde değil, davetiye bazlıdır.
+Temel dijital davetiye; mobil uyumlu davetiye sayfası, paylaşım linki, RSVP alanı ve yönetim paneli gibi ana özellikleri kapsar. DavetRota’da ücretlendirme abonelik şeklinde değil, davetiye bazlıdır.
 
 ### 2. Şablon tercihi
 
@@ -36,11 +36,11 @@ Müzik, Albüm & Anı, sesli anı, canlı fotoğraf duvarı veya oturma planı g
 
 ### 4. Tek seferlik ödeme
 
-Bazı platformlar aylık abonelik veya paket sistemi kullanır. Tek etkinlik için hazırlanan düğün, nişan veya doğum günü davetiyelerinde tek seferlik ödeme çoğu zaman daha anlaşılırdır. [Bekleriz fiyatlar sayfasında](/fiyatlar) temel davetiye ve ek özelliklerin güncel tutarlarını görebilirsiniz.
+Bazı platformlar aylık abonelik veya paket sistemi kullanır. Tek etkinlik için hazırlanan düğün, nişan veya doğum günü davetiyelerinde tek seferlik ödeme çoğu zaman daha anlaşılırdır. [DavetRota fiyatlar sayfasında](/fiyatlar) temel davetiye ve ek özelliklerin güncel tutarlarını görebilirsiniz.
 
 ## Davetiye Hazırlarken Toplam Tutarı Nasıl Kontrol Edersiniz?
 
-Bekleriz'de davetiye oluştururken seçtiğiniz şablon ve ek özellikler fiyat özetine yansır. Ödeme adımına geçmeden önce:
+DavetRota’da davetiye oluştururken seçtiğiniz şablon ve ek özellikler fiyat özetine yansır. Ödeme adımına geçmeden önce:
 
 - Hangi şablonu kullandığınızı,
 - Hangi ek özellikleri açtığınızı,

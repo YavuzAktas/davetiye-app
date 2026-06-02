@@ -142,7 +142,7 @@ Aylin & Mert
 21 Haziran 2026 · Cumartesi · 19:00
 Suma Beach, İstanbul Boğazı
 
-Katılım için: [bekleriz.com/davetiye/link]
+Katılım için: [davetrota.com/davetiye/link]
 ```
 
 ---

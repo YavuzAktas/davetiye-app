@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const KEY = "bekleriz_sablon_secimi";
+const KEY = "davetrota_sablon_secimi";
 const MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 type Secim = { sablonId: string; sablonIsim: string; savedAt: number };

@@ -113,7 +113,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           marginBottom: 36, display: "flex",
         }} />
 
-        {/* Bekleriz logo */}
+        {/* DavetRota logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{
             width: 44, height: 44, borderRadius: 12,
@@ -124,7 +124,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             B
           </div>
           <span style={{ fontSize: 30, color: "rgba(255,255,255,0.55)", fontFamily: "serif" }}>
-            Bekleriz
+            DavetRota
           </span>
         </div>
       </div>

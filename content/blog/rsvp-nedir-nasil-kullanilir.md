@@ -84,7 +84,7 @@ Bu nedenle RSVP son tarihinden sonra yanıt vermeyenlere kısa bir hatırlatma g
 
 ## RSVP ile Katılımcı Yönetimi
 
-[Bekleriz](/) gibi platformlarda RSVP formu şu verileri toplar:
+[DavetRota](/) gibi platformlarda RSVP formu şu verileri toplar:
 
 | Veri | Kullanım |
 |---|---|
@@ -133,7 +133,7 @@ Organizatör için zor olur. Yanıt göndermemek ne geleceğinizi ne de gelmeyec
 Organizatörü mümkün olan en kısa sürede bilgilendirin. Dijital davetiyede formu tekrar doldurabilirsiniz — sistem son yanıtı geçerli sayar.
 
 **RSVP formu kişisel bilgilerimi kaydediyor mu?**
-Bekleriz'de RSVP formuyla toplanan ad-soyad ve kişi sayısı yalnızca organizatöre iletilir; üçüncü taraflarla paylaşılmaz.
+DavetRota’da RSVP formuyla toplanan ad-soyad ve kişi sayısı yalnızca organizatöre iletilir; üçüncü taraflarla paylaşılmaz.
 
 ---
 

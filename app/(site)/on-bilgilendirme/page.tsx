@@ -4,7 +4,7 @@ import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandir
 
 export const metadata = {
   title: "Ön Bilgilendirme Formu",
-  description: "Bekleriz dijital davetiye satın alımları için ön bilgilendirme formu.",
+  description: "DavetRota dijital davetiye satın alımları için ön bilgilendirme formu.",
 };
 
 export default function OnBilgilendirmeSayfasi() {
@@ -34,7 +34,7 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <>
               <p>
-                Bekleriz, dijital davetiye oluşturma, paylaşma, RSVP toplama ve seçilen
+                DavetRota, dijital davetiye oluşturma, paylaşma, RSVP toplama ve seçilen
                 davetiyeye göre ek özellikler sunan çevrimiçi bir hizmettir.
               </p>
               <ul>
@@ -53,7 +53,7 @@ export default function OnBilgilendirmeSayfasi() {
                 <tr><th>Ek özellikler</th><td>Seçilen özelliklere göre ödeme ekranı öncesinde ayrıca gösterilir.</td></tr>
                 <tr><th>Toplam fiyat</th><td>Davetiye oluşturma ekranında ve ödeme öncesinde seçilen özelliklere göre hesaplanır.</td></tr>
                 <tr><th>Ek masraf</th><td>Platform tarafından ayrıca kargo, teslimat veya kurulum bedeli alınmaz.</td></tr>
-                <tr><th>Ödeme altyapısı</th><td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri Bekleriz tarafından saklanmaz.</td></tr>
+                <tr><th>Ödeme altyapısı</th><td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri DavetRota tarafından saklanmaz.</td></tr>
                 <tr><th>Ödeme için aktarılan alıcı bilgileri</th><td>{ODEME_ALICI_VERILERI.join(", ")}.</td></tr>
               </tbody>
             </table>
@@ -92,7 +92,7 @@ export default function OnBilgilendirmeSayfasi() {
           icerik: (
             <>
               <p>
-                Destek ve iade talepleri için <a href="mailto:destek@bekleriz.com">destek@bekleriz.com</a>{" "}
+                Destek ve iade talepleri için <a href="mailto:destek@davetrota.com">destek@davetrota.com</a>{" "}
                 adresine başvurabilirsiniz.
               </p>
               <p>

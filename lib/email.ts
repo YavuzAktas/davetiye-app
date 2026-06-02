@@ -112,7 +112,7 @@ export async function rsvpBildirimiGonder({
 
         <div style="padding:16px 24px;border-top:1px solid #e5e7eb;text-align:center;">
           <p style="color:#9ca3af;font-size:12px;margin:0;">
-            Bu e-posta bekleriz.com tarafından gönderildi.
+            Bu e-posta davetrota.com tarafından gönderildi.
           </p>
         </div>
       </div>
@@ -226,8 +226,8 @@ export async function odemeHatirlatmaGonder({
     <!-- Footer -->
     <div style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 36px;text-align:center;">
       <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;">
-        © 2025 Bekleriz &nbsp;·&nbsp;
-        <a href="mailto:destek@bekleriz.com" style="color:rgba(124,58,237,0.7);text-decoration:none;">destek@bekleriz.com</a>
+        © 2025 DavetRota &nbsp;·&nbsp;
+        <a href="mailto:destek@davetrota.com" style="color:rgba(124,58,237,0.7);text-decoration:none;">destek@davetrota.com</a>
       </p>
     </div>
   </div>
@@ -261,7 +261,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
         </div>
         <div style="padding:32px;">
           <p style="color:#374151;font-size:15px;margin:0 0 16px;">
-            Bekleriz hesabınız için şifre sıfırlama talebinde bulundunuz.
+            DavetRota hesabınız için şifre sıfırlama talebinde bulundunuz.
           </p>
           <p style="color:#374151;font-size:15px;margin:0 0 28px;">
             Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz.
@@ -280,7 +280,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
           </p>
         </div>
         <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 DavetRota · destek@davetrota.com</p>
         </div>
       </div>
     </body>
@@ -291,7 +291,7 @@ export async function sifreSifirlamaGonder(email: string, resetUrl: string) {
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: email,
-      subject: "Bekleriz — Şifre Sıfırlama",
+      subject: "DavetRota — Şifre Sıfırlama",
       html,
     });
   } catch (error) {
@@ -351,7 +351,7 @@ export async function partnerBasvuruAdminBildir({
           </div>
         </div>
         <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz — Partner Admin Bildirimi</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 DavetRota — Partner Admin Bildirimi</p>
         </div>
       </div>
     </body>
@@ -404,10 +404,10 @@ export async function partnerOnayBildir({
           <div style="text-align:center;margin:28px 0;">
             <a href="${guvenliUrl}" style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;">Partner Paneline Git →</a>
           </div>
-          <p style="color:#9ca3af;font-size:13px;margin:0;">Sorularınız için <a href="mailto:destek@bekleriz.com" style="color:#7C3AED;">destek@bekleriz.com</a> adresinden bize ulaşabilirsiniz.</p>
+          <p style="color:#9ca3af;font-size:13px;margin:0;">Sorularınız için <a href="mailto:destek@davetrota.com" style="color:#7C3AED;">destek@davetrota.com</a> adresinden bize ulaşabilirsiniz.</p>
         </div>
         <div style="background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 DavetRota · destek@davetrota.com</p>
         </div>
       </div>
     </body>
@@ -418,7 +418,7 @@ export async function partnerOnayBildir({
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: email,
-      subject: "Bekleriz Partner Başvurunuz Onaylandı 🎉",
+      subject: "DavetRota Partner Başvurunuz Onaylandı 🎉",
       html,
     });
   } catch (error) {
@@ -467,7 +467,7 @@ export async function aktivasyonKoduKullanilanBildir({
           </div>
         </div>
         <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 DavetRota · destek@davetrota.com</p>
         </div>
       </div>
     </body>
@@ -523,7 +523,7 @@ export async function davetiyeYayindaBildir({
           </div>
         </div>
         <div style="background:#f9fafb;padding:14px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 Bekleriz · destek@bekleriz.com</p>
+          <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 DavetRota · destek@davetrota.com</p>
         </div>
       </div>
     </body>

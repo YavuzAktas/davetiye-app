@@ -9,7 +9,7 @@ import DavetiyeGoruntulenmeKaydedici from "@/components/DavetiyeGoruntulenmeKayd
 import { DavetiyeVeri } from "@/lib/sablon-tipleri";
 import { davetiyeOzelligiAktif } from "@/lib/davetiye-ozellikleri";
 import { davetiyeCacheTag } from "@/lib/cache-tags";
-import BeklerizWatermark from "@/components/BeklerizWatermark";
+import DavetRotaWatermark from "@/components/DavetRotaWatermark";
 import EtkilesimButonuBekle from "./EtkilesimButonuBekle";
 import { type RsvpSorular } from "@/lib/rsvp-sorular";
 
@@ -221,7 +221,7 @@ export default async function DavetiyeSayfasi({ params, searchParams }: Props) {
     <>
       <DavetiyeGoruntulenmeKaydedici slug={davetiye.slug} />
       {sablon}
-      {!["vintage-nisan", "nisan-luks"].includes(sablonTipi) && <BeklerizWatermark />}
+      {!["vintage-nisan", "nisan-luks"].includes(sablonTipi) && <DavetRotaWatermark />}
       {sablonTipi === "nisan-luks" ? (
         <EtkilesimButonuBekle
           slug={davetiye.slug}

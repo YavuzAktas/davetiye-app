@@ -72,7 +72,7 @@ const GUVEN_BADGELERI = [
 
 const SORU_CEVAP = [
   {
-    soru: "Bekleriz abonelik mi?",
+    soru: "DavetRota abonelik mi?",
     cevap: "Hayır. Her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır. Abonelik veya otomatik yenileme yoktur.",
   },
   {
@@ -85,7 +85,7 @@ const SORU_CEVAP = [
   },
   {
     soru: "Fatura alabilir miyim?",
-    cevap: "Ödeme belgesi veya fatura talebi için destek@bekleriz.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
+    cevap: "Ödeme belgesi veya fatura talebi için destek@davetrota.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
   },
   {
     soru: "Ödeme sonrasında özellik ekleyebilir miyim?",
@@ -360,7 +360,7 @@ export default async function FiyatlarSayfasi({
             </p>
             <span className="hidden sm:block text-gray-200">·</span>
             <p className="text-xs text-gray-400 text-center">
-              Bekleriz ile tüm misafirlere <span className="text-gray-600 font-medium">sınırsız dijital</span> ulaşım
+              DavetRota ile tüm misafirlere <span className="text-gray-600 font-medium">sınırsız dijital</span> ulaşım
             </p>
           </div>
 
@@ -571,8 +571,8 @@ export default async function FiyatlarSayfasi({
           </div>
           <p className="text-center text-sm text-gray-400 mt-6">
             Başka sorun mu var?{" "}
-            <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:text-purple-700 transition-colors">
-              destek@bekleriz.com
+            <a href="mailto:destek@davetrota.com" className="text-purple-600 hover:text-purple-700 transition-colors">
+              destek@davetrota.com
             </a>
           </p>
         </div>

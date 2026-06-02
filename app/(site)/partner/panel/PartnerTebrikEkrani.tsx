@@ -55,7 +55,7 @@ export default function PartnerTebrikEkrani({
           </h1>
 
           <p className="mt-3 text-sm leading-relaxed text-gray-500">
-            <strong className="font-black text-gray-800">{firmaAdi}</strong> artık resmi bir Bekleriz
+            <strong className="font-black text-gray-800">{firmaAdi}</strong> artık resmi bir DavetRota
             partneri. Paneli keşfetmeye başlayabilirsiniz.
           </p>
 
@@ -84,8 +84,8 @@ export default function PartnerTebrikEkrani({
 
           <p className="mt-4 text-[11px] text-gray-400">
             Sorularınız için{" "}
-            <a href="mailto:destek@bekleriz.com" className="text-purple-500 hover:underline">
-              destek@bekleriz.com
+            <a href="mailto:destek@davetrota.com" className="text-purple-500 hover:underline">
+              destek@davetrota.com
             </a>
           </p>
         </div>

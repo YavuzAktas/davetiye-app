@@ -142,7 +142,7 @@ function ChatCard({ delay }: { delay: number }) {
         </div>
         <div className="bg-[#d9fdd3] px-2.5 py-1.5">
           <p className="text-[10px] font-semibold text-gray-700">Düğün Davetiyesi 💍</p>
-          <p className="text-[9px] text-gray-400">bekleriz.com/davetiye/ayse-mehmet</p>
+          <p className="text-[9px] text-gray-400">davetrota.com/davetiye/ayse-mehmet</p>
         </div>
       </div>
     </div>
@@ -1062,7 +1062,7 @@ export default function Anasayfa() {
                             <div className="px-3 pt-2 pb-0.5">
                               <p className="text-gray-800 font-semibold leading-tight" style={{ fontSize: 11 }}>Düğün Davetiyesi 💍</p>
                               <p className="text-gray-500" style={{ fontSize: 9 }}>Ayşe &amp; Mehmet · 12 Eylül 2026</p>
-                              <p className="text-gray-400" style={{ fontSize: 8 }}>bekleriz.com</p>
+                              <p className="text-gray-400" style={{ fontSize: 8 }}>davetrota.com</p>
                             </div>
                             <div className="px-3 pb-2">
                               <p className="text-right" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>14:33 ✓✓</p>
@@ -1127,7 +1127,7 @@ export default function Anasayfa() {
         <div className="max-w-5xl mx-auto relative">
           <Section>
             <div className="text-center mb-20">
-              <span className="text-purple-400 text-xs font-bold tracking-[0.25em] uppercase">Rakamlarla Bekleriz</span>
+              <span className="text-purple-400 text-xs font-bold tracking-[0.25em] uppercase">Rakamlarla DavetRota</span>
               <h2 className="text-4xl md:text-5xl font-bold text-white mt-3">Binlerce anıya ortak olduk</h2>
             </div>
           </Section>
@@ -1225,7 +1225,7 @@ export default function Anasayfa() {
                   <div className="w-px h-10 bg-gradient-to-b from-transparent via-purple-500/40 to-transparent" />
                   <p className="text-white/25 text-xs leading-relaxed">
                     Rakip platformların çoğu davetiye + RSVP&apos;de kalır.<br />
-                    Bekleriz etkinlik sonrasında da devam eder.
+                    DavetRota etkinlik sonrasında da devam eder.
                   </p>
                 </div>
               </div>
@@ -1294,7 +1294,7 @@ export default function Anasayfa() {
                   <p className="text-xs font-bold text-gray-400 tracking-wider uppercase">Kağıt Davetiye</p>
                 </div>
                 <div className="bg-purple-600 px-5 py-4 border-b border-gray-100 text-center">
-                  <p className="text-xs font-bold text-white/80 tracking-wider uppercase">Bekleriz</p>
+                  <p className="text-xs font-bold text-white/80 tracking-wider uppercase">DavetRota</p>
                   <span className="inline-block mt-0.5 text-[10px] text-purple-200">✦ dijital</span>
                 </div>
               </div>

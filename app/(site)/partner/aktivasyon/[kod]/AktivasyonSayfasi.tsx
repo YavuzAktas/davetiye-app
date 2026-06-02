@@ -217,7 +217,7 @@ export default function AktivasyonSayfasi({
         <p className="text-sm text-gray-500 mb-2">{hataMesaji}</p>
         <p className="text-xs text-gray-400">
           Yardım için{" "}
-          <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:underline">destek@bekleriz.com</a>
+          <a href="mailto:destek@davetrota.com" className="text-purple-600 hover:underline">destek@davetrota.com</a>
         </p>
       </div>
     );

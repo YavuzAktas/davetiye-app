@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/whatsapp-davetiye" },
   openGraph: {
-    title: "WhatsApp Davetiye Oluştur | Bekleriz",
+    title: "WhatsApp Davetiye Oluştur | DavetRota",
     description:
       "Davetiyeni link olarak hazırla, WhatsApp ile paylaş ve katılım yanıtlarını tek panelden takip et.",
     url: `${SITE_URL}/whatsapp-davetiye`,
@@ -66,7 +66,7 @@ const faq = [
   {
     soru: "WhatsApp davetiyede RSVP alınabilir mi?",
     cevap:
-      "Evet. Bekleriz ile oluşturulan davetiyelerde misafirler katılım durumunu form üzerinden bildirebilir.",
+      "Evet. DavetRota ile oluşturulan davetiyelerde misafirler katılım durumunu form üzerinden bildirebilir.",
   },
   {
     soru: "WhatsApp davetiye görsel mi link mi olmalı?",
@@ -169,7 +169,7 @@ export default function WhatsappDavetiyePage() {
                     <p className="mt-3 text-2xl" style={{ fontFamily: "var(--font-dancing), cursive" }}>Ayşe & Mehmet</p>
                   </div>
                   <div className="px-4 py-3">
-                    <p className="text-xs font-semibold text-gray-800">bekleriz.com/davetiye/ayse-mehmet</p>
+                    <p className="text-xs font-semibold text-gray-800">davetrota.com/davetiye/ayse-mehmet</p>
                     <p className="mt-1 text-[11px] text-gray-500">Tarih, mekan ve RSVP formu davetiyede.</p>
                   </div>
                 </div>

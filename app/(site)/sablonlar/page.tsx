@@ -1431,7 +1431,7 @@ export default function SablonlarSayfasi() {
               Online davetiye şablonunu etkinliğine göre seç
             </h2>
             <p className="mt-4 max-w-2xl text-sm text-gray-500 leading-7">
-              Bekleriz&apos;de düğün davetiyesi, nişan davetiyesi, doğum günü davetiyesi ve özel etkinlikler için
+              DavetRota&apos;de düğün davetiyesi, nişan davetiyesi, doğum günü davetiyesi ve özel etkinlikler için
               dijital davetiye şablonları bulunur. Şablonu seçtikten sonra bilgilerini düzenleyebilir, davetiye
               linkini WhatsApp veya sosyal medya üzerinden paylaşabilirsin.
             </p>

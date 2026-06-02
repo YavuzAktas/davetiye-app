@@ -11,8 +11,8 @@ export default function ReferralYonlendirme() {
   useEffect(() => {
     if (!kod) { router.replace("/sablonlar"); return; }
     try {
-      localStorage.setItem("bekleriz_ref", kod);
-      document.cookie = `bekleriz_ref=${encodeURIComponent(kod)}; max-age=2592000; path=/; samesite=lax`;
+      localStorage.setItem("davetrota_ref", kod);
+      document.cookie = `davetrota_ref=${encodeURIComponent(kod)}; max-age=2592000; path=/; samesite=lax`;
     } catch {}
     router.replace("/sablonlar");
   }, [kod, router]);

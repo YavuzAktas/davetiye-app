@@ -3,7 +3,7 @@ import { ODEME_ALICI_VERILERI, YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/li
 
 export const metadata = {
   title: "KVKK Aydınlatma Metni",
-  description: "Bekleriz platformu kişisel verilerin korunması kanunu aydınlatma metni.",
+  description: "DavetRota platformu kişisel verilerin korunması kanunu aydınlatma metni.",
 };
 
 export default function KvkkSayfasi() {
@@ -19,7 +19,7 @@ export default function KvkkSayfasi() {
             <>
               <p>
                 6698 sayılı Kişisel Verilerin Korunması Kanunu ("<strong>KVKK</strong>") uyarınca,
-                kişisel verileriniz; veri sorumlusu sıfatıyla <strong>Bekleriz</strong> tarafından
+                kişisel verileriniz; veri sorumlusu sıfatıyla <strong>DavetRota</strong> tarafından
                 aşağıda açıklanan kapsamda işlenmektedir.
               </p>
               <table>
@@ -129,7 +129,7 @@ export default function KvkkSayfasi() {
               <p>
                 Ödeme başlatılırken iyzico'ya aktarılabilecek alıcı/fatura bilgileri şunlardır:{" "}
                 {ODEME_ALICI_VERILERI.join(", ")}. Kart bilgileri iyzico altyapısında işlenir;
-                Bekleriz tarafından saklanmaz.
+                DavetRota tarafından saklanmaz.
               </p>
               <p>
                 Partner programında partner firma, müşteriye yalnızca dijital davetiye aktivasyon hakkı
@@ -199,7 +199,7 @@ export default function KvkkSayfasi() {
               </p>
               <table>
                 <tbody>
-                  <tr><th>E-posta</th><td>kvkk@bekleriz.com</td></tr>
+                  <tr><th>E-posta</th><td>kvkk@davetrota.com</td></tr>
                   <tr><th>Konu</th><td>"KVKK Başvurusu" olarak belirtiniz</td></tr>
                 </tbody>
               </table>

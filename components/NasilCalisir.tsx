@@ -97,7 +97,7 @@ function Visual3() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.1-1.1m-.757-4.9a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
         </svg>
         <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", fontFamily: "monospace", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          bekleriz.com/davetiye/ayse-mehmet
+          davetrota.com/davetiye/ayse-mehmet
         </p>
       </div>
       <div className="grid grid-cols-3 gap-1.5 pt-1">

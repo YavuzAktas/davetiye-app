@@ -1,6 +1,6 @@
 {
-  "name": "Bekleriz — Online Davetiye",
-  "short_name": "Bekleriz",
+  "name": "DavetRota — Online Davetiye",
+  "short_name": "DavetRota",
   "description": "Düğün, nişan ve doğum günü için dijital davetiye oluşturun.",
   "start_url": "/",
   "display": "standalone",

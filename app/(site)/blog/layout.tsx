@@ -24,12 +24,12 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
   const blogSchema = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "Bekleriz Davetiye Blogu",
+    name: "DavetRota Davetiye Blogu",
     url: `${SITE_URL}/blog`,
     description: "Online davetiye, dijital davetiye, WhatsApp davetiye ve düğün davetiyesi rehberleri.",
     publisher: {
       "@type": "Organization",
-      name: "Bekleriz",
+      name: "DavetRota",
       url: SITE_URL,
     },
   };

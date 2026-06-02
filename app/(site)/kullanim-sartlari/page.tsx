@@ -3,7 +3,7 @@ import { YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata = {
   title: "Kullanım Şartları",
-  description: "Bekleriz platformu kullanım şartları ve hizmet koşulları.",
+  description: "DavetRota platformu kullanım şartları ve hizmet koşulları.",
 };
 
 export default function KullanimSartlariSayfasi() {
@@ -18,7 +18,7 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Bu Kullanım Şartları ("<strong>Şartlar</strong>"), <strong>Bekleriz</strong> ("<strong>Bekleriz</strong>",
+                Bu Kullanım Şartları ("<strong>Şartlar</strong>"), <strong>DavetRota</strong> ("<strong>DavetRota</strong>",
                 "<strong>biz</strong>") ile platformumuzu kullanan gerçek veya tüzel kişi
                 ("<strong>Kullanıcı</strong>", "<strong>siz</strong>") arasındaki hukuki ilişkiyi
                 düzenlemektedir.
@@ -36,7 +36,7 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Bekleriz; kullanıcıların düğün, nişan, doğum günü ve benzeri etkinlikler için
+                DavetRota; kullanıcıların düğün, nişan, doğum günü ve benzeri etkinlikler için
                 dijital davetiye oluşturmasına, paylaşmasına ve RSVP (katılım bildirimi) toplamasına
                 imkân tanıyan çevrimiçi bir platformdur.
               </p>
@@ -130,7 +130,7 @@ export default function KullanimSartlariSayfasi() {
               <ul>
                 <li>Partner yalnızca satın aldığı paket kapsamındaki aktivasyon linklerini müşterilerine iletebilir.</li>
                 <li>Aktivasyon linki tek kullanımlıktır ve ilgili partner aboneliği süresince geçerlidir.</li>
-                <li>Aktivasyon hakkı kullanıldığında davetiye müşterinin kendi Bekleriz hesabında oluşur.</li>
+                <li>Aktivasyon hakkı kullanıldığında davetiye müşterinin kendi DavetRota hesabında oluşur.</li>
                 <li>Partner, müşteri adına KVKK, gizlilik, kullanım şartları veya ticari ileti onayı veremez.</li>
                 <li>Partner, platform üzerinden müşteriye veya müşterinin davetlilerine reklam/kampanya mesajı gönderemez.</li>
                 <li>Ticari elektronik ileti gönderimi yapılacaksa gerekli izinler ve İYS yükümlülükleri partnerin kendi sorumluluğundadır.</li>
@@ -166,7 +166,7 @@ export default function KullanimSartlariSayfasi() {
                   <strong>14 gün</strong> içindeki başvurular iade değerlendirmesine alınır.
                 </li>
                 <li>
-                  İade talepleri için <a href="mailto:destek@bekleriz.com">destek@bekleriz.com</a>{" "}
+                  İade talepleri için <a href="mailto:destek@davetrota.com">destek@davetrota.com</a>{" "}
                   adresine yazınız. Talepler 5 iş günü içinde yanıtlanır.
                 </li>
               </ul>
@@ -179,7 +179,7 @@ export default function KullanimSartlariSayfasi() {
             <>
               <p>
                 Platformda oluşturduğunuz davetiye içerikleri (metinler, yüklediğiniz görseller)
-                size aittir. Bekleriz bu içerikler üzerinde mülkiyet hakkı talep etmez.
+                size aittir. DavetRota bu içerikler üzerinde mülkiyet hakkı talep etmez.
               </p>
               <p>
                 Bununla birlikte içeriğinizi platform üzerinde barındırmak, iletmek ve görüntülemek
@@ -187,7 +187,7 @@ export default function KullanimSartlariSayfasi() {
                 tanımış olursunuz.
               </p>
               <p>
-                Platform tasarımları, şablonlar, marka unsurları ve yazılım <strong>Bekleriz</strong>'e
+                Platform tasarımları, şablonlar, marka unsurları ve yazılım <strong>DavetRota</strong>'e
                 aittir; izinsiz kopyalanamaz, dağıtılamaz veya türev eserler oluşturulamaz.
               </p>
             </>
@@ -215,12 +215,12 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <>
               <p>
-                Bekleriz'in herhangi bir nedenle sorumlu tutulabileceği durumlarda toplam sorumluluğu;
+                DavetRota’nın herhangi bir nedenle sorumlu tutulabileceği durumlarda toplam sorumluluğu;
                 zararın meydana geldiği tarihten önceki son <strong>3 ay</strong> içinde
                 kullanıcının ödediği toplam ücretle sınırlıdır.
               </p>
               <p>
-                Bekleriz; veri kayıpları, iş kesintisi, kâr kaybı veya dolaylı zararlar için
+                DavetRota; veri kayıpları, iş kesintisi, kâr kaybı veya dolaylı zararlar için
                 sorumlu tutulamaz.
               </p>
             </>
@@ -240,7 +240,7 @@ export default function KullanimSartlariSayfasi() {
                 <li>Yasal saklama yükümlülüğü olan ödeme kayıtları mevzuat gereği saklanmaya devam eder.</li>
               </ul>
               <p>
-                Şartlara aykırı davranış tespit edilmesi hâlinde Bekleriz, hesabı önceden
+                Şartlara aykırı davranış tespit edilmesi hâlinde DavetRota, hesabı önceden
                 bildirmeksizin feshedebilir. Ücret iadesi talepleri bu Şartlar'daki iade politikası
                 ve emredici tüketici mevzuatı hükümlerine göre değerlendirilir.
               </p>
@@ -283,9 +283,9 @@ export default function KullanimSartlariSayfasi() {
           icerik: (
             <table>
               <tbody>
-                <tr><th>Genel destek</th><td>destek@bekleriz.com</td></tr>
-                <tr><th>KVKK başvuruları</th><td>kvkk@bekleriz.com</td></tr>
-                <tr><th>Hukuki bildirimler</th><td>hukuk@bekleriz.com</td></tr>
+                <tr><th>Genel destek</th><td>destek@davetrota.com</td></tr>
+                <tr><th>KVKK başvuruları</th><td>kvkk@davetrota.com</td></tr>
+                <tr><th>Hukuki bildirimler</th><td>hukuk@davetrota.com</td></tr>
               </tbody>
             </table>
           ),

@@ -4,8 +4,8 @@ import { PARTNER_PAKET_LISTESI } from "@/lib/partner-paketler";
 import { YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata: Metadata = {
-  title: "Partner Abonelik Ön Bilgilendirme | Bekleriz",
-  description: "Bekleriz partner abonelik paketleri için ödeme öncesi bilgilendirme.",
+  title: "Partner Abonelik Ön Bilgilendirme | DavetRota",
+  description: "DavetRota partner abonelik paketleri için ödeme öncesi bilgilendirme.",
   robots: { index: false },
 };
 
@@ -45,7 +45,7 @@ export default function PartnerOnBilgilendirmePage() {
             <>
               <p>
                 Partner aboneliği; düğün salonu, davet evi, organizasyon firması ve benzeri
-                işletmelerin kendi müşterilerine Bekleriz üzerinden dijital davetiye aktivasyon
+                işletmelerin kendi müşterilerine DavetRota üzerinden dijital davetiye aktivasyon
                 hakkı sunabilmesi için hazırlanan aylık dijital hizmet paketidir.
               </p>
               <ul>
@@ -82,7 +82,7 @@ export default function PartnerOnBilgilendirmePage() {
                 </tr>
                 <tr>
                   <th>Ödeme altyapısı</th>
-                  <td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri Bekleriz tarafından saklanmaz.</td>
+                  <td>Ödemeler iyzico altyapısı üzerinden işlenir. Kart bilgileri DavetRota tarafından saklanmaz.</td>
                 </tr>
               </tbody>
             </table>

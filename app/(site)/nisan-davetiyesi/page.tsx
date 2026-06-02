@@ -5,7 +5,7 @@ import { getSiteUrl } from "@/lib/site-url";
 const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Dijital Nişan Davetiyesi Oluştur — Söz & Yüzük Töreni | Bekleriz",
+  title: "Dijital Nişan Davetiyesi Oluştur — Söz & Yüzük Töreni | DavetRota",
   description:
     "Online nişan davetiyesi oluştur, WhatsApp ile paylaş, RSVP yanıtlarını takip et. Söz, nişan ve yüzük töreni için zarif dijital davetiye şablonları. 10 dakikada hazır.",
   keywords: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/nisan-davetiyesi" },
   openGraph: {
-    title: "Dijital Nişan Davetiyesi Oluştur | Bekleriz",
+    title: "Dijital Nişan Davetiyesi Oluştur | DavetRota",
     description:
       "Nişan ve söz töreni için 10 dakikada dijital davetiye hazırlayın. WhatsApp ile paylaşın, katılım yanıtlarını ve misafir listesini tek panelden yönetin.",
     url: `${SITE_URL}/nisan-davetiyesi`,
@@ -143,7 +143,7 @@ export default function NisanDavetiyesiPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Dijital Nişan Davetiyesi",
-    provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
+    provider: { "@type": "Organization", name: "DavetRota", url: SITE_URL },
     description: "Online nişan ve söz töreni davetiyesi oluşturma, paylaşma ve RSVP takip hizmeti.",
     areaServed: "TR",
     offers: { "@type": "Offer", priceCurrency: "TRY", price: "349", priceValidUntil: "2027-12-31" },
@@ -193,7 +193,7 @@ export default function NisanDavetiyesiPage() {
                   ))}
                 </div>
                 <p className="text-sm text-white/40">
-                  <span className="text-white font-semibold">200+</span> çift nişan davetiyesini Bekleriz ile oluşturdu
+                  <span className="text-white font-semibold">200+</span> çift nişan davetiyesini DavetRota ile oluşturdu
                 </p>
               </div>
             </div>

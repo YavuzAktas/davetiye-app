@@ -656,7 +656,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
           }}>Sizi çok seviyoruz 💛</p>
         )}
         <a
-          href="https://bekleriz.com"
+          href="https://davetrota.com"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -671,7 +671,7 @@ export default function NisanLuksSablon({ davetiye, rsvpBileseni, previewModu }:
             transition:"all 0.2s",
           }}
         >
-          ✦ Bekleriz ile oluşturuldu
+          ✦ DavetRota ile oluşturuldu
         </a>
       </footer>
 

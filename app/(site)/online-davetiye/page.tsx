@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/online-davetiye" },
   openGraph: {
-    title: "Online Davetiye Oluştur | Bekleriz",
+    title: "Online Davetiye Oluştur | DavetRota",
     description:
       "Hazır şablonlarla online davetiye oluşturun, WhatsApp ile paylaşın ve RSVP yanıtlarını takip edin.",
     url: `${SITE_URL}/online-davetiye`,
@@ -132,7 +132,7 @@ export default function OnlineDavetiyePage() {
                   Online davetiye hazırla, misafirlerine anında ulaştır
                 </h1>
                 <p className="mt-7 max-w-2xl text-base leading-8 text-white/60 sm:text-lg">
-                  Bekleriz ile etkinliğine uygun şablonu seç, davetiye bilgilerini gir ve davetiyeni
+                  DavetRota ile etkinliğine uygun şablonu seç, davetiye bilgilerini gir ve davetiyeni
                   link olarak paylaş. Katılım yanıtları ve misafir listesi tek panelde toplansın.
                 </p>
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row">

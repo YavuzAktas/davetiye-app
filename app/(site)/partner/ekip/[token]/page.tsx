@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const metadata = {
-  title: "Partner Ekip Erişimi | Bekleriz",
+  title: "Partner Ekip Erişimi | DavetRota",
   robots: { index: false },
 };
 
@@ -37,7 +37,7 @@ function tarih(tarihDegeri: Date | null | undefined) {
 }
 
 function publicUrl(path: string) {
-  const base = process.env.NEXT_PUBLIC_URL || "https://davetiye-app.vercel.app";
+  const base = process.env.NEXT_PUBLIC_URL || "https://davetrota.com";
   return `${base}${path}`;
 }
 
@@ -264,7 +264,7 @@ export default async function PartnerEkipPage({ params }: Props) {
 
         <p className="mt-6 text-center text-[11px] leading-relaxed text-gray-400">
           Erişimde sorun varsa partner hesap sahibinden yeni link isteyin.{" "}
-          <Link href="/" className="font-semibold text-purple-500 hover:underline">Bekleriz</Link>
+          <Link href="/" className="font-semibold text-purple-500 hover:underline">DavetRota</Link>
         </p>
       </main>
     </div>

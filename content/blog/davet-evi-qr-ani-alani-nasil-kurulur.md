@@ -84,7 +84,7 @@ Bu nedenle:
 - Davetiye sahibi onay mekanizması bulunmalıdır.
 - Partner, gereksiz şekilde davetli veya anı verilerini görmemelidir.
 
-Bekleriz'de bu yapı, müşteri hesabı merkezli olacak şekilde tasarlanır. Partner sadece aktivasyon ve durum takibine odaklanır.
+DavetRota’da bu yapı, müşteri hesabı merkezli olacak şekilde tasarlanır. Partner sadece aktivasyon ve durum takibine odaklanır.
 
 ## Masa Kartı Metni Örneği
 
@@ -100,4 +100,4 @@ QR kodun yanında kısa ve anlaşılır bir metin kullanmak gerekir:
 
 Davet evi QR anı alanı, küçük bir teknik ekleme gibi görünse de müşteri deneyimini ciddi şekilde güçlendirir. Misafirler etkinliğe daha fazla katılır, müşteri daha düzenli bir anı arşivi elde eder, davet evi ise hizmet paketini daha modern hale getirir.
 
-Bu sistemi müşterilerinize sunmak için [Bekleriz partner programını](/partner) inceleyebilirsiniz.
+Bu sistemi müşterilerinize sunmak için [DavetRota partner programını](/partner) inceleyebilirsiniz.

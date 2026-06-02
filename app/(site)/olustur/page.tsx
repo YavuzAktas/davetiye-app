@@ -179,7 +179,7 @@ function OlusturIcerigi() {
   const [mobilOnizlemeAcik, setMobilOnizlemeAcik] = useState(false);
   const alanRefleri = useRef<Partial<Record<ZorunluAlan, HTMLInputElement | null>>>({});
 
-  const TASLAK_KEY = `bekleriz_taslak_${sablonId}`;
+  const TASLAK_KEY = `davetrota_taslak_${sablonId}`;
 
   useEffect(() => {
     if (!localStorage.getItem("olustur-tutorial-goruldu")) setTutorialAcik(true);

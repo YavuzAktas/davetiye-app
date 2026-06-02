@@ -55,7 +55,7 @@ const ADIMLAR: Step[] = [
 ];
 
 export default function OnboardingChecklist({ slug }: { slug: string | null }) {
-  const key  = `bekleriz_ob_${slug ?? "x"}`;
+  const key  = `davetrota_ob_${slug ?? "x"}`;
   const [done,    setDone]    = useState<string[]>([]);
   const [baseUrl, setBaseUrl] = useState("");
 

@@ -199,7 +199,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
               }}>
                 <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>D</span>
               </div>
-              <span style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 24, color: "#1f2937" }}>Bekleriz</span>
+              <span style={{ fontFamily: "var(--font-dancing),cursive", fontSize: 24, color: "#1f2937" }}>DavetRota</span>
             </Link>
             <Link href={`/dashboard/davetiye/${slug}`} style={{
               fontSize: 13, color: "#9ca3af",
@@ -411,7 +411,7 @@ export default async function OdemeCheckoutPage({ params }: Props) {
                 marginTop: 14, fontSize: 10.5, color: "#d1d5db",
                 lineHeight: 1.65, textAlign: "center",
               }}>
-                Bekleriz dijital bir hizmettir. Ödeme onaylanıp davetiye yayına alındıktan sonra
+                DavetRota dijital bir hizmettir. Ödeme onaylanıp davetiye yayına alındıktan sonra
                 dijital içerik teslimi başlar; bu aşamada mesafeli satış mevzuatı kapsamındaki
                 cayma hakkı sona erer. Satın almadan önce{" "}
                 <Link href="/sablonlar" style={{ color: "#a78bfa", textDecoration: "none" }}>

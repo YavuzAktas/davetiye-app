@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://davetiye-app.vercel.app";
+const DEFAULT_SITE_URL = "https://davetrota.com";
 
 function normalizeSiteUrl(value?: string) {
   const trimmed = value?.trim();
@@ -15,8 +15,6 @@ export function getSiteUrl() {
   return (
     normalizeSiteUrl(process.env.NEXT_PUBLIC_URL) ??
     normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
-    normalizeSiteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
-    normalizeSiteUrl(process.env.VERCEL_URL) ??
     DEFAULT_SITE_URL
   );
 }

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/dugun-salonlari-icin-dijital-davetiye" },
   openGraph: {
-    title: "Düğün Salonları İçin Dijital Davetiye | Bekleriz",
+    title: "Düğün Salonları İçin Dijital Davetiye | DavetRota",
     description:
       "Müşterilerinize profesyonel dijital davetiye, LCV takibi, QR giriş ve canlı anı deneyimi sunun.",
     url: `${SITE_URL}/dugun-salonlari-icin-dijital-davetiye`,
@@ -90,7 +90,7 @@ const faq = [
   {
     soru: "Düğün salonu müşterisinin davetli listesini görebilir mi?",
     cevap:
-      "Hayır. Bekleriz partner modelinde davetli listesi, RSVP cevapları ve anı içerikleri müşterinin hesabında kalır. Partner panelinde kişisel davetli verileri gösterilmez.",
+      "Hayır. DavetRota partner modelinde davetli listesi, RSVP cevapları ve anı içerikleri müşterinin hesabında kalır. Partner panelinde kişisel davetli verileri gösterilmez.",
   },
   {
     soru: "Salon müşteriye ücretsiz dijital davetiye sunabilir mi?",
@@ -138,7 +138,7 @@ export default function DugunSalonlariIcinDijitalDavetiyePage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Düğün Salonları İçin Dijital Davetiye ve LCV Takip Sistemi",
-    provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
+    provider: { "@type": "Organization", name: "DavetRota", url: SITE_URL },
     areaServed: "TR",
     serviceType: "Dijital davetiye, LCV takip, QR check-in ve partner aktivasyon paneli",
     audience: {
@@ -188,7 +188,7 @@ export default function DugunSalonlariIcinDijitalDavetiyePage() {
                 Düğün salonunuz müşterilerine dijital davetiye, LCV ve QR giriş deneyimi sunsun
               </h1>
               <p className="mt-7 max-w-2xl text-base leading-8 text-white/62 sm:text-lg">
-                Bekleriz partner modeliyle her müşterinize profesyonel dijital davetiye aktivasyonu verin.
+                DavetRota partner modeliyle her müşterinize profesyonel dijital davetiye aktivasyonu verin.
                 Misafir takibi, QR check-in, canlı fotoğraf duvarı ve WhatsApp teslim akışı tek sistemde çalışır.
               </p>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">

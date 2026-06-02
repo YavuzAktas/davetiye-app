@@ -435,7 +435,7 @@ export default function AkisDemosu() {
                       <div style={{ width: 22, height: 22, borderRadius: 7, background: "linear-gradient(135deg,#7c3aed,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>B</span>
                       </div>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>Bekleriz</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>DavetRota</span>
                     </div>
                   </div>
 

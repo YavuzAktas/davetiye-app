@@ -3,7 +3,7 @@ import { ODEME_ALICI_VERILERI, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler
 
 export const metadata = {
   title: "Gizlilik Politikası",
-  description: "Bekleriz platformu gizlilik politikası ve kişisel veri işleme ilkeleri.",
+  description: "DavetRota platformu gizlilik politikası ve kişisel veri işleme ilkeleri.",
 };
 
 export default function GizlilikSayfasi() {
@@ -18,7 +18,7 @@ export default function GizlilikSayfasi() {
           icerik: (
             <>
               <p>
-                <strong>Bekleriz</strong> olarak gizliliğinize saygı duyuyor ve kişisel verilerinizi
+                <strong>DavetRota</strong> olarak gizliliğinize saygı duyuyor ve kişisel verilerinizi
                 korumayı öncelikli yükümlülüklerimizden biri olarak kabul ediyoruz. Bu Gizlilik
                 Politikası; hangi verileri topladığımızı, neden topladığımızı ve bu verileri nasıl
                 kullandığımızı açıklamaktadır.
@@ -175,7 +175,7 @@ export default function GizlilikSayfasi() {
               <p>
                 Fotoğraf, yazılı anı, sesli anı ve polaroid görselleri davetiye veya hesap silinene
                 kadar saklanabilir; çünkü bu içerikler davet sahibinin anı arşivi olarak kullanılır.
-                İlgili kişi silme talebini <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a>{" "}
+                İlgili kişi silme talebini <a href="mailto:kvkk@davetrota.com">kvkk@davetrota.com</a>{" "}
                 adresinden iletebilir.
               </p>
               <p>
@@ -219,7 +219,7 @@ export default function GizlilikSayfasi() {
                 yaş, ses kaydı veya benzeri bilgiler ancak ebeveyn/veli ya da bu paylaşım için
                 yetkili kişi tarafından girilmelidir. Yetkisiz çocuk verisi işlendiğini fark edersek
                 ilgili içeriği kaldırabiliriz. Ebeveyn veya vasiler bu konuda{" "}
-                <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine başvurabilir.
+                <a href="mailto:kvkk@davetrota.com">kvkk@davetrota.com</a> adresine başvurabilir.
               </p>
             </>
           ),
@@ -234,7 +234,7 @@ export default function GizlilikSayfasi() {
                 ve zararın giderilmesini talep etme haklarına sahipsiniz.
               </p>
               <p>
-                Talepleriniz için <a href="mailto:kvkk@bekleriz.com">kvkk@bekleriz.com</a> adresine
+                Talepleriniz için <a href="mailto:kvkk@davetrota.com">kvkk@davetrota.com</a> adresine
                 yazabilirsiniz. Ayrıca hesabınızı <strong>Dashboard → Ayarlar</strong> sayfasından
                 silebilirsiniz.
               </p>

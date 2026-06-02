@@ -67,10 +67,10 @@ export default async function BlogPostPage(
     dateModified: post.date,
     inLanguage: "tr-TR",
     articleSection: post.category,
-    author: { "@type": "Organization", name: "Bekleriz", url: siteUrl },
+    author: { "@type": "Organization", name: "DavetRota", url: siteUrl },
     publisher: {
       "@type": "Organization",
-      name: "Bekleriz",
+      name: "DavetRota",
       url: siteUrl,
       logo: {
         "@type": "ImageObject",

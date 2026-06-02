@@ -3,13 +3,13 @@ import { getSiteUrl } from "@/lib/site-url";
 const siteUrl = getSiteUrl();
 
 export const YASAL_BILGILER = {
-  unvan: "DOLDURULACAK - Bekleriz / Satıcı-Sağlayıcı Ticari Unvanı",
+  unvan: "DOLDURULACAK - DavetRota / Satıcı-Sağlayıcı Ticari Unvanı",
   adres: "DOLDURULACAK - Açık adres",
   telefon: "DOLDURULACAK - Telefon numarası",
-  destekEposta: "destek@bekleriz.com",
+  destekEposta: "destek@davetrota.com",
   whatsappDestek: "905XXXXXXXXX", // Gerçek numara ile değiştir (başında 90, boşluksuz)
-  kvkkEposta: "kvkk@bekleriz.com",
-  hukukEposta: "hukuk@bekleriz.com",
+  kvkkEposta: "kvkk@davetrota.com",
+  hukukEposta: "hukuk@davetrota.com",
   mersisVergi: "DOLDURULACAK - MERSİS / vergi bilgisi",
   web: siteUrl,
   webKisa: new URL(siteUrl).host,

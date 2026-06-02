@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Bekleriz — Online Davetiye Platformu";
+export const alt = "DavetRota — Online Davetiye Platformu";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -87,7 +87,7 @@ export default function Image() {
               letterSpacing: "-0.5px",
             }}
           >
-            Bekleriz
+            DavetRota
           </span>
         </div>
 

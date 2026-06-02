@@ -517,7 +517,7 @@ export default function RsvpForm({ davetiyeId, renk, etkinlikler = [], rsvpSorul
             <p className="text-[11px] text-gray-400 leading-relaxed">
               <span className="font-semibold text-gray-500">Kişisel Veri Bildirimi: </span>
               Girdiğiniz bilgiler yalnızca katılım durumunuzu davet sahibine iletmek amacıyla{" "}
-              <span className="font-medium text-gray-500">Bekleriz</span> tarafından işlenmektedir.
+              <span className="font-medium text-gray-500">DavetRota</span> tarafından işlenmektedir.
               Etkinlik tarihinden itibaren en geç 1 yıl içinde silinir.{" "}
               <a href="/kvkk" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-gray-600">
                 KVKK Aydınlatma Metni

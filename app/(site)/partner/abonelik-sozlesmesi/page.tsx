@@ -4,8 +4,8 @@ import { PARTNER_PAKET_LISTESI } from "@/lib/partner-paketler";
 import { YASAL_BILGILER, YASAL_SON_GUNCELLEME } from "@/lib/yasal-bilgiler";
 
 export const metadata: Metadata = {
-  title: "Partner Abonelik Sözleşmesi | Bekleriz",
-  description: "Bekleriz partner aboneliği otomatik yenileme, paket kullanımı ve iptal koşulları.",
+  title: "Partner Abonelik Sözleşmesi | DavetRota",
+  description: "DavetRota partner aboneliği otomatik yenileme, paket kullanımı ve iptal koşulları.",
   robots: { index: false },
 };
 
@@ -28,7 +28,7 @@ export default function PartnerAbonelikSozlesmesiPage() {
           baslik: "Taraflar",
           icerik: (
             <p>
-              Bu sözleşme, <strong>{YASAL_BILGILER.unvan}</strong> ("Bekleriz" veya
+              Bu sözleşme, <strong>{YASAL_BILGILER.unvan}</strong> ("DavetRota" veya
               "Platform") ile partner panelinde seçtiği abonelik paketini satın alan gerçek veya
               tüzel kişi ("Partner") arasında elektronik ortamda kurulur.
             </p>

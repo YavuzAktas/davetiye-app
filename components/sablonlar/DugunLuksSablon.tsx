@@ -489,7 +489,7 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
         </a>
 
         <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:11, letterSpacing:"0.2em", color:`${GOLD}35` }}>
-          bekleriz.com ile oluşturuldu ◆
+          davetrota.com ile oluşturuldu ◆
         </p>
       </footer>
 

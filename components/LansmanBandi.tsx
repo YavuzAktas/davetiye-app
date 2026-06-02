@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 const SURE_MS    = 24 * 60 * 60 * 1000;
-const EXPIRY_KEY = "bekleriz_bitis";
-const KAPALI_KEY = "bekleriz_band_kapali";
+const EXPIRY_KEY = "davetrota_bitis";
+const KAPALI_KEY = "davetrota_band_kapali";
 
 function getBitis(): number {
   try {

@@ -81,7 +81,7 @@ Düğün salonu dijital davetiyeyi ayrı bir teknik ürün gibi değil, müşter
 
 Düğün salonu müşterinin davetli listesini doğrudan yönetiyorsa kişisel veri sorumluluğu artabilir. Daha güvenli yaklaşım, davetli verisinin müşterinin kendi hesabında kalmasıdır.
 
-Bekleriz partner modelinde:
+DavetRota partner modelinde:
 
 - Müşteri kendi hesabını açar.
 - Davetli verilerini müşteri yönetir.

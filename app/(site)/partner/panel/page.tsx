@@ -29,7 +29,7 @@ import PartnerIsAkisi from "./PartnerIsAkisi";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Partner Paneli | Bekleriz",
+  title: "Partner Paneli | DavetRota",
   robots: { index: false },
 };
 
@@ -296,8 +296,8 @@ export default async function PartnerPanelPage({
 
             <div className="border-t border-gray-100 pt-6 text-center">
               <p className="text-xs text-gray-400 mb-1">Sorularınız için</p>
-              <a href="mailto:destek@bekleriz.com" className="text-sm font-semibold text-purple-600 hover:underline">
-                destek@bekleriz.com
+              <a href="mailto:destek@davetrota.com" className="text-sm font-semibold text-purple-600 hover:underline">
+                destek@davetrota.com
               </a>
             </div>
           </div>
@@ -309,7 +309,7 @@ export default async function PartnerPanelPage({
             <h2 className="text-xl font-black text-gray-900 mb-2">Hesabınız Askıya Alındı</h2>
             <p className="text-sm text-gray-500">
               Detaylar için{" "}
-              <a href="mailto:destek@bekleriz.com" className="text-purple-600 hover:underline">destek@bekleriz.com</a>
+              <a href="mailto:destek@davetrota.com" className="text-purple-600 hover:underline">destek@davetrota.com</a>
               {" "}adresine yazın.
             </p>
           </div>

@@ -312,8 +312,8 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         Adınız ve fotoğrafınız davet sahibine iletilir; onaylanırsa albümde görünür. Silme:{" "}
-                        <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
-                          kvkk@bekleriz.com
+                        <a href="mailto:kvkk@davetrota.com" className="underline underline-offset-2 hover:text-gray-600">
+                          kvkk@davetrota.com
                         </a>
                       </p>
                     </div>
@@ -422,8 +422,8 @@ export default function AlbumButonu({ slug, renk = "#7C3AED" }: Props) {
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         Göndererek adınızın ve mesajınızın davet sahibine iletilmesini ve onay sonrası anı defterinde görünmesini kabul edersiniz. Silme:{" "}
-                        <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
-                          kvkk@bekleriz.com
+                        <a href="mailto:kvkk@davetrota.com" className="underline underline-offset-2 hover:text-gray-600">
+                          kvkk@davetrota.com
                         </a>
                       </p>
                     </div>

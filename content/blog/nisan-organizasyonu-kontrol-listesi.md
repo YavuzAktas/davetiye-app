@@ -62,7 +62,7 @@ Nişan masası, oda süslemesi veya fotoğraf köşesi için çiçek siparişi v
 Yüzüklerin hazır olduğunu teyit edin. Nişan töreninde yüzük takma sırası ve kısa bir seremoni varsa bunu aile büyükleriyle paylaşın.
 
 ### 11. Müzik Planlaması
-Fon müziği için çalma listesi hazırlayın ya da canlı müzik düşünüyorsanız müzisyen rezervasyonu yapın. [Bekleriz davetiyesine](/) arka plan müziği eklemek de güzel bir dokunuş olabilir.
+Fon müziği için çalma listesi hazırlayın ya da canlı müzik düşünüyorsanız müzisyen rezervasyonu yapın. [DavetRota davetiyesine](/) arka plan müziği eklemek de güzel bir dokunuş olabilir.
 
 ---
 
@@ -107,7 +107,7 @@ Misafirlerin iyi dilek bırakabileceği bir anı defteri veya dijital [anı deft
 
 ## Nişan Sonrası
 
-Nişan bitti ama anılar devam eder. Fotoğrafçıdan görselleri alın, dijital davetiyenizde anı arşivi oluşturdunuz ise indirin. Bekleriz üzerinden oluşturulan davetiyeler Anı Kitabı PDF özelliği sunar — fotoğraflar, yazılı mesajlar ve sesli anıları tek bir belgede toplar.
+Nişan bitti ama anılar devam eder. Fotoğrafçıdan görselleri alın, dijital davetiyenizde anı arşivi oluşturdunuz ise indirin. DavetRota üzerinden oluşturulan davetiyeler Anı Kitabı PDF özelliği sunar — fotoğraflar, yazılı mesajlar ve sesli anıları tek bir belgede toplar.
 
 ---
 

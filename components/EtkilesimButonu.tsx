@@ -558,8 +558,8 @@ export default function EtkilesimButonu({
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         Adınız ve fotoğrafınız davet sahibine iletilir; onaylanırsa albüm/canlı duvarda görünür. Silme:{" "}
-                        <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
-                          kvkk@bekleriz.com
+                        <a href="mailto:kvkk@davetrota.com" className="underline underline-offset-2 hover:text-gray-600">
+                          kvkk@davetrota.com
                         </a>
                       </p>
                     </div>
@@ -653,8 +653,8 @@ export default function EtkilesimButonu({
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         Göndererek adınızın ve mesajınızın davet sahibine iletilmesini ve onay sonrası anı defterinde görünmesini kabul edersiniz. Silme:{" "}
-                        <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
-                          kvkk@bekleriz.com
+                        <a href="mailto:kvkk@davetrota.com" className="underline underline-offset-2 hover:text-gray-600">
+                          kvkk@davetrota.com
                         </a>
                       </p>
                     </div>
@@ -717,8 +717,8 @@ export default function EtkilesimButonu({
                     <div className="rounded-xl border border-gray-100 bg-white px-3.5 py-2.5">
                       <p className="text-[11px] text-gray-400 leading-relaxed">
                         Adınız ve ses kaydınız davet sahibine iletilir; onaylanırsa dinlenebilir. Silme:{" "}
-                        <a href="mailto:kvkk@bekleriz.com" className="underline underline-offset-2 hover:text-gray-600">
-                          kvkk@bekleriz.com
+                        <a href="mailto:kvkk@davetrota.com" className="underline underline-offset-2 hover:text-gray-600">
+                          kvkk@davetrota.com
                         </a>
                       </p>
                     </div>

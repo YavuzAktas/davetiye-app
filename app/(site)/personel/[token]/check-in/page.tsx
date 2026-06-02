@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const metadata = {
-  title: "Personel Check-in | Bekleriz",
+  title: "Personel Check-in | DavetRota",
   robots: { index: false },
 };
 
@@ -86,7 +86,7 @@ export default async function PersonelCheckInPage({ params }: Props) {
 
         <p className="mt-6 text-center text-[11px] leading-relaxed text-gray-400">
           Erişiminizde sorun varsa davetiye sahibinden yeni personel linki isteyin.{" "}
-          <Link href="/" className="font-semibold text-purple-500 hover:underline">Bekleriz</Link>
+          <Link href="/" className="font-semibold text-purple-500 hover:underline">DavetRota</Link>
         </p>
       </main>
     </div>

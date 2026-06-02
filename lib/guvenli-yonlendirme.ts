@@ -1,5 +1,5 @@
 const VARSAYILAN_CALLBACK_URL = "/dashboard";
-const YEREL_ORIGIN = "https://bekleriz.local";
+const YEREL_ORIGIN = "https://davetrota.local";
 
 export function guvenliCallbackUrl(raw: string | null | undefined, fallback = VARSAYILAN_CALLBACK_URL) {
   const deger = raw?.trim();

@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     keywords: sablonAnahtarKelimeleri(sablon),
     alternates: { canonical: `/sablonlar/${sablon.id}` },
     openGraph: {
-      title: `${sablon.isim} Dijital Davetiye Şablonu | Bekleriz`,
+      title: `${sablon.isim} Dijital Davetiye Şablonu | DavetRota`,
       description,
       url,
       type: "website",
@@ -68,11 +68,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     },
     twitter: {
       card: "summary_large_image",
-      title: `${sablon.isim} Davetiye Şablonu | Bekleriz`,
+      title: `${sablon.isim} Davetiye Şablonu | DavetRota`,
       description,
     },
     robots: { index: true, follow: true },
-    other: premium ? { "bekleriz:sablon-tier": "premium" } : undefined,
+    other: premium ? { "davetrota:sablon-tier": "premium" } : undefined,
   };
 }
 
@@ -102,7 +102,7 @@ export default async function SablonDetayLayout({ children, params }: LayoutProp
     name: `${sablon.isim} Davetiye Şablonu`,
     description,
     category: `${kategori} davetiye şablonu`,
-    brand: { "@type": "Brand", name: "Bekleriz" },
+    brand: { "@type": "Brand", name: "DavetRota" },
     url,
     offers: {
       "@type": "Offer",

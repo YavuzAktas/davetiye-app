@@ -4,7 +4,7 @@ import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandir
 
 export const metadata = {
   title: "Mesafeli Satış Sözleşmesi",
-  description: "Bekleriz dijital davetiye satın alımları için mesafeli satış sözleşmesi.",
+  description: "DavetRota dijital davetiye satın alımları için mesafeli satış sözleşmesi.",
 };
 
 export default function MesafeliSatisSozlesmesiSayfasi() {
@@ -19,7 +19,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
           icerik: (
             <>
               <p>
-                İşbu sözleşme, aşağıda bilgileri yer alan satıcı/sağlayıcı ile Bekleriz üzerinden
+                İşbu sözleşme, aşağıda bilgileri yer alan satıcı/sağlayıcı ile DavetRota üzerinden
                 dijital davetiye veya ek özellik satın alan kullanıcı arasında elektronik ortamda kurulmaktadır.
               </p>
               <table>
@@ -38,7 +38,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
           baslik: "Sözleşmenin Konusu",
           icerik: (
             <p>
-              Sözleşmenin konusu, kullanıcının Bekleriz üzerinde oluşturduğu dijital davetiye
+              Sözleşmenin konusu, kullanıcının DavetRota üzerinde oluşturduğu dijital davetiye
               ve seçtiği ek özelliklerin ödeme sonrası dijital olarak aktif edilmesidir.
             </p>
           ),
@@ -91,7 +91,7 @@ export default function MesafeliSatisSozlesmesiSayfasi() {
           baslik: "Uyuşmazlık Çözümü",
           icerik: (
             <p>
-              Uyuşmazlıklarda öncelikle <a href="mailto:destek@bekleriz.com">destek@bekleriz.com</a>{" "}
+              Uyuşmazlıklarda öncelikle <a href="mailto:destek@davetrota.com">destek@davetrota.com</a>{" "}
               üzerinden çözüm aranır. Tüketici işlemlerinde Tüketici Hakem Heyetleri ve Tüketici
               Mahkemeleri dahil olmak üzere emredici yetki kuralları saklıdır.
             </p>

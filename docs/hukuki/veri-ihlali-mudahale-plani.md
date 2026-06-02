@@ -2,7 +2,7 @@
 
 Son güncelleme: 13 Mayıs 2026
 
-Bu plan, Bekleriz platformunda kişisel veri güvenliği ihlali şüphesi veya doğrulanmış ihlal durumunda izlenecek iç prosedürü tanımlar. Hukuki görüş yerine geçmez; gerçek olaylarda hukuk/uyum danışmanı ve teknik ekip birlikte hareket etmelidir.
+Bu plan, DavetRota platformunda kişisel veri güvenliği ihlali şüphesi veya doğrulanmış ihlal durumunda izlenecek iç prosedürü tanımlar. Hukuki görüş yerine geçmez; gerçek olaylarda hukuk/uyum danışmanı ve teknik ekip birlikte hareket etmelidir.
 
 ## Resmi Dayanak
 
@@ -71,7 +71,7 @@ Etkilenen kişiler belirlendikten sonra bildirimde sade ve anlaşılır bir dil 
 - Ne olduğu
 - Hangi verilerin etkilenmiş olabileceği
 - Kullanıcının alması gereken önlemler
-- Bekleriz tarafından alınan önlemler
+- DavetRota tarafından alınan önlemler
 - İletişim kanalı
 
 İletişim adresi bilinen kullanıcılara doğrudan e-posta tercih edilir. Doğrudan iletişim mümkün değilse web sitesi veya platform içi uygun bir yöntem değerlendirilir.

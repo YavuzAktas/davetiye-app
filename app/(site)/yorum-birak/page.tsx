@@ -1,8 +1,8 @@
 import YorumFormu from "@/components/YorumFormu";
 
 export const metadata = {
-  title: "Deneyimini Paylaş — Bekleriz",
-  description: "Bekleriz ile davetiye oluşturdunuz mu? Deneyiminizi diğer kullanıcılarla paylaşın.",
+  title: "Deneyimini Paylaş — DavetRota",
+  description: "DavetRota ile davetiye oluşturdunuz mu? Deneyiminizi diğer kullanıcılarla paylaşın.",
   robots: "noindex",
 };
 

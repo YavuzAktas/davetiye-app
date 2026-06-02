@@ -6,7 +6,7 @@ import AktivasyonSayfasi from "./AktivasyonSayfasi";
 import { dahilKodlarGetir } from "@/lib/partner-paketler";
 
 export const metadata: Metadata = {
-  title: "Aktivasyon | Bekleriz",
+  title: "Aktivasyon | DavetRota",
   robots: { index: false },
 };
 

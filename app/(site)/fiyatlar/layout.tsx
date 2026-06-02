@@ -6,14 +6,14 @@ const SITE_URL = getSiteUrl();
 export const metadata: Metadata = {
   title: "Dijital Davetiye Fiyatları",
   description:
-    "Bekleriz davetiye bazlı fiyatlandırma: temel dijital davetiye ve seçtiğiniz ek özellikler için tek seferlik ödeme. Plan, abonelik ve otomatik yenileme yok.",
+    "DavetRota davetiye bazlı fiyatlandırma: temel dijital davetiye ve seçtiğiniz ek özellikler için tek seferlik ödeme. Plan, abonelik ve otomatik yenileme yok.",
   keywords: [
     "online davetiye fiyat", "dijital davetiye fiyat", "davetiye ücreti",
     "düğün davetiyesi fiyat", "nişan davetiyesi online ücret",
   ],
   alternates: { canonical: "/fiyatlar" },
   openGraph: {
-    title: "Dijital Davetiye Fiyatları | Bekleriz",
+    title: "Dijital Davetiye Fiyatları | DavetRota",
     description: "Davetiye bazlı ödeme: seçtiğiniz özelliklere göre toplam tutarı canlı görün.",
     url: `${SITE_URL}/fiyatlar`,
     images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
@@ -26,10 +26,10 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Bekleriz abonelik mi?",
+      name: "DavetRota abonelik mi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Hayır. Bekleriz'de abonelik veya otomatik yenileme yoktur; her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır.",
+        text: "Hayır. DavetRota’da abonelik veya otomatik yenileme yoktur; her davetiye için seçilen özelliklere göre tek seferlik ödeme alınır.",
       },
     },
     {
@@ -53,7 +53,7 @@ const faqSchema = {
       name: "Fatura alabilir miyim?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ödeme belgesi veya fatura talebi için destek@bekleriz.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
+        text: "Ödeme belgesi veya fatura talebi için destek@davetrota.com adresine yazabilirsiniz. Talebiniz kayıt bilgileriniz ve yürürlükteki mevzuata göre değerlendirilir.",
       },
     },
   ],

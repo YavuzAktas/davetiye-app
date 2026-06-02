@@ -33,8 +33,8 @@ const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   title: {
-    default: "Online Davetiye Oluştur | Bekleriz",
-    template: "%s | Bekleriz",
+    default: "Online Davetiye Oluştur | DavetRota",
+    template: "%s | DavetRota",
   },
   description:
     "Düğün, nişan, doğum günü ve özel etkinlikler için online davetiye oluştur. Dijital davetiyeni WhatsApp ile paylaş, RSVP yanıtlarını takip et.",
@@ -45,16 +45,16 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Online Davetiye Oluştur | Bekleriz",
+    title: "Online Davetiye Oluştur | DavetRota",
     description: "Düğün, nişan, doğum günü için dijital davetiye oluştur. WhatsApp ile paylaş, RSVP yanıtlarını takip et.",
     url: SITE_URL,
-    siteName: "Bekleriz",
+    siteName: "DavetRota",
     locale: "tr_TR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Online Davetiye Oluştur | Bekleriz",
+    title: "Online Davetiye Oluştur | DavetRota",
     description: "Düğün, nişan, doğum günü için dijital davetiye oluştur.",
   },
   icons: { icon: "/favicon.ico" },
@@ -70,13 +70,13 @@ export default function RootLayout({
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Bekleriz",
+    name: "DavetRota",
     url: SITE_URL,
     logo: `${SITE_URL}/opengraph-image`,
     description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
     contactPoint: {
       "@type": "ContactPoint",
-      email: "destek@bekleriz.com",
+      email: "destek@davetrota.com",
       contactType: "customer service",
       availableLanguage: "Turkish",
     },
@@ -84,11 +84,11 @@ export default function RootLayout({
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Bekleriz",
+    name: "DavetRota",
     url: SITE_URL,
     logo: `${SITE_URL}/opengraph-image`,
     description: "Türkiye'nin online davetiye platformu — düğün, nişan, doğum günü için dijital davetiye oluşturun.",
-    email: "destek@bekleriz.com",
+    email: "destek@davetrota.com",
     areaServed: { "@type": "Country", name: "Turkey" },
     availableLanguage: { "@type": "Language", name: "Turkish" },
     priceRange: "₺₺",
@@ -96,7 +96,7 @@ export default function RootLayout({
   const webApplicationSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Bekleriz",
+    name: "DavetRota",
     url: SITE_URL,
     applicationCategory: "DesignApplication",
     operatingSystem: "Web",

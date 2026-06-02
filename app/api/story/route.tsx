@@ -349,7 +349,7 @@ export async function GET(req: NextRequest) {
             letterSpacing: 1,
           }}
         >
-          bekleriz.com ile hazırlandı
+          davetrota.com ile hazırlandı
         </div>
       </div>
     ),

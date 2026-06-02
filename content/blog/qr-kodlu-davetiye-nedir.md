@@ -20,7 +20,7 @@ Temel akış oldukça basittir:
 3. QR kod WhatsApp, masa kartı, poster veya giriş panosunda paylaşılır.
 4. Misafir QR kodu okutur ve ilgili sayfaya ulaşır.
 
-[Bekleriz'de dijital davetiye](/dijital-davetiye) link olarak paylaşılabildiği için QR kodla birlikte kullanılabilir. Böylece misafirler uygulama indirmeden davetiye bilgilerine ulaşır.
+[DavetRota’da dijital davetiye](/dijital-davetiye) link olarak paylaşılabildiği için QR kodla birlikte kullanılabilir. Böylece misafirler uygulama indirmeden davetiye bilgilerine ulaşır.
 
 ## QR Kod Nerelerde Kullanılır?
 

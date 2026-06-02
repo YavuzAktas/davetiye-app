@@ -50,7 +50,7 @@ Dijital fotoğraf albümü, misafirlerden gelen fotoğrafların etkinlik sayfas�
 - Etkinlik sonrası indirme veya arşivleme
 - Kişisel veri bilgilendirmesi
 
-Bekleriz'de fotoğraf gönderimleri davetiye sahibi onayladıktan sonra görünür. Bu, hem kullanıcı deneyimi hem de hukuki güven açısından daha kontrollü bir yaklaşımdır.
+DavetRota’da fotoğraf gönderimleri davetiye sahibi onayladıktan sonra görünür. Bu, hem kullanıcı deneyimi hem de hukuki güven açısından daha kontrollü bir yaklaşımdır.
 
 ## 4. Canlı Fotoğraf Duvarı
 
@@ -85,4 +85,4 @@ Anı Kitabı PDF özellikle şu durumlarda anlamlıdır:
 
 Düğünde fotoğraf toplamanın en düzenli yolu, QR kodlu fotoğraf yükleme alanı ve onaylı dijital albüm kullanmaktır. Canlı duvar ve Anı Kitabı PDF eklendiğinde bu süreç sadece arşiv değil, etkinlik deneyiminin bir parçası olur.
 
-Düğününüz için fotoğraf albümü ve anı özelliklerini görmek isterseniz [Bekleriz fiyatlar sayfasını](/fiyatlar) inceleyebilirsiniz.
+Düğününüz için fotoğraf albümü ve anı özelliklerini görmek isterseniz [DavetRota fiyatlar sayfasını](/fiyatlar) inceleyebilirsiniz.

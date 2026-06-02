@@ -16,7 +16,7 @@ export default async function Image(
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
-  const title   = post?.title       ?? "Bekleriz Blog";
+  const title   = post?.title       ?? "DavetRota Blog";
   const category = post?.category   ?? "Rehber";
   const color    = CATEGORY_COLORS[category] ?? "#7c3aed";
 
@@ -94,11 +94,11 @@ export default async function Image(
               B
             </div>
             <span style={{ fontSize: 26, fontWeight: 600, color: "#fff", fontFamily: "serif" }}>
-              Bekleriz
+              DavetRota
             </span>
           </div>
           <span style={{ fontSize: 20, color: "rgba(255,255,255,0.4)", fontFamily: "sans-serif", display: "flex" }}>
-            bekleriz.com/blog
+            davetrota.com/blog
           </span>
         </div>
       </div>

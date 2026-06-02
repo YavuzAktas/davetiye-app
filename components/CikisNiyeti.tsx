@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const SK = "bekleriz_cikis_gosterildi";
+const SK = "davetrota_cikis_gosterildi";
 
 const HARIC = ["/giris", "/dashboard", "/odeme", "/sablonlar", "/gizlilik", "/kullanim", "/kvkk", "/iletisim"];
 

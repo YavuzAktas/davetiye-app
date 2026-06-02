@@ -211,7 +211,7 @@ function Kapak({ v }: { v: AniKitabiVeri }) {
         )}
       </View>
 
-      <Text style={S.coverBranding}>bekleriz.com</Text>
+      <Text style={S.coverBranding}>davetrota.com</Text>
     </Page>
   );
 }
@@ -319,7 +319,7 @@ export function AniKitabiPDF({ v }: { v: AniKitabiVeri }) {
   const pn = () => pageCounter++;
 
   return (
-    <Document title={`${v.baslik} — Anı Kitabı`} author="Bekleriz" subject="Etkinlik Anı Kitabı">
+    <Document title={`${v.baslik} — Anı Kitabı`} author="DavetRota" subject="Etkinlik Anı Kitabı">
       <Kapak v={v} />
 
       {v.fotolar.map((f, i) => (

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/dijital-davetiye" },
   openGraph: {
-    title: "Dijital Davetiye Oluştur | Bekleriz",
+    title: "Dijital Davetiye Oluştur | DavetRota",
     description:
       "Dakikalar içinde dijital davetiye hazırla, WhatsApp ile paylaş ve RSVP yanıtlarını tek panelden takip et.",
     url: `${SITE_URL}/dijital-davetiye`,
@@ -64,7 +64,7 @@ const faq = [
   {
     soru: "Dijital davetiyeyi WhatsApp ile gönderebilir miyim?",
     cevap:
-      "Evet. Bekleriz ile oluşturduğunuz davetiyeyi tek link olarak WhatsApp üzerinden kişi veya gruplara gönderebilirsiniz.",
+      "Evet. DavetRota ile oluşturduğunuz davetiyeyi tek link olarak WhatsApp üzerinden kişi veya gruplara gönderebilirsiniz.",
   },
   {
     soru: "RSVP takibi nasıl çalışır?",
@@ -74,7 +74,7 @@ const faq = [
   {
     soru: "Dijital davetiye ücretsiz oluşturulabilir mi?",
     cevap:
-      "Bekleriz'de davetiyenizi hazırlarken toplam fiyatı canlı görür, yalnızca seçtiğiniz davetiye ve ek özellikler için tek seferlik ödeme yaparsınız.",
+      "DavetRota’da davetiyenizi hazırlarken toplam fiyatı canlı görür, yalnızca seçtiğiniz davetiye ve ek özellikler için tek seferlik ödeme yaparsınız.",
   },
 ];
 

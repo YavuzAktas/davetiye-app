@@ -5,7 +5,7 @@ import { getSiteUrl } from "@/lib/site-url";
 const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Dijital Doğum Günü Davetiyesi Oluştur — Anında WhatsApp&apos;ta Paylaş | Bekleriz",
+  title: "Dijital Doğum Günü Davetiyesi Oluştur — Anında WhatsApp&apos;ta Paylaş | DavetRota",
   description:
     "Online doğum günü davetiyesi oluştur, WhatsApp ile paylaş, konuk listeni ve RSVP yanıtlarını takip et. Çocuk, genç, yetişkin — her yaşa uygun dijital doğum günü davetiyesi şablonları. 10 dakikada hazır.",
   keywords: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/dogumgunu-davetiyesi" },
   openGraph: {
-    title: "Dijital Doğum Günü Davetiyesi Oluştur | Bekleriz",
+    title: "Dijital Doğum Günü Davetiyesi Oluştur | DavetRota",
     description:
       "Doğum günü partisi için 10 dakikada dijital davetiye hazırlayın. WhatsApp ile paylaşın, katılım yanıtlarını ve misafir listenizi kolayca takip edin.",
     url: `${SITE_URL}/dogumgunu-davetiyesi`,
@@ -143,7 +143,7 @@ export default function DogumGunuDavetiyesiPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Dijital Doğum Günü Davetiyesi",
-    provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
+    provider: { "@type": "Organization", name: "DavetRota", url: SITE_URL },
     description: "Online doğum günü parti davetiyesi oluşturma, paylaşma ve RSVP takip hizmeti.",
     areaServed: "TR",
     offers: { "@type": "Offer", priceCurrency: "TRY", price: "349", priceValidUntil: "2027-12-31" },
@@ -193,7 +193,7 @@ export default function DogumGunuDavetiyesiPage() {
                   ))}
                 </div>
                 <p className="text-sm text-white/40">
-                  <span className="text-white font-semibold">500+</span> parti davetiyesi Bekleriz ile oluşturuldu
+                  <span className="text-white font-semibold">500+</span> parti davetiyesi DavetRota ile oluşturuldu
                 </p>
               </div>
             </div>

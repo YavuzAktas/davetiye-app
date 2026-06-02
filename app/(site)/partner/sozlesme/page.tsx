@@ -3,8 +3,8 @@ import Link from "next/link";
 import { YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata: Metadata = {
-  title: "Partner Sözleşmesi | Bekleriz",
-  description: "Bekleriz partner programı sözleşmesi ve yasal koşullar.",
+  title: "Partner Sözleşmesi | DavetRota",
+  description: "DavetRota partner programı sözleşmesi ve yasal koşullar.",
   robots: { index: false },
 };
 

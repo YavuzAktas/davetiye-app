@@ -266,7 +266,7 @@ export async function GET(): Promise<NextResponse> {
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "Content-Disposition": `attachment; filename="bekleriz-verilerim-${new Date().toISOString().slice(0, 10)}.json"`,
+      "Content-Disposition": `attachment; filename="davetrota-verilerim-${new Date().toISOString().slice(0, 10)}.json"`,
     },
   });
 }

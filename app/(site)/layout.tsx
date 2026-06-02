@@ -21,7 +21,7 @@ function Header() {
                 <span className="text-white text-sm font-bold">D</span>
               </div>
             </div>
-            <span className="text-lg font-bold text-gray-900 tracking-tight">Bekleriz</span>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">DavetRota</span>
           </Link>
           <NavLinks />
         </div>
@@ -98,7 +98,7 @@ function Footer() {
               <div className="w-7 h-7 bg-linear-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center">
                 <span className="text-white text-xs font-bold">D</span>
               </div>
-              <span className="font-bold text-white/90">Bekleriz</span>
+              <span className="font-bold text-white/90">DavetRota</span>
             </Link>
             <p className="text-white/30 text-sm leading-relaxed mb-5 max-w-50">
               Online davetiye oluşturma ve RSVP takip platformu.
@@ -196,7 +196,7 @@ function Footer() {
                 </svg>
                 WhatsApp Destek
               </a>
-              <p className="text-xs text-white/20">© 2025 Bekleriz. Tüm hakları saklıdır.</p>
+              <p className="text-xs text-white/20">© 2025 DavetRota. Tüm hakları saklıdır.</p>
               <p className="text-xs text-white/20 flex items-center gap-1.5">
                 <span>🇹🇷</span> Türkiye&apos;de geliştirildi
               </p>

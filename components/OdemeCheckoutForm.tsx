@@ -307,7 +307,7 @@ export default function OdemeCheckoutForm({ davetiyeId }: { davetiyeId: string }
                 display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
               }}>🎁</div>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", margin: 0 }}>{kredi}₺ Bekleriz krediniz var</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", margin: 0 }}>{kredi}₺ DavetRota krediniz var</p>
                 <p style={{ fontSize: 11, color: "#6b7280", margin: 0, marginTop: 2 }}>
                   {krediUygula ? "Ödemeye uygulandı ✓" : "Uygulamak için tıklayın"}
                 </p>

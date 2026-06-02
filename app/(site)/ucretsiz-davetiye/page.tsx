@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/ucretsiz-davetiye" },
   openGraph: {
-    title: "Ücretsiz Davetiye Taslağı Oluştur | Bekleriz",
+    title: "Ücretsiz Davetiye Taslağı Oluştur | DavetRota",
     description:
       "Davetiye taslağınızı ücretsiz hazırlayın; şablon, özellik ve toplam tutarı ödeme öncesinde net görün.",
     url: `${SITE_URL}/ucretsiz-davetiye`,
@@ -169,7 +169,7 @@ export default function UcretsizDavetiyePage() {
                 Ödeme öncesinde rahatça deneyebileceğiniz alanlar
               </h2>
               <p className="mt-5 text-sm leading-7 text-gray-500">
-                Bekleriz'de davetiye hazırlama akışı ödeme öncesinde başlar. Böylece şablonu,
+                DavetRota’da davetiye hazırlama akışı ödeme öncesinde başlar. Böylece şablonu,
                 davetiye metnini, özellikleri ve toplam tutarı görmeden ödeme yapmak zorunda kalmazsınız.
               </p>
             </div>

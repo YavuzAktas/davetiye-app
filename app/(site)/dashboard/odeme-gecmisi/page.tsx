@@ -379,10 +379,10 @@ export default async function OdemeGecmisiSayfasi() {
               <p className="text-xs text-gray-500">
                 Fatura veya iade talebi için{" "}
                 <a
-                  href="mailto:destek@bekleriz.com"
+                  href="mailto:destek@davetrota.com"
                   className="text-purple-600 font-medium hover:underline"
                 >
-                  destek@bekleriz.com
+                  destek@davetrota.com
                 </a>
               </p>
             </div>

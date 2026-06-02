@@ -110,7 +110,7 @@ function tarihSaat(tarih: string | null) {
 function urlUret(path: string) {
   const base =
     process.env.NEXT_PUBLIC_URL ||
-    (typeof window !== "undefined" ? window.location.origin : "https://davetiye-app.vercel.app");
+    (typeof window !== "undefined" ? window.location.origin : "https://davetrota.com");
   return `${base}${path}`;
 }
 

@@ -575,7 +575,7 @@ export default function DogumGunuLuksSablon({ davetiye, previewModu }: SablonPro
           fontFamily:"var(--font-cormorant),serif",
           fontSize:11, letterSpacing:"0.2em",
           color:`${GOLD}35`,
-        }}>bekleriz.com ile oluşturuldu ★</p>
+        }}>davetrota.com ile oluşturuldu ★</p>
       </footer>
 
       <style>{`@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}`}</style>

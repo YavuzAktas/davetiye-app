@@ -10,9 +10,9 @@ export default function ReferralKaydetici() {
     if (status !== "authenticated" || !session?.user?.id) return;
 
     let refKod = "";
-    try { refKod = localStorage.getItem("bekleriz_ref") ?? ""; } catch {}
+    try { refKod = localStorage.getItem("davetrota_ref") ?? ""; } catch {}
     if (!refKod) {
-      const m = document.cookie.match(/bekleriz_ref=([^;]+)/);
+      const m = document.cookie.match(/davetrota_ref=([^;]+)/);
       if (m) refKod = decodeURIComponent(m[1]);
     }
     if (!refKod) return;
@@ -25,8 +25,8 @@ export default function ReferralKaydetici() {
       .then(r => r.json())
       .then(d => {
         if (d.ok) {
-          try { localStorage.removeItem("bekleriz_ref"); } catch {}
-          document.cookie = "bekleriz_ref=; max-age=0; path=/";
+          try { localStorage.removeItem("davetrota_ref"); } catch {}
+          document.cookie = "davetrota_ref=; max-age=0; path=/";
         }
       })
       .catch(() => {});

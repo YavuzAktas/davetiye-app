@@ -97,7 +97,7 @@ Evet, ayrı olması önerilir. Bunun nedenleri:
 2. **Farklı RSVP takibi** — Hangi gecede kaç kişi olduğunu ayrı ayrı görmek daha kolay.
 3. **Farklı içerik** — Kına töreninin akışı düğünden farklıdır.
 
-Bekleriz'de her etkinlik için bağımsız davetiye oluşturabilir, her birini ayrı RSVP formuyla yönetebilirsiniz.
+DavetRota’da her etkinlik için bağımsız davetiye oluşturabilir, her birini ayrı RSVP formuyla yönetebilirsiniz.
 
 ---
 

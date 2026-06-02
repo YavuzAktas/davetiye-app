@@ -2,7 +2,7 @@
 
 Son güncelleme: 12 Mayıs 2026
 
-Bu doküman Bekleriz projesinde kullanılan üçüncü taraf sağlayıcılar için KVKK m.9 kapsamındaki yurt dışı kişisel veri aktarımı kontrollerini takip etmek amacıyla tutulur. Hukuki görüş yerine geçmez; sağlayıcı sözleşmeleri ve Kurum bildirimi hukuk/mali müşavirlik ile tamamlanmalıdır.
+Bu doküman DavetRota projesinde kullanılan üçüncü taraf sağlayıcılar için KVKK m.9 kapsamındaki yurt dışı kişisel veri aktarımı kontrollerini takip etmek amacıyla tutulur. Hukuki görüş yerine geçmez; sağlayıcı sözleşmeleri ve Kurum bildirimi hukuk/mali müşavirlik ile tamamlanmalıdır.
 
 ## Resmi Dayanak
 
@@ -25,7 +25,7 @@ Kaynaklar:
 | Supabase Inc. | PostgreSQL veritabanı | Kullanıcı, davetiye, RSVP, ödeme kayıtları | Bölgeye göre yurt dışı aktarım riski var | Seçili bölge, alt işleyenler ve aktarım dayanağı belgelenmeli |
 | Vercel Inc. | Uygulama ve medya barındırma | Trafik logları, medya dosyaları, IP, teknik kayıtlar | Yurt dışı aktarım riski var | DPA/SCC, Blob saklama bölgesi ve alt işleyenler belgelenmeli |
 | Spotify AB | İsteğe bağlı müzik entegrasyonu | Spotify kullanıcı/playlist bilgisi, şarkı önerileri, tokenlar | Yurt dışı aktarım riski var | Kullanıcı rızası ve sağlayıcı aktarım dayanağı teyit edilmeli |
-| iyzico | Ödeme altyapısı | Alıcı/fatura bilgisi, IP, ödeme durumu; kart bilgisi Bekleriz'de saklanmaz | Sağlayıcı sözleşmesine bağlı | Üye işyeri sözleşmesi, saklama ve alt işleyen bilgileri dosyalanmalı |
+| iyzico | Ödeme altyapısı | Alıcı/fatura bilgisi, IP, ödeme durumu; kart bilgisi DavetRota’da saklanmaz | Sağlayıcı sözleşmesine bağlı | Üye işyeri sözleşmesi, saklama ve alt işleyen bilgileri dosyalanmalı |
 
 ## Uygulama Kontrolleri
 

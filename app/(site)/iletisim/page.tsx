@@ -4,7 +4,7 @@ import { YASAL_BILGILER } from "@/lib/yasal-bilgiler";
 
 export const metadata: Metadata = {
   title: "İletişim",
-  description: "Bekleriz platformu iletişim bilgileri ve destek kanalları.",
+  description: "DavetRota platformu iletişim bilgileri ve destek kanalları.",
 };
 
 const KANALLAR = [
@@ -12,24 +12,24 @@ const KANALLAR = [
     icon: "✉️",
     baslik: "Genel Destek",
     aciklama: "Ürün, teknik sorunlar ve genel sorularınız için",
-    deger: "destek@bekleriz.com",
-    href: "mailto:destek@bekleriz.com",
+    deger: "destek@davetrota.com",
+    href: "mailto:destek@davetrota.com",
     sure: "1–2 iş günü içinde yanıt",
   },
   {
     icon: "⚖️",
     baslik: "KVKK Başvuruları",
     aciklama: "Kişisel veri erişim, düzeltme ve silme talepleri",
-    deger: "kvkk@bekleriz.com",
-    href: "mailto:kvkk@bekleriz.com",
+    deger: "kvkk@davetrota.com",
+    href: "mailto:kvkk@davetrota.com",
     sure: "5 iş günü içinde yanıt (yasal yükümlülük)",
   },
   {
     icon: "🏛️",
     baslik: "Hukuki Bildirimler",
     aciklama: "Resmi tebligat ve hukuki yazışmalar için",
-    deger: "hukuk@bekleriz.com",
-    href: "mailto:hukuk@bekleriz.com",
+    deger: "hukuk@davetrota.com",
+    href: "mailto:hukuk@davetrota.com",
     sure: "5 iş günü içinde yanıt",
   },
 ];
