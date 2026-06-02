@@ -932,14 +932,21 @@ function OlusturIcerigi() {
                               {id === "kisiSayisi" && soru.aktif && (
                                 <div className="flex items-center gap-3 mb-2 mt-1">
                                   <span className="text-xs text-gray-500">Maks kişi:</span>
-                                  <input
-                                    type="number"
-                                    min={2}
-                                    max={20}
-                                    value={soruGetir(rsvpSorularConfig, "kisiSayisi").maxKisi ?? 2}
-                                    onChange={e => rsvpMaxKisiGuncelle(Math.max(2, Math.min(20, Number(e.target.value))))}
-                                    className="w-20 border-2 border-purple-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
-                                  />
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => rsvpMaxKisiGuncelle(Math.max(2, (soruGetir(rsvpSorularConfig, "kisiSayisi").maxKisi ?? 2) - 1))}
+                                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-base flex items-center justify-center transition-colors"
+                                    >−</button>
+                                    <span className="text-sm font-bold text-gray-800 w-6 text-center tabular-nums">
+                                      {soruGetir(rsvpSorularConfig, "kisiSayisi").maxKisi ?? 2}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => rsvpMaxKisiGuncelle(Math.min(20, (soruGetir(rsvpSorularConfig, "kisiSayisi").maxKisi ?? 2) + 1))}
+                                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-base flex items-center justify-center transition-colors"
+                                    >+</button>
+                                  </div>
                                   <span className="text-xs text-gray-400">(2–20)</span>
                                 </div>
                               )}
