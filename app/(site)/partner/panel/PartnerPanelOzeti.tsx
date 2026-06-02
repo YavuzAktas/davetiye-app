@@ -48,6 +48,14 @@ type Aksiyon = {
   onem: "kritik" | "bugun" | "normal";
 };
 
+type BasariParcasi = {
+  baslik: string;
+  puan: number;
+  max: number;
+  aciklama: string;
+  href: string;
+};
+
 const SICAK_LEAD_DURUMLARI = new Set<LeadDurum>(["teklif_gonderildi", "kapora_bekliyor"]);
 const KAPORA_LEAD_DURUMLARI = new Set<LeadDurum>(["kapora_bekliyor", "kazandi"]);
 const AKTIF_LEAD_DURUMLARI = new Set<LeadDurum>(["yeni", "gorusuldu", "teklif_gonderildi", "kapora_bekliyor"]);
@@ -69,6 +77,27 @@ function markaTamamMi(marka: Marka) {
     marka.instagramUrl?.trim() ||
     marka.whatsappImzasi?.trim()
   );
+}
+
+function clamp(sayi: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, sayi));
+}
+
+function yuzde(deger: number, toplam: number) {
+  if (toplam <= 0) return 0;
+  return Math.round((deger / toplam) * 100);
+}
+
+function skorRengi(skor: number) {
+  if (skor >= 80) return "from-emerald-500 to-teal-500";
+  if (skor >= 55) return "from-amber-500 to-orange-500";
+  return "from-rose-500 to-pink-500";
+}
+
+function skorEtiketi(skor: number) {
+  if (skor >= 80) return "Güçlü";
+  if (skor >= 55) return "Gelişiyor";
+  return "Başlangıç";
 }
 
 function aksiyonStili(onem: Aksiyon["onem"]) {
@@ -119,6 +148,62 @@ export default function PartnerPanelOzeti({
   const aktifEkipLinki = ekipErisimleri.filter(erisim =>
     erisim.aktif && !erisim.revokedAt && !tarihGectiMi(erisim.expiresAt)
   ).length;
+  const baslayanKod = aktifKodlar.filter(kod => BASLAYAN_KOD_DURUMLARI.has(kod.durum)).length;
+  const teslimOrani = yuzde(baslayanKod, aktifKodlar.length);
+  const yayinaCikisOrani = yuzde(yayinda, aktifKodlar.length);
+  const kayipLead = leadler.filter(lead => lead.durum === "kaybedildi").length;
+  const kazanimOrani = yuzde(leadler.filter(lead => lead.durum === "kazandi").length, Math.max(1, leadler.length - kayipLead));
+  const takipSagligi = aktifLead.length > 0 ? Math.max(0, 100 - yuzde(takipBekleyen.length, aktifLead.length)) : 100;
+
+  const basariParcalari: BasariParcasi[] = [
+    {
+      baslik: "Marka hazır",
+      puan: markaTamamMi(marka) ? 15 : 0,
+      max: 15,
+      aciklama: markaTamamMi(marka) ? "Partner markası teklif ve teslim akışında güven veriyor." : "Logo, slogan veya destek bilgisi ekleyin.",
+      href: "#marka",
+    },
+    {
+      baslik: "Satış akışı",
+      puan: clamp((leadler.length > 0 ? 8 : 0) + (teklifHazir ? 7 : 0) + (sicakLead.length > 0 ? 5 : 0), 0, 20),
+      max: 20,
+      aciklama: leadler.length > 0 ? `${leadler.length} lead, ${sicakLead.length} sıcak fırsat takipte.` : "İlk müşteri adayını ekleyin.",
+      href: "#lead-crm",
+    },
+    {
+      baslik: "Takip disiplini",
+      puan: clamp(Math.round((takipSagligi / 100) * 15), 0, 15),
+      max: 15,
+      aciklama: takipBekleyen.length > 0 ? `${takipBekleyen.length} lead 7 gündür güncellenmedi.` : "Geciken takip görünmüyor.",
+      href: "#lead-crm",
+    },
+    {
+      baslik: "Teslim başarısı",
+      puan: clamp(Math.round((teslimOrani / 100) * 15) + (yayinaCikisOrani > 0 ? 5 : 0), 0, 20),
+      max: 20,
+      aciklama: aktifKodlar.length > 0 ? `Teslim başlama oranı %${teslimOrani}, yayına çıkış %${yayinaCikisOrani}.` : "İlk teslim linkini oluşturun.",
+      href: "#aktivasyon-kodlari",
+    },
+    {
+      baslik: "Ekip düzeni",
+      puan: aktifEkipLinki > 0 ? 10 : 0,
+      max: 10,
+      aciklama: aktifEkipLinki > 0 ? `${aktifEkipLinki} sınırlı ekip linki aktif.` : "Operasyon veya teslim için sınırlı ekip linki oluşturun.",
+      href: "#ekip",
+    },
+    {
+      baslik: "Kapasite kullanımı",
+      puan: abonelik ? clamp(Math.round((abonelik.kullanilanHak / Math.max(1, abonelik.hakSayisi)) * 15) + (kazanimOrani > 0 ? 5 : 0), 0, 20) : 0,
+      max: 20,
+      aciklama: abonelik ? `${abonelik.kullanilanHak}/${abonelik.hakSayisi} hak kullanıldı. Kazanım oranı %${kazanimOrani}.` : "Aktif abonelik yok.",
+      href: "#odeme",
+    },
+  ];
+  const basariSkoru = clamp(basariParcalari.reduce((toplam, parca) => toplam + parca.puan, 0), 0, 100);
+  const eksikParcalar = basariParcalari
+    .filter(parca => parca.puan < parca.max)
+    .sort((a, b) => (b.max - b.puan) - (a.max - a.puan))
+    .slice(0, 3);
 
   const aksiyonlar: Aksiyon[] = [
     ...(!abonelik ? [{
@@ -229,6 +314,53 @@ export default function PartnerPanelOzeti({
 
       <div className="grid gap-5 p-5 lg:grid-cols-[1.15fr_0.85fr] sm:p-7">
         <div>
+          <div className="mb-5 overflow-hidden rounded-3xl border border-gray-100 bg-gray-950 text-white shadow-sm">
+            <div className="grid gap-5 p-5 lg:grid-cols-[220px_1fr]">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/40">Partner başarı skoru</p>
+                <div className="mt-3 flex items-end gap-2">
+                  <span className="text-5xl font-black tabular-nums">{basariSkoru}</span>
+                  <span className="mb-1 text-sm font-black text-white/40">/100</span>
+                </div>
+                <div className={`mt-4 h-2 overflow-hidden rounded-full bg-white/10`}>
+                  <div
+                    className={`h-full rounded-full bg-linear-to-r ${skorRengi(basariSkoru)}`}
+                    style={{ width: `${basariSkoru}%` }}
+                  />
+                </div>
+                <p className="mt-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white">
+                  {skorEtiketi(basariSkoru)}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm font-black text-white">Skoru yükselten başlıklar</p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                  {basariParcalari.map(parca => (
+                    <a
+                      key={parca.baslik}
+                      href={parca.href}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:bg-white/10"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-xs font-black text-white">{parca.baslik}</p>
+                        <span className="shrink-0 text-xs font-black tabular-nums text-white/60">
+                          {parca.puan}/{parca.max}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-[11px] font-semibold leading-relaxed text-white/50">{parca.aciklama}</p>
+                    </a>
+                  ))}
+                </div>
+                {eksikParcalar.length > 0 && (
+                  <p className="mt-3 text-xs font-semibold leading-relaxed text-white/50">
+                    En hızlı iyileştirme: {eksikParcalar.map(parca => parca.baslik).join(", ")}.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-black text-gray-950">Öncelikli aksiyon</h3>
             <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-bold text-gray-500 shadow-sm">
