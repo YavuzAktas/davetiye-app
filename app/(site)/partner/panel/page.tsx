@@ -9,6 +9,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import PartnerEkipErisimleri from "./PartnerEkipErisimleri";
+import PartnerEtkinlikGunuKiti from "./PartnerEtkinlikGunuKiti";
 import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerHazirPaketler from "./PartnerHazirPaketler";
@@ -591,9 +592,15 @@ export default async function PartnerPanelPage({
                   <PanelAracGrubu
                     id="operasyon-detaylari-grubu"
                     baslik="Yerleşim, ekip linkleri ve iş takibi"
-                    aciklama="Masa düzeni şablonlarını hazırlayın, personele sınırlı erişim verin, açık işleri kontrol edin."
-                    hedefler={["salon-yerlesim", "ekip", "operasyon"]}
+                    aciklama="Etkinlik günü kitini, masa düzeni şablonlarını ve ekip erişimlerini hazırlayın."
+                    hedefler={["etkinlik-gunu-kiti", "salon-yerlesim", "ekip", "operasyon"]}
                   >
+                    <div id="etkinlik-gunu-kiti" className="scroll-mt-24">
+                      <PartnerEtkinlikGunuKiti
+                        firmaAdi={partner.firmaAdi}
+                        kodlar={teslimRaporuKodlari}
+                      />
+                    </div>
                     <div id="salon-yerlesim" className="scroll-mt-24">
                       <PartnerSalonYerlesimSablonlari firmaAdi={partner.firmaAdi} />
                     </div>
