@@ -89,7 +89,13 @@ export default function EtkilesimButonu({
 
   /* ─ Veri çek ─ */
   useEffect(() => {
-    if (!acik) return;
+    if (!acik) {
+      // Panel kapandığında cache sıfırla → sonraki açılışta taze veri gelsin
+      setFotoListeYuklendi(false);
+      setAniListeYuklendi(false);
+      setSesliListeYuklendi(false);
+      return;
+    }
     if (sekme === "foto")  fetchFotolar();
     if (sekme === "ani")   fetchAnilar();
     if (sekme === "sesli") fetchSesliAnilar();
