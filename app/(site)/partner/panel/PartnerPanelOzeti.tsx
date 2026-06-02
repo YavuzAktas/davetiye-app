@@ -112,6 +112,9 @@ export default function PartnerPanelOzeti({
   const aktifLead = leadler.filter(lead => AKTIF_LEAD_DURUMLARI.has(lead.durum));
   const sicakLead = leadler.filter(lead => SICAK_LEAD_DURUMLARI.has(lead.durum));
   const kaporaLead = leadler.filter(lead => KAPORA_LEAD_DURUMLARI.has(lead.durum));
+  // Aktivasyon kodu oluşturulmamış kapora/kazandı lead sayısı:
+  // Lead-kod arasında doğrudan bağlantı olmadığından toplam aktif kod sayısını çıkarırız.
+  const kodSizKaporaLead = Math.max(0, kaporaLead.length - aktifKodlar.length);
   const takipBekleyen = aktifLead.filter(lead => gunOnce(lead.updatedAt) >= 7);
   const aktifEkipLinki = ekipErisimleri.filter(erisim =>
     erisim.aktif && !erisim.revokedAt && !tarihGectiMi(erisim.expiresAt)
@@ -153,8 +156,8 @@ export default function PartnerPanelOzeti({
       cta: "Teklife git",
       onem: "normal" as const,
     }] : []),
-    ...(kaporaLead.length > 0 ? [{
-      baslik: `${kaporaLead.length} müşteri için aktivasyon linki oluştur`,
+    ...(kodSizKaporaLead > 0 ? [{
+      baslik: `${kodSizKaporaLead} müşteri için aktivasyon linki oluştur`,
       aciklama: "Kapora/anlaşma sağlandı. Şimdi teslim linkini üretin ve müşteriye gönderin.",
       href: "#aktivasyon-kodlari",
       cta: "Teslim Linkini Oluştur",
