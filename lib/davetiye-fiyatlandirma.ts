@@ -1,4 +1,4 @@
-const LUKS_SABLON_IDS = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
+const LUKS_SABLON_IDS = new Set(["nisan-luks", "vintage-nisan", "dugun-luks", "dogumgunu-luks"]);
 
 export type DavetiyeFiyatGirdisi = {
   sablon?: string | null;
