@@ -7,6 +7,10 @@ const CAT: Record<string, { bg: string; color: string }> = {
   "İlham":  { bg: "rgba(245,158,11,0.12)", color: "#d97706" },
 };
 const KONU_LINKLERI = [
+  { href: "/blog/qr-kodlu-davetiye-nedir", label: "QR kodlu davetiye" },
+  { href: "/blog/dugunde-fotograf-toplama-yontemleri", label: "Düğünde fotoğraf toplama" },
+  { href: "/blog/dugun-salonu-lcv-takip-sistemi", label: "Düğün salonu LCV takip" },
+  { href: "/blog/davet-evi-qr-ani-alani-nasil-kurulur", label: "Davet evi QR anı alanı" },
   { href: "/blog/dugun-davetiyesi-ne-zaman-gonderilir", label: "Davetiye ne zaman gönderilir?" },
   { href: "/blog/rsvp-nedir-nasil-kullanilir", label: "RSVP nedir, nasıl kullanılır?" },
   { href: "/blog/nisan-organizasyonu-kontrol-listesi", label: "Nişan organizasyonu listesi" },
