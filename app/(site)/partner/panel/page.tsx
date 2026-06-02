@@ -21,6 +21,7 @@ import PanelAracGrubu from "./PanelAracGrubu";
 import PartnerPanelOzeti from "./PartnerPanelOzeti";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
+import PartnerSalonYerlesimSablonlari from "./PartnerSalonYerlesimSablonlari";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
@@ -589,10 +590,13 @@ export default async function PartnerPanelPage({
                   </div>
                   <PanelAracGrubu
                     id="operasyon-detaylari-grubu"
-                    baslik="Ekip linkleri ve iş takibi"
-                    aciklama="Personele sınırlı erişim verin, açık işleri kontrol edin."
-                    hedefler={["ekip", "operasyon"]}
+                    baslik="Yerleşim, ekip linkleri ve iş takibi"
+                    aciklama="Masa düzeni şablonlarını hazırlayın, personele sınırlı erişim verin, açık işleri kontrol edin."
+                    hedefler={["salon-yerlesim", "ekip", "operasyon"]}
                   >
+                    <div id="salon-yerlesim" className="scroll-mt-24">
+                      <PartnerSalonYerlesimSablonlari firmaAdi={partner.firmaAdi} />
+                    </div>
                     <div id="ekip" className="scroll-mt-24">
                       <PartnerEkipErisimleri
                         baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
