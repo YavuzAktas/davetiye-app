@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/dugun-davetiyesi`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/nisan-davetiyesi`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/dugun-salonlari-icin-dijital-davetiye`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.82 },
+    { url: `${baseUrl}/davet-evleri-icin-qr-ani-alani`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.82 },
     { url: `${baseUrl}/sablonlar`,           lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },
     ...sablonSayfalari,
     { url: `${baseUrl}/blog`,                lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },

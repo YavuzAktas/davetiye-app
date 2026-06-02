@@ -136,6 +136,11 @@ const SEKTOR_COZUMLERI = [
     baslik: "Düğün salonları için çözüm",
     aciklama: "LCV takip, QR check-in, canlı fotoğraf duvarı ve müşteri aktivasyon akışı.",
   },
+  {
+    href: "/davet-evleri-icin-qr-ani-alani",
+    baslik: "Davet evleri için QR anı alanı",
+    aciklama: "QR masa kartı, fotoğraf toplama, anı defteri ve LCV takip paketi.",
+  },
 ];
 
 const GUVEN_NOKTALAR = [
