@@ -25,6 +25,7 @@ import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSalonYerlesimSablonlari from "./PartnerSalonYerlesimSablonlari";
 import PartnerSatisAsistani from "./PartnerSatisAsistani";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
+import PartnerSosyalMedyaPaketi from "./PartnerSosyalMedyaPaketi";
 import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
 import PartnerWhatsappAsistani from "./PartnerWhatsappAsistani";
@@ -482,8 +483,8 @@ export default async function PartnerPanelPage({
                   <PanelAracGrubu
                     id="satis-araclari-grubu"
                     baslik="Teklif ve mesaj araçları"
-                    aciklama="Paket önerisi, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
-                    hedefler={["satis-asistani", "paketler", "whatsapp-asistani", "teklif", "satis"]}
+                    aciklama="Paket önerisi, sosyal içerik, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
+                    hedefler={["satis-asistani", "sosyal-medya-paketi", "paketler", "whatsapp-asistani", "teklif", "satis"]}
                   >
                     <div id="satis-asistani" className="scroll-mt-24">
                       <PartnerSatisAsistani
@@ -497,6 +498,15 @@ export default async function PartnerPanelPage({
                           kaynak: lead.kaynak,
                           durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
                         }))}
+                      />
+                    </div>
+                    <div id="sosyal-medya-paketi" className="scroll-mt-24">
+                      <PartnerSosyalMedyaPaketi
+                        firmaAdi={partner.firmaAdi}
+                        markaSlogani={partner.markaSlogani}
+                        instagramUrl={partner.instagramUrl}
+                        whatsappImzasi={partner.whatsappImzasi}
+                        portalUrl={`${SITE_URL}/partner/portal/${partner.id}`}
                       />
                     </div>
                     <div id="paketler" className="scroll-mt-24">
