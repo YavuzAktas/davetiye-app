@@ -515,6 +515,15 @@ export default async function PartnerPanelPage({
                             ? (partner.teklifNotlari as { id: string; metin: string; createdAt: string }[])
                             : []
                         }
+                        leadler={partnerLeadleriHam.map(lead => ({
+                          id: lead.id,
+                          baslik: lead.baslik,
+                          ilgiliKisi: lead.ilgiliKisi,
+                          etkinlikTuru: lead.etkinlikTuru,
+                          etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                          kisiSayisi: lead.kisiSayisi,
+                          durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        }))}
                       />
                     </div>
                     <div id="satis" className="scroll-mt-24">

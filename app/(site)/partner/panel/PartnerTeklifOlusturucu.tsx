@@ -1,9 +1,20 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type PaketId = "davet" | "operasyon" | "hatira" | "tam";
+type LeadDurum = "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi";
+
+type Lead = {
+  id: string;
+  baslik: string;
+  ilgiliKisi: string | null;
+  etkinlikTuru: string | null;
+  etkinlikTarihi: string | null;
+  kisiSayisi: number | null;
+  durum: LeadDurum;
+};
 
 type Paket = {
   id: PaketId;
@@ -100,6 +111,15 @@ const ETKINLIK_TURLERI = [
   "Özel davet",
 ];
 
+const DURUM_LABEL: Record<LeadDurum, string> = {
+  yeni: "Yeni",
+  gorusuldu: "Görüşüldü",
+  teklif_gonderildi: "Teklif gönderildi",
+  kapora_bekliyor: "Kapora bekliyor",
+  kazandi: "Kabul edildi",
+  kaybedildi: "Kaybedildi",
+};
+
 function htmlKacir(deger: string) {
   return deger
     .replaceAll("&", "&amp;")
@@ -117,6 +137,13 @@ function paraFormatla(deger: string) {
     currency: "TRY",
     maximumFractionDigits: 0,
   }).format(sayi);
+}
+
+function tarihKisa(deger: string | null) {
+  if (!deger) return "";
+  const tarih = new Date(deger);
+  if (Number.isNaN(tarih.getTime())) return "";
+  return tarih.toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
 }
 
 type OzelNot = { id: string; metin: string; createdAt: string };
@@ -180,6 +207,7 @@ export default function PartnerTeklifOlusturucu({
   whatsappImzasi,
   teklifHazir: teklifHazirBaslangic,
   teklifNotlari: teklifNotlariBaslangic,
+  leadler,
 }: {
   firmaAdi: string;
   markaRenk?: string | null;
@@ -189,9 +217,11 @@ export default function PartnerTeklifOlusturucu({
   whatsappImzasi?: string | null;
   teklifHazir: boolean;
   teklifNotlari: OzelNot[];
+  leadler: Lead[];
 }) {
   const router = useRouter();
   const [paketId, setPaketId] = useState<PaketId>("tam");
+  const [leadId, setLeadId] = useState("");
   const [etkinlikTuru, setEtkinlikTuru] = useState(ETKINLIK_TURLERI[0]);
   const [referans, setReferans] = useState("");
   const [tutar, setTutar] = useState("");
@@ -202,8 +232,11 @@ export default function PartnerTeklifOlusturucu({
   const [yeniNot, setYeniNot] = useState("");
   const [notKaydediliyor, setNotKaydediliyor] = useState(false);
   const [silinenId, setSilinenId] = useState<string | null>(null);
+  const [leadGuncelleniyor, setLeadGuncelleniyor] = useState<LeadDurum | null>(null);
+  const [leadMesaj, setLeadMesaj] = useState<{ tip: "hata" | "basari"; metin: string } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const seciliLead = useMemo(() => leadler.find(lead => lead.id === leadId) ?? null, [leadId, leadler]);
   const paket = PAKETLER.find(p => p.id === paketId) ?? PAKETLER[0];
   const tutarMetni = paraFormatla(tutar);
   const temizReferans = referans.trim();
@@ -214,6 +247,15 @@ export default function PartnerTeklifOlusturucu({
     month: "long",
     year: "numeric",
   });
+
+  useEffect(() => {
+    if (!seciliLead) return;
+    const leadEtkinlikTuru = seciliLead.etkinlikTuru?.trim();
+    if (leadEtkinlikTuru && ETKINLIK_TURLERI.includes(leadEtkinlikTuru)) {
+      setEtkinlikTuru(leadEtkinlikTuru);
+    }
+    setReferans(prev => prev || seciliLead.baslik.slice(0, 80));
+  }, [seciliLead]);
 
   const teklifMetni = useMemo(() => {
     const satirlar = [
@@ -234,6 +276,14 @@ export default function PartnerTeklifOlusturucu({
       satirlar.push("", `İç referans: ${temizReferans}`);
     }
 
+    if (seciliLead?.etkinlikTarihi || seciliLead?.kisiSayisi) {
+      const detaylar = [
+        seciliLead.etkinlikTarihi ? `Etkinlik tarihi: ${tarihKisa(seciliLead.etkinlikTarihi)}` : "",
+        seciliLead.kisiSayisi ? `Yaklaşık davetli sayısı: ${seciliLead.kisiSayisi}` : "",
+      ].filter(Boolean);
+      if (detaylar.length > 0) satirlar.push("", ...detaylar);
+    }
+
     if (temizNot) {
       satirlar.push("", `Not: ${temizNot}`);
     }
@@ -249,7 +299,7 @@ export default function PartnerTeklifOlusturucu({
     );
 
     return satirlar.join("\n");
-  }, [etkinlikTuru, firmaAdi, paket, temizNot, temizReferans, tutarMetni, whatsappImzasi]);
+  }, [etkinlikTuru, firmaAdi, paket, seciliLead, temizNot, temizReferans, tutarMetni, whatsappImzasi]);
 
   const hazirIsaretle = async () => {
     if (teklifHazir) return;
@@ -272,9 +322,47 @@ export default function PartnerTeklifOlusturucu({
       setKopyalandi(true);
       setTimeout(() => setKopyalandi(false), 2000);
       hazirIsaretle();
+      teklifGonderildiIsaretle();
     } catch {
       setKopyalandi(false);
     }
+  };
+
+  const leadDurumuGuncelle = async (durum: LeadDurum) => {
+    if (!seciliLead || leadGuncelleniyor) return;
+    setLeadGuncelleniyor(durum);
+    setLeadMesaj(null);
+    try {
+      const res = await fetch("/api/partner/leadler", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: seciliLead.id, durum }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.hata ?? "Lead durumu güncellenemedi.");
+
+      setLeadMesaj({
+        tip: "basari",
+        metin: durum === "kazandi"
+          ? "Teklif kabul edildi olarak işaretlendi. Şimdi aktivasyon linki oluşturabilirsiniz."
+          : "Lead teklif gönderildi aşamasına taşındı.",
+      });
+      router.refresh();
+      if (durum === "kazandi") {
+        setTimeout(() => {
+          document.getElementById("aktivasyon-kodlari")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 250);
+      }
+    } catch (err) {
+      setLeadMesaj({ tip: "hata", metin: err instanceof Error ? err.message : "Lead durumu güncellenemedi." });
+    } finally {
+      setLeadGuncelleniyor(null);
+    }
+  };
+
+  const teklifGonderildiIsaretle = () => {
+    if (!seciliLead || seciliLead.durum === "teklif_gonderildi" || seciliLead.durum === "kazandi") return;
+    leadDurumuGuncelle("teklif_gonderildi");
   };
 
   const notEkle = async () => {
@@ -314,6 +402,10 @@ export default function PartnerTeklifOlusturucu({
   };
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(teklifMetni)}`;
+
+  const aktivasyonaGit = () => {
+    document.getElementById("aktivasyon-kodlari")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const pdfOlarakKaydet = () => {
     const pencere = window.open("", "_blank", "width=900,height=1200");
@@ -564,6 +656,58 @@ export default function PartnerTeklifOlusturucu({
 
       <div className="grid gap-6 p-5 lg:grid-cols-[1fr_0.9fr] lg:p-7">
         <div className="space-y-5">
+          {leadler.length > 0 && (
+            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <label className="block flex-1">
+                  <span className="text-xs font-bold text-purple-700">Lead ile bağla</span>
+                  <select
+                    value={leadId}
+                    onChange={e => {
+                      setLeadId(e.target.value);
+                      setLeadMesaj(null);
+                    }}
+                    className="mt-1 w-full rounded-2xl border border-purple-200 bg-white px-4 py-3 text-sm font-semibold text-gray-800 outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100"
+                  >
+                    <option value="">Lead seçmeden teklif hazırla</option>
+                    {leadler.map(lead => (
+                      <option key={lead.id} value={lead.id}>
+                        {lead.baslik} · {DURUM_LABEL[lead.durum]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <a
+                  href="#lead-crm"
+                  className="inline-flex shrink-0 items-center justify-center rounded-2xl border border-purple-200 bg-white px-4 py-3 text-xs font-black text-purple-700 transition-colors hover:bg-purple-100"
+                >
+                  Leadleri Aç
+                </a>
+              </div>
+
+              {seciliLead && (
+                <div className="mt-3 rounded-2xl border border-purple-100 bg-white p-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-black text-gray-950">{seciliLead.baslik}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-gray-500">
+                        {[seciliLead.etkinlikTuru, tarihKisa(seciliLead.etkinlikTarihi), seciliLead.kisiSayisi ? `${seciliLead.kisiSayisi} kişi` : ""]
+                          .filter(Boolean)
+                          .join(" · ") || "Etkinlik detayı eklenmemiş"}
+                      </p>
+                    </div>
+                    <span className="w-fit shrink-0 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-black text-purple-700">
+                      {DURUM_LABEL[seciliLead.durum]}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[11px] leading-relaxed text-purple-700/75">
+                    Teklif metnine müşteri adı, telefon veya e-posta otomatik eklenmez; yalnızca etkinlik bağlamı kullanılır.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="grid gap-3 sm:grid-cols-2">
             {PAKETLER.map(p => {
               const secili = p.id === paketId;
@@ -667,7 +811,10 @@ export default function PartnerTeklifOlusturucu({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={hazirIsaretle}
+              onClick={() => {
+                hazirIsaretle();
+                teklifGonderildiIsaretle();
+              }}
               className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-green-700"
             >
               WhatsApp&apos;ta Aç
@@ -683,6 +830,46 @@ export default function PartnerTeklifOlusturucu({
           <p className="mt-3 text-xs leading-relaxed text-gray-400">
             PDF çıktısı tarayıcıda hazırlanır; teklif bilgileri sunucuya kaydedilmez.
           </p>
+
+          {seciliLead && (
+            <div className="mt-4 rounded-2xl border border-purple-100 bg-white p-4">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-purple-500">Kabul sonrası</p>
+              <p className="mt-2 text-sm font-black text-gray-950">Teklifi aktivasyon teslimine bağla</p>
+              <p className="mt-1 text-xs leading-relaxed text-gray-500">
+                Müşteri kabul ettiğinde lead “Kabul edildi” olur. Sonra aktivasyon bölümünde tek kullanımlık müşteri linkini oluşturup teslim paketini gönderebilirsiniz.
+              </p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => leadDurumuGuncelle("kazandi")}
+                  disabled={leadGuncelleniyor !== null || seciliLead.durum === "kazandi"}
+                  className="rounded-xl bg-purple-600 px-3 py-2.5 text-xs font-black text-white transition-colors hover:bg-purple-700 disabled:opacity-45"
+                >
+                  {leadGuncelleniyor === "kazandi"
+                    ? "Güncelleniyor..."
+                    : seciliLead.durum === "kazandi"
+                    ? "Kabul Edildi"
+                    : "Müşteri Kabul Etti"}
+                </button>
+                <button
+                  type="button"
+                  onClick={aktivasyonaGit}
+                  className="rounded-xl border border-purple-200 bg-purple-50 px-3 py-2.5 text-xs font-black text-purple-700 transition-colors hover:bg-purple-100"
+                >
+                  Aktivasyon Linki Oluştur
+                </button>
+              </div>
+              {leadMesaj && (
+                <p className={`mt-3 rounded-xl px-3 py-2 text-xs font-semibold ${
+                  leadMesaj.tip === "basari"
+                    ? "border border-emerald-100 bg-emerald-50 text-emerald-700"
+                    : "border border-red-100 bg-red-50 text-red-600"
+                }`}>
+                  {leadMesaj.metin}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
