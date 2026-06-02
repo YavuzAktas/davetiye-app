@@ -32,6 +32,9 @@ type Lead = {
   seansBaslangic: string | null;
   seansBitis: string | null;
   sonGorusmeAt: string | null;
+  takipAt: string | null;
+  teklifGecerliAt: string | null;
+  kayipNedeni: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -49,6 +52,9 @@ type FormState = {
   not: string;
   seansBaslangic: string;
   seansBitis: string;
+  takipAt: string;
+  teklifGecerliAt: string;
+  kayipNedeni: string;
 };
 
 const DURUMLAR: { id: LeadDurum; label: string; renk: string }[] = [
@@ -65,6 +71,7 @@ const BOS_FORM: FormState = {
   etkinlikTuru: "", etkinlikTarihi: "", kisiSayisi: "",
   kaynak: "", durum: "yeni", not: "",
   seansBaslangic: "", seansBitis: "",
+  takipAt: "", teklifGecerliAt: "", kayipNedeni: "",
 };
 
 function tarihKisa(d: string | null) {
@@ -74,6 +81,32 @@ function tarihKisa(d: string | null) {
 
 function inputTarihi(d: string | null) { return d ? d.slice(0, 10) : ""; }
 
+function gunFarki(d: string | null) {
+  if (!d) return null;
+  const bugun = new Date();
+  bugun.setHours(0, 0, 0, 0);
+  const hedef = new Date(d);
+  hedef.setHours(0, 0, 0, 0);
+  if (Number.isNaN(hedef.getTime())) return null;
+  return Math.round((hedef.getTime() - bugun.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function takipEtiketi(d: string | null) {
+  const fark = gunFarki(d);
+  if (fark === null) return null;
+  if (fark < 0) return { metin: `Takip ${Math.abs(fark)} gün gecikti`, renk: "bg-red-50 text-red-700 border-red-100" };
+  if (fark === 0) return { metin: "Takip bugün", renk: "bg-amber-50 text-amber-700 border-amber-100" };
+  return { metin: `Takip: ${tarihKisa(d)}`, renk: "bg-emerald-50 text-emerald-700 border-emerald-100" };
+}
+
+function teklifEtiketi(d: string | null) {
+  const fark = gunFarki(d);
+  if (fark === null) return null;
+  if (fark < 0) return { metin: "Teklif süresi geçti", renk: "bg-red-50 text-red-700 border-red-100" };
+  if (fark === 0) return { metin: "Teklif bugün bitiyor", renk: "bg-purple-50 text-purple-700 border-purple-100" };
+  return { metin: `Teklif geçerli: ${tarihKisa(d)}`, renk: "bg-purple-50 text-purple-700 border-purple-100" };
+}
+
 function leadFormu(l: Lead): FormState {
   return {
     baslik: l.baslik, ilgiliKisi: l.ilgiliKisi ?? "", telefon: l.telefon ?? "",
@@ -82,6 +115,9 @@ function leadFormu(l: Lead): FormState {
     kisiSayisi: l.kisiSayisi ? String(l.kisiSayisi) : "",
     kaynak: l.kaynak ?? "", durum: l.durum, not: l.not ?? "",
     seansBaslangic: l.seansBaslangic ?? "", seansBitis: l.seansBitis ?? "",
+    takipAt: inputTarihi(l.takipAt),
+    teklifGecerliAt: inputTarihi(l.teklifGecerliAt),
+    kayipNedeni: l.kayipNedeni ?? "",
   };
 }
 
@@ -93,6 +129,9 @@ function payloadHazirla(f: FormState) {
     kaynak: f.kaynak, durum: f.durum, not: f.not,
     seansBaslangic: f.seansBaslangic || null,
     seansBitis: f.seansBitis || null,
+    takipAt: f.takipAt || null,
+    teklifGecerliAt: f.teklifGecerliAt || null,
+    kayipNedeni: f.durum === "kaybedildi" ? f.kayipNedeni : "",
   };
 }
 
@@ -114,6 +153,9 @@ function seansSaati(baslangic: string | null, bitis: string | null) {
 
 /* ── Shared card body (reused in DraggableKart and DragOverlay) ─ */
 function KartDetay({ lead }: { lead: Lead }) {
+  const takip = takipEtiketi(lead.takipAt);
+  const teklif = teklifEtiketi(lead.teklifGecerliAt);
+
   return (
     <div className="mt-1.5 space-y-1 text-xs font-semibold text-gray-500">
       {lead.ilgiliKisi && <p>{lead.ilgiliKisi}</p>}
@@ -125,6 +167,17 @@ function KartDetay({ lead }: { lead: Lead }) {
       )}
       {lead.kisiSayisi && <p>{lead.kisiSayisi} kişi</p>}
       {lead.kaynak && <p>Kaynak: {lead.kaynak}</p>}
+      {(takip || teklif) && (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {takip && <span className={`rounded-full border px-2 py-0.5 text-[10px] font-black ${takip.renk}`}>{takip.metin}</span>}
+          {teklif && <span className={`rounded-full border px-2 py-0.5 text-[10px] font-black ${teklif.renk}`}>{teklif.metin}</span>}
+        </div>
+      )}
+      {lead.durum === "kaybedildi" && lead.kayipNedeni && (
+        <p className="rounded-xl bg-gray-50 p-2 text-[11px] leading-relaxed text-gray-500">
+          Kayıp nedeni: {lead.kayipNedeni}
+        </p>
+      )}
     </div>
   );
 }
@@ -505,6 +558,20 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
             )}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
+                <span className="text-xs font-bold text-gray-500">Sonraki takip tarihi</span>
+                <input type="date" value={form.takipAt} onChange={e => guncelle("takipAt", e.target.value)}
+                  className="mt-1 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100" />
+                <span className="mt-1 block text-[11px] font-semibold text-gray-400">Arama veya WhatsApp dönüşünü planlamak için.</span>
+              </label>
+              <label className="block">
+                <span className="text-xs font-bold text-gray-500">Teklif geçerlilik tarihi</span>
+                <input type="date" value={form.teklifGecerliAt} onChange={e => guncelle("teklifGecerliAt", e.target.value)}
+                  className="mt-1 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100" />
+                <span className="mt-1 block text-[11px] font-semibold text-gray-400">Fiyat veya kapsamın ne zamana kadar geçerli olduğunu belirtir.</span>
+              </label>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block">
                 <span className="text-xs font-bold text-gray-500">Etkinlik türü</span>
                 <input value={form.etkinlikTuru} onChange={e => guncelle("etkinlikTuru", e.target.value)}
                   placeholder="Düğün, nişan..." maxLength={60}
@@ -524,6 +591,15 @@ export default function PartnerLeadCRM({ leadler: baslangicLeadler }: { leadler:
                 className="mt-1 min-h-24 w-full resize-none rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100" />
               <span className="mt-1 block text-right text-[11px] font-semibold text-gray-400">{form.not.length}/500</span>
             </label>
+            {form.durum === "kaybedildi" && (
+              <label className="block">
+                <span className="text-xs font-bold text-gray-500">Kayıp nedeni</span>
+                <textarea value={form.kayipNedeni} onChange={e => guncelle("kayipNedeni", e.target.value)} rows={2}
+                  placeholder="Örn. Bütçe uygun değil, tarih dolu, rakip teklifi seçildi." maxLength={240}
+                  className="mt-1 min-h-20 w-full resize-none rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100" />
+                <span className="mt-1 block text-right text-[11px] font-semibold text-gray-400">{form.kayipNedeni.length}/240</span>
+              </label>
+            )}
             {hata && <p className="rounded-2xl bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{hata}</p>}
             {bilgi && <p className="rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">{bilgi}</p>}
             <button type="button" onClick={kaydet} disabled={kaydediliyor}

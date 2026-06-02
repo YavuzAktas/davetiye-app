@@ -542,27 +542,32 @@ model Partner {
 }
 
 model PartnerLead {
-  id             String    @id @default(cuid())
-  partnerId      String
-  baslik         String    @db.VarChar(120)
-  ilgiliKisi     String?   @db.VarChar(120)
-  telefon        String?   @db.VarChar(30)
-  eposta         String?   @db.VarChar(160)
-  etkinlikTuru   String?   @db.VarChar(60)
-  etkinlikTarihi DateTime?
-  kisiSayisi     Int?
-  kaynak         String?   @db.VarChar(60)
-  durum          String    @default("yeni") @db.VarChar(40)
-  not            String?   @db.VarChar(500)
-  seansBaslangic String?   @db.VarChar(5)
-  seansBitis     String?   @db.VarChar(5)
-  sonGorusmeAt   DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  partner        Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  id              String    @id @default(cuid())
+  partnerId       String
+  baslik          String    @db.VarChar(120)
+  ilgiliKisi      String?   @db.VarChar(120)
+  telefon         String?   @db.VarChar(30)
+  eposta          String?   @db.VarChar(160)
+  etkinlikTuru    String?   @db.VarChar(60)
+  etkinlikTarihi  DateTime?
+  kisiSayisi      Int?
+  kaynak          String?   @db.VarChar(60)
+  durum           String    @default("yeni") @db.VarChar(40)
+  not             String?   @db.VarChar(500)
+  seansBaslangic  String?   @db.VarChar(5)
+  seansBitis      String?   @db.VarChar(5)
+  sonGorusmeAt    DateTime?
+  takipAt         DateTime?
+  teklifGecerliAt DateTime?
+  kayipNedeni     String?   @db.VarChar(240)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  partner         Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
 
   @@index([partnerId, durum])
   @@index([partnerId, etkinlikTarihi])
+  @@index([partnerId, takipAt])
+  @@index([partnerId, teklifGecerliAt])
   @@index([partnerId, updatedAt])
 }
 

@@ -22,6 +22,9 @@ const leadSemasi = z.object({
   not: z.string().trim().max(500).optional().nullable(),
   seansBaslangic: saatFormatr,
   seansBitis: saatFormatr,
+  takipAt: z.string().trim().optional().nullable(),
+  teklifGecerliAt: z.string().trim().optional().nullable(),
+  kayipNedeni: z.string().trim().max(240).optional().nullable(),
 }).strict();
 
 const leadGuncelleSemasi = leadSemasi.partial().extend({
@@ -82,6 +85,9 @@ function leadSecimi() {
     seansBaslangic: true,
     seansBitis: true,
     sonGorusmeAt: true,
+    takipAt: true,
+    teklifGecerliAt: true,
+    kayipNedeni: true,
     createdAt: true,
     updatedAt: true,
   } as const;
@@ -102,6 +108,9 @@ function leadJson(lead: {
   seansBaslangic: string | null;
   seansBitis: string | null;
   sonGorusmeAt: Date | null;
+  takipAt: Date | null;
+  teklifGecerliAt: Date | null;
+  kayipNedeni: string | null;
   createdAt: Date;
   updatedAt: Date;
 }) {
@@ -109,6 +118,8 @@ function leadJson(lead: {
     ...lead,
     etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
     sonGorusmeAt: lead.sonGorusmeAt?.toISOString() ?? null,
+    takipAt: lead.takipAt?.toISOString() ?? null,
+    teklifGecerliAt: lead.teklifGecerliAt?.toISOString() ?? null,
     createdAt: lead.createdAt.toISOString(),
     updatedAt: lead.updatedAt.toISOString(),
   };
@@ -148,6 +159,9 @@ export async function POST(req: NextRequest) {
       not: bosIseNull(sonuc.data.not),
       seansBaslangic: bosIseNull(sonuc.data.seansBaslangic),
       seansBitis: bosIseNull(sonuc.data.seansBitis),
+      takipAt: tarihHazirla(sonuc.data.takipAt),
+      teklifGecerliAt: tarihHazirla(sonuc.data.teklifGecerliAt),
+      kayipNedeni: sonuc.data.durum === "kaybedildi" ? bosIseNull(sonuc.data.kayipNedeni) : null,
       sonGorusmeAt: new Date(),
     },
     select: leadSecimi(),
@@ -185,6 +199,10 @@ export async function PATCH(req: NextRequest) {
       ...(sonuc.data.not !== undefined && { not: bosIseNull(sonuc.data.not) }),
       ...(sonuc.data.seansBaslangic !== undefined && { seansBaslangic: bosIseNull(sonuc.data.seansBaslangic) }),
       ...(sonuc.data.seansBitis !== undefined && { seansBitis: bosIseNull(sonuc.data.seansBitis) }),
+      ...(sonuc.data.takipAt !== undefined && { takipAt: tarihHazirla(sonuc.data.takipAt) }),
+      ...(sonuc.data.teklifGecerliAt !== undefined && { teklifGecerliAt: tarihHazirla(sonuc.data.teklifGecerliAt) }),
+      ...(sonuc.data.kayipNedeni !== undefined && { kayipNedeni: bosIseNull(sonuc.data.kayipNedeni) }),
+      ...(sonuc.data.durum !== undefined && sonuc.data.durum !== "kaybedildi" && { kayipNedeni: null }),
     },
   });
 
