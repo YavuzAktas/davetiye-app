@@ -23,6 +23,7 @@ import PartnerPanelOzeti from "./PartnerPanelOzeti";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSalonYerlesimSablonlari from "./PartnerSalonYerlesimSablonlari";
+import PartnerSatisAsistani from "./PartnerSatisAsistani";
 import PartnerSatisRehberi from "./PartnerSatisRehberi";
 import PartnerTeslimRaporu from "./PartnerTeslimRaporu";
 import PartnerTeklifOlusturucu from "./PartnerTeklifOlusturucu";
@@ -481,9 +482,23 @@ export default async function PartnerPanelPage({
                   <PanelAracGrubu
                     id="satis-araclari-grubu"
                     baslik="Teklif ve mesaj araçları"
-                    aciklama="Paket metni, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
-                    hedefler={["paketler", "whatsapp-asistani", "teklif", "satis"]}
+                    aciklama="Paket önerisi, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
+                    hedefler={["satis-asistani", "paketler", "whatsapp-asistani", "teklif", "satis"]}
                   >
+                    <div id="satis-asistani" className="scroll-mt-24">
+                      <PartnerSatisAsistani
+                        firmaAdi={partner.firmaAdi}
+                        leadler={partnerLeadleriHam.map(lead => ({
+                          id: lead.id,
+                          baslik: lead.baslik,
+                          etkinlikTuru: lead.etkinlikTuru,
+                          etkinlikTarihi: lead.etkinlikTarihi?.toISOString() ?? null,
+                          kisiSayisi: lead.kisiSayisi,
+                          kaynak: lead.kaynak,
+                          durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                        }))}
+                      />
+                    </div>
                     <div id="paketler" className="scroll-mt-24">
                       <PartnerHazirPaketler firmaAdi={partner.firmaAdi} whatsappImzasi={partner.whatsappImzasi} />
                     </div>
