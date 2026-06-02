@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Check } from "lucide-react";
+import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 import { SABLONLAR, Sablon } from "@/lib/sablonlar";
 import {
   DEMO_URLS, PREMIUM, KAT_EMOJI,
@@ -97,6 +98,7 @@ export default function SablonDetaySayfasi() {
   const iMB       = Math.round(iH * (1 - iScale));
 
   const goldGradient = "linear-gradient(135deg,#BF953F 0%,#FCF6BA 25%,#B38728 50%,#FBF5B7 75%,#AA771C 100%)";
+  const premiumEkUcret = DAVETIYE_FIYAT_KALEMLERI.luksSablon.tutar;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -242,7 +244,7 @@ export default function SablonDetaySayfasi() {
                     <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.35)" }}>Temel pakete ek ücret</p>
                     <p className="text-3xl font-bold tabular-nums"
                       style={{ background: goldGradient, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                      +₺100
+                      +{tutarMetni(premiumEkUcret)}
                     </p>
                     <p className="text-xs mt-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>Tek seferlik · Ömür boyu geçerli</p>
                   </div>
