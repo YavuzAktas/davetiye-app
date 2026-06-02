@@ -13,6 +13,7 @@ import PartnerEtkinlikGunuKiti from "./PartnerEtkinlikGunuKiti";
 import LogoYukle from "./LogoYukle";
 import PartnerMarkaAyarlari from "./PartnerMarkaAyarlari";
 import PartnerHazirPaketler from "./PartnerHazirPaketler";
+import PartnerKarlilikHesaplayici from "./PartnerKarlilikHesaplayici";
 import PartnerLeadCRM from "./PartnerLeadCRM";
 import PartnerMusteriSegmentleri from "./PartnerMusteriSegmentleri";
 import PartnerOnboardingChecklist from "./PartnerOnboardingChecklist";
@@ -434,7 +435,7 @@ export default async function PartnerPanelPage({
                     id="satis-takip-grubu"
                     baslik="Müşteri grupları ve raporlar"
                     aciklama="Hangi müşteri hangi aşamada, hızlıca kontrol edin."
-                    hedefler={["segmentler", "analitik"]}
+                    hedefler={["segmentler", "analitik", "karlilik"]}
                   >
                     <div id="segmentler" className="scroll-mt-24">
                       <PartnerMusteriSegmentleri
@@ -475,6 +476,24 @@ export default async function PartnerPanelPage({
                           createdAt: lead.createdAt.toISOString(),
                           updatedAt: lead.updatedAt.toISOString(),
                         }))}
+                        odemeGecmisi={odemeKayitlariHam.map(k => ({
+                          id: k.id,
+                          createdAt: k.createdAt.toISOString(),
+                          planId: k.planId,
+                          paidPrice: k.paidPrice,
+                          currency: k.currency,
+                          fiyatKirilimi: k.fiyatKirilimi,
+                        }))}
+                      />
+                    </div>
+                    <div id="karlilik" className="scroll-mt-24">
+                      <PartnerKarlilikHesaplayici
+                        abonelik={{
+                          paketId: abonelik.paketId,
+                          hakSayisi: abonelik.hakSayisi,
+                          kullanilanHak: abonelik.kullanilanHak,
+                          bitisAt: abonelik.bitisAt,
+                        }}
                         odemeGecmisi={odemeKayitlariHam.map(k => ({
                           id: k.id,
                           createdAt: k.createdAt.toISOString(),
