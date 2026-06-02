@@ -4,7 +4,7 @@ import FiyatHesaplama from "@/components/FiyatHesaplama";
 import { SABLONLAR } from "@/lib/sablonlar";
 
 const K = DAVETIYE_FIYAT_KALEMLERI;
-const LUKS_SABLONLAR = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
+const LUKS_SABLONLAR = new Set(["nisan-luks", "vintage-nisan", "dugun-luks", "dogumgunu-luks"]);
 
 const PAKETLER = [
   {

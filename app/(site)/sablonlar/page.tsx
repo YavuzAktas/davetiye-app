@@ -18,7 +18,7 @@ const DEMO_URLS: Record<string, string> = {
   "vintage-nisan":   "/davetiye/ornek-vintage-nisan",
 };
 const PREMIUM = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks", "vintage-nisan"]);
-const LUKS_SABLON_IDS = new Set(["nisan-luks", "dugun-luks", "dogumgunu-luks"]);
+const LUKS_SABLON_IDS = new Set(["nisan-luks", "vintage-nisan", "dugun-luks", "dogumgunu-luks"]);
 const KAT_EMOJI: Record<string, string> = {
   dugun:"💍", nisan:"💌", dogumgunu:"🎂", sunnet:"⭐", kina:"🕯️", kurumsal:"💼", diger:"🎉",
 };
