@@ -16,6 +16,17 @@ type EkipErisim = {
   createdAt: string;
 };
 
+type GorevProfili = {
+  id: string;
+  baslik: string;
+  rol: Rol;
+  gun: string;
+  etiket: string;
+  kimIcin: string;
+  yetki: string;
+  gorevler: string[];
+};
+
 const ROLLER: Array<{
   id: Rol;
   label: string;
@@ -38,6 +49,59 @@ const ROLLER: Array<{
   },
 ];
 
+const GOREV_PROFILLERI: GorevProfili[] = [
+  {
+    id: "kapi-qr",
+    baslik: "Kapı QR ekibi",
+    rol: "operasyon",
+    gun: "1",
+    etiket: "Kapı QR check-in ekibi",
+    kimIcin: "Etkinlik girişinde davetli akışını kontrol eden personel",
+    yetki: "Aktivasyon, kurulum ve yayın durumlarını görür; davetli isimleri ve iletişim bilgileri görünmez.",
+    gorevler: ["Etkinlikten önce QR akışını test et", "Giriş ekibine doğru linki ver", "Sorun olursa partner hesap sahibine bildir"],
+  },
+  {
+    id: "masa-qr",
+    baslik: "Masa QR kurulum",
+    rol: "operasyon",
+    gun: "3",
+    etiket: "Masa QR ve canlı duvar kurulumu",
+    kimIcin: "Masa kartı, pano QR veya canlı duvar hazırlayan ekip",
+    yetki: "Operasyon özetini görür; fotoğraf, anı içerikleri ve müşteri iletişim bilgileri görünmez.",
+    gorevler: ["Masa QR kartlarının doğru etkinliğe ait olduğunu kontrol et", "Canlı duvar ekranını etkinlik öncesi test et", "Kurulum tamamlanınca partner sahibine bilgi ver"],
+  },
+  {
+    id: "satis-temsilcisi",
+    baslik: "Satış temsilcisi",
+    rol: "satis",
+    gun: "14",
+    etiket: "Satış temsilcisi",
+    kimIcin: "Teklif sürecini takip eden satış personeli",
+    yetki: "Lead başlığı, etkinlik türü, tarih ve durum özeti görür; telefon/e-posta/not gibi detayları görmez.",
+    gorevler: ["Sıcak fırsatları takip et", "Teklif aşamasındaki leadleri partner sahibine bildir", "Kişisel veri içeren notları bu ekrana taşımadan kendi görüşme kanalında tut"],
+  },
+  {
+    id: "teslim-sorumlusu",
+    baslik: "Teslim sorumlusu",
+    rol: "teslim",
+    gun: "7",
+    etiket: "Müşteri teslim sorumlusu",
+    kimIcin: "Müşteriye aktivasyon ve teslim linklerini hazırlayan görevli",
+    yetki: "Teslim portalı ve davetiye yayın özetlerini görür; ödeme ve davetli detayları görünmez.",
+    gorevler: ["Teslim portalı linkini kontrol et", "Yayındaki davetiyenin açıldığını doğrula", "Müşteriye yalnızca gerekli teslim linklerini ilet"],
+  },
+  {
+    id: "vendor-koordinator",
+    baslik: "Vendor koordinatörü",
+    rol: "operasyon",
+    gun: "7",
+    etiket: "Vendor / organizasyon koordinatörü",
+    kimIcin: "Davet evi, fotoğrafçı, organizasyon veya salon koordinatörü",
+    yetki: "Sadece operasyon durumunu görür; müşteri/davetli kişisel verileri ve ödeme bilgileri kapalıdır.",
+    gorevler: ["Etkinlik hazırlık durumunu takip et", "Kurulumda eksik varsa partner hesabı sahibine bildir", "Linki başka kişi veya gruplara yönlendirme"],
+  },
+];
+
 function tarih(deger: string | null) {
   if (!deger) return "-";
   return new Date(deger).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
@@ -55,22 +119,62 @@ function erisimDurumu(erisim: EkipErisim) {
   return { label: "Aktif", cls: "bg-emerald-50 text-emerald-700" };
 }
 
+function profilMesaji({
+  firmaAdi,
+  profil,
+  link,
+}: {
+  firmaAdi?: string;
+  profil: GorevProfili | null;
+  link: string;
+}) {
+  const ad = firmaAdi || "DavetRota partner ekibi";
+  const gorevler = profil?.gorevler ?? ["Görev kapsamınızı kontrol edin", "İşiniz bitince partner hesap sahibine bilgi verin"];
+  return [
+    `Merhaba, ${ad} tarafından size sınırlı görev erişimi oluşturuldu.`,
+    "",
+    profil ? `Görev: ${profil.baslik}` : "Görev: Ekip erişimi",
+    profil ? `Kapsam: ${profil.yetki}` : "Bu link yalnızca göreviniz için gerekli özetleri gösterir.",
+    "",
+    "Görev notları:",
+    ...gorevler.map(gorev => `- ${gorev}`),
+    "",
+    `Erişim linki: ${link}`,
+    "",
+    "Bu linki başkalarıyla paylaşmayın. Görev bittiğinde partner hesap sahibinden linki iptal etmesini isteyin.",
+  ].join("\n");
+}
+
 export default function PartnerEkipErisimleri({
   baslangicErisimler,
+  firmaAdi,
 }: {
   baslangicErisimler: EkipErisim[];
+  firmaAdi?: string;
 }) {
   const [erisimler, setErisimler] = useState<EkipErisim[]>(baslangicErisimler);
-  const [rol, setRol] = useState<Rol>("operasyon");
-  const [etiket, setEtiket] = useState("");
-  const [gun, setGun] = useState("7");
+  const [rol, setRol] = useState<Rol>(GOREV_PROFILLERI[0].rol);
+  const [etiket, setEtiket] = useState(GOREV_PROFILLERI[0].etiket);
+  const [gun, setGun] = useState(GOREV_PROFILLERI[0].gun);
   const [link, setLink] = useState("");
+  const [seciliProfilId, setSeciliProfilId] = useState<string | null>("kapi-qr");
   const [kopyalandi, setKopyalandi] = useState(false);
+  const [mesajKopyalandi, setMesajKopyalandi] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
 
   const aktifErisimler = erisimler.filter(erisimGecerliMi);
   const limitDoldu = aktifErisimler.length >= 10;
+  const seciliProfil = GOREV_PROFILLERI.find(profil => profil.id === seciliProfilId) ?? null;
+
+  const profilSec = (profil: GorevProfili) => {
+    setSeciliProfilId(profil.id);
+    setRol(profil.rol);
+    setGun(profil.gun);
+    setEtiket(profil.etiket);
+    setLink("");
+    setHata("");
+  };
 
   const olustur = async () => {
     setHata("");
@@ -90,7 +194,6 @@ export default function PartnerEkipErisimleri({
       if (!res.ok) throw new Error(data.hata || "Ekip linki oluşturulamadı.");
       setErisimler(prev => [data.erisim as EkipErisim, ...prev]);
       setLink(data.link);
-      setEtiket("");
     } catch (err) {
       setHata(err instanceof Error ? err.message : "Ekip linki oluşturulamadı.");
     } finally {
@@ -121,6 +224,13 @@ export default function PartnerEkipErisimleri({
     setTimeout(() => setKopyalandi(false), 1800);
   };
 
+  const mesajKopyala = async () => {
+    if (!link) return;
+    await navigator.clipboard.writeText(profilMesaji({ firmaAdi, profil: seciliProfil, link }));
+    setMesajKopyalandi(true);
+    setTimeout(() => setMesajKopyalandi(false), 1800);
+  };
+
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
       <div className="border-b border-gray-100 bg-linear-to-br from-gray-950 via-purple-950 to-gray-900 px-5 py-6 text-white sm:px-7">
@@ -149,7 +259,7 @@ export default function PartnerEkipErisimleri({
         </div>
       </div>
 
-      <div className="grid gap-5 p-5 lg:grid-cols-[360px_1fr] sm:p-7">
+      <div className="grid gap-5 p-5 lg:grid-cols-[380px_1fr] sm:p-7">
         <div className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
           <h3 className="text-sm font-black text-gray-950">Yeni ekip linki</h3>
           <p className="mt-1 text-xs leading-relaxed text-gray-500">
@@ -157,11 +267,42 @@ export default function PartnerEkipErisimleri({
           </p>
 
           <div className="mt-4 space-y-3">
+            <div>
+              <p className="text-xs font-bold text-gray-500">Hazır görev profili</p>
+              <div className="mt-2 grid gap-2">
+                {GOREV_PROFILLERI.map(profil => (
+                  <button
+                    key={profil.id}
+                    type="button"
+                    onClick={() => profilSec(profil)}
+                    className={`rounded-2xl border px-3 py-3 text-left transition-colors ${
+                      seciliProfilId === profil.id
+                        ? "border-purple-200 bg-white shadow-sm"
+                        : "border-gray-100 bg-white/70 hover:border-purple-100 hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-black text-gray-950">{profil.baslik}</p>
+                        <p className="mt-1 text-[11px] font-semibold leading-relaxed text-gray-500">{profil.kimIcin}</p>
+                      </div>
+                      <span className="shrink-0 rounded-full bg-purple-50 px-2 py-1 text-[10px] font-black text-purple-700">
+                        {ROLLER.find(item => item.id === profil.rol)?.label}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <label className="block">
               <span className="text-xs font-bold text-gray-500">Rol</span>
               <select
                 value={rol}
-                onChange={e => setRol(e.target.value as Rol)}
+                onChange={e => {
+                  setRol(e.target.value as Rol);
+                  setSeciliProfilId(null);
+                }}
                 className="mt-1 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-bold text-gray-900 outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100"
               >
                 {ROLLER.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
@@ -170,8 +311,13 @@ export default function PartnerEkipErisimleri({
 
             <div className="rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3">
               <p className="text-xs font-bold leading-relaxed text-purple-900">
-                {ROLLER.find(item => item.id === rol)?.aciklama}
+                {seciliProfil?.yetki || ROLLER.find(item => item.id === rol)?.aciklama}
               </p>
+              {seciliProfil && (
+                <ul className="mt-2 space-y-1 text-[11px] font-semibold leading-relaxed text-purple-800">
+                  {seciliProfil.gorevler.map(gorev => <li key={gorev}>- {gorev}</li>)}
+                </ul>
+              )}
             </div>
 
             <label className="block">
@@ -220,13 +366,22 @@ export default function PartnerEkipErisimleri({
             <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
               <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-700">Tek sefer gösterilir</p>
               <p className="mt-2 break-all rounded-xl bg-white px-3 py-2 text-xs font-semibold text-gray-700">{link}</p>
-              <button
-                type="button"
-                onClick={linkKopyala}
-                className="mt-3 w-full rounded-xl bg-emerald-600 px-3 py-2 text-xs font-black text-white transition-colors hover:bg-emerald-700"
-              >
-                {kopyalandi ? "Kopyalandı" : "Linki kopyala"}
-              </button>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={linkKopyala}
+                  className="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-black text-white transition-colors hover:bg-emerald-700"
+                >
+                  {kopyalandi ? "Kopyalandı" : "Linki kopyala"}
+                </button>
+                <button
+                  type="button"
+                  onClick={mesajKopyala}
+                  className="rounded-xl border border-emerald-200 bg-white px-3 py-2 text-xs font-black text-emerald-700 transition-colors hover:bg-emerald-100"
+                >
+                  {mesajKopyalandi ? "Mesaj kopyalandı" : "Görev mesajı"}
+                </button>
+              </div>
             </div>
           )}
         </div>

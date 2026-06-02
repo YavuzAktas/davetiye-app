@@ -637,6 +637,7 @@ export default async function PartnerPanelPage({
                     </div>
                     <div id="ekip" className="scroll-mt-24">
                       <PartnerEkipErisimleri
+                        firmaAdi={partner.firmaAdi}
                         baslangicErisimler={partner.ekipErisimleri.map(erisim => ({
                           id: erisim.id,
                           rol: erisim.rol,

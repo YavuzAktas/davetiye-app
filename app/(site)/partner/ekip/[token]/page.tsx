@@ -127,6 +127,7 @@ export default async function PartnerEkipPage({ params }: Props) {
   const satisGorur = erisim.rol === PARTNER_EKIP_ROLLERI.satis;
   const operasyonGorur = erisim.rol === PARTNER_EKIP_ROLLERI.operasyon;
   const teslimGorur = erisim.rol === PARTNER_EKIP_ROLLERI.teslim;
+  const gorevler = ekipGorevleri(erisim.rol);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -178,6 +179,17 @@ export default async function PartnerEkipPage({ params }: Props) {
             <OzetKart baslik="Sıcak fırsat" deger={sicakLead.toString()} />
             <OzetKart baslik="Kurulumda" deger={kurulumda.toString()} />
             <OzetKart baslik="Yayında" deger={yayinda.toString()} />
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-purple-100 bg-purple-50 p-4">
+            <p className="text-sm font-black text-purple-950">Görev kontrol listesi</p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {gorevler.map(gorev => (
+                <div key={gorev} className="rounded-2xl bg-white px-4 py-3 text-xs font-bold leading-relaxed text-purple-900">
+                  {gorev}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -269,6 +281,28 @@ export default async function PartnerEkipPage({ params }: Props) {
       </main>
     </div>
   );
+}
+
+function ekipGorevleri(rol: string) {
+  if (rol === PARTNER_EKIP_ROLLERI.satis) {
+    return [
+      "Sıcak fırsatları kontrol et",
+      "Teklif veya kapora aşamasındaki kayıtları partner sahibine bildir",
+      "Kişisel iletişim bilgisini bu ekranda arama",
+    ];
+  }
+  if (rol === PARTNER_EKIP_ROLLERI.teslim) {
+    return [
+      "Teslim portalı ve davetiye linklerini kontrol et",
+      "Yayındaki davetiyenin açıldığını doğrula",
+      "Müşteriye yalnızca gerekli teslim linkini ilet",
+    ];
+  }
+  return [
+    "Kurulum ve yayın durumlarını kontrol et",
+    "QR veya canlı duvar testini etkinlikten önce yap",
+    "Eksik gördüğün işi partner sahibine bildir",
+  ];
 }
 
 function OzetKart({ baslik, deger }: { baslik: string; deger: string }) {
