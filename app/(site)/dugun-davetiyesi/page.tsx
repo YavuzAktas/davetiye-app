@@ -69,7 +69,7 @@ const ozellikler = [
 
 const karsilastirma = [
   { kriter: "Hazırlık süresi", kagit: "3–5 gün baskı + teslimat", dijital: "10 dakika" },
-  { kriter: "Maliyet", kagit: "₺2.000+ baskı + kargo", dijital: "₺299'dan başlar" },
+  { kriter: "Maliyet", kagit: "₺2.000+ baskı + kargo", dijital: "₺349'dan başlar" },
   { kriter: "Bilgi güncelleme", kagit: "Mümkün değil", dijital: "İstediğin zaman" },
   { kriter: "Katılım takibi", kagit: "Telefon araması gerekir", dijital: "Otomatik RSVP paneli" },
   { kriter: "Gönderim", kagit: "Fiziksel dağıtım", dijital: "WhatsApp / SMS / e-posta" },
@@ -155,7 +155,7 @@ export default function DugunDavetiyesiPage() {
     provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
     description: "Online düğün davetiyesi oluşturma, paylaşma ve RSVP takip hizmeti.",
     areaServed: "TR",
-    offers: { "@type": "Offer", priceCurrency: "TRY", price: "299", priceValidUntil: "2027-12-31" },
+    offers: { "@type": "Offer", priceCurrency: "TRY", price: "349", priceValidUntil: "2027-12-31" },
   };
 
   return (

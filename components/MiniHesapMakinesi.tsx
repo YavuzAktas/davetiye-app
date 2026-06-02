@@ -13,6 +13,7 @@ const EKLER = [
   { ...K.aniKitabi,  icon: "📖", kisa: "Anı Kitabı PDF" },
   { ...K.canliDuvar, icon: "📺", kisa: "Canlı duvar"    },
   { ...K.sesliAni,   icon: "🎙️", kisa: "Sesli anı"      },
+  { ...K.checkIn,     icon: "✅", kisa: "QR check-in"     },
   { ...K.luksSablon, icon: "✨", kisa: "Lüks şablon"    },
   { ...K.oturmaPlan, icon: "🪑", kisa: "Oturma planı"   },
 ];

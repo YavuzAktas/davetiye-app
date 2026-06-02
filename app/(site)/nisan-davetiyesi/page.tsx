@@ -146,7 +146,7 @@ export default function NisanDavetiyesiPage() {
     provider: { "@type": "Organization", name: "Bekleriz", url: SITE_URL },
     description: "Online nişan ve söz töreni davetiyesi oluşturma, paylaşma ve RSVP takip hizmeti.",
     areaServed: "TR",
-    offers: { "@type": "Offer", priceCurrency: "TRY", price: "299", priceValidUntil: "2027-12-31" },
+    offers: { "@type": "Offer", priceCurrency: "TRY", price: "349", priceValidUntil: "2027-12-31" },
   };
 
   return (

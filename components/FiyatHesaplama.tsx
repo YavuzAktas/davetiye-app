@@ -43,6 +43,12 @@ const OZELLIKLER = [
     rozet: null as string | null,
   },
   {
+    ...DAVETIYE_FIYAT_KALEMLERI.checkIn,
+    icon: "✅",
+    desc: "Girişte QR okut, gelen davetlileri panelden takip et",
+    rozet: "Etkinlik günü" as string | null,
+  },
+  {
     ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan,
     icon: "🪑",
     desc: "Masa ve koltuk düzeni, davetli atama",

@@ -6,16 +6,17 @@ import { iyzipay } from "@/lib/iyzico";
 import { ipIzinVer, ipAlNextRequest } from "@/lib/rate-limit";
 import { yasalOnayKaydiOlustur } from "@/lib/yasal-onay-kaydi";
 import { isAdmin } from "@/lib/admin";
+import { DAVETIYE_FIYAT_KALEMLERI } from "@/lib/davetiye-fiyatlandirma";
 
 // Satın alınabilir ek özelliklerin sabit fiyatları
 const OZELLIK_FIYAT: Record<string, { kod: string; ad: string; tutar: number }> = {
-  checkInAktif:    { kod: "qr-check-in",    ad: "QR Check-in",             tutar: 99  },
-  oturmaPlanAktif: { kod: "oturma-plani",   ad: "Oturma planı",            tutar: 199 },
-  albumAktif:      { kod: "album-foto",     ad: "Fotoğraf albümü",         tutar: 99  },
-  aniDefteriAktif: { kod: "ani-defteri",    ad: "Anı defteri",             tutar: 99  },
-  sesliAniAktif:   { kod: "sesli-ani",      ad: "Sesli anı defteri",       tutar: 99  },
-  canliDuvarAktif: { kod: "canli-duvar",    ad: "Canlı fotoğraf duvarı",   tutar: 99  },
-  aniKitabiAktif:  { kod: "ani-kitabi-pdf", ad: "Anı Kitabı PDF",          tutar: 79  },
+  checkInAktif:    { ...DAVETIYE_FIYAT_KALEMLERI.checkIn },
+  oturmaPlanAktif: { ...DAVETIYE_FIYAT_KALEMLERI.oturmaPlan },
+  albumAktif:      { ...DAVETIYE_FIYAT_KALEMLERI.album },
+  aniDefteriAktif: { ...DAVETIYE_FIYAT_KALEMLERI.aniDefteri },
+  sesliAniAktif:   { ...DAVETIYE_FIYAT_KALEMLERI.sesliAni },
+  canliDuvarAktif: { ...DAVETIYE_FIYAT_KALEMLERI.canliDuvar },
+  aniKitabiAktif:  { ...DAVETIYE_FIYAT_KALEMLERI.aniKitabi },
 };
 
 const GECERLI_ALANLAR = new Set(Object.keys(OZELLIK_FIYAT));

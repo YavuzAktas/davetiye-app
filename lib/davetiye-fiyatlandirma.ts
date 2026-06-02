@@ -26,16 +26,16 @@ export type DavetiyeFiyatSonucu = {
 };
 
 export const DAVETIYE_FIYAT_KALEMLERI = {
-  temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 299 },
-  luksSablon: { kod: "luks-sablon", ad: "Lüks şablon", tutar: 100 },
-  muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 69 },
-  album: { kod: "album-foto", ad: "Fotoğraf albümü", tutar: 99 },
+  temel: { kod: "temel-davetiye", ad: "Dijital davetiye", tutar: 349 },
+  luksSablon: { kod: "luks-sablon", ad: "Lüks şablon", tutar: 149 },
+  muzik: { kod: "muzik", ad: "Müzik ekleme", tutar: 79 },
+  album: { kod: "album-foto", ad: "Fotoğraf albümü", tutar: 129 },
   aniDefteri: { kod: "ani-defteri", ad: "Anı defteri", tutar: 99 },
-  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 99 },
-  sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 99 },
-  oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 199 },
-  aniKitabi:  { kod: "ani-kitabi-pdf", ad: "Anı Kitabı PDF", tutar: 79 },
-  checkIn:    { kod: "qr-check-in", ad: "QR Check-in", tutar: 99 },
+  canliDuvar: { kod: "canli-duvar", ad: "Canlı fotoğraf duvarı", tutar: 199 },
+  sesliAni: { kod: "sesli-ani", ad: "Sesli anı defteri", tutar: 149 },
+  oturmaPlan: { kod: "oturma-plani", ad: "Oturma planı", tutar: 249 },
+  aniKitabi:  { kod: "ani-kitabi-pdf", ad: "Anı Kitabı PDF", tutar: 149 },
+  checkIn:    { kod: "qr-check-in", ad: "QR Check-in", tutar: 149 },
 } as const;
 
 function kalemEkle(kalemler: DavetiyeFiyatKalemi[], kalem: DavetiyeFiyatKalemi, kosul: boolean) {
@@ -67,16 +67,16 @@ export function davetiyeFiyatiHesapla(girdi: DavetiyeFiyatGirdisi): DavetiyeFiya
 
 /** Görsel "önceki fiyat" — ödeme hesaplamasında kullanılmaz */
 export const ASIL_FIYAT_KODU: Record<string, number> = {
-  "temel-davetiye": 399,
-  "luks-sablon":    149,
-  "muzik":          99,
-  "album-foto":     149,
+  "temel-davetiye": 499,
+  "luks-sablon":    249,
+  "muzik":          129,
+  "album-foto":     199,
   "ani-defteri":    149,
-  "canli-duvar":    149,
-  "sesli-ani":      199,
-  "oturma-plani":   269,
-  "ani-kitabi-pdf": 129,
-  "qr-check-in":   149,
+  "canli-duvar":    299,
+  "sesli-ani":      249,
+  "oturma-plani":   349,
+  "ani-kitabi-pdf": 249,
+  "qr-check-in":    249,
 };
 
 export function indirimOrani(asil: number, simdiki: number): number {

@@ -11,34 +11,45 @@ const PAKETLER = [
     id: "baslangic",
     icon: "✉️",
     ad: "Başlangıç",
-    slogan: "Davetiye + RSVP — hepsi hazır",
+    slogan: "Davetiye + RSVP — hızlı başlangıç",
     renk: "#6366f1",
     populer: false,
     kalemler: [K.temel],
     dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli"],
-    dahilDegil: ["Müzik", "Fotoğraf albümü", "Anı defteri", "Sesli anı", "Anı Kitabı PDF", "Canlı duvar", "Oturma planı"],
+    dahilDegil: ["Müzik", "Fotoğraf albümü", "Anı defteri", "Sesli anı", "Anı Kitabı PDF", "Canlı duvar", "QR check-in", "Oturma planı"],
   },
   {
-    id: "populer",
+    id: "hatira",
     icon: "🎵",
-    ad: "Popüler",
-    slogan: "Misafirler anı bıraksın, siz PDF indirin",
+    ad: "Hatıra Paketi",
+    slogan: "Anılar biriksin, PDF olarak kalsın",
     renk: "#9333EA",
     populer: true,
     kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.aniKitabi],
     dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri", "Anı Kitabı PDF"],
-    dahilDegil: ["Canlı duvar", "Sesli anı", "Oturma planı"],
+    dahilDegil: ["Canlı duvar", "Sesli anı", "QR check-in", "Oturma planı"],
   },
   {
-    id: "tam-paket",
+    id: "etkinlik-gunu",
     icon: "💒",
-    ad: "Tam Paket",
-    slogan: "Hiçbir an kaybolmasın",
+    ad: "Etkinlik Günü",
+    slogan: "Salon ekranı, QR giriş ve anılar",
     renk: "#DB2777",
     populer: false,
-    kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.canliDuvar, K.sesliAni, K.aniKitabi],
-    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri", "Anı Kitabı PDF", "Canlı fotoğraf duvarı", "Sesli anı defteri"],
+    kalemler: [K.temel, K.muzik, K.album, K.aniDefteri, K.canliDuvar, K.sesliAni, K.aniKitabi, K.checkIn],
+    dahil: ["Mobil uyumlu şablon", "RSVP formu", "Paylaşım linki", "QR kod", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri", "Anı Kitabı PDF", "Canlı fotoğraf duvarı", "Sesli anı defteri", "QR check-in"],
     dahilDegil: ["Oturma planı"],
+  },
+  {
+    id: "premium-organizasyon",
+    icon: "✨",
+    ad: "Premium Organizasyon",
+    slogan: "Tüm özellikler tek davetiyede",
+    renk: "#0f172a",
+    populer: false,
+    kalemler: [K.temel, K.luksSablon, K.muzik, K.album, K.aniDefteri, K.canliDuvar, K.sesliAni, K.aniKitabi, K.checkIn, K.oturmaPlan],
+    dahil: ["Lüks şablon", "Mobil uyumlu davetiye", "RSVP formu", "Paylaşım linki", "Yönetim paneli", "Arka plan müziği", "Fotoğraf albümü", "Anı defteri", "Anı Kitabı PDF", "Canlı fotoğraf duvarı", "Sesli anı defteri", "QR check-in", "Oturma planı"],
+    dahilDegil: [],
   },
 ] as const;
 
@@ -78,7 +89,7 @@ const SORU_CEVAP = [
   },
   {
     soru: "Ödeme sonrasında özellik ekleyebilir miyim?",
-    cevap: "Şu an için hayır. Özellikler davetiye oluşturulurken seçilir ve ödeme tamamlandıktan sonra değiştirilemez.",
+    cevap: "Evet. Davetiyen yayına alındıktan sonra panelinden desteklenen ek özellikleri ayrıca satın alıp aktif edebilirsin.",
   },
 ];
 
@@ -211,11 +222,15 @@ export default async function FiyatlarSayfasi({
             sub="Hızlı başlamak için bir paket seç. İstersen hesaplayıcıyla özelleştir."
           />
 
-          {/* 3-column package grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
+          {/* Paket kartları */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             {PAKETLER.map(paket => {
-              const tutar    = toplam(paket.kalemler);
-              const asil     = asılToplam(paket.kalemler);
+              const luksPaketIcinde = paket.kalemler.some(kalem => kalem.kod === K.luksSablon.kod);
+              const kalemler = luksSablonSecili && !luksPaketIcinde
+                ? [...paket.kalemler, K.luksSablon]
+                : [...paket.kalemler];
+              const tutar    = toplam(kalemler);
+              const asil     = asılToplam(kalemler);
               const indirim  = indirimOrani(asil, tutar);
               const kisiBasi = Math.ceil(tutar / 100);
 
@@ -261,6 +276,11 @@ export default async function FiyatlarSayfasi({
                         {paket.ad}
                       </h3>
                       <p className={`text-xs ${paket.populer ? "text-white/70" : "text-gray-400"}`}>{paket.slogan}</p>
+                      {luksSablonSecili && !luksPaketIcinde && (
+                        <p className={`mt-2 text-[11px] font-semibold ${paket.populer ? "text-white/75" : "text-purple-600"}`}>
+                          Seçili lüks şablon dahil edildi
+                        </p>
+                      )}
                     </div>
 
                     {/* Price */}

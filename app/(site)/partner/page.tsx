@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 export const metadata: Metadata = {
   title: "Organizasyoncular İçin Dijital Davetiye Partner Programı | Bekleriz",
@@ -22,9 +23,9 @@ const PAKETLER = [
     populer: false,
     aciklama: "Sektöre yeni giren küçük işletmeler için",
     dahilOzellikler: [
-      "Dijital davetiye (299₺ değer)",
-      "Arka plan müziği (69₺ değer)",
-      "Anı defteri (99₺ değer)",
+      `Dijital davetiye (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)} değer)`,
+      `Arka plan müziği (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.muzik.tutar)} değer)`,
+      `Anı defteri (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar)} değer)`,
     ],
     ozellikler: [
       "Ayda 10 davetiye aktivasyon hakkı",
@@ -47,12 +48,12 @@ const PAKETLER = [
     populer: true,
     aciklama: "Aktif düğün & etkinlik organizatörleri için",
     dahilOzellikler: [
-      "Dijital davetiye (299₺ değer)",
-      "Lüks şablon (100₺ değer)",
-      "Arka plan müziği (69₺ değer)",
-      "Fotoğraf albümü (99₺ değer)",
-      "Anı defteri (99₺ değer)",
-      "Canlı fotoğraf duvarı (99₺ değer)",
+      `Dijital davetiye (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)} değer)`,
+      `Lüks şablon (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.luksSablon.tutar)} değer)`,
+      `Arka plan müziği (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.muzik.tutar)} değer)`,
+      `Fotoğraf albümü (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.album.tutar)} değer)`,
+      `Anı defteri (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar)} değer)`,
+      `Canlı fotoğraf duvarı (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar)} değer)`,
     ],
     ozellikler: [
       "Ayda 30 davetiye aktivasyon hakkı",
@@ -77,7 +78,7 @@ const PAKETLER = [
     populer: false,
     aciklama: "Büyük ajanslar ve yüksek hacimli organizatörler için",
     dahilOzellikler: [
-      "Tüm özellikler dahil (1.141₺ değer/davetiye)",
+      "Tüm özellikler dahil (1.700₺ değer/davetiye)",
       "Sesli anı, Oturma planı",
       "QR check-in, Anı kitabı PDF",
     ],
@@ -267,7 +268,9 @@ export default function PartnerPage() {
           <div className="text-center mb-14">
             <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Fiyatlandırma</p>
             <h2 className="text-3xl font-black text-gray-900">Partner Paketleri</h2>
-            <p className="text-sm text-gray-500 mt-3">Kullanılmayan haklar ertesi aya devretmez, her ay yenilenir.</p>
+            <p className="text-sm text-gray-500 mt-3">
+              Lansman fiyatlarıyla sunulur. Kullanılmayan haklar ertesi aya devretmez, her ay yenilenir.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -295,6 +298,9 @@ export default function PartnerPage() {
                     <span className="text-3xl font-black text-gray-900">{paket.fiyat}</span>
                     <span className="text-sm text-gray-400 mb-1">{paket.periyot}</span>
                   </div>
+                  <p className="mt-1 inline-flex rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    Lansman fiyatı
+                  </p>
                   <p className="text-xs text-gray-500 mt-1">
                     Ayda <strong>{paket.hakSayisi}</strong> davetiye aktivasyonu
                   </p>

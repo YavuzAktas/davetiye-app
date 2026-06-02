@@ -1311,7 +1311,7 @@ export default function Anasayfa() {
                   kriter: "Maliyet",
                   aciklama: "Tasarım + baskı + kargo dahil",
                   kagit: { ikon: "💸", metin: "₺2.000+", renk: "text-gray-400" },
-                  dijital: { ikon: "💜", metin: "₺299'dan başlar", renk: "text-white font-semibold" },
+                  dijital: { ikon: "💜", metin: "₺349'dan başlar", renk: "text-white font-semibold" },
                 },
                 {
                   kriter: "Bilgi güncelleme",
@@ -1389,8 +1389,8 @@ export default function Anasayfa() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
             {[
               { plan: "Temel", fiyat: tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar), alt: "davetiye başına", ozellikler: ["Dijital davetiye", "Paylaşım linki", "RSVP takibi"], populer: false },
-              { plan: "Popüler ekler", fiyat: "+₺149", alt: "özelliğe göre", ozellikler: ["Müzik", "Albüm & Anı", "Canlı duvar"], populer: true },
-              { plan: "Organizasyon", fiyat: "+₺199", alt: "isteğe bağlı", ozellikler: ["Oturma planı", "Lüks şablon", "Sesli anı"], populer: false },
+              { plan: "Hatıra Paketi", fiyat: tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar + DAVETIYE_FIYAT_KALEMLERI.muzik.tutar + DAVETIYE_FIYAT_KALEMLERI.album.tutar + DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar + DAVETIYE_FIYAT_KALEMLERI.aniKitabi.tutar), alt: "tek seferlik", ozellikler: ["Müzik", "Fotoğraf albümü", "Anı defteri", "Anı Kitabı PDF"], populer: true },
+              { plan: "Etkinlik Günü", fiyat: tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar + DAVETIYE_FIYAT_KALEMLERI.muzik.tutar + DAVETIYE_FIYAT_KALEMLERI.album.tutar + DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar + DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar + DAVETIYE_FIYAT_KALEMLERI.sesliAni.tutar + DAVETIYE_FIYAT_KALEMLERI.aniKitabi.tutar + DAVETIYE_FIYAT_KALEMLERI.checkIn.tutar), alt: "tek seferlik", ozellikler: ["Canlı duvar", "Sesli anı", "QR check-in", "Anı arşivi"], populer: false },
             ].map((item, i) => (
               <Section key={i}>
                 <div className={`relative rounded-3xl p-7 h-full flex flex-col transition-all duration-300 ${item.populer ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-2xl shadow-purple-200 sm:scale-105" : "bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1"}`}>
