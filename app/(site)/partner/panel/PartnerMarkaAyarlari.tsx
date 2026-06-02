@@ -13,9 +13,11 @@ type Marka = {
 
 export default function PartnerMarkaAyarlari({
   firmaAdi,
+  portalUrl,
   marka,
 }: {
   firmaAdi: string;
+  portalUrl: string;
   marka: Marka;
 }) {
   const router = useRouter();
@@ -29,6 +31,7 @@ export default function PartnerMarkaAyarlari({
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [mesaj, setMesaj] = useState<{ tip: "hata" | "basari"; metin: string } | null>(null);
   const [kaydedildi, setKaydedildi] = useState(true);
+  const [portalKopyalandi, setPortalKopyalandi] = useState(false);
 
   const baslangic = {
     markaRenk: marka.markaRenk || "#7c3aed",
@@ -65,6 +68,16 @@ export default function PartnerMarkaAyarlari({
       setMesaj({ tip: "hata", metin: err instanceof Error ? err.message : "Marka ayarları kaydedilemedi." });
     } finally {
       setKaydediliyor(false);
+    }
+  };
+
+  const portalLinkiniKopyala = async () => {
+    try {
+      await navigator.clipboard.writeText(portalUrl);
+      setPortalKopyalandi(true);
+      setTimeout(() => setPortalKopyalandi(false), 2000);
+    } catch {
+      setPortalKopyalandi(false);
     }
   };
 
@@ -163,6 +176,34 @@ export default function PartnerMarkaAyarlari({
         </div>
 
         <div className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
+          <div className="mb-4 rounded-2xl border border-purple-100 bg-purple-50 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-500">Müşteri portalı</p>
+            <p className="mt-2 text-sm font-black text-gray-950">Markalı public sayfanız hazır</p>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+              Bu link kişisel veri içermez. Instagram bio, WhatsApp teklif metni veya web sitenizde kullanabilirsiniz.
+            </p>
+            <div className="mt-3 rounded-2xl border border-purple-100 bg-white px-3 py-2 text-xs font-semibold text-gray-500 break-all">
+              {portalUrl}
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={portalLinkiniKopyala}
+                className="rounded-xl bg-purple-600 px-3 py-2.5 text-xs font-black text-white transition-colors hover:bg-purple-700"
+              >
+                {portalKopyalandi ? "Kopyalandı" : "Linki Kopyala"}
+              </button>
+              <a
+                href={portalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl border border-purple-200 bg-white px-3 py-2.5 text-center text-xs font-black text-purple-700 transition-colors hover:bg-purple-100"
+              >
+                Sayfayı Aç
+              </a>
+            </div>
+          </div>
+
           <div className="rounded-2xl bg-white p-4 shadow-sm">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Önizleme</p>
             <div className="mt-4 rounded-2xl border border-gray-100 p-4">

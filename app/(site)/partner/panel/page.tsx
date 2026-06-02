@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { getSiteUrl } from "@/lib/site-url";
 import PanelIcerik from "./PanelIcerik";
 import AktivasyonKodlari from "./AktivasyonKodlari";
 import PartnerEkipErisimleri from "./PartnerEkipErisimleri";
@@ -32,6 +33,8 @@ export const metadata: Metadata = {
   title: "Partner Paneli | DavetRota",
   robots: { index: false },
 };
+
+const SITE_URL = getSiteUrl();
 
 export default async function PartnerPanelPage({
   searchParams,
@@ -624,6 +627,7 @@ export default async function PartnerPanelPage({
               <div id="marka" className="scroll-mt-24">
                 <PartnerMarkaAyarlari
                   firmaAdi={partner.firmaAdi}
+                  portalUrl={`${SITE_URL}/partner/portal/${partner.id}`}
                   marka={{
                     markaRenk: partner.markaRenk,
                     markaSlogani: partner.markaSlogani,
