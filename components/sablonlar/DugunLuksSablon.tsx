@@ -399,42 +399,23 @@ export default function DugunLuksSablon({ davetiye, previewModu }: SablonProps) 
         </div>
 
         {davetiye.mekan && (
-          <a
-            href={`https://maps.google.com/?q=${encodeURIComponent(davetiye.mekan)}`}
-            target="_blank" rel="noopener noreferrer"
-            style={{
-              display:"block", textDecoration:"none",
-              maxWidth:560, margin:"0 auto 28px",
-              borderRadius:12, overflow:"hidden",
-              border:`1px solid ${GOLD}22`, boxShadow:"0 8px 32px rgba(0,0,0,0.4)",
-            }}
-          >
-            <div style={{
-              height:220, position:"relative",
-              display:"flex", flexDirection:"column",
-              alignItems:"center", justifyContent:"center",
-              gap:12, padding:"32px 24px", background:BG_MED,
-            }}>
-              <div style={{
-                position:"absolute", inset:0, pointerEvents:"none",
-                backgroundImage:`linear-gradient(${GOLD}08 1px,transparent 1px),linear-gradient(90deg,${GOLD}08 1px,transparent 1px)`,
-                backgroundSize:"28px 28px",
-              }} />
-              <div style={{ position:"relative", textAlign:"center" }}>
-                <div style={{ fontSize:32, marginBottom:10 }}>📍</div>
-                <p style={{ fontFamily:"var(--font-cormorant),serif", fontSize:15, color:GOLD, letterSpacing:"0.05em", lineHeight:1.5, marginBottom:16 }}>
-                  {davetiye.mekan}
-                </p>
-                <div style={{
-                  display:"inline-flex", alignItems:"center", gap:6,
-                  padding:"10px 24px", borderRadius:8,
-                  border:`1px solid ${GOLD}44`, color:GOLD,
-                  fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase",
-                  fontFamily:"var(--font-cormorant),serif", background:"rgba(0,0,0,0.25)",
-                }}>Yol Tarifi Al</div>
-              </div>
+          <>
+            <div style={{ maxWidth:560, margin:"0 auto 28px", borderRadius:12, overflow:"hidden",
+              border:`1px solid ${GOLD}22`, boxShadow:"0 8px 32px rgba(0,0,0,0.4)" }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&output=embed`}
+                width="100%" height="260" style={{ border:0, display:"block" }}
+                loading="lazy" allowFullScreen/>
             </div>
-          </a>
+            <a href={`https://maps.google.com/?q=${encodeURIComponent(davetiye.mekan)}`}
+              target="_blank" rel="noopener noreferrer"
+              style={{
+                display:"inline-flex", alignItems:"center", gap:8,
+                fontFamily:"var(--font-cormorant),serif", fontSize:13, letterSpacing:"0.22em",
+                color:CREAM, border:`1px solid ${GOLD}38`, padding:"12px 28px", borderRadius:8,
+                textDecoration:"none", textTransform:"uppercase",
+              }}>📍 Yol Tarifi Al</a>
+          </>
         )}
       </section>
 

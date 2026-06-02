@@ -570,17 +570,9 @@ export default function VintageNisanSablon({ davetiye, rsvpBileseni, previewModu
 
             {/* Harita */}
             {davetiye.mekan && (
-              <a href={`https://maps.google.com/?q=${encodeURIComponent(davetiye.mekan)}`} target="_blank" rel="noopener noreferrer"
-                style={{ display:"block", textDecoration:"none", maxWidth:560, margin:"0 auto", borderRadius:16, overflow:"hidden", border:`1px solid ${GOLD}33`, boxShadow:"0 8px 28px rgba(42,24,8,0.12)" }}>
-                <div style={{ height:200, position:"relative", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, padding:"32px 24px", background:BG_SOFT }}>
-                  <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(${GOLD}18 1px,transparent 1px),linear-gradient(90deg,${GOLD}18 1px,transparent 1px)`, backgroundSize:"28px 28px" }} />
-                  <div style={{ position:"relative", textAlign:"center" }}>
-                    <div style={{ fontSize:32, marginBottom:10 }}>📍</div>
-                    <p style={{ fontFamily:"var(--font-playfair),serif", fontStyle:"italic", fontSize:15, color:WARM_MD, letterSpacing:"0.03em", lineHeight:1.5, marginBottom:16 }}>{davetiye.mekan}</p>
-                    <div style={{ display:"inline-flex", alignItems:"center", gap:6, padding:"10px 24px", borderRadius:8, border:`1px solid ${GOLD}55`, color:WARM_MD, fontSize:11, letterSpacing:"0.18em", textTransform:"uppercase", fontFamily:"var(--font-lora),serif", background:`${GOLD}15` }}>Yol Tarifi Al</div>
-                  </div>
-                </div>
-              </a>
+              <div style={{ maxWidth: 560, margin: "0 auto", borderRadius: 16, overflow: "hidden", border: `1px solid ${GOLD}22`, boxShadow: "0 16px 48px rgba(0,0,0,0.35)" }}>
+                <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(davetiye.mekan)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="260" style={{ border: 0, display: "block" }} loading="lazy" allowFullScreen />
+              </div>
             )}
           </div>
         </section>
