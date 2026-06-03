@@ -420,9 +420,8 @@ export default function PartnerPanelOzeti({
           <div className="mt-3 grid gap-2">
             <HizliIslem href={abonelik ? "#lead-crm" : "#odeme"} label="Müşteri adayı ekle" variant="primary" />
             <HizliIslem href={abonelik ? "#aktivasyon-kodlari" : "#odeme"} label="Teslim linki oluştur" />
-            <HizliIslem href={abonelik ? "#whatsapp-asistani" : "#odeme"} label="WhatsApp mesajı hazırla" />
-            <HizliIslem href={abonelik ? "#teklif" : "#odeme"} label="Teklif hazırla" />
-            <HizliIslem href={abonelik ? "#ekip" : "#odeme"} label="Ekip linki oluştur" />
+            <HizliIslem href={abonelik ? "#satis-detayli-araclar" : "#odeme"} label="Detaylı satış araçları" />
+            <HizliIslem href={abonelik ? "#operasyon-detaylari-grubu" : "#odeme"} label="Etkinlik günü araçları" />
           </div>
 
           <div className="mt-4 rounded-2xl border border-white bg-white/80 px-4 py-3 shadow-sm">

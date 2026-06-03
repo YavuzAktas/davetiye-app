@@ -440,10 +440,10 @@ export default async function PartnerPanelPage({
                     />
                   </div>
                   <PanelAracGrubu
-                    id="satis-takip-grubu"
-                    baslik="Müşteri grupları"
-                    aciklama="Hangi müşteri hangi aşamada, hızlıca kontrol edin."
-                    hedefler={["segmentler"]}
+                    id="satis-detayli-araclar"
+                    baslik="Detaylı satış araçları"
+                    aciklama="İlk satış akışı tamamlandıktan sonra segment, teklif, sosyal medya, WhatsApp ve rehber araçlarını buradan kullanın."
+                    hedefler={["segmentler", "satis-asistani", "sosyal-medya-paketi", "paketler", "whatsapp-asistani", "teklif", "satis"]}
                   >
                     <div id="segmentler" className="scroll-mt-24">
                       <PartnerMusteriSegmentleri
@@ -460,13 +460,6 @@ export default async function PartnerPanelPage({
                         }))}
                       />
                     </div>
-                  </PanelAracGrubu>
-                  <PanelAracGrubu
-                    id="satis-araclari-grubu"
-                    baslik="Teklif ve mesaj araçları"
-                    aciklama="Paket önerisi, sosyal içerik, WhatsApp mesajı ve teklif çıktısını buradan hazırlayın."
-                    hedefler={["satis-asistani", "sosyal-medya-paketi", "paketler", "whatsapp-asistani", "teklif", "satis"]}
-                  >
                     <div id="satis-asistani" className="scroll-mt-24">
                       <PartnerSatisAsistani
                         firmaAdi={partner.firmaAdi}
@@ -577,8 +570,8 @@ export default async function PartnerPanelPage({
                   </div>
                   <PanelAracGrubu
                     id="operasyon-detaylari-grubu"
-                    baslik="Yerleşim, ekip linkleri ve iş takibi"
-                    aciklama="Etkinlik günü kitini, masa düzeni şablonlarını ve ekip erişimlerini hazırlayın."
+                    baslik="Detaylı etkinlik günü araçları"
+                    aciklama="Masa düzeni, ekip erişimleri, canlı operasyon ve etkinlik günü çıktılarını gerektiğinde buradan hazırlayın."
                     hedefler={["etkinlik-gunu-kiti", "salon-yerlesim", "ekip", "operasyon"]}
                   >
                     <div id="etkinlik-gunu-kiti" className="scroll-mt-24">
@@ -632,8 +625,8 @@ export default async function PartnerPanelPage({
                 >
                   <PanelAracGrubu
                     id="gelir-raporlari-grubu"
-                    baslik="Satış raporu ve kârlılık"
-                    aciklama="Dijital paketlerin satışa ve kâra etkisini hızlıca görün."
+                    baslik="Detaylı gelir ve teslim raporları"
+                    aciklama="Satış hunisi, kârlılık hesabı ve teslim raporlarını periyodik kontrol için burada tutun."
                     hedefler={["analitik", "karlilik", "teslim-raporu"]}
                   >
                     <div id="analitik" className="scroll-mt-24">
