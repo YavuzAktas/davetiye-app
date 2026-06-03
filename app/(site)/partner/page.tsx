@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { DAVETIYE_FIYAT_KALEMLERI, tutarMetni } from "@/lib/davetiye-fiyatlandirma";
 
 export const metadata: Metadata = {
-  title: "Organizasyoncular İçin Dijital Davetiye Partner Programı | DavetRota",
+  title: "Davet Evi ve Salonlar İçin Dijital Paket Satışı | DavetRota Partner",
   description:
-    "Düğün organizasyonu, etkinlik planlama, fotoğrafçılık ve mekan işletmeleri için aylık dijital davetiye aktivasyon hakkı. Müşterilerinize profesyonel davetiye sunun.",
+    "Düğün salonu, davet evi ve organizasyon işletmeleri için dijital davetiye, LCV, QR check-in, canlı duvar ve anı paketini müşterilerinize ek hizmet olarak sunun.",
   alternates: { canonical: "/partner" },
 };
 
@@ -21,17 +21,17 @@ const PAKETLER = [
     btnClass: "bg-indigo-600 hover:bg-indigo-700",
     hakSayisi: 10,
     populer: false,
-    aciklama: "Sektöre yeni giren küçük işletmeler için",
+    aciklama: "Ayda birkaç etkinliğe dijital paket eklemek isteyen işletmeler için",
     dahilOzellikler: [
       `Dijital davetiye (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)} değer)`,
       `Arka plan müziği (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.muzik.tutar)} değer)`,
       `Anı defteri (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.aniDefteri.tutar)} değer)`,
     ],
     ozellikler: [
-      "Ayda 10 davetiye aktivasyon hakkı",
+      "Ayda 10 satılabilir dijital paket hakkı",
       "Kişisel aktivasyon linki oluşturma",
       "Partner paneli & durum takibi",
-      "WhatsApp ile tek tıkla ilet",
+      "WhatsApp satış metniyle tek tıkla ilet",
     ],
     dahilDegil: ["Partner logo/marka ibaresi", "Lüks şablon dahil", "Fotoğraf albümü dahil"],
   },
@@ -46,7 +46,7 @@ const PAKETLER = [
     btnClass: "bg-purple-600 hover:bg-purple-700",
     hakSayisi: 30,
     populer: true,
-    aciklama: "Aktif düğün & etkinlik organizatörleri için",
+    aciklama: "Davet evi, salon ve aktif organizasyon ekipleri için",
     dahilOzellikler: [
       `Dijital davetiye (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.temel.tutar)} değer)`,
       `Lüks şablon (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.luksSablon.tutar)} değer)`,
@@ -56,10 +56,10 @@ const PAKETLER = [
       `Canlı fotoğraf duvarı (${tutarMetni(DAVETIYE_FIYAT_KALEMLERI.canliDuvar.tutar)} değer)`,
     ],
     ozellikler: [
-      "Ayda 30 davetiye aktivasyon hakkı",
+      "Ayda 30 satılabilir dijital paket hakkı",
       "Kişisel aktivasyon linki oluşturma",
       "Partner logo / marka ibaresi",
-      "Detaylı kullanım raporu",
+      "Satış ve teslim durum raporu",
       "WhatsApp ile tek tıkla ilet",
       "Öncelikli destek",
     ],
@@ -76,14 +76,14 @@ const PAKETLER = [
     btnClass: "bg-red-600 hover:bg-red-700",
     hakSayisi: 75,
     populer: false,
-    aciklama: "Büyük ajanslar ve yüksek hacimli organizatörler için",
+    aciklama: "Çok şubeli salonlar ve yüksek hacimli organizasyon ekipleri için",
     dahilOzellikler: [
       "Tüm özellikler dahil (1.700₺ değer/davetiye)",
       "Sesli anı, Oturma planı",
       "QR check-in, Anı kitabı PDF",
     ],
     ozellikler: [
-      "Ayda 75 davetiye aktivasyon hakkı",
+      "Ayda 75 satılabilir dijital paket hakkı",
       "Kişisel aktivasyon linki oluşturma",
       "Partner logo / marka ibaresi",
       "Öncelikli destek hattı",
@@ -97,37 +97,37 @@ const PAKETLER = [
 const NASIL_CALISIR = [
   {
     n: "1",
-    baslik: "Partner paketi satın al",
-    aciklama: "İhtiyacına uygun paketi seç. Aktivasyon hakları anında hesabına yüklenir.",
+    baslik: "Dijital paketi hizmetine ekle",
+    aciklama: "Davetiye, LCV takip, QR giriş ve anı toplamayı salon hizmetinin satılabilir ek paketi olarak konumlandır.",
     icon: "📦",
   },
   {
     n: "2",
-    baslik: "Müşteriye aktivasyon linki gönder",
-    aciklama: "Partner panelinden tek tıkla link oluştur, WhatsApp ile ilet.",
+    baslik: "Müşteriye teklif et",
+    aciklama: "Panelde hazır paket, fiyat ve WhatsApp metniyle müşteriye anlaşılır bir ek hizmet teklifi gönder.",
     icon: "🔗",
   },
   {
     n: "3",
-    baslik: "Müşteri kendi hesabını açar",
-    aciklama: "Müşteri linkle gelir, kaydolur, KVKK'yı kabul eder ve davetiyesini oluşturur.",
+    baslik: "Aktivasyon linkini teslim et",
+    aciklama: "Anlaşma sonrası tek kullanımlık linki ver. Müşteri kendi hesabında davetiyesini kurar ve yasal onayları kendisi verir.",
     icon: "🎨",
   },
   {
     n: "4",
-    baslik: "Sen sadece durumu takip edersin",
-    aciklama: "Partner panelinde davetiye durumunu görürsün. Davetli verileri sende değil, müşteride.",
+    baslik: "Etkinlik günü akışı izle",
+    aciklama: "QR, canlı duvar ve teslim durumunu takip et. Davetli listesi, RSVP ve anı içerikleri müşterinin hesabında kalır.",
     icon: "📊",
   },
 ];
 
 const PARTNER_GURUPLARI = [
-  { emoji: "💒", label: "Düğün organizasyon firmaları" },
-  { emoji: "📸", label: "Düğün fotoğrafçıları" },
-  { emoji: "🎪", label: "Etkinlik organizatörleri" },
-  { emoji: "🌺", label: "Çiçekçi & dekorasyon firmaları" },
+  { emoji: "🏛️", label: "Düğün salonları" },
+  { emoji: "💒", label: "Davet evleri" },
+  { emoji: "🌿", label: "Kır düğünü mekanları" },
+  { emoji: "🎪", label: "Organizasyon firmaları" },
+  { emoji: "📸", label: "Fotoğraf & video ekipleri" },
   { emoji: "🍽️", label: "Catering ve mekan işletmeleri" },
-  { emoji: "🎵", label: "Müzik grupları & DJ'ler" },
 ];
 
 const SEKTOR_COZUMLERI = [
@@ -148,19 +148,19 @@ const GUVEN_NOKTALAR = [
     icon: "🔒",
     baslik: "Davetli verisi sende değil",
     aciklama:
-      "Müşterinin davetli isimleri, telefonları ve RSVP cevapları sana gösterilmez. Tamamen müşteriye aittir.",
+      "Davetli isimleri, telefonları ve RSVP cevapları partner panelinde gösterilmez. Süreç müşterinin hesabında yönetilir.",
   },
   {
     icon: "⚖️",
     baslik: "KVKK müşteri kabul eder",
     aciklama:
-      "Yasal metinleri müşteri kendi hesabıyla kabul eder. Sen sadece aktivasyon hakkı sağlarsın.",
+      "Yasal metinleri ve içerik izinlerini müşteri kendi hesabıyla kabul eder. Partner satış ve teslim akışını yönetir.",
   },
   {
     icon: "💳",
     baslik: "Ödeme sürpriz yok",
     aciklama:
-      "Müşteri ayrıca ödeme yapmaz. Paketinde kalan hak kadar davetiye aktivasyonu ücretsizdir.",
+      "Müşteriye DavetRota içinde ayrıca ödeme çıkarılmaz. Paketi kendi hizmet bedelinize nasıl ekleyeceğinizi siz belirlersiniz.",
   },
 ];
 
@@ -176,25 +176,25 @@ export default function PartnerPage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-24 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 text-xs font-semibold text-white/70 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-            Organizasyoncular İçin · B2B Program
+            Davet evi ve salonlar için · Ek gelir paketi
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6">
-            Müşterilerinize<br />
+            Her etkinlikten<br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">
-              dijital davetiye
+              dijital paket
             </span>{" "}
-            sunun
+            geliri çıkarın
           </h1>
           <p className="text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Organizasyon firmanız için toplu davetiye aktivasyon hakkı satın alın.
-            Müşterileriniz davetiyelerini kendi hesaplarında oluşturup yönetsin.
+            Dijital davetiye, LCV takibi, QR check-in, canlı duvar ve anı toplamayı müşterinize ek hizmet olarak sunun.
+            Müşteri kendi hesabında yönetir; siz satış, teslim ve etkinlik günü durumunu takip edersiniz.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/partner/basvuru"
               className="inline-flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity text-sm"
             >
-              Partner Başvurusu Yap
+              Dijital Paket Satışına Başvur
               <span>→</span>
             </Link>
             <Link
@@ -211,7 +211,7 @@ export default function PartnerPage() {
       <section className="border-b border-gray-100 py-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <p className="text-center text-xs font-semibold text-gray-400 tracking-widest uppercase mb-8">
-            Kimler için?
+            En hızlı değer gören işletmeler
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {PARTNER_GURUPLARI.map(g => (
@@ -248,7 +248,7 @@ export default function PartnerPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Süreç</p>
-            <h2 className="text-3xl font-black text-gray-900">Nasıl çalışır?</h2>
+            <h2 className="text-3xl font-black text-gray-900">Satıştan etkinlik gününe tek rota</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {NASIL_CALISIR.map(adim => (
@@ -273,7 +273,7 @@ export default function PartnerPage() {
           <div className="text-center mb-10">
             <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Hukuki güvenlik</p>
             <h2 className="text-2xl font-black text-gray-900">
-              Müşteri verisi sende değil — kasıtlı tasarladık
+              Ek gelir kazanırken veri riskini büyütmeyin
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -299,9 +299,9 @@ export default function PartnerPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">Fiyatlandırma</p>
-            <h2 className="text-3xl font-black text-gray-900">Partner Paketleri</h2>
+            <h2 className="text-3xl font-black text-gray-900">Ek Hizmet Olarak Satılabilir Partner Paketleri</h2>
             <p className="text-sm text-gray-500 mt-3">
-              Lansman fiyatlarıyla sunulur. Kullanılmayan haklar ertesi aya devretmez, her ay yenilenir.
+              Bu fiyatlar partner aboneliği içindir. Paketleri kendi hizmet bedelinize ekleyerek müşteriye dijital çözüm olarak sunabilirsiniz.
             </p>
           </div>
 
@@ -334,7 +334,7 @@ export default function PartnerPage() {
                     Lansman fiyatı
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Ayda <strong>{paket.hakSayisi}</strong> davetiye aktivasyonu
+                    Ayda <strong>{paket.hakSayisi}</strong> dijital paket aktivasyonu
                   </p>
                   <p className="text-[11px] text-gray-400 mt-0.5">{paket.aciklama}</p>
                 </div>
@@ -390,16 +390,16 @@ export default function PartnerPage() {
       <section className="bg-[#0c0118] py-16 text-center">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <p className="text-3xl font-black text-white mb-4">
-            Hazır mısınız?
+            Müşterilerinize satılabilir dijital paket sunmaya hazır mısınız?
           </p>
           <p className="text-sm text-white/40 mb-8">
-            Başvurunuzu alır, 24 saat içinde iletişime geçeriz.
+            Başvurunuzu alır, işletmeniz için en doğru paket ve satış akışını birlikte netleştiririz.
           </p>
           <Link
             href="/partner/basvuru"
             className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity"
           >
-            Partner Başvurusu Yap →
+            Dijital Paket Partneri Ol →
           </Link>
         </div>
       </section>

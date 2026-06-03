@@ -6,16 +6,16 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const FIRMA_TURLERI = [
-  "Düğün organizasyon firması",
-  "Düğün fotoğrafçısı",
-  "Etkinlik organizatörü",
-  "Çiçekçi & dekorasyon firması",
+  "Düğün salonu",
+  "Davet evi",
+  "Kır düğünü mekanı",
+  "Organizasyon firması",
+  "Fotoğraf & video ekibi",
   "Catering & mekan işletmesi",
-  "Müzik grubu & DJ",
   "Diğer",
 ];
 
-const MUSTERI_SAYILARI = ["1-5 müşteri/ay", "5-15 müşteri/ay", "15-30 müşteri/ay", "30+ müşteri/ay"];
+const MUSTERI_SAYILARI = ["1-5 etkinlik/ay", "5-15 etkinlik/ay", "15-30 etkinlik/ay", "30+ etkinlik/ay"];
 
 type PartnerDurumu = "aktif" | "beklemede" | "askida" | "reddedildi" | string;
 type Durum = "kontrol" | "form" | "gonderiliyor" | "basarili" | "zatenVar" | "aktif" | "askida" | "hata";
@@ -126,9 +126,9 @@ export default function PartnerBasvuruPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🤝</div>
-          <h1 className="text-2xl font-black text-gray-900 mb-2">Partner Başvurusu</h1>
+          <h1 className="text-2xl font-black text-gray-900 mb-2">Dijital Paket Partner Başvurusu</h1>
           <p className="text-sm text-gray-500 mb-8 leading-relaxed">
-            Başvuru yapmak için önce DavetRota hesabınıza giriş yapmanız gerekiyor.
+            Davet evi, salon veya organizasyon müşterilerinize dijital davetiye ve etkinlik günü paketi sunmak için giriş yapın.
           </p>
           <button
             onClick={() => signIn(undefined, { callbackUrl: "/partner/basvuru" })}
@@ -234,8 +234,10 @@ export default function PartnerBasvuruPage() {
           <Link href="/partner" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
             ← Partner Programı
           </Link>
-          <h1 className="text-3xl font-black text-gray-900 mt-4 mb-1">Partner Başvurusu</h1>
-          <p className="text-sm text-gray-500">Başvurunuzu alır, 24 saat içinde iletişime geçeriz.</p>
+          <h1 className="text-3xl font-black text-gray-900 mt-4 mb-1">Dijital Paket Partner Başvurusu</h1>
+          <p className="text-sm text-gray-500">
+            İşletmeniz için satılabilir dijital davetiye, QR ve anı paketi akışını birlikte netleştirelim.
+          </p>
         </div>
 
         <form onSubmit={gonder} className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 space-y-5">
@@ -264,7 +266,7 @@ export default function PartnerBasvuruPage() {
               value={form.firmaAdi}
               onChange={degistir}
               required
-              placeholder="örn. Yıldız Organizasyon"
+              placeholder="örn. Yıldız Davet Evi"
               className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 transition-all"
             />
           </div>
@@ -302,7 +304,7 @@ export default function PartnerBasvuruPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1.5">
-              Aylık Tahmini Müşteri Sayısı <span className="text-red-400">*</span>
+              Aylık Tahmini Etkinlik / Müşteri Sayısı <span className="text-red-400">*</span>
             </label>
             <select
               name="aylikMusteriSayisi"
@@ -325,7 +327,7 @@ export default function PartnerBasvuruPage() {
               value={form.basvuruNotu}
               onChange={degistir}
               rows={3}
-              placeholder="Bizimle paylaşmak istediğiniz ek bilgiler…"
+              placeholder="Örn. Ayda 12 etkinlik yapıyoruz; dijital davetiye, QR giriş ve anı paketini müşterilerimize ek hizmet olarak sunmak istiyoruz."
               className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 transition-all resize-none"
             />
           </div>
@@ -344,7 +346,7 @@ export default function PartnerBasvuruPage() {
                 <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
                 Gönderiliyor…
               </>
-            ) : "Başvuruyu Gönder →"}
+            ) : "Partner Başvurusunu Gönder →"}
           </button>
 
           <p className="text-center text-[11px] text-gray-400 leading-relaxed">
