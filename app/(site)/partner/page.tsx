@@ -143,6 +143,31 @@ const SEKTOR_COZUMLERI = [
   },
 ];
 
+const DEMO_METRIKLER = [
+  {
+    etiket: "Etkinlik",
+    deger: "300 kişi",
+    aciklama: "Düğün salonu veya davet evi müşterisi",
+  },
+  {
+    etiket: "Satılabilir paket",
+    deger: "₺1.500",
+    aciklama: "Örnek dijital hizmet bedeli",
+  },
+  {
+    etiket: "Ayda 4 etkinlik",
+    deger: "₺6.000",
+    aciklama: "Örnek ek ciro potansiyeli",
+  },
+];
+
+const DEMO_AKIS = [
+  "Müşteriye salon paketi yanında dijital davetiye + LCV takibi teklif edilir.",
+  "Kabul sonrası tek kullanımlık aktivasyon linki gönderilir; müşteri kendi hesabında kurulum yapar.",
+  "Etkinlik günü QR check-in, canlı duvar ve anı toplama araçları devreye alınır.",
+  "Partner panelinde yalnızca satış, teslim ve durum bilgisi izlenir; davetli verisi müşteride kalır.",
+];
+
 const GUVEN_NOKTALAR = [
   {
     icon: "🔒",
@@ -263,6 +288,65 @@ export default function PartnerPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Örnek senaryo ── */}
+      <section className="border-y border-purple-100 bg-purple-50/40 py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-center">
+            <div>
+              <p className="text-xs font-semibold text-purple-600 tracking-widest uppercase mb-3">
+                Örnek kullanım
+              </p>
+              <h2 className="text-3xl font-black leading-tight text-gray-900">
+                300 kişilik bir düğünü dijital ek hizmete çevirin
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-gray-600">
+                Bu senaryo garanti gelir vaadi değildir; salonun kendi fiyatlamasına göre değişen örnek bir satış modelidir.
+                Ama müşteriye ne sunulacağını netleştirir: davetiye, LCV, QR giriş, canlı fotoğraf duvarı ve anı toplama tek pakette anlatılır.
+              </p>
+              <div className="mt-6 grid gap-3">
+                {DEMO_AKIS.map((adim, index) => (
+                  <div key={adim} className="flex gap-3 rounded-2xl border border-purple-100 bg-white px-4 py-3 shadow-sm">
+                    <span className="grid size-7 shrink-0 place-items-center rounded-full bg-purple-600 text-xs font-black text-white">
+                      {index + 1}
+                    </span>
+                    <p className="text-sm font-semibold leading-6 text-gray-700">{adim}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-xl shadow-purple-100/60">
+              <div className="rounded-2xl bg-gray-950 px-5 py-4 text-white">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-200">
+                  Davet evi demo senaryosu
+                </p>
+                <p className="mt-2 text-2xl font-black">Bir etkinlik, tek dijital paket</p>
+                <p className="mt-2 text-xs leading-5 text-white/55">
+                  Örnek tutarlar temsilidir. Nihai satış fiyatı, hizmet kapsamı ve operasyon maliyeti işletme tarafından belirlenir.
+                </p>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                {DEMO_METRIKLER.map(metrik => (
+                  <div key={metrik.etiket} className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-gray-400">{metrik.etiket}</p>
+                    <p className="mt-1 text-2xl font-black tabular-nums text-gray-950">{metrik.deger}</p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-gray-500">{metrik.aciklama}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/partner/basvuru"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-linear-to-r from-purple-600 to-pink-600 px-5 py-3 text-sm font-black text-white transition-opacity hover:opacity-90"
+              >
+                Bu modeli işletmemde kullanmak istiyorum
+              </Link>
+            </div>
           </div>
         </div>
       </section>
