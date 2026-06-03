@@ -95,7 +95,7 @@ export default function NavLinks() {
 
       {/* ── Mobile trigger ── */}
       <div className="flex items-center gap-1.5 md:hidden">
-        <Link href={session ? "/sablonlar" : "/giris"}
+        <Link href="/sablonlar"
           className="text-xs bg-linear-to-r from-purple-600 to-pink-600 text-white px-3.5 py-1.5 rounded-lg font-medium">
           {session ? "+ Yeni" : "Başla"}
         </Link>
