@@ -14,6 +14,7 @@ type Adim = {
   no: number;
   label: string;
   aciklama: string;
+  sonuc: string;
   faz: "satis" | "teslim" | "operasyon";
   href: string;
   cta: string;
@@ -42,17 +43,17 @@ export default function PartnerIsAkisi({
   const kodGonderildi = aktifKodlar.some(k => !["olusturuldu"].includes(k.durum));
   const yayinda = aktifKodlar.some(k => k.durum === "yayinda");
 
-  // Kritik boşluk: kapora var ama kod gönderilmemiş
   const linkEksik = kaporaLeadler.length > 0 && !kodGonderildi;
 
   const adimlar: Adim[] = [
     {
       no: 1,
       faz: "satis",
-      label: "Müşteri Bul",
-      aciklama: "Görüştüğün kişiyi CRM'e ekle ve aşamayı takip et.",
+      label: "Müşteriyi ekle",
+      aciklama: "Salon, davet evi veya organizasyon müşterisini CRM'e ekleyin.",
+      sonuc: "Görüşme dağılmaz; teklif ve teslim tek yerden izlenir.",
       href: "#lead-crm",
-      cta: "CRM'e git",
+      cta: "Müşteri ekle",
       tamam: leadler.length > 0,
       aktif: leadler.length === 0,
       aktifLeadler: gorusmeLeadler.slice(0, 3),
@@ -60,10 +61,11 @@ export default function PartnerIsAkisi({
     {
       no: 2,
       faz: "satis",
-      label: "Teklif Gönder",
-      aciklama: "Paket kapsamını anlat ve yazılı teklif ilet.",
-      href: "#teklif",
-      cta: "Teklif hazırla",
+      label: "Paketi seç",
+      aciklama: "Hızlı davetiye, salon operasyonu, anı paketi veya premium deneyimi seçin.",
+      sonuc: "Müşteri ne aldığını net görür; siz ek hizmeti daha kolay satarsınız.",
+      href: "#paketler",
+      cta: "Paketlere git",
       tamam: teklifHazir || teklifLeadler.length > 0,
       aktif: leadler.length > 0 && !teklifHazir && teklifLeadler.length === 0,
       aktifLeadler: teklifLeadler.filter(l => l.durum === "teklif_gonderildi").slice(0, 3),
@@ -71,10 +73,11 @@ export default function PartnerIsAkisi({
     {
       no: 3,
       faz: "satis",
-      label: "Kapora Al",
-      aciklama: "Müşteri onay verdi. CRM'de durumu 'Kazandı' olarak güncelle.",
-      href: "#lead-crm",
-      cta: "CRM güncelle",
+      label: "Fiyat ve teklifi gönder",
+      aciklama: "Kârlılığı kontrol edip WhatsApp veya teklif metniyle müşteriye iletin.",
+      sonuc: "Salon hizmetinin üstüne satılabilir dijital paket oluşur.",
+      href: "#teklif",
+      cta: "Teklif hazırla",
       tamam: kaporaLeadler.length > 0,
       aktif: teklifLeadler.length > 0 && kaporaLeadler.length === 0,
       aktifLeadler: kaporaLeadler.slice(0, 3),
@@ -82,10 +85,11 @@ export default function PartnerIsAkisi({
     {
       no: 4,
       faz: "teslim",
-      label: "Aktivasyon Linki Oluştur",
-      aciklama: "Teslim bölümünden tek kullanımlık link üret. Bir müşteri = bir link.",
+      label: "Aktivasyon linki ver",
+      aciklama: "Anlaşılan müşteri için tek kullanımlık teslim linki üretin.",
+      sonuc: "Müşteri kendi davetiyesini ve içeriklerini kendi hesabında yönetir.",
       href: "#aktivasyon-kodlari",
-      cta: "Linki Oluştur",
+      cta: "Link oluştur",
       tamam: kodOlusturuldu,
       aktif: kaporaLeadler.length > 0 && !kodOlusturuldu,
       vurgu: linkEksik,
@@ -93,10 +97,11 @@ export default function PartnerIsAkisi({
     {
       no: 5,
       faz: "teslim",
-      label: "Müşteriye Gönder",
-      aciklama: "Linki ve kurulum notunu müşteriye ilet. WhatsApp asistanı ile hızlanabilirsin.",
-      href: "#aktivasyon-kodlari",
-      cta: "Teslim Paketini Aç",
+      label: "Etkinlik kitini hazırla",
+      aciklama: "QR kart, canlı duvar ve ekip görevlerini etkinlikten önce kontrol edin.",
+      sonuc: "Etkinlik günü kapı, masa ve anı toplama akışı daha düzenli ilerler.",
+      href: "#etkinlik-gunu-kiti",
+      cta: "Kiti aç",
       tamam: kodGonderildi,
       aktif: kodOlusturuldu && !kodGonderildi,
       vurgu: kodOlusturuldu && !kodGonderildi,
@@ -104,10 +109,11 @@ export default function PartnerIsAkisi({
     {
       no: 6,
       faz: "operasyon",
-      label: "Yayın & Etkinlik Kontrolü",
-      aciklama: "Davetiye yayında mı? QR kartlar ve ekip erişimi hazır mı?",
-      href: "#operasyon",
-      cta: "Operasyona bak",
+      label: "Teslimi raporla",
+      aciklama: "Yayına çıkan davetiye, RSVP ve kullanım özetini müşteriye aktarın.",
+      sonuc: "Müşteri hizmetin değerini görür; tekrar satış ve referans ihtimali artar.",
+      href: "#teslim-raporu",
+      cta: "Raporla",
       tamam: yayinda,
       aktif: kodGonderildi && !yayinda,
     },
@@ -119,33 +125,55 @@ export default function PartnerIsAkisi({
   if (!abonelik) return null;
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-      <div className="border-b border-gray-100 bg-linear-to-br from-purple-50/60 via-white to-pink-50/30 px-5 py-5 sm:px-7">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <section className="overflow-hidden rounded-3xl border border-purple-100 bg-white shadow-sm">
+      <div className="border-b border-purple-100 bg-linear-to-br from-gray-950 via-purple-950 to-gray-900 px-5 py-6 text-white sm:px-7">
+        <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-purple-600/70">İş Akışı</p>
-            <h2 className="mt-1.5 text-xl font-black text-gray-950">
-              Müşteri bulmaktan teslime: adım adım
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-purple-200/70">Ana satış akışı</p>
+            <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+              Yeni müşteriye dijital paket sat
             </h2>
+            <p className="mt-2 max-w-2xl text-sm font-semibold leading-relaxed text-white/60">
+              Davet evi veya salon müşterisine davetiye, LCV, QR giriş ve anı toplama paketini satmak için tek sıra. Önce müşteriyi ekleyin, sonra paketi teklif edip teslim linkini üretin.
+            </p>
           </div>
-          <div className="flex items-center gap-2 rounded-2xl border border-gray-100 bg-white px-4 py-2.5 shadow-sm">
-            <div className="h-1.5 w-24 overflow-hidden rounded-full bg-gray-100">
+          <div className="rounded-3xl border border-white/10 bg-white/10 p-4 sm:w-80">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-black text-white/60">Akış ilerlemesi</p>
+              <span className="text-sm font-black tabular-nums text-white">{tamamlananSayisi}/{adimlar.length}</span>
+            </div>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full bg-linear-to-r from-purple-600 to-pink-500 transition-all"
+                className="h-full rounded-full bg-linear-to-r from-emerald-400 to-purple-400 transition-all"
                 style={{ width: `${Math.round((tamamlananSayisi / adimlar.length) * 100)}%` }}
               />
             </div>
-            <span className="text-xs font-black text-gray-500">{tamamlananSayisi}/{adimlar.length}</span>
+            <a
+              href={aktifAdim?.href ?? "#lead-crm"}
+              className="mt-4 flex w-full items-center justify-center rounded-2xl bg-white px-4 py-3 text-sm font-black text-gray-950 transition-colors hover:bg-purple-50"
+            >
+              {aktifAdim ? aktifAdim.cta : "İlk müşteriyi ekle"}
+            </a>
           </div>
         </div>
       </div>
 
       <div className="p-5 sm:p-7">
+        <div className="mb-5 grid gap-3 lg:grid-cols-3">
+          {[
+            ["Ek gelir", "Dijital davetiye ve QR hizmetini salon paketine ekleyin."],
+            ["Kolay teslim", "Müşteri kendi hesabında yönetir; partner operasyonu izler."],
+            ["Daha modern hizmet", "LCV, QR check-in, canlı duvar ve anı akışı tek pakette görünür."],
+          ].map(([baslik, aciklama]) => (
+            <div key={baslik} className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
+              <p className="text-sm font-black text-gray-950">{baslik}</p>
+              <p className="mt-1 text-xs font-semibold leading-relaxed text-gray-500">{aciklama}</p>
+            </div>
+          ))}
+        </div>
 
-        {/* Kritik uyarı: Kapora var ama link yok */}
         {linkEksik && (
           <div className="mb-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-            <span className="mt-0.5 text-lg">⚠️</span>
             <div className="flex-1">
               <p className="text-sm font-black text-amber-900">
                 {kaporaLeadler.length} müşteri kapora/anlaşma aşamasında — aktivasyon linki henüz oluşturulmadı
@@ -163,29 +191,23 @@ export default function PartnerIsAkisi({
           </div>
         )}
 
-        {/* Adım pipeline */}
-        <div className="grid gap-1">
-
-          {/* Faz başlıkları (3 faz) */}
-          <div className="mb-2 grid grid-cols-3 gap-3 text-center">
+        <div className="grid gap-4 lg:grid-cols-3">
             {(["satis", "teslim", "operasyon"] as const).map(faz => (
-              <div key={faz} className="rounded-xl bg-gray-50 py-1.5">
-                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-400">
-                  {faz === "satis" ? "Satış" : faz === "teslim" ? "Teslim" : "Operasyon"}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Adımlar — 3 sütun grid (her faz bir sütun) */}
-          <div className="grid grid-cols-3 gap-3">
-            {(["satis", "teslim", "operasyon"] as const).map(faz => (
-              <div key={faz} className="space-y-2">
+              <div key={faz} className="rounded-3xl border border-gray-100 bg-gray-50 p-3">
+                <div className="mb-3 rounded-2xl bg-white px-4 py-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-400">
+                    {faz === "satis" ? "Satış" : faz === "teslim" ? "Teslim" : "Operasyon"}
+                  </p>
+                  <p className="mt-1 text-sm font-black text-gray-950">
+                    {faz === "satis" ? "Müşteriyi kazan" : faz === "teslim" ? "Link ve kit ver" : "Günü yönet"}
+                  </p>
+                </div>
+                <div className="space-y-2">
                 {adimlar.filter(a => a.faz === faz).map(adim => (
                   <a
                     key={adim.no}
                     href={adim.href}
-                    className={`block rounded-2xl border p-3 transition-all ${
+                    className={`block rounded-2xl border p-4 transition-all ${
                       adim.vurgu
                         ? "border-amber-300 bg-amber-50 hover:bg-amber-100"
                         : adim.tamam
@@ -208,11 +230,11 @@ export default function PartnerIsAkisi({
                         {adim.tamam ? "✓" : adim.no}
                       </span>
                       <div className="min-w-0">
-                        <p className={`text-xs font-black leading-tight ${
+                        <p className={`text-sm font-black leading-tight ${
                           adim.vurgu ? "text-amber-900" :
                           adim.tamam ? "text-emerald-800" :
                           adim.aktif ? "text-purple-900" :
-                          "text-gray-500"
+                          "text-gray-700"
                         }`}>
                           {adim.label}
                         </p>
@@ -224,8 +246,10 @@ export default function PartnerIsAkisi({
                         }`}>
                           {adim.aciklama}
                         </p>
+                        <p className="mt-2 rounded-xl bg-white px-3 py-2 text-[11px] font-semibold leading-relaxed text-gray-500">
+                          {adim.sonuc}
+                        </p>
 
-                        {/* Aktif lead'ler */}
                         {adim.aktifLeadler && adim.aktifLeadler.length > 0 && (
                           <div className="mt-2 space-y-1">
                             {adim.aktifLeadler.map(l => (
@@ -250,14 +274,12 @@ export default function PartnerIsAkisi({
                   </a>
                 ))}
               </div>
+              </div>
             ))}
-          </div>
         </div>
 
-        {/* Sonraki adım özeti */}
         {aktifAdim && (
           <div className="mt-4 flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3">
-            <span className="text-sm">📍</span>
             <p className="text-xs font-semibold text-gray-600">
               <span className="font-black text-gray-900">Şu an: {aktifAdim.label}.</span>
               {" "}{aktifAdim.aciklama}
