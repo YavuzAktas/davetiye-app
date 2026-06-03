@@ -85,7 +85,7 @@ export default function PartnerIsAkisi({
     {
       no: 4,
       faz: "teslim",
-      label: "Aktivasyon linki ver",
+      label: "Teslim linki ver",
       aciklama: "Anlaşılan müşteri için tek kullanımlık teslim linki üretin.",
       sonuc: "Müşteri kendi davetiyesini ve içeriklerini kendi hesabında yönetir.",
       href: "#aktivasyon-kodlari",
@@ -176,10 +176,10 @@ export default function PartnerIsAkisi({
           <div className="mb-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
             <div className="flex-1">
               <p className="text-sm font-black text-amber-900">
-                {kaporaLeadler.length} müşteri kapora/anlaşma aşamasında — aktivasyon linki henüz oluşturulmadı
+                {kaporaLeadler.length} müşteri kapora/anlaşma aşamasında — teslim linki henüz oluşturulmadı
               </p>
               <p className="mt-1 text-xs font-semibold leading-relaxed text-amber-800">
-                Teslim bölümüne giderek her müşteri için ayrı bir aktivasyon linki oluşturun ve gönderin.
+                Teslim bölümüne giderek her müşteri için ayrı bir teslim linki oluşturun ve gönderin.
               </p>
             </div>
             <a

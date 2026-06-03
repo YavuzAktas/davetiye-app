@@ -214,7 +214,7 @@ export default function PartnerPanelOzeti({
       onem: "kritik" as const,
     }] : []),
     ...(abonelik && kalanHak <= 2 ? [{
-      baslik: "Aktivasyon hakkı azalıyor",
+      baslik: "Dijital paket hakkı azalıyor",
       aciklama: `${kalanHak} hakkınız kaldı. Yeni satış için paketi yenileyin.`,
       href: "#odeme",
       cta: "Ödeme alanı",
@@ -242,7 +242,7 @@ export default function PartnerPanelOzeti({
       onem: "normal" as const,
     }] : []),
     ...(kodSizKaporaLead > 0 ? [{
-      baslik: `${kodSizKaporaLead} müşteri için aktivasyon linki oluştur`,
+      baslik: `${kodSizKaporaLead} müşteri için teslim linki oluştur`,
       aciklama: "Kapora/anlaşma sağlandı. Şimdi teslim linkini üretin ve müşteriye gönderin.",
       href: "#aktivasyon-kodlari",
       cta: "Teslim Linkini Oluştur",

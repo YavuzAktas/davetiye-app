@@ -37,7 +37,7 @@ const PAKETLER: Record<PaketId, Paket> = {
     renk: "from-indigo-600 to-purple-600",
     kapsam: ["Dijital davetiye", "WhatsApp paylaşım linki", "RSVP takibi", "Genel QR kod"],
     neZaman: "Tarih yakınsa, bütçe hassasiyeti varsa veya müşteri sadece hızlı davetiye istiyorsa.",
-    sonrakiAksiyon: "Kısa teklif metni + aktivasyon linki akışını hazırlayın.",
+    sonrakiAksiyon: "Kısa teklif metni + teslim linki akışını hazırlayın.",
   },
   operasyon: {
     id: "operasyon",

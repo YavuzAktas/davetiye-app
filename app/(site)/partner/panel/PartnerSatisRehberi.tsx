@@ -15,7 +15,7 @@ const PAKET_ONERILERI = [
     teklif: "Dijital Davetiye Teslimi",
     neden: "Hızlı kurulum, WhatsApp paylaşımı ve RSVP takibi yeterlidir.",
     tetikleyici: "Basılı davetiye maliyetini kısmak istiyorum.",
-    aksiyon: "Aktivasyon linki + kısa teslim paketi gönderin.",
+    aksiyon: "Teslim linki + kısa kullanım notu gönderin.",
   },
   {
     baslik: "Salon girişini düzenlemek isteyen mekan",
@@ -41,7 +41,7 @@ const PAKET_ONERILERI = [
 ];
 
 const KONTROL_LISTESI = [
-  "Müşteriye kişisel veri toplamadan aktivasyon linkini gönder.",
+  "Müşteriye kişisel veri toplamadan teslim linkini gönder.",
   "Kod etiketi alanına kişi adı, telefon veya e-posta yazma.",
   "Müşteri kayıt olunca kurulum durumunu takip et.",
   "Davetiye yayına çıkınca QR kiti ve paylaşım linkini hatırlat.",
@@ -68,7 +68,7 @@ const METINLER: RehberMetni[] = [
     baslik: "Nazik takip",
     hedef: "Link gönderildi ama müşteri başlamadıysa",
     metin:
-      "Merhaba, dijital davetiye aktivasyon linkinizi tekrar iletiyorum. Bağlantıyı açıp şablon seçerek birkaç adımda davetiyenizi yayına alabilirsiniz. Takıldığınız noktada bize yazabilirsiniz.",
+      "Merhaba, dijital davetiye teslim linkinizi tekrar iletiyorum. Bağlantıyı açıp şablon seçerek birkaç adımda davetiyenizi yayına alabilirsiniz. Takıldığınız noktada bize yazabilirsiniz.",
   },
 ];
 
@@ -151,7 +151,7 @@ export default function PartnerSatisRehberi() {
           <div className="mt-4 rounded-2xl border border-amber-100 bg-amber-50 p-4">
             <p className="text-xs font-black text-amber-800">Hukuksal güvenlik notu</p>
             <p className="mt-1 text-xs leading-relaxed text-amber-700">
-              Partner satışta hizmeti anlatır ve aktivasyon linkini paylaşır. Davetli verileri, RSVP yanıtları ve anı içerikleri müşterinin hesabında kalır.
+              Partner satışta hizmeti anlatır ve teslim linkini paylaşır. Davetli verileri, RSVP yanıtları ve anı içerikleri müşterinin hesabında kalır.
             </p>
           </div>
         </div>

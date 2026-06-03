@@ -76,7 +76,7 @@ export default function PartnerOnboardingChecklist({
       cta: teklifHazir ? "Teklif hazır" : abonelik ? "Teklife git" : "Paket seç",
     },
     {
-      baslik: "İlk aktivasyon linkini oluştur",
+      baslik: "İlk teslim linkini oluştur",
       aciklama: "Müşteriye özel tek kullanımlık link üretin.",
       tamam: ilkKodVar,
       href: abonelik ? "#aktivasyon-kodlari" : "#odeme",

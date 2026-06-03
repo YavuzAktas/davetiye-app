@@ -40,7 +40,7 @@ const ROLLER: Array<{
   {
     id: "operasyon",
     label: "Operasyon",
-    aciklama: "Aktivasyon, yayın durumu ve etkinlik hazırlık akışını takip eder.",
+    aciklama: "Teslim, yayın durumu ve etkinlik hazırlık akışını takip eder.",
   },
   {
     id: "teslim",
@@ -57,7 +57,7 @@ const GOREV_PROFILLERI: GorevProfili[] = [
     gun: "1",
     etiket: "Kapı QR check-in ekibi",
     kimIcin: "Etkinlik girişinde davetli akışını kontrol eden personel",
-    yetki: "Aktivasyon, kurulum ve yayın durumlarını görür; davetli isimleri ve iletişim bilgileri görünmez.",
+    yetki: "Teslim, kurulum ve yayın durumlarını görür; davetli isimleri ve iletişim bilgileri görünmez.",
     gorevler: ["Etkinlikten önce QR akışını test et", "Giriş ekibine doğru linki ver", "Sorun olursa partner hesap sahibine bildir"],
   },
   {
@@ -86,7 +86,7 @@ const GOREV_PROFILLERI: GorevProfili[] = [
     rol: "teslim",
     gun: "7",
     etiket: "Müşteri teslim sorumlusu",
-    kimIcin: "Müşteriye aktivasyon ve teslim linklerini hazırlayan görevli",
+    kimIcin: "Müşteriye teslim linklerini ve kullanım notlarını hazırlayan görevli",
     yetki: "Teslim portalı ve davetiye yayın özetlerini görür; ödeme ve davetli detayları görünmez.",
     gorevler: ["Teslim portalı linkini kontrol et", "Yayındaki davetiyenin açıldığını doğrula", "Müşteriye yalnızca gerekli teslim linklerini ilet"],
   },

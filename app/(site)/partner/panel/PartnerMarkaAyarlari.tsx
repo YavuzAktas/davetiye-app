@@ -222,7 +222,7 @@ export default function PartnerMarkaAyarlari({
                 </div>
               </div>
               <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                {form.markaSlogani || "Slogan girildiğinde müşterinin aktivasyon ekranında görünür."}
+                {form.markaSlogani || "Slogan girildiğinde müşterinin teslim ekranında görünür."}
               </p>
               {(form.destekTelefonu || form.instagramUrl) && (
                 <div className="mt-4 flex flex-wrap gap-2">

@@ -350,7 +350,7 @@ export default function PartnerEtkinlikGunuKiti({
             href="#aktivasyon-kodlari"
             className="mt-4 inline-flex rounded-2xl bg-purple-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-purple-700"
           >
-            Aktivasyonları Aç
+            Teslim Linklerini Aç
           </a>
         </div>
       )}

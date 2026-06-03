@@ -40,7 +40,7 @@ const PAKETLER: Paket[] = [
       "Genel davetiye QR kodu",
     ],
     teslimatlar: [
-      "Müşteriye özel aktivasyon linki",
+      "Müşteriye özel teslim linki",
       "Yayına hazır davetiye paneli",
       "Davetli paylaşım rehberi",
     ],
@@ -295,7 +295,7 @@ export default function PartnerTeklifOlusturucu({
     satirlar.push(
       "",
       "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri müşterinin kendi hesabında yönetilir.",
-      "Uygun görürseniz size özel aktivasyon bağlantısını paylaşabiliriz."
+      "Uygun görürseniz size özel teslim bağlantısını paylaşabiliriz."
     );
 
     return satirlar.join("\n");
@@ -344,7 +344,7 @@ export default function PartnerTeklifOlusturucu({
       setLeadMesaj({
         tip: "basari",
         metin: durum === "kazandi"
-          ? "Teklif kabul edildi olarak işaretlendi. Şimdi aktivasyon linki oluşturabilirsiniz."
+          ? "Teklif kabul edildi olarak işaretlendi. Şimdi teslim linki oluşturabilirsiniz."
           : "Lead teklif gönderildi aşamasına taşındı.",
       });
       router.refresh();
@@ -615,7 +615,7 @@ export default function PartnerTeklifOlusturucu({
 
       <p class="alt">
         Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri müşterinin kendi hesabında yönetilir.
-        Uygun görürseniz size özel aktivasyon bağlantısı paylaşılır.
+        Uygun görürseniz size özel teslim bağlantısı paylaşılır.
         ${destekHtml.length ? `<br />${destekHtml.join(" · ")}` : ""}
       </p>
     </section>
@@ -834,9 +834,9 @@ export default function PartnerTeklifOlusturucu({
           {seciliLead && (
             <div className="mt-4 rounded-2xl border border-purple-100 bg-white p-4">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-purple-500">Kabul sonrası</p>
-              <p className="mt-2 text-sm font-black text-gray-950">Teklifi aktivasyon teslimine bağla</p>
+              <p className="mt-2 text-sm font-black text-gray-950">Teklifi teslim linkine bağla</p>
               <p className="mt-1 text-xs leading-relaxed text-gray-500">
-                Müşteri kabul ettiğinde lead “Kabul edildi” olur. Sonra aktivasyon bölümünde tek kullanımlık müşteri linkini oluşturup teslim paketini gönderebilirsiniz.
+                Müşteri kabul ettiğinde lead “Kabul edildi” olur. Sonra teslim bölümünde tek kullanımlık müşteri linkini oluşturup teslim paketini gönderebilirsiniz.
               </p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 <button
@@ -856,7 +856,7 @@ export default function PartnerTeklifOlusturucu({
                   onClick={aktivasyonaGit}
                   className="rounded-xl border border-purple-200 bg-purple-50 px-3 py-2.5 text-xs font-black text-purple-700 transition-colors hover:bg-purple-100"
                 >
-                  Aktivasyon Linki Oluştur
+                  Teslim Linki Oluştur
                 </button>
               </div>
               {leadMesaj && (

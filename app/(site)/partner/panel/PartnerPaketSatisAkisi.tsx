@@ -55,7 +55,7 @@ export default function PartnerPaketSatisAkisi({
     },
     {
       baslik: "Teslim linki",
-      aciklama: "Anlaşma sonrası müşteriye aktivasyon linki verin.",
+      aciklama: "Anlaşma sonrası müşteriye tek kullanımlık teslim linki verin.",
       href: "#aktivasyon-kodlari",
       cta: "Link oluştur",
       durum: anlasmaVar ? "aktif" : "bekliyor",

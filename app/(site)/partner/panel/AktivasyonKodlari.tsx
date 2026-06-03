@@ -263,7 +263,7 @@ export default function AktivasyonKodlari({
     const satirlar = [
       `Merhaba, ${firmaAdi} dijital davetiye teslim paketiniz hazır.`,
       "",
-      "Başlamak için size özel aktivasyon bağlantısı:",
+      "Başlamak için size özel teslim bağlantısı:",
       aktivasyonUrl(kod),
       "",
       "Nasıl ilerleyeceksiniz?",
@@ -275,7 +275,7 @@ export default function AktivasyonKodlari({
       "Bu bağlantı daha sonra da müşteri teslim portalınız olarak çalışır; davetiyeniz oluştuğunda aynı linkten panelinize ve davetiyenize ulaşabilirsiniz.",
       "",
       "Gizlilik notu:",
-      "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri sizin hesabınızda yönetilir. Partner panelinde yalnızca aktivasyon süreci ve yayın durumu görünür.",
+      "Davetli listesi, RSVP yanıtları, fotoğraf ve anı içerikleri sizin hesabınızda yönetilir. Partner panelinde yalnızca teslim süreci ve yayın durumu görünür.",
     ];
 
     if (destekTelefonu?.trim() || instagramUrl?.trim()) {
@@ -383,7 +383,7 @@ export default function AktivasyonKodlari({
       {/* Başlık + oluştur butonu */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Aktivasyon Kodları</p>
+          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">Teslim Linkleri</p>
           {abonelik && (
             <p className="text-xs text-gray-400 mt-0.5">
               {paket?.ad ?? abonelik.paketId} paketi
@@ -469,7 +469,7 @@ export default function AktivasyonKodlari({
                   : "text-purple-700"
               }`}>
                 {hakDurumu === "tukendi"
-                  ? "Yeni aktivasyon oluşturmak için paketinizi yenileyin."
+                  ? "Yeni teslim linki oluşturmak için paketinizi yenileyin."
                   : hakDurumu === "azaldi"
                   ? `Yalnızca ${kalanHak} hakkınız kaldı. Yeni müşterilerden önce yenileme planı yapın.`
                   : hakDurumu === "yakinda"
@@ -519,7 +519,7 @@ export default function AktivasyonKodlari({
       {!abonelik && (
         <div className="bg-purple-50 border border-purple-100 rounded-2xl px-5 py-4 text-center">
           <p className="text-sm font-bold text-purple-700 mb-1">Henüz aktif paketiniz yok</p>
-          <p className="text-xs text-purple-500">Aktivasyon kodu oluşturmak için aşağıdan bir paket satın alın.</p>
+          <p className="text-xs text-purple-500">Teslim linki oluşturmak için aşağıdan bir paket satın alın.</p>
         </div>
       )}
 
@@ -538,7 +538,7 @@ export default function AktivasyonKodlari({
         <div className="overflow-hidden rounded-3xl border border-purple-100 bg-linear-to-br from-purple-50 via-white to-rose-50">
           <div className="p-5 sm:p-6">
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-400">İlk aktivasyon</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-400">İlk teslim linki</p>
               <h3 className="mt-2 text-lg font-black text-gray-900 sm:text-xl">
                 İlk müşteri linkinizi oluşturun
               </h3>
@@ -549,7 +549,7 @@ export default function AktivasyonKodlari({
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {[
-                ["1", "Kod oluştur", "Tek kullanımlık aktivasyon linki hazırlanır."],
+                ["1", "Link oluştur", "Tek kullanımlık teslim linki hazırlanır."],
                 ["2", "WhatsApp ile gönder", "Hazır mesajla müşteriye hızlıca iletilir."],
                 ["3", "Durumu takip et", "Kayıt, süreç ve yayın durumları panelde görünür."],
               ].map(([sira, baslik, aciklama]) => (
@@ -573,7 +573,7 @@ export default function AktivasyonKodlari({
                 disabled={!olusturulabilir || olusturuluyor}
                 className="inline-flex items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-pink-600 shadow-sm shadow-purple-200 px-4 py-3 text-sm font-black text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:shrink-0"
               >
-                {olusturuluyor ? "Oluşturuluyor..." : "İlk Kodu Oluştur"}
+                {olusturuluyor ? "Oluşturuluyor..." : "İlk Linki Oluştur"}
               </button>
             </div>
           </div>
@@ -585,7 +585,7 @@ export default function AktivasyonKodlari({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-black text-green-800">
-                {sonOlusturulanKodlar.length} yeni aktivasyon kodu hazır
+                {sonOlusturulanKodlar.length} yeni teslim linki hazır
               </p>
               <p className="mt-1 text-xs leading-relaxed text-green-700">
                 Linkleri hemen müşterinize gönderebilir veya toplu kopyalayabilirsiniz.
@@ -770,7 +770,7 @@ export default function AktivasyonKodlari({
               />
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-[10px] leading-relaxed text-gray-400">
-                  <code className="bg-gray-100 px-1 rounded">{"{{link}}"}</code> → aktivasyon bağlantısı
+                  <code className="bg-gray-100 px-1 rounded">{"{{link}}"}</code> → teslim bağlantısı
                   {!mesajSablonu.includes("{{link}}") && (
                     <span className="ml-1 font-semibold text-amber-600">Link gönderimde otomatik eklenecek.</span>
                   )}
@@ -828,7 +828,7 @@ export default function AktivasyonKodlari({
                 )}
 
                 {["kayit_oldu", "davetiye_olusturuldu"].includes(k.durum) && (
-                  <p className="text-xs text-gray-500">Bu aktivasyon linki müşteri tarafından kullanıldı.</p>
+                  <p className="text-xs text-gray-500">Bu teslim linki müşteri tarafından kullanıldı.</p>
                 )}
 
                 {k.durum === "yayinda" && (
@@ -886,7 +886,7 @@ export default function AktivasyonKodlari({
                 {/* Link */}
                 <div className="rounded-xl bg-gray-50 px-3 py-2 min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-300 sm:hidden">
-                    Aktivasyon Linki
+                    Teslim Linki
                   </p>
                   <span className="block truncate font-mono text-[11px] text-gray-400 sm:text-[11px]">{url}</span>
                 </div>
@@ -971,7 +971,7 @@ export default function AktivasyonKodlari({
                     Hazır paylaşım metni
                   </h3>
                   <p className="mt-2 max-w-xl text-sm leading-relaxed text-gray-500">
-                    Aktivasyon linki, kullanım adımları ve gizlilik notunu tek metinde gönderin. Bu metin kaydedilmez.
+                    Teslim linki, kullanım adımları ve gizlilik notunu tek metinde gönderin. Bu metin kaydedilmez.
                   </p>
                 </div>
                 <button
@@ -1047,7 +1047,7 @@ export default function AktivasyonKodlari({
               </div>
               <div className="min-w-0">
                 <h3 id="aktivasyon-iptal-baslik" className="text-lg font-black text-gray-900">
-                  Aktivasyon kodu iptal edilsin mi?
+                  Teslim linki iptal edilsin mi?
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed text-gray-500">
                   Bu link artık müşteri tarafından kullanılamaz. Kod henüz kullanılmadıysa hak bakiyenize geri eklenir.

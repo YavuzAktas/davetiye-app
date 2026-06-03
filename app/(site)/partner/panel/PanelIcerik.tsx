@@ -289,7 +289,7 @@ export default function PanelIcerik({
         }`}>
           <div>
             <p className={`text-sm font-black ${abonelikHakTukendi ? "text-red-700" : "text-amber-700"}`}>
-              {abonelikHakTukendi ? "Aktivasyon hakkınız bitti" : "Paket süreniz yakında bitiyor"}
+              {abonelikHakTukendi ? "Dijital paket hakkınız bitti" : "Paket süreniz yakında bitiyor"}
             </p>
             <p className={`mt-1 text-xs leading-relaxed ${abonelikHakTukendi ? "text-red-500" : "text-amber-600"}`}>
               {abonelikHakTukendi
@@ -325,7 +325,7 @@ export default function PanelIcerik({
             <p className="mt-1 text-sm text-gray-500">
               {abonelik
                 ? `${paketGetir(abonelik.paketId)?.ad ?? abonelik.paketId} paketi aktif`
-                : "Partner paketinizi seçip aktivasyon hakkı alın."}
+                : "Partner paketinizi seçip dijital paket hakkı alın."}
             </p>
           </div>
           <span className="rounded-full bg-gray-50 px-3 py-1.5 text-xs font-bold text-gray-400 transition-transform group-open:rotate-180">
@@ -375,7 +375,7 @@ export default function PanelIcerik({
                         ₺{paket.aylikTutar.toLocaleString("tr-TR")}
                         <span className="text-xs font-normal text-gray-400">/ay</span>
                       </p>
-                      <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} aktivasyon hakkı</p>
+                      <p className="text-xs text-gray-500">Ayda {paket.hakSayisi} dijital paket hakkı</p>
                     </button>
                   );
                 })}

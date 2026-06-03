@@ -26,7 +26,7 @@ const PAKETLER: Paket[] = [
     dahil: ["Dijital davetiye", "WhatsApp paylaşım linki", "RSVP takibi", "Genel QR kod"],
     teslim: ["Müşteri teslim portalı", "Yayına hazır davetiye paneli", "Paylaşım kontrol listesi"],
     fiyatNotu: "Giriş seviyesi paket olarak konumlandırın; ek özellikleri ayrıca sunun.",
-    takipAksiyonu: "Müşteriye aktivasyon linki gönderin ve şablon seçimini takip edin.",
+    takipAksiyonu: "Müşteriye teslim linki gönderin ve şablon seçimini takip edin.",
   },
   {
     id: "salon-operasyon",
@@ -62,7 +62,7 @@ const PAKETLER: Paket[] = [
     dahil: ["Lüks şablon", "RSVP ve davetli hunisi", "QR check-in", "Oturma planı", "Canlı duvar", "Anı arşivi"],
     teslim: ["Markalı müşteri portalı", "Etkinlik günü operasyon paketi", "Etkinlik sonrası teslim rehberi"],
     fiyatNotu: "Ana teklif olarak sunun; kapsamı net yazın ve sonradan değişiklikleri ayrıca fiyatlayın.",
-    takipAksiyonu: "Önce lead'i premium olarak işaretleyin, sonra teklif metnini ve aktivasyon linkini paylaşın.",
+    takipAksiyonu: "Önce müşteriyi premium olarak işaretleyin, sonra teklif metnini ve teslim linkini paylaşın.",
   },
 ];
 
@@ -78,7 +78,7 @@ function metinHazirla(paket: Paket, firmaAdi: string, whatsappImzasi?: string | 
     "Teslimde hazırlananlar:",
     ...paket.teslim.map(madde => `- ${madde}`),
     "",
-    "Uygun görürseniz size özel aktivasyon bağlantısını paylaşabiliriz. Davetli listesi, RSVP yanıtları ve anı içerikleri sizin hesabınızda yönetilir.",
+    "Uygun görürseniz size özel teslim bağlantısını paylaşabiliriz. Davetli listesi, RSVP yanıtları ve anı içerikleri sizin hesabınızda yönetilir.",
   ];
 
   if (whatsappImzasi?.trim()) {
@@ -131,7 +131,7 @@ export default function PartnerHazirPaketler({
             href="#aktivasyon-kodlari"
             className="inline-flex items-center justify-center rounded-2xl bg-gray-950 px-4 py-3 text-xs font-black text-white transition-colors hover:bg-purple-700"
           >
-            Aktivasyon Linki Oluştur
+            Teslim Linki Oluştur
           </a>
         </div>
       </div>

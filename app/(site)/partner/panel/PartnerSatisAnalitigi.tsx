@@ -195,8 +195,8 @@ export default function PartnerSatisAnalitigi({
       ? `${metrikler.gonderilenKod - metrikler.baslayanKod} teslim linkinde müşteri kuruluma başlamamış. Kısa hatırlatma iyi çalışır.`
       : "Teslim edilen linklerde kurulum başlangıcı sağlıklı görünüyor.",
     abonelik.hakSayisi - abonelik.kullanilanHak <= 2
-      ? "Kalan aktivasyon hakkı düşük. Satış görüşmelerinde kesinti yaşamamak için yenilemeyi planlayın."
-      : "Aktivasyon hakkı satış akışı için yeterli görünüyor.",
+      ? "Kalan dijital paket hakkı düşük. Satış görüşmelerinde kesinti yaşamamak için yenilemeyi planlayın."
+      : "Dijital paket hakkı satış akışı için yeterli görünüyor.",
   ];
 
   return (
@@ -211,7 +211,7 @@ export default function PartnerSatisAnalitigi({
               Partner aboneliği işinize ne kadar katkı sağlıyor?
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/65">
-              Bu ekran muhasebe raporu değildir; CRM, aktivasyon ve ödeme kayıtlarından satış odağı için tahmini karar verileri üretir.
+              Bu ekran muhasebe raporu değildir; CRM, teslim linki ve ödeme kayıtlarından satış odağı için tahmini karar verileri üretir.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 shadow-sm backdrop-blur">

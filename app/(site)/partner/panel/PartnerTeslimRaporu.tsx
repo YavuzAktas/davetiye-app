@@ -39,7 +39,7 @@ type Kod = {
 const DURUM_META: Record<string, { label: string; aciklama: string; cls: string }> = {
   olusturuldu: {
     label: "Link hazır",
-    aciklama: "Aktivasyon bağlantısı oluşturuldu, müşteriye gönderilmeyi bekliyor.",
+    aciklama: "Teslim bağlantısı oluşturuldu, müşteriye gönderilmeyi bekliyor.",
     cls: "bg-gray-100 text-gray-700",
   },
   gonderildi: {
@@ -69,7 +69,7 @@ const DURUM_META: Record<string, { label: string; aciklama: string; cls: string 
   },
   iptal: {
     label: "İptal",
-    aciklama: "Bu aktivasyon bağlantısı iptal edildi.",
+    aciklama: "Bu teslim bağlantısı iptal edildi.",
     cls: "bg-red-50 text-red-700",
   },
 };
@@ -218,7 +218,7 @@ export default function PartnerTeslimRaporu({
               Müşteriye güven veren teslim çıktısı
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500">
-              Aktivasyon, yayın ve kullanım sayılarını kişisel veri göstermeden özetler. WhatsApp veya e-posta ile müşteriye gönderilebilir.
+              Teslim, yayın ve kullanım sayılarını kişisel veri göstermeden özetler. WhatsApp veya e-posta ile müşteriye gönderilebilir.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:w-[430px]">
@@ -349,7 +349,7 @@ export default function PartnerTeslimRaporu({
         <div className="p-8 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-2xl">📋</div>
           <h3 className="text-lg font-black text-gray-950">Henüz raporlanacak teslim yok</h3>
-          <p className="mt-2 text-sm text-gray-500">Önce aktivasyon kodu oluşturup müşteriye teslim edin.</p>
+          <p className="mt-2 text-sm text-gray-500">Önce teslim linki oluşturup müşteriye gönderin.</p>
         </div>
       )}
     </section>

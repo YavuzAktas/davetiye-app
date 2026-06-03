@@ -23,7 +23,7 @@ const SENARYOLAR: { id: SenaryoId; label: string; aciklama: string }[] = [
   { id: "ilk_temas", label: "İlk temas", aciklama: "Yeni müşteri adayına hizmeti kısa anlatır." },
   { id: "paket_onerisi", label: "Paket önerisi", aciklama: "Seçili paketin değerini öne çıkarır." },
   { id: "takip", label: "Nazik takip", aciklama: "Cevap gelmeyen müşteriye baskısız dönüş yapar." },
-  { id: "aktivasyon", label: "Aktivasyon teslimi", aciklama: "Hazır aktivasyon linki gönderirken kullanılır." },
+  { id: "aktivasyon", label: "Teslim linki", aciklama: "Hazır teslim linki gönderirken kullanılır." },
   { id: "etkinlik_oncesi", label: "Etkinlik öncesi", aciklama: "QR, RSVP ve anı araçlarını hatırlatır." },
 ];
 
@@ -312,7 +312,7 @@ export default function PartnerWhatsappAsistani({
 
             {senaryo === "aktivasyon" && (
               <label className="block">
-                <span className="text-xs font-bold text-gray-500">Aktivasyon linki</span>
+                <span className="text-xs font-bold text-gray-500">Teslim linki</span>
                 <input
                   value={aktivasyonLinki}
                   onChange={e => setAktivasyonLinki(e.target.value)}

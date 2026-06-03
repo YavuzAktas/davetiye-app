@@ -63,7 +63,7 @@ export default function PartnerTebrikEkrani({
           <div className="mt-6 space-y-2 text-left">
             {[
               "Marka görünümünüzü özelleştirin",
-              "İlk aktivasyon linkini oluşturun",
+              "İlk teslim linkini oluşturun",
               "Müşterilerinizi CRM'e ekleyin",
             ].map(item => (
               <div key={item} className="flex items-center gap-2.5">

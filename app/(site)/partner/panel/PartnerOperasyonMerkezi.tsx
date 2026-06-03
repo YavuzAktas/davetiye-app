@@ -125,7 +125,7 @@ function isUret(kod: Kod): OperasyonIs | null {
   const etiket = kodEtiketi(kod);
 
   if (kod.durum === "olusturuldu") {
-    return { id: kod.id, baslik: "Aktivasyon linkini müşteriye gönder", aciklama: "WhatsApp mesaj şablonunu kullanarak teslim linkini paylaşın.", durum: kod.durum, etiket, tarih: createdAt, oncelik: gunFarki(createdAt) <= 0 ? "bugun" : "normal" };
+    return { id: kod.id, baslik: "Teslim linkini müşteriye gönder", aciklama: "WhatsApp mesaj şablonunu kullanarak teslim linkini paylaşın.", durum: kod.durum, etiket, tarih: createdAt, oncelik: gunFarki(createdAt) <= 0 ? "bugun" : "normal" };
   }
   if (kod.durum === "gonderildi") {
     const takipTarihi = gunEkle(createdAt, 2);
@@ -323,7 +323,7 @@ export default function PartnerOperasyonMerkezi({
             <div className="mt-4 rounded-2xl border border-dashed border-gray-200 px-4 py-8 text-center">
               <p className="text-sm font-semibold text-gray-700">Acil takip işi yok</p>
               <p className="mt-1 text-xs text-gray-400">
-                İlk aktivasyon linkini oluşturduğunda işler burada görünür.
+                İlk teslim linkini oluşturduğunda işler burada görünür.
               </p>
               <a
                 href="#aktivasyon-kodlari"
@@ -357,7 +357,7 @@ export default function PartnerOperasyonMerkezi({
             href="#aktivasyon-kodlari"
             className="mt-4 flex items-center justify-center rounded-xl bg-purple-600 px-4 py-2.5 text-xs font-black text-white transition-colors hover:bg-purple-700"
           >
-            Aktivasyonları Yönet
+            Teslim Linklerini Yönet
           </a>
         </div>
 
