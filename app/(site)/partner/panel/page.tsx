@@ -21,6 +21,7 @@ import PartnerOperasyonMerkezi from "./PartnerOperasyonMerkezi";
 import PartnerPanelNav from "./PartnerPanelNav";
 import PanelAracGrubu from "./PanelAracGrubu";
 import PartnerPanelOzeti from "./PartnerPanelOzeti";
+import PartnerPaketSatisAkisi from "./PartnerPaketSatisAkisi";
 import PartnerSatisAnalitigi from "./PartnerSatisAnalitigi";
 import PartnerSalonTakvimi from "./PartnerSalonTakvimi";
 import PartnerSalonYerlesimSablonlari from "./PartnerSalonYerlesimSablonlari";
@@ -406,6 +407,13 @@ export default async function PartnerPanelPage({
                   etiket="Satış"
                   baslik="Müşteriye dijital paket satışı"
                 >
+                  <PartnerPaketSatisAkisi
+                    teklifHazir={partner.teklifHazir}
+                    leadler={partnerLeadleriHam.map(lead => ({
+                      id: lead.id,
+                      durum: lead.durum as "yeni" | "gorusuldu" | "teklif_gonderildi" | "kapora_bekliyor" | "kazandi" | "kaybedildi",
+                    }))}
+                  />
                   <div id="lead-crm" className="scroll-mt-24">
                     <PartnerLeadCRM
                       leadler={partnerLeadleriHam.map(lead => ({
