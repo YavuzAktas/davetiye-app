@@ -48,7 +48,7 @@ const AKIS_ADIMLARI = [
 ] as const;
 
 const VARSAYILAN_MESAJ = (firma: string) =>
-  `Merhaba! ${firma} aracılığıyla size özel bir dijital davetiye hakkı sunuyoruz.\n\nDavetiyenizi oluşturmak için:\n{{link}}\n\nBu bağlantı yalnızca size özeldir.`;
+  `Merhaba! ${firma} aracılığıyla size özel dijital davetiye paketiniz hazırlandı.\n\nDavetiyenizi oluşturmak için:\n{{link}}\n\nBu bağlantı yalnızca size özeldir.`;
 
 const WHATSAPP_MESAJ_SABLONLARI = (firma: string) => [
   {
@@ -67,7 +67,7 @@ const WHATSAPP_MESAJ_SABLONLARI = (firma: string) => [
     id: "premium",
     label: "Premium",
     aciklama: "Daha özenli ve marka dili güçlü.",
-    metin: `Merhaba,\n\n${firma} olarak size özel dijital davetiye hakkınızı tanımladık. Davetiyenizi birkaç adımda hazırlayıp yayına alabilirsiniz.\n\nBaşlamak için bağlantınız:\n{{link}}\n\nBu bağlantı size özeldir.`,
+    metin: `Merhaba,\n\n${firma} olarak size özel dijital davetiye paketinizi hazırladık. Davetiyenizi birkaç adımda hazırlayıp yayına alabilirsiniz.\n\nBaşlamak için bağlantınız:\n{{link}}\n\nBu bağlantı size özeldir.`,
   },
 ] as const;
 

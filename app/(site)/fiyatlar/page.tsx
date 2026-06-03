@@ -621,17 +621,17 @@ export default async function FiyatlarSayfasi({
             <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
               <div>
                 <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.28em] text-purple-400/70">
-                  Organizasyoncular İçin
+                  Davet evleri ve salonlar için
                 </p>
                 <h2 className="text-2xl font-black leading-tight sm:text-3xl">
                   <span style={{ background: "linear-gradient(90deg, #e2d9fa, #f9a8d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                    Ayda birden fazla müşteri için davetiye mi hazırlıyorsunuz?
+                    Her etkinlikte satılabilir dijital paket sunmak ister misiniz?
                   </span>
                 </h2>
                 <p className="mt-3 max-w-lg text-sm leading-7 text-purple-200/40">
-                  Düğün organizasyonu, etkinlik planlama veya fotoğrafçılık yapıyorsanız partner
-                  paketleriyle müşterilerinize dijital davetiye aktivasyon hakkı sunabilirsiniz.
-                  Müşteri verisi müşterinin hesabında kalır; siz panelden yalnızca hak ve durum takibi yaparsınız.
+                  Düğün salonu, davet evi veya organizasyon işletmesiyseniz dijital davetiye,
+                  LCV, QR check-in ve anı paketini müşterilerinize ek hizmet olarak sunabilirsiniz.
+                  Müşteri verisi müşterinin hesabında kalır; siz panelden yalnızca satış ve teslim durumunu izlersiniz.
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-3 md:w-72">

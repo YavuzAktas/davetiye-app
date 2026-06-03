@@ -1449,16 +1449,17 @@ export default function Anasayfa() {
             <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.28em] text-purple-400/70">
-                  Organizasyoncular İçin
+                  Davet evleri ve salonlar için
                 </p>
                 <h2 className="text-2xl font-black leading-tight sm:text-3xl">
                   <span style={{ background: "linear-gradient(90deg, #e2d9fa, #f9a8d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                    Müşterilerine dijital davetiye hakkı sunan partnerlerden biri ol
+                    Müşterilerine satılabilir dijital etkinlik paketi sun
                   </span>
                 </h2>
                 <p className="mt-3 max-w-xl text-sm leading-7 text-purple-200/40">
-                  Düğün organizasyonu, fotoğrafçılık veya etkinlik planlama yapıyorsan; her müşteriye
-                  tek kullanımlık aktivasyon linki ver, davetiye sürecini müşteri kendi hesabında yönetsin.
+                  Düğün salonu, davet evi veya organizasyon işletmesiysen; dijital davetiye,
+                  LCV, QR check-in ve anı paketini müşterilerine ek hizmet olarak sun.
+                  Davetiye sürecini müşteri kendi hesabında yönetir.
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-3 lg:w-[320px]">

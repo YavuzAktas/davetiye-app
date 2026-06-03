@@ -53,7 +53,7 @@ const YASAL_LINKS = [
 
 const PARTNER_LINKS = [
   { href: "/partner",           label: "Partner Programı"       },
-  { href: "/partner#paketler",  label: "Organizasyoncular İçin" },
+  { href: "/partner#paketler",  label: "Davet Evleri İçin" },
   { href: "/partner/on-bilgilendirme", label: "Partner Ön Bilgilendirme" },
   { href: "/partner/abonelik-sozlesmesi", label: "Partner Abonelik Sözleşmesi" },
   { href: "/partner/sozlesme",  label: "Partner Sözleşmesi"     },
