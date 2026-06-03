@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 const NAV_LINKLERI = [
-  { href: "#ozet", label: "Özet", aciklama: "Bugünün işleri", abonelikGerekli: false },
-  { href: "#satis-akisi", label: "Satış", aciklama: "Müşteri ve teklif", abonelikGerekli: true },
-  { href: "#teslim-akisi", label: "Teslim", aciklama: "Link ve rapor", abonelikGerekli: true },
-  { href: "#operasyon-akisi", label: "Operasyon", aciklama: "Takvim ve ekip", abonelikGerekli: true },
-  { href: "#ayarlar-akisi", label: "Ayarlar", aciklama: "Marka ve ödeme", abonelikGerekli: false },
+  { href: "#ozet", label: "Özet", aciklama: "Bugün ne yapacağım?", abonelikGerekli: false },
+  { href: "#satis-akisi", label: "Satış", aciklama: "Müşteri paket satışı", abonelikGerekli: true },
+  { href: "#operasyon-akisi", label: "Etkinlik Günü", aciklama: "QR, ekip ve kurulum", abonelikGerekli: true },
+  { href: "#gelir-akisi", label: "Gelir", aciklama: "Rapor ve kârlılık", abonelikGerekli: true },
+  { href: "#ayarlar-akisi", label: "Ayarlar", aciklama: "Marka ve abonelik", abonelikGerekli: false },
 ];
 
 export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean }) {
@@ -45,8 +45,6 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
     return () => observer.disconnect();
   }, [navLinkleri]);
 
-  const aktifLink = navLinkleri.find(link => link.href === aktif) ?? navLinkleri[0];
-
   function bolumeGit(href: string) {
     setAktif(href);
     const hedef = document.getElementById(href.slice(1));
@@ -63,17 +61,21 @@ export default function PartnerPanelNav({ abonelikVar }: { abonelikVar: boolean 
           {navLinkleri.map(link => {
             const isAktif = aktif === link.href;
             return (
-              <a
+              <button
                 key={link.href}
-                href={link.href}
-                className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-black shadow-sm transition-colors ${
+                type="button"
+                onClick={() => bolumeGit(link.href)}
+                className={`shrink-0 rounded-2xl border px-3.5 py-2 text-left shadow-sm transition-colors ${
                   isAktif
                     ? "border-transparent bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-sm shadow-purple-200"
                     : "border-gray-200 bg-white text-gray-600 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700"
                 }`}
               >
-                {link.label}
-              </a>
+                <span className="block text-xs font-black">{link.label}</span>
+                <span className={`mt-0.5 hidden text-[10px] font-semibold sm:block ${isAktif ? "text-white/70" : "text-gray-400"}`}>
+                  {link.aciklama}
+                </span>
+              </button>
             );
           })}
         </div>
